@@ -19,20 +19,12 @@ declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do n
 /* Include the base application config file */
 require_once(__DIR__ . '/app.php');
 
-/* Define the database constants, if they're not set in the ENV variables, set them here */
-if (!isset($_ENV['DB_HOST'])) {
-    $_ENV['DB_HOST'] = "localhost";
-}
-if (!isset($_ENV['DB_PORT'])) {
-    $_ENV['DB_PORT'] = "3306";
-}
-if (!isset($_ENV['DB_DATABASE'])) {
-    $_ENV['DB_DATABASE'] = "capstone";
-}
-if (!isset($_ENV['DB_USERNAME'])) {
-    $_ENV['DB_USERNAME'] = "capstone";
-}
-if (!isset($_ENV['DB_PASSWORD'])) {
-    $_ENV['DB_PASSWORD'] = "capstone";
-}
-$dotenv->required(['DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD']);
+/* Get ENV variables, if they are not set or do not meet requirements, throw an exception */
+$dotenv->required(['DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'])->notEmpty();
+
+/* Define the database constants */
+define('DB_HOST', $_ENV['DB_HOST']); // Define the DB_HOST constant, this is the host of the database.
+define('DB_PORT', $_ENV['DB_PORT']); // Define the DB_PORT constant, this is the port of the database.
+define('DB_DATABASE', $_ENV['DB_DATABASE']); // Define the DB_DATABASE constant, this is the name of the database.
+define('DB_USERNAME', $_ENV['DB_USERNAME']); // Define the DB_USERNAME constant, this is the username of the database.
+define('DB_PASSWORD', $_ENV['DB_PASSWORD']); // Define the DB_PASSWORD constant, this is the password of the database.
