@@ -22,7 +22,7 @@ define('BASEPATH', dirname(__DIR__, 1));
 require_once(BASEPATH . '/vendor/autoload.php');
 
 /* Use the phpdotenv package to read the .env file */
-$dotenv = Dotenv\Dotenv::createImmutable(BASEPATH); // Create a new instance of the Dotenv class, load the .env file from the BASEPATH.
+$dotenv = Dotenv\Dotenv::createImmutable(BASEPATH);
 $dotenv->safeLoad(); // Load the .env file if it exists.
 
 /* Get ENV variables, if they are not set or do not meet requirements, throw an exception */
