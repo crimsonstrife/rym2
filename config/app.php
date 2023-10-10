@@ -25,30 +25,15 @@ require_once(BASEPATH . '/vendor/autoload.php');
 $dotenv = Dotenv\Dotenv::createImmutable(BASEPATH); // Create a new instance of the Dotenv class, load the .env file from the BASEPATH.
 $dotenv->safeLoad(); // Load the .env file if it exists.
 
-/* Define application constants, if they're not set in the ENV variables, set them here */
-if (!isset($_ENV['APP_ENV'])) {
-    $_ENV['APP_ENV'] = "LOCAL";
-} else if ($_ENV['APP_ENV'] != "LOCAL" && $_ENV['APP_ENV'] != "PROD" && $_ENV['APP_ENV'] != "TEST") {
-    $_ENV['APP_ENV'] = "LOCAL";
-}
-if (!isset($_ENV['APP_URL'])) {
-    if ($_ENV['ENVIRONMENT'] == "LOCAL") {
-        $_ENV['APP_URL'] = "http://localhost";
-    } else if ($_ENV['ENVIRONMENT'] == "PROD") {
-        $_ENV['APP_URL'] = "https://capstone.hostedprojects.net";
-    } else if ($_ENV['ENVIRONMENT'] == "TEST") {
-        $_ENV['APP_URL'] = "https://testing.hostedprojects.net";
-    }
-}
-if (!isset($_ENV['APP_NAME'])) {
-    $_ENV['APP_NAME'] = "College Recruitment Application";
-}
-if (!isset($_ENV['APP_DEBUG'])) {
-    $_ENV['APP_DEBUG'] = false;
-}
-$dotenv->required(['APP_ENV', 'APP_URL', 'APP_NAME', 'APP_DEBUG']);
+/* Get ENV variables, if they are not set or do not meet requirements, throw an exception */
+$dotenv->required(['APP_ENV', 'APP_URL', 'APP_NAME', 'APP_DEBUG'])->notEmpty();
+$dotenv->required(['APP_ENV'])->allowedValues(['LOCAL', 'PRODUCTION', 'TEST']);
+$dotenv->required(['APP_DEBUG'])->isBoolean();
+$dotenv->required(['APP_URL'])->allowedRegexValues('/(?i)\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|(([^\s()<>]+|(([^\s()<>]+)))*))+(?:(([^\s()<>]+|(([^\s()<>]+)))*)|[^\s`!()[]{};:\'\".,<>?«»“”‘’]))/');  // Regex to validate URL format, https://stackoverflow.com/questions/206059/php-validation-regex-for-url
+
+/* Define the application constants */
 define('APP_URL', $_ENV['APP_URL']); // Define the APP_URL constant, this is the root URL of the application.
 define('APP_NAME', $_ENV['APP_NAME']); // Define the APP_NAME constant, this is the name of the application.
 define('APP_VERSION', "1.0.0"); // Define the APP_VERSION constant, this is the version of the application.
-define('APP_ENV', $_ENV['APP_ENV']); // Define the APP_ENV constant, this is the environment the application is running in i.e LOCAL, PROD, TEST.
+define('APP_ENV', $_ENV['APP_ENV']); // Define the APP_ENV constant, this is the environment the application is running in i.e LOCAL, PRODUCTION, TEST.
 define('APP_DEBUG', $_ENV['APP_DEBUG']); // Define the APP_DEBUG constant, this is the debug mode of the application.
