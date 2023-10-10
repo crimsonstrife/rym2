@@ -18,9 +18,12 @@
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 /* Include the base application config file */
 require_once(__DIR__ . '/app.php');
+// include the database connector file
+require_once(BASEPATH . '/includes/connector.inc.php');
 
 /* Get ENV variables, if they are not set or do not meet requirements, throw an exception */
 $dotenv->required(['DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'])->notEmpty();
+$dotenv->required('DB_PORT')->isInteger();
 
 /* Define the database constants */
 define('DB_HOST', $_ENV['DB_HOST']); // Define the DB_HOST constant, this is the host of the database.
@@ -28,3 +31,14 @@ define('DB_PORT', $_ENV['DB_PORT']); // Define the DB_PORT constant, this is the
 define('DB_DATABASE', $_ENV['DB_DATABASE']); // Define the DB_DATABASE constant, this is the name of the database.
 define('DB_USERNAME', $_ENV['DB_USERNAME']); // Define the DB_USERNAME constant, this is the username of the database.
 define('DB_PASSWORD', $_ENV['DB_PASSWORD']); // Define the DB_PASSWORD constant, this is the password of the database.
+
+/* Attempt to connect to the MySQL database */
+try {
+    $mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+} catch (Exception $e) {
+    /* If the connection fails, throw an exception */
+    throw new Exception("Failed to connect to Database: (" . $e->getCode() . ")" . $e->getMessage());
+} finally {
+    /* Close the connection to the database */
+    $mysqli->close();
+}
