@@ -1,5 +1,22 @@
 {
+    "name": "crimsonstrife/rym2",
+    "type": "project",
+    "license": "MIT",
+    "homepage": "https://github.com/crimsonstrife/rym2",
+    "description": "C868 Capstone Project",
+    "keywords": [
+        "capstone",
+        "college recruitment",
+        "web application"
+    ],
+    "authors": [
+        {
+            "name": "Patrick Barnhardt",
+            "email": "pbarnh1@wgu.edu"
+        }
+    ],
     "require": {
+        "php": ">=7.2.5",
         "vlucas/phpdotenv": "^5.5"
     }
 }
