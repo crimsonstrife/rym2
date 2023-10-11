@@ -21,19 +21,32 @@ define('BASEPATH', dirname(__DIR__, 1));
 /* Get the composer autoloader from the vendor directory */
 require_once(BASEPATH . '/vendor/autoload.php');
 
-/* Use the phpdotenv package to read the .env file */
-$dotenv = Dotenv\Dotenv::createImmutable(BASEPATH);
-$dotenv->safeLoad(); // Load the .env file if it exists.
+if (file_exists(BASEPATH . '/.env')) {
+    /* Use the phpdotenv package to read the .env file */
+    $dotenv = Dotenv\Dotenv::createImmutable(BASEPATH);
+    $dotenv->safeLoad(); // Load the .env file if it exists.
 
-/* Get ENV variables, if they are not set or do not meet requirements, throw an exception */
-$dotenv->required(['APP_ENV', 'APP_URL', 'APP_NAME', 'APP_DEBUG'])->notEmpty();
-$dotenv->required(['APP_ENV'])->allowedValues(['LOCAL', 'PRODUCTION', 'TEST']);
-$dotenv->required(['APP_DEBUG'])->isBoolean();
-$dotenv->required(['APP_URL'])->allowedRegexValues('/(?i)\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|(([^\s()<>]+|(([^\s()<>]+)))*))+(?:(([^\s()<>]+|(([^\s()<>]+)))*)|[^\s`!()[]{};:\'\".,<>?«»“”‘’]))/');  // Regex to validate URL format, https://stackoverflow.com/questions/206059/php-validation-regex-for-url
+    /* Get ENV variables, if they are not set or do not meet requirements, throw an exception */
+    $dotenv->required(['APP_ENV', 'APP_URL', 'APP_NAME', 'APP_DEBUG'])->notEmpty();
+    $dotenv->required(['APP_ENV'])->allowedValues(['LOCAL', 'PRODUCTION', 'TEST']);
+    $dotenv->required(['APP_DEBUG'])->allowedValues(['true', 'false', '1', '0', 'TRUE', 'FALSE']);
+    $dotenv->required(['APP_URL'])->allowedRegexValues('/(?i)\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|(([^\s()<>]+|(([^\s()<>]+)))*))+(?:(([^\s()<>]+|(([^\s()<>]+)))*)|[^\s`!()[]{};:\'\".,<>?«»“”‘’]))/');  // Regex to validate URL format, https://stackoverflow.com/questions/206059/php-validation-regex-for-url
 
-/* Define the application constants */
-define('APP_URL', $_ENV['APP_URL']); // Define the APP_URL constant, this is the root URL of the application.
-define('APP_NAME', $_ENV['APP_NAME']); // Define the APP_NAME constant, this is the name of the application.
-define('APP_VERSION', "1.0.0"); // Define the APP_VERSION constant, this is the version of the application.
-define('APP_ENV', $_ENV['APP_ENV']); // Define the APP_ENV constant, this is the environment the application is running in i.e LOCAL, PRODUCTION, TEST.
-define('APP_DEBUG', $_ENV['APP_DEBUG']); // Define the APP_DEBUG constant, this is the debug mode of the application.
+    /* Define the application constants */
+    define('APP_URL', $_ENV['APP_URL']); // Define the APP_URL constant, this is the root URL of the application.
+    define('APP_NAME', $_ENV['APP_NAME']); // Define the APP_NAME constant, this is the name of the application.
+    define('APP_VERSION', "1.0.0"); // Define the APP_VERSION constant, this is the version of the application.
+    define('APP_ENV', $_ENV['APP_ENV']); // Define the APP_ENV constant, this is the environment the application is running in i.e LOCAL, PRODUCTION, TEST.
+    define('APP_DEBUG', $_ENV['APP_DEBUG']); // Define the APP_DEBUG constant, this is the debug mode of the application.
+} else {
+    /*load the .env.example file if the .env file does not exist */
+    $dotenv = Dotenv\Dotenv::createImmutable(BASEPATH, '.env.example');
+    $dotenv->safeLoad();
+
+    /* Define the application constants */
+    define('APP_URL', $_ENV['APP_URL']); // Define the APP_URL constant, this is the root URL of the application.
+    define('APP_NAME', $_ENV['APP_NAME']); // Define the APP_NAME constant, this is the name of the application.
+    define('APP_VERSION', "1.0.0"); // Define the APP_VERSION constant, this is the version of the application.
+    define('APP_ENV', $_ENV['APP_ENV']); // Define the APP_ENV constant, this is the environment the application is running in i.e LOCAL, PRODUCTION, TEST.
+    define('APP_DEBUG', $_ENV['APP_DEBUG']); // Define the APP_DEBUG constant, this is the debug mode of the application.
+}
