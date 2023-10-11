@@ -19,7 +19,7 @@ declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do n
 /* Include the base application config file */
 require_once(__DIR__ . '/app.php');
 // include the database connector file
-require_once(BASEPATH . '/includes/connector.inc.php');
+include(BASEPATH . '/includes/connector.inc.php');
 
 /* Get ENV variables, if they are not set or do not meet requirements, throw an exception */
 $dotenv->required(['DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'])->notEmpty();
