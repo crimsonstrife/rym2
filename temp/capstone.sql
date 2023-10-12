@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Oct 12, 2023 at 02:29 AM
+-- Generation Time: Oct 12, 2023 at 10:55 AM
 -- Server version: 5.7.39
--- PHP Version: 8.2.0
+-- PHP Version: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,13 +29,18 @@ USE `capstone`;
 -- Table structure for table `aoi`
 --
 
-CREATE TABLE `aoi` (
-  `id` bigint(20) NOT NULL,
+DROP TABLE IF EXISTS `aoi`;
+CREATE TABLE IF NOT EXISTS `aoi` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(55) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `created_by` bigint(20) NOT NULL,
-  `updated_by` bigint(20) NOT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `updated_by` bigint(20) DEFAULT NULL,
   `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  KEY `created` (`created_by`),
+  KEY `updated` (`updated_by`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -44,14 +49,18 @@ CREATE TABLE `aoi` (
 -- Table structure for table `contact_log`
 --
 
-CREATE TABLE `contact_log` (
-  `id` bigint(20) NOT NULL,
-  `student` bigint(20) NOT NULL,
+DROP TABLE IF EXISTS `contact_log`;
+CREATE TABLE IF NOT EXISTS `contact_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `student` bigint(20) DEFAULT NULL,
   `auto` tinyint(1) NOT NULL DEFAULT '1',
   `sender` bigint(20) DEFAULT NULL,
   `send_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `subject` varchar(150) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `message` varchar(500) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
+  `message` varchar(500) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `student` (`student`),
+  KEY `sender` (`sender`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -60,13 +69,63 @@ CREATE TABLE `contact_log` (
 -- Table structure for table `degree_lvl`
 --
 
-CREATE TABLE `degree_lvl` (
-  `id` int(20) NOT NULL,
+DROP TABLE IF EXISTS `degree_lvl`;
+CREATE TABLE IF NOT EXISTS `degree_lvl` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_by` bigint(20) NOT NULL,
-  `updated_by` bigint(20) NOT NULL
+  `created_by` bigint(20) DEFAULT NULL,
+  `updated_by` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  KEY `created_by` (`created_by`),
+  KEY `updated_by` (`updated_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event`
+--
+
+DROP TABLE IF EXISTS `event`;
+CREATE TABLE IF NOT EXISTS `event` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `event_date` date NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_by` bigint(20) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `location` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `eventCreatedBy` (`created_by`),
+  KEY `eventUpdatedBy` (`updated_by`),
+  KEY `eventAtSchool` (`location`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jobs`
+--
+
+DROP TABLE IF EXISTS `jobs`;
+CREATE TABLE IF NOT EXISTS `jobs` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(150) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `description` varchar(500) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `type` enum('FULL','PART','INTERN') COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'INTERN',
+  `field` bigint(20) NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_by` bigint(20) DEFAULT NULL,
+  `updated_by` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `jobField` (`field`),
+  KEY `jobCreatedBy` (`created_by`),
+  KEY `jobUpdatedBy` (`updated_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -75,13 +134,18 @@ CREATE TABLE `degree_lvl` (
 -- Table structure for table `major`
 --
 
-CREATE TABLE `major` (
-  `id` bigint(20) NOT NULL,
+DROP TABLE IF EXISTS `major`;
+CREATE TABLE IF NOT EXISTS `major` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_by` bigint(20) NOT NULL,
-  `updated_by` bigint(20) NOT NULL
+  `created_by` bigint(20) DEFAULT NULL,
+  `updated_by` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  KEY `created_by` (`created_by`),
+  KEY `updated_by` (`updated_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -90,20 +154,26 @@ CREATE TABLE `major` (
 -- Table structure for table `permissions`
 --
 
-CREATE TABLE `permissions` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL
+DROP TABLE IF EXISTS `permissions`;
+CREATE TABLE IF NOT EXISTS `permissions` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `report_topMajorBySchool`
+-- Table structure for table `report_majorToAOIRatioBySchool`
 --
 
-CREATE TABLE `report_topMajorBySchool` (
+DROP TABLE IF EXISTS `report_majorToAOIRatioBySchool`;
+CREATE TABLE IF NOT EXISTS `report_majorToAOIRatioBySchool` (
   `major_id` bigint(20) NOT NULL,
   `major_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `aoi_id` bigint(20) NOT NULL,
+  `aoi_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `school_id` bigint(20) NOT NULL,
   `school_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `student_count` bigint(20) NOT NULL
@@ -114,7 +184,9 @@ CREATE TABLE `report_topMajorBySchool` (
 --
 -- Table structure for table `report_topAOIBySchool`
 --
-CREATE TABLE 'report_topAOIBySchool' (
+
+DROP TABLE IF EXISTS `report_topAOIBySchool`;
+CREATE TABLE IF NOT EXISTS `report_topAOIBySchool` (
   `aoi_id` bigint(20) NOT NULL,
   `aoi_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `school_id` bigint(20) NOT NULL,
@@ -125,13 +197,13 @@ CREATE TABLE 'report_topAOIBySchool' (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `report_majorToAOIRatioBySchool`
+-- Table structure for table `report_topMajorBySchool`
 --
-CREATE TABLE 'report_majorToAOIRatioBySchool' (
+
+DROP TABLE IF EXISTS `report_topMajorBySchool`;
+CREATE TABLE IF NOT EXISTS `report_topMajorBySchool` (
   `major_id` bigint(20) NOT NULL,
   `major_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `aoi_id` bigint(20) NOT NULL,
-  `aoi_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `school_id` bigint(20) NOT NULL,
   `school_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `student_count` bigint(20) NOT NULL
@@ -143,9 +215,12 @@ CREATE TABLE 'report_majorToAOIRatioBySchool' (
 -- Table structure for table `roles`
 --
 
-CREATE TABLE `roles` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -154,12 +229,16 @@ CREATE TABLE `roles` (
 -- Table structure for table `role_has_permission`
 --
 
-CREATE TABLE `role_has_permission` (
-  `id` bigint(20) NOT NULL,
+DROP TABLE IF EXISTS `role_has_permission`;
+CREATE TABLE IF NOT EXISTS `role_has_permission` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `role_id` bigint(20) NOT NULL,
   `permission_id` bigint(20) NOT NULL,
   `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `roleHasPermission` (`role_id`,`permission_id`),
+  KEY `permissionID` (`permission_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -168,17 +247,22 @@ CREATE TABLE `role_has_permission` (
 -- Table structure for table `school`
 --
 
-CREATE TABLE `school` (
-  `id` bigint(20) NOT NULL,
+DROP TABLE IF EXISTS `school`;
+CREATE TABLE IF NOT EXISTS `school` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `address` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `city` varchar(50) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `state` char(2) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `zipcode` varchar(15) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `created_by` bigint(20) NOT NULL,
-  `updated_by` bigint(20) NOT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `updated_by` bigint(20) DEFAULT NULL,
   `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  KEY `created_by` (`created_by`),
+  KEY `updated_by` (`updated_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -187,20 +271,114 @@ CREATE TABLE `school` (
 -- Table structure for table `student`
 --
 
-CREATE TABLE `student` (
-  `id` bigint(20) NOT NULL,
+DROP TABLE IF EXISTS `student`;
+CREATE TABLE IF NOT EXISTS `student` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `first_name` varchar(55) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `last_name` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_at` timestamp NOT NULL,
+  `event` bigint(20) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `interest` bigint(20) NOT NULL,
   `grade` tinyint(2) NOT NULL,
+  `degree` bigint(20) NOT NULL,
   `major` bigint(20) NOT NULL,
   `school` bigint(20) NOT NULL,
   `position` enum('FULL','PART','INTERN') COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'INTERN',
-  `graduation` year(4) NOT NULL
+  `graduation` year(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `studentInterest` (`email`,`interest`),
+  KEY `areaOfInterest` (`interest`),
+  KEY `degree` (`degree`),
+  KEY `major` (`major`),
+  KEY `school` (`school`),
+  KEY `eventAttended` (`event`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+--
+-- Triggers `student`
+--
+DROP TRIGGER IF EXISTS `updateOnDelete_majorToAOIRatioBySchool`;
+DELIMITER $$
+CREATE TRIGGER `updateOnDelete_majorToAOIRatioBySchool` AFTER DELETE ON `student` FOR EACH ROW INSERT INTO report_majorToAOIRatioBySchool (major_id, major_name, aoi_id, aoi_name, school_id, school_name, student_count)
+    SELECT major.id AS major_id, major.name AS major_name, aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN major ON student.major = major.id
+    INNER JOIN aoi ON student.interest = aoi.id
+    INNER JOIN school ON student.school = school.id
+    WHERE major.id = OLD.major AND aoi.id = OLD.interest
+    GROUP BY major.id, aoi.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count - 1
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `updateOnDelete_topAOIBySchool`;
+DELIMITER $$
+CREATE TRIGGER `updateOnDelete_topAOIBySchool` AFTER DELETE ON `student` FOR EACH ROW INSERT INTO report_topAOIBySchool (aoi_id, aoi_name, school_id, school_name, student_count)
+    SELECT aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN aoi ON student.interest = aoi.id
+    INNER JOIN school ON student.school = school.id
+    WHERE aoi.id = OLD.interest
+    GROUP BY aoi.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count - 1
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `updateOnDelete_topMajorBySchool`;
+DELIMITER $$
+CREATE TRIGGER `updateOnDelete_topMajorBySchool` AFTER DELETE ON `student` FOR EACH ROW INSERT INTO report_topMajorBySchool (major_id, major_name, school_id, school_name, student_count)
+    SELECT major.id AS major_id, major.name AS major_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN major ON student.major = major.id
+    INNER JOIN school ON student.school = school.id
+    WHERE major.id = OLD.major
+    GROUP BY major.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count - 1
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `updateOnInsert_majorToAOIRatioBySchool`;
+DELIMITER $$
+CREATE TRIGGER `updateOnInsert_majorToAOIRatioBySchool` AFTER INSERT ON `student` FOR EACH ROW INSERT INTO report_majorToAOIRatioBySchool (major_id, major_name, aoi_id, aoi_name, school_id, school_name, student_count)
+    SELECT major.id AS major_id, major.name AS major_name, aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN major ON student.major = major.id
+    INNER JOIN aoi ON student.interest = aoi.id
+    INNER JOIN school ON student.school = school.id
+    WHERE major.id = NEW.major AND aoi.id = NEW.interest
+    GROUP BY major.id, aoi.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count + 1
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `updateOnInsert_topAOIBySchool`;
+DELIMITER $$
+CREATE TRIGGER `updateOnInsert_topAOIBySchool` AFTER INSERT ON `student` FOR EACH ROW INSERT INTO report_topAOIBySchool (aoi_id, aoi_name, school_id, school_name, student_count)
+    SELECT aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN aoi ON student.interest = aoi.id
+    INNER JOIN school ON student.school = school.id
+    WHERE aoi.id = NEW.interest
+    GROUP BY aoi.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count + 1
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `updateOnInsert_topMajorBySchool`;
+DELIMITER $$
+CREATE TRIGGER `updateOnInsert_topMajorBySchool` AFTER INSERT ON `student` FOR EACH ROW INSERT INTO report_topMajorBySchool (major_id, major_name, school_id, school_name, student_count)
+    SELECT major.id AS major_id, major.name AS major_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN major ON student.major = major.id
+    INNER JOIN school ON student.school = school.id
+    WHERE major.id = NEW.major
+    GROUP BY major.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count + 1
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -208,13 +386,17 @@ CREATE TABLE `student` (
 -- Table structure for table `users`
 --
 
-CREATE TABLE `users` (
-  `id` bigint(20) NOT NULL,
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `username` varchar(55) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -223,179 +405,87 @@ CREATE TABLE `users` (
 -- Table structure for table `user_has_role`
 --
 
-CREATE TABLE `user_has_role` (
-  `id` bigint(20) NOT NULL,
+DROP TABLE IF EXISTS `user_has_role`;
+CREATE TABLE IF NOT EXISTS `user_has_role` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NOT NULL,
   `role_id` bigint(20) NOT NULL,
   `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `userHasRole` (`user_id`,`role_id`),
+  KEY `roleID` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
---
--- Indexes for dumped tables
---
+-- --------------------------------------------------------
 
 --
--- Indexes for table `aoi`
+-- Stand-in structure for view `view_majortoaoiratiobyschool`
+-- (See below for the actual view)
 --
-ALTER TABLE `aoi`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`),
-  ADD KEY `created` (`created_by`),
-  ADD KEY `updated` (`updated_by`) USING BTREE;
+DROP VIEW IF EXISTS `view_majortoaoiratiobyschool`;
+CREATE TABLE IF NOT EXISTS `view_majortoaoiratiobyschool` (
+`major_name` varchar(255)
+,`aoi_name` varchar(255)
+,`school_name` varchar(255)
+,`student_count` bigint(20)
+);
+
+-- --------------------------------------------------------
 
 --
--- Indexes for table `contact_log`
+-- Stand-in structure for view `view_topaoibyschool`
+-- (See below for the actual view)
 --
-ALTER TABLE `contact_log`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `student` (`student`),
-  ADD KEY `sender` (`sender`);
+DROP VIEW IF EXISTS `view_topaoibyschool`;
+CREATE TABLE IF NOT EXISTS `view_topaoibyschool` (
+`aoi_name` varchar(255)
+,`school_name` varchar(255)
+,`student_count` bigint(20)
+);
+
+-- --------------------------------------------------------
 
 --
--- Indexes for table `degree_lvl`
+-- Stand-in structure for view `view_topmajorbyschool`
+-- (See below for the actual view)
 --
-ALTER TABLE `degree_lvl`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`),
-  ADD KEY `created_by` (`created_by`),
-  ADD KEY `updated_by` (`updated_by`);
+DROP VIEW IF EXISTS `view_topmajorbyschool`;
+CREATE TABLE IF NOT EXISTS `view_topmajorbyschool` (
+`major_name` varchar(255)
+,`school_name` varchar(255)
+,`student_count` bigint(20)
+);
+
+-- --------------------------------------------------------
 
 --
--- Indexes for table `major`
+-- Structure for view `view_majortoaoiratiobyschool`
 --
-ALTER TABLE `major`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`),
-  ADD KEY `created_by` (`created_by`),
-  ADD KEY `updated_by` (`updated_by`);
+DROP TABLE IF EXISTS `view_majortoaoiratiobyschool`;
+
+DROP VIEW IF EXISTS `view_majortoaoiratiobyschool`;
+CREATE OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_majortoaoiratiobyschool`  AS SELECT `report_majortoaoiratiobyschool`.`major_name` AS `major_name`, `report_majortoaoiratiobyschool`.`aoi_name` AS `aoi_name`, `report_majortoaoiratiobyschool`.`school_name` AS `school_name`, `report_majortoaoiratiobyschool`.`student_count` AS `student_count` FROM `report_majortoaoiratiobyschool` ORDER BY `report_majortoaoiratiobyschool`.`school_name` ASC, `report_majortoaoiratiobyschool`.`student_count` AS `DESCdesc` ASC  ;
+
+-- --------------------------------------------------------
 
 --
--- Indexes for table `permissions`
+-- Structure for view `view_topaoibyschool`
 --
-ALTER TABLE `permissions`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
+DROP TABLE IF EXISTS `view_topaoibyschool`;
+
+DROP VIEW IF EXISTS `view_topaoibyschool`;
+CREATE OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_topaoibyschool`  AS SELECT `report_topaoibyschool`.`aoi_name` AS `aoi_name`, `report_topaoibyschool`.`school_name` AS `school_name`, `report_topaoibyschool`.`student_count` AS `student_count` FROM `report_topaoibyschool` ORDER BY `report_topaoibyschool`.`school_name` ASC, `report_topaoibyschool`.`student_count` AS `DESCdesc` ASC  ;
+
+-- --------------------------------------------------------
 
 --
--- Indexes for table `roles`
+-- Structure for view `view_topmajorbyschool`
 --
-ALTER TABLE `roles`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
+DROP TABLE IF EXISTS `view_topmajorbyschool`;
 
---
--- Indexes for table `role_has_permission`
---
-ALTER TABLE `role_has_permission`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `roleHasPermission` (`role_id`,`permission_id`),
-  ADD KEY `permissionID` (`permission_id`);
-
---
--- Indexes for table `school`
---
-ALTER TABLE `school`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`),
-  ADD KEY `created_by` (`created_by`),
-  ADD KEY `updated_by` (`updated_by`);
-
---
--- Indexes for table `student`
---
-ALTER TABLE `student`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `studentInterest` (`email`,`interest`),
-  ADD KEY `areaOfInterest` (`interest`),
-  ADD KEY `major` (`major`),
-  ADD KEY `school` (`school`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- Indexes for table `user_has_role`
---
-ALTER TABLE `user_has_role`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `userHasRole` (`user_id`,`role_id`),
-  ADD KEY `roleID` (`role_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `aoi`
---
-ALTER TABLE `aoi`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `contact_log`
---
-ALTER TABLE `contact_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `degree_lvl`
---
-ALTER TABLE `degree_lvl`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `major`
---
-ALTER TABLE `major`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `permissions`
---
-ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `roles`
---
-ALTER TABLE `roles`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `role_has_permission`
---
-ALTER TABLE `role_has_permission`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `school`
---
-ALTER TABLE `school`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `student`
---
-ALTER TABLE `student`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `user_has_role`
---
-ALTER TABLE `user_has_role`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+DROP VIEW IF EXISTS `view_topmajorbyschool`;
+CREATE OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_topmajorbyschool`  AS SELECT `report_topmajorbyschool`.`major_name` AS `major_name`, `report_topmajorbyschool`.`school_name` AS `school_name`, `report_topmajorbyschool`.`student_count` AS `student_count` FROM `report_topmajorbyschool` ORDER BY `report_topmajorbyschool`.`school_name` ASC, `report_topmajorbyschool`.`student_count` AS `DESCdesc` ASC  ;
 
 --
 -- Constraints for dumped tables
@@ -405,219 +495,77 @@ ALTER TABLE `user_has_role`
 -- Constraints for table `aoi`
 --
 ALTER TABLE `aoi`
-  ADD CONSTRAINT `createdBy` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `updatedBy` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `createdBy` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `updatedBy` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `contact_log`
 --
 ALTER TABLE `contact_log`
   ADD CONSTRAINT `senderOfEmail` FOREIGN KEY (`sender`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `studentContacted` FOREIGN KEY (`student`) REFERENCES `student` (`id`);
+  ADD CONSTRAINT `studentContacted` FOREIGN KEY (`student`) REFERENCES `student` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `degree_lvl`
 --
 ALTER TABLE `degree_lvl`
-  ADD CONSTRAINT `degreeCreatedBy` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `degreeUpdatedBy` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `degreeCreatedBy` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `degreeUpdatedBy` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `event`
+--
+ALTER TABLE `event`
+  ADD CONSTRAINT `eventAtSchool` FOREIGN KEY (`location`) REFERENCES `school` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `eventCreatedBy` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `eventUpdatedBy` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `jobs`
+--
+ALTER TABLE `jobs`
+  ADD CONSTRAINT `jobCreatedBy` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `jobField` FOREIGN KEY (`field`) REFERENCES `aoi` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `jobUpdatedBy` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `major`
 --
 ALTER TABLE `major`
-  ADD CONSTRAINT `majorCreatedBy` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `majorUpdatedBy` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `majorCreatedBy` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `majorUpdatedBy` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `role_has_permission`
 --
 ALTER TABLE `role_has_permission`
-  ADD CONSTRAINT `permissionID` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`),
-  ADD CONSTRAINT `roleForPermission` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
+  ADD CONSTRAINT `permissionID` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `roleForPermission` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `school`
 --
 ALTER TABLE `school`
-  ADD CONSTRAINT `schoolAddedBy` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `schoolUpdatedBy` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `schoolAddedBy` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `schoolUpdatedBy` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `student`
 --
 ALTER TABLE `student`
-  ADD CONSTRAINT `areaOfInterest` FOREIGN KEY (`interest`) REFERENCES `aoi` (`id`),
-  ADD CONSTRAINT `areaOfStudy` FOREIGN KEY (`major`) REFERENCES `major` (`id`),
-  ADD CONSTRAINT `schoolAttended` FOREIGN KEY (`school`) REFERENCES `school` (`id`);
+  ADD CONSTRAINT `areaOfInterest` FOREIGN KEY (`interest`) REFERENCES `aoi` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `areaOfStudy` FOREIGN KEY (`major`) REFERENCES `major` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `degreeLevel` FOREIGN KEY (`degree`) REFERENCES `degree_lvl` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `eventAttended` FOREIGN KEY (`event`) REFERENCES `event` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `schoolAttended` FOREIGN KEY (`school`) REFERENCES `school` (`id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user_has_role`
 --
 ALTER TABLE `user_has_role`
-  ADD CONSTRAINT `roleID` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
-  ADD CONSTRAINT `userID` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `roleID` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `userID` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
-
---
--- setup joins summary report of top majors by school on table report_topMajorBySchool
---
-SELECT major.id AS major_id, major.name AS major_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
-FROM student
-INNER JOIN major ON student.major = major.id
-INNER JOIN school ON student.school = school.id
-GROUP BY major.id, school.id
-ORDER BY school.id, student_count DESC;
-
---
--- setup joins summary report of top areas of interest by school on table report_topAOIBySchool
---
-SELECT aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
-FROM student
-INNER JOIN aoi ON student.interest = aoi.id
-INNER JOIN school ON student.school = school.id
-GROUP BY aoi.id, school.id
-ORDER BY school.id, student_count DESC;
-
---
--- setup joins summary report comparison of top majors to areas of interest by school on table report_majorToAOIRatioBySchool
---
-SELECT major.id AS major_id, major.name AS major_name, aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
-FROM student
-INNER JOIN major ON student.major = major.id
-INNER JOIN aoi ON student.interest = aoi.id
-INNER JOIN school ON student.school = school.id
-GROUP BY major.id, aoi.id, school.id
-ORDER BY school.id, student_count DESC;
-
---
--- setup triggers to update the report_topMajorBySchool table
---
-CREATE TRIGGER `updateOnInsert_topMajorBySchool` AFTER INSERT ON `student` FOR EACH ROW
-BEGIN
-    INSERT INTO report_topMajorBySchool (major_id, major_name, school_id, school_name, student_count)
-    SELECT major.id AS major_id, major.name AS major_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
-    FROM student
-    INNER JOIN major ON student.major = major.id
-    INNER JOIN school ON student.school = school.id
-    WHERE major.id = NEW.major
-    GROUP BY major.id, school.id
-    ORDER BY school.id, student_count DESC
-    ON DUPLICATE KEY UPDATE student_count = student_count + 1;
-END;
-
-CREATE TRIGGER `updateOnUpdate_topMajorBySchool` AFTER UPDATE ON `student` FOR EACH ROW
-BEGIN
-    INSERT INTO report_topMajorBySchool (major_id, major_name, school_id, school_name, student_count)
-    SELECT major.id AS major_id, major.name AS major_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
-    FROM student
-    INNER JOIN major ON student.major = major.id
-    INNER JOIN school ON student.school = school.id
-    WHERE major.id = NEW.major
-    GROUP BY major.id, school.id
-    ORDER BY school.id, student_count DESC
-    ON DUPLICATE KEY UPDATE student_count = student_count + 1;
-END;
-
-CREATE TRIGGER `updateOnDelete_topMajorBySchool` AFTER DELETE ON `student` FOR EACH ROW
-BEGIN
-    INSERT INTO report_topMajorBySchool (major_id, major_name, school_id, school_name, student_count)
-    SELECT major.id AS major_id, major.name AS major_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
-    FROM student
-    INNER JOIN major ON student.major = major.id
-    INNER JOIN school ON student.school = school.id
-    WHERE major.id = OLD.major
-    GROUP BY major.id, school.id
-    ORDER BY school.id, student_count DESC
-    ON DUPLICATE KEY UPDATE student_count = student_count - 1;
-END;
-
---
--- setup triggers to update the report_topAOIBySchool table
---
-CREATE TRIGGER `updateOnInsert_topAOIBySchool` AFTER INSERT ON `student` FOR EACH ROW
-BEGIN
-    INSERT INTO report_topAOIBySchool (aoi_id, aoi_name, school_id, school_name, student_count)
-    SELECT aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
-    FROM student
-    INNER JOIN aoi ON student.interest = aoi.id
-    INNER JOIN school ON student.school = school.id
-    WHERE aoi.id = NEW.interest
-    GROUP BY aoi.id, school.id
-    ORDER BY school.id, student_count DESC
-    ON DUPLICATE KEY UPDATE student_count = student_count + 1;
-END;
-
-CREATE TRIGGER `updateOnUpdate_topAOIBySchool` AFTER UPDATE ON `student` FOR EACH ROW
-BEGIN
-    INSERT INTO report_topAOIBySchool (aoi_id, aoi_name, school_id, school_name, student_count)
-    SELECT aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
-    FROM student
-    INNER JOIN aoi ON student.interest = aoi.id
-    INNER JOIN school ON student.school = school.id
-    WHERE aoi.id = NEW.interest
-    GROUP BY aoi.id, school.id
-    ORDER BY school.id, student_count DESC
-    ON DUPLICATE KEY UPDATE student_count = student_count + 1;
-END;
-
-CREATE TRIGGER `updateOnDelete_topAOIBySchool` AFTER DELETE ON `student` FOR EACH ROW
-BEGIN
-    INSERT INTO report_topAOIBySchool (aoi_id, aoi_name, school_id, school_name, student_count)
-    SELECT aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
-    FROM student
-    INNER JOIN aoi ON student.interest = aoi.id
-    INNER JOIN school ON student.school = school.id
-    WHERE aoi.id = OLD.interest
-    GROUP BY aoi.id, school.id
-    ORDER BY school.id, student_count DESC
-    ON DUPLICATE KEY UPDATE student_count = student_count - 1;
-END;
-
---
--- setup triggers to update the report_majorToAOIRatioBySchool table
---
-CREATE TRIGGER `updateOnInsert_majorToAOIRatioBySchool` AFTER INSERT ON `student` FOR EACH ROW
-BEGIN
-    INSERT INTO report_majorToAOIRatioBySchool (major_id, major_name, aoi_id, aoi_name, school_id, school_name, student_count)
-    SELECT major.id AS major_id, major.name AS major_name, aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
-    FROM student
-    INNER JOIN major ON student.major = major.id
-    INNER JOIN aoi ON student.interest = aoi.id
-    INNER JOIN school ON student.school = school.id
-    WHERE major.id = NEW.major AND aoi.id = NEW.interest
-    GROUP BY major.id, aoi.id, school.id
-    ORDER BY school.id, student_count DESC
-    ON DUPLICATE KEY UPDATE student_count = student_count + 1;
-END;
-
-CREATE TRIGGER `updateOnUpdate_majorToAOIRatioBySchool` AFTER UPDATE ON `student` FOR EACH ROW
-BEGIN
-    INSERT INTO report_majorToAOIRatioBySchool (major_id, major_name, aoi_id, aoi_name, school_id, school_name, student_count)
-    SELECT major.id AS major_id, major.name AS major_name, aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
-    FROM student
-    INNER JOIN major ON student.major = major.id
-    INNER JOIN aoi ON student.interest = aoi.id
-    INNER JOIN school ON student.school = school.id
-    WHERE major.id = NEW.major AND aoi.id = NEW.interest
-    GROUP BY major.id, aoi.id, school.id
-    ORDER BY school.id, student_count DESC
-    ON DUPLICATE KEY UPDATE student_count = student_count + 1;
-END;
-
-CREATE TRIGGER `updateOnDelete_majorToAOIRatioBySchool` AFTER DELETE ON `student` FOR EACH ROW
-BEGIN
-    INSERT INTO report_majorToAOIRatioBySchool (major_id, major_name, aoi_id, aoi_name, school_id, school_name, student_count)
-    SELECT major.id AS major_id, major.name AS major_name, aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
-    FROM student
-    INNER JOIN major ON student.major = major.id
-    INNER JOIN aoi ON student.interest = aoi.id
-    INNER JOIN school ON student.school = school.id
-    WHERE major.id = OLD.major AND aoi.id = OLD.interest
-    GROUP BY major.id, aoi.id, school.id
-    ORDER BY school.id, student_count DESC
-    ON DUPLICATE KEY UPDATE student_count = student_count - 1;
-END;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
