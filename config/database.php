@@ -34,11 +34,14 @@ define('DB_PASSWORD', $_ENV['DB_PASSWORD']); // Define the DB_PASSWORD constant,
 
 /* Attempt to connect to the MySQL database */
 try {
-    $mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+    $testConnection = testDatabaseConnection(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
 } catch (Exception $e) {
-    /* If the connection fails, throw an exception */
-    throw new Exception("Failed to connect to Database: (" . $e->getCode() . ")" . $e->getMessage());
-} finally {
-    /* Close the connection to the database */
-    $mysqli->close();
+    $mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+    /* If the connection fails, log the error */
+    error_log("Failed to connect to the database: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error);
+    //we'll do more with this later
+}
+/* If the connection fails, log the error */
+if (!$testConnection) {
+    //we'll do more with this later
 }
