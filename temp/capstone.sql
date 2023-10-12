@@ -212,6 +212,24 @@ CREATE TABLE IF NOT EXISTS `report_topMajorBySchool` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `report_jobsByAOI`
+--
+
+DROP TABLE IF EXISTS `report_jobsByAOI`;
+CREATE TABLE IF NOT EXISTS `report_jobsByAOI` (
+  `aoi_id` bigint(20) NOT NULL,
+  `aoi_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `job_id` bigint(20) NOT NULL,
+  `job_name` varchar(150) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `job_type` enum('FULL','PART','INTERN') COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'INTERN',
+  `job_field` bigint(20) NOT NULL,
+  `job_field_name` varchar(55) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `job_count` bigint(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `roles`
 --
 
@@ -339,6 +357,18 @@ CREATE TRIGGER `updateOnDelete_topMajorBySchool` AFTER DELETE ON `student` FOR E
     ON DUPLICATE KEY UPDATE student_count = student_count - 1
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `updateOnDelete_jobsByAOI`;
+DELIMITER $$
+CREATE TRIGGER `updateOnDelete_jobsByAOI` AFTER DELETE ON `jobs` FOR EACH ROW INSERT INTO report_jobsByAOI (aoi_id, aoi_name, job_id, job_name, job_type, job_field, job_field_name, job_count)
+    SELECT aoi.id AS aoi_id, aoi.name AS aoi_name, jobs.id AS job_id, jobs.name AS job_name, jobs.type AS job_type, aoi.id AS job_field, aoi.name AS job_field_name, COUNT(jobs.id) AS job_count
+    FROM jobs
+    INNER JOIN aoi ON jobs.field = aoi.id
+    WHERE aoi.id = OLD.field
+    GROUP BY aoi.id, jobs.id
+    ORDER BY aoi.id, job_count DESC
+    ON DUPLICATE KEY UPDATE job_count = job_count - 1
+$$
+DELIMITER ;
 DROP TRIGGER IF EXISTS `updateOnInsert_majorToAOIRatioBySchool`;
 DELIMITER $$
 CREATE TRIGGER `updateOnInsert_majorToAOIRatioBySchool` AFTER INSERT ON `student` FOR EACH ROW INSERT INTO report_majorToAOIRatioBySchool (major_id, major_name, aoi_id, aoi_name, school_id, school_name, student_count)
@@ -377,6 +407,18 @@ CREATE TRIGGER `updateOnInsert_topMajorBySchool` AFTER INSERT ON `student` FOR E
     GROUP BY major.id, school.id
     ORDER BY school.id, student_count DESC
     ON DUPLICATE KEY UPDATE student_count = student_count + 1
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `updateOnInsert_jobsByAOI`;
+DELIMITER $$
+CREATE TRIGGER `updateOnInsert_jobsByAOI` AFTER INSERT ON `jobs` FOR EACH ROW INSERT INTO report_jobsByAOI (aoi_id, aoi_name, job_id, job_name, job_type, job_field, job_field_name, job_count)
+    SELECT aoi.id AS aoi_id, aoi.name AS aoi_name, jobs.id AS job_id, jobs.name AS job_name, jobs.type AS job_type, aoi.id AS job_field, aoi.name AS job_field_name, COUNT(jobs.id) AS job_count
+    FROM jobs
+    INNER JOIN aoi ON jobs.field = aoi.id
+    WHERE aoi.id = NEW.field
+    GROUP BY aoi.id, jobs.id
+    ORDER BY aoi.id, job_count DESC
+    ON DUPLICATE KEY UPDATE job_count = job_count + 1
 $$
 DELIMITER ;
 
@@ -418,74 +460,6 @@ CREATE TABLE IF NOT EXISTS `user_has_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
-
---
--- Stand-in structure for view `view_majortoaoiratiobyschool`
--- (See below for the actual view)
---
-DROP VIEW IF EXISTS `view_majortoaoiratiobyschool`;
-CREATE TABLE IF NOT EXISTS `view_majortoaoiratiobyschool` (
-`major_name` varchar(255)
-,`aoi_name` varchar(255)
-,`school_name` varchar(255)
-,`student_count` bigint(20)
-);
-
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `view_topaoibyschool`
--- (See below for the actual view)
---
-DROP VIEW IF EXISTS `view_topaoibyschool`;
-CREATE TABLE IF NOT EXISTS `view_topaoibyschool` (
-`aoi_name` varchar(255)
-,`school_name` varchar(255)
-,`student_count` bigint(20)
-);
-
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `view_topmajorbyschool`
--- (See below for the actual view)
---
-DROP VIEW IF EXISTS `view_topmajorbyschool`;
-CREATE TABLE IF NOT EXISTS `view_topmajorbyschool` (
-`major_name` varchar(255)
-,`school_name` varchar(255)
-,`student_count` bigint(20)
-);
-
--- --------------------------------------------------------
-
---
--- Structure for view `view_majortoaoiratiobyschool`
---
-DROP TABLE IF EXISTS `view_majortoaoiratiobyschool`;
-
-DROP VIEW IF EXISTS `view_majortoaoiratiobyschool`;
-CREATE OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_majortoaoiratiobyschool`  AS SELECT `report_majortoaoiratiobyschool`.`major_name` AS `major_name`, `report_majortoaoiratiobyschool`.`aoi_name` AS `aoi_name`, `report_majortoaoiratiobyschool`.`school_name` AS `school_name`, `report_majortoaoiratiobyschool`.`student_count` AS `student_count` FROM `report_majortoaoiratiobyschool` ORDER BY `report_majortoaoiratiobyschool`.`school_name` ASC, `report_majortoaoiratiobyschool`.`student_count` AS `DESCdesc` ASC  ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `view_topaoibyschool`
---
-DROP TABLE IF EXISTS `view_topaoibyschool`;
-
-DROP VIEW IF EXISTS `view_topaoibyschool`;
-CREATE OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_topaoibyschool`  AS SELECT `report_topaoibyschool`.`aoi_name` AS `aoi_name`, `report_topaoibyschool`.`school_name` AS `school_name`, `report_topaoibyschool`.`student_count` AS `student_count` FROM `report_topaoibyschool` ORDER BY `report_topaoibyschool`.`school_name` ASC, `report_topaoibyschool`.`student_count` AS `DESCdesc` ASC  ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `view_topmajorbyschool`
---
-DROP TABLE IF EXISTS `view_topmajorbyschool`;
-
-DROP VIEW IF EXISTS `view_topmajorbyschool`;
-CREATE OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_topmajorbyschool`  AS SELECT `report_topmajorbyschool`.`major_name` AS `major_name`, `report_topmajorbyschool`.`school_name` AS `school_name`, `report_topmajorbyschool`.`student_count` AS `student_count` FROM `report_topmajorbyschool` ORDER BY `report_topmajorbyschool`.`school_name` ASC, `report_topmajorbyschool`.`student_count` AS `DESCdesc` ASC  ;
 
 --
 -- Constraints for dumped tables
