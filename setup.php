@@ -67,31 +67,35 @@ if (!isset($_ENV['DB_HOST']) || !isset($_ENV['DB_PORT']) || !isset($_ENV['DB_DAT
     $errorIsDBVarMissing = true;
 } else {
     /* If the env vars contain database information, try to connect */
-    try {
-        $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $_ENV['DB_PORT']);
-    } catch (Exception $e) {
-        /* If the connection fails, throw an exception */
+    $testConnection = testDatabaseConnection($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $_ENV['DB_PORT']);
+    /* Check if the connection failed */
+    if ($testConnection == false) {
+        /* If the connection failed, throw an exception */
         $errorFound = true;
         $errorIsDBConnectionFailed = true;
-        $dbErrorMessage = $e->getMessage();
-    } finally {
-        /* Check the mysql version, get it as a string */
+        $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $_ENV['DB_PORT']);
+        $dbErrorMessage = "Failed to connect to the database: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error;
+        closeDatabaseConnection($mysqli);
+    } else {
+        /* If the connection was successful, check if the database is empty */
+        $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $_ENV['DB_PORT']);
+        $result = $mysqli->query("SELECT * FROM users");
+        /* Check if the query returned any rows */
+        if ($result->num_rows > 0) {
+            /* If the query returned rows, throw an exception */
+            $errorFound = true;
+            $errorIsDBNotEmpty = true;
+        }
+        /* Check if the MySQL version is greater than or equal to 5.7.0 */
         $mysqlVersion = $mysqli->server_info;
-        if ($mysqlVersion != null && version_compare($mysqlVersion, '5.7.0', '<')) {
+        if (version_compare($mysqlVersion, '5.7.0', '<')) {
             /* If the MySQL version is less than 5.7.0, throw an exception */
             $errorFound = true;
+            $errorIsMySQLVersion = true;
             $mysqlErrorMessage = "MySQL version must be greater than or equal to 5.7.0, current version is $mysqlVersion";
-        } else {
-            /* If the MySQL version is greater than or equal to 5.7.0, check if the database is empty */
-            $result = $mysqli->query("SELECT *");
-            if ($result->num_rows > 0) {
-                /* If the database is not empty, throw an exception */
-                $errorFound = true;
-                $errorIsDBNotEmpty = true;
-            }
         }
         /* Close the connection to the database */
-        $mysqli->close();
+        closeDatabaseConnection($mysqli);
     }
 }
 /* Check if mail is enabled */
