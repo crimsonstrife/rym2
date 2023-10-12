@@ -112,6 +112,34 @@ CREATE TABLE `report_topMajorBySchool` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `report_topAOIBySchool`
+--
+CREATE TABLE 'report_topAOIBySchool' (
+  `aoi_id` bigint(20) NOT NULL,
+  `aoi_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `school_id` bigint(20) NOT NULL,
+  `school_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `student_count` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `report_majorToAOIRatioBySchool`
+--
+CREATE TABLE 'report_majorToAOIRatioBySchool' (
+  `major_id` bigint(20) NOT NULL,
+  `major_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `aoi_id` bigint(20) NOT NULL,
+  `aoi_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `school_id` bigint(20) NOT NULL,
+  `school_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `student_count` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `roles`
 --
 
@@ -430,6 +458,166 @@ ALTER TABLE `user_has_role`
   ADD CONSTRAINT `roleID` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
   ADD CONSTRAINT `userID` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
+
+--
+-- setup joins summary report of top majors by school on table report_topMajorBySchool
+--
+SELECT major.id AS major_id, major.name AS major_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+FROM student
+INNER JOIN major ON student.major = major.id
+INNER JOIN school ON student.school = school.id
+GROUP BY major.id, school.id
+ORDER BY school.id, student_count DESC;
+
+--
+-- setup joins summary report of top areas of interest by school on table report_topAOIBySchool
+--
+SELECT aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+FROM student
+INNER JOIN aoi ON student.interest = aoi.id
+INNER JOIN school ON student.school = school.id
+GROUP BY aoi.id, school.id
+ORDER BY school.id, student_count DESC;
+
+--
+-- setup joins summary report comparison of top majors to areas of interest by school on table report_majorToAOIRatioBySchool
+--
+SELECT major.id AS major_id, major.name AS major_name, aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+FROM student
+INNER JOIN major ON student.major = major.id
+INNER JOIN aoi ON student.interest = aoi.id
+INNER JOIN school ON student.school = school.id
+GROUP BY major.id, aoi.id, school.id
+ORDER BY school.id, student_count DESC;
+
+--
+-- setup triggers to update the report_topMajorBySchool table
+--
+CREATE TRIGGER `updateOnInsert_topMajorBySchool` AFTER INSERT ON `student` FOR EACH ROW
+BEGIN
+    INSERT INTO report_topMajorBySchool (major_id, major_name, school_id, school_name, student_count)
+    SELECT major.id AS major_id, major.name AS major_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN major ON student.major = major.id
+    INNER JOIN school ON student.school = school.id
+    WHERE major.id = NEW.major
+    GROUP BY major.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count + 1;
+END;
+
+CREATE TRIGGER `updateOnUpdate_topMajorBySchool` AFTER UPDATE ON `student` FOR EACH ROW
+BEGIN
+    INSERT INTO report_topMajorBySchool (major_id, major_name, school_id, school_name, student_count)
+    SELECT major.id AS major_id, major.name AS major_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN major ON student.major = major.id
+    INNER JOIN school ON student.school = school.id
+    WHERE major.id = NEW.major
+    GROUP BY major.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count + 1;
+END;
+
+CREATE TRIGGER `updateOnDelete_topMajorBySchool` AFTER DELETE ON `student` FOR EACH ROW
+BEGIN
+    INSERT INTO report_topMajorBySchool (major_id, major_name, school_id, school_name, student_count)
+    SELECT major.id AS major_id, major.name AS major_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN major ON student.major = major.id
+    INNER JOIN school ON student.school = school.id
+    WHERE major.id = OLD.major
+    GROUP BY major.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count - 1;
+END;
+
+--
+-- setup triggers to update the report_topAOIBySchool table
+--
+CREATE TRIGGER `updateOnInsert_topAOIBySchool` AFTER INSERT ON `student` FOR EACH ROW
+BEGIN
+    INSERT INTO report_topAOIBySchool (aoi_id, aoi_name, school_id, school_name, student_count)
+    SELECT aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN aoi ON student.interest = aoi.id
+    INNER JOIN school ON student.school = school.id
+    WHERE aoi.id = NEW.interest
+    GROUP BY aoi.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count + 1;
+END;
+
+CREATE TRIGGER `updateOnUpdate_topAOIBySchool` AFTER UPDATE ON `student` FOR EACH ROW
+BEGIN
+    INSERT INTO report_topAOIBySchool (aoi_id, aoi_name, school_id, school_name, student_count)
+    SELECT aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN aoi ON student.interest = aoi.id
+    INNER JOIN school ON student.school = school.id
+    WHERE aoi.id = NEW.interest
+    GROUP BY aoi.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count + 1;
+END;
+
+CREATE TRIGGER `updateOnDelete_topAOIBySchool` AFTER DELETE ON `student` FOR EACH ROW
+BEGIN
+    INSERT INTO report_topAOIBySchool (aoi_id, aoi_name, school_id, school_name, student_count)
+    SELECT aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN aoi ON student.interest = aoi.id
+    INNER JOIN school ON student.school = school.id
+    WHERE aoi.id = OLD.interest
+    GROUP BY aoi.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count - 1;
+END;
+
+--
+-- setup triggers to update the report_majorToAOIRatioBySchool table
+--
+CREATE TRIGGER `updateOnInsert_majorToAOIRatioBySchool` AFTER INSERT ON `student` FOR EACH ROW
+BEGIN
+    INSERT INTO report_majorToAOIRatioBySchool (major_id, major_name, aoi_id, aoi_name, school_id, school_name, student_count)
+    SELECT major.id AS major_id, major.name AS major_name, aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN major ON student.major = major.id
+    INNER JOIN aoi ON student.interest = aoi.id
+    INNER JOIN school ON student.school = school.id
+    WHERE major.id = NEW.major AND aoi.id = NEW.interest
+    GROUP BY major.id, aoi.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count + 1;
+END;
+
+CREATE TRIGGER `updateOnUpdate_majorToAOIRatioBySchool` AFTER UPDATE ON `student` FOR EACH ROW
+BEGIN
+    INSERT INTO report_majorToAOIRatioBySchool (major_id, major_name, aoi_id, aoi_name, school_id, school_name, student_count)
+    SELECT major.id AS major_id, major.name AS major_name, aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN major ON student.major = major.id
+    INNER JOIN aoi ON student.interest = aoi.id
+    INNER JOIN school ON student.school = school.id
+    WHERE major.id = NEW.major AND aoi.id = NEW.interest
+    GROUP BY major.id, aoi.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count + 1;
+END;
+
+CREATE TRIGGER `updateOnDelete_majorToAOIRatioBySchool` AFTER DELETE ON `student` FOR EACH ROW
+BEGIN
+    INSERT INTO report_majorToAOIRatioBySchool (major_id, major_name, aoi_id, aoi_name, school_id, school_name, student_count)
+    SELECT major.id AS major_id, major.name AS major_name, aoi.id AS aoi_id, aoi.name AS aoi_name, school.id AS school_id, school.name AS school_name, COUNT(student.id) AS student_count
+    FROM student
+    INNER JOIN major ON student.major = major.id
+    INNER JOIN aoi ON student.interest = aoi.id
+    INNER JOIN school ON student.school = school.id
+    WHERE major.id = OLD.major AND aoi.id = OLD.interest
+    GROUP BY major.id, aoi.id, school.id
+    ORDER BY school.id, student_count DESC
+    ON DUPLICATE KEY UPDATE student_count = student_count - 1;
+END;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
