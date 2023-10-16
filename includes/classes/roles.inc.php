@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
-
 /**
  * Roles Class file for the College Recruitment Application
  * Contains all the functions for the Roles Class and handles all user role functions.
@@ -16,14 +14,15 @@ declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do n
  * @requires PHP 7.2.5+
  */
 
+declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
+
 /* Include the base application config file */
+
 require_once(__DIR__ . '/../../config/app.php');
 /* Include the database config file */
 require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
-// include the permissions class file
-require_once(BASEPATH . '/includes/classes/permissions.inc.php');
 
 /**
  * Roles Class
