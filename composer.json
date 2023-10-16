@@ -9,11 +9,6 @@
         "college recruitment",
         "web application"
     ],
-    "classmap": [
-        "includes/classes/users.inc.php",
-        "includes/classes/roles.inc.php",
-        "includes/classes/permissions.inc.php"
-    ],
     "authors": [
         {
             "name": "Patrick Barnhardt",
@@ -27,6 +22,11 @@
     "autoload": {
         "psr-4": {
             "CrimsonStrife\\RYM2\\": "includes/classes/"
-        }
+        },
+        "classmap": [
+            "includes/classes/users.inc.php",
+            "includes/classes/roles.inc.php",
+            "includes/classes/permissions.inc.php"
+        ]
     }
 }
