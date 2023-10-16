@@ -7,7 +7,7 @@ require_once(__DIR__ . '../../config/app.php');
 
 // Check if the user is logged in, if not then redirect him to login page
 if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] !== true) {
-    header("location: " . BASEPATH . "/login.php");
+    header("location: " . APP_URL . "/login.php");
     exit;
 }
 ?>
