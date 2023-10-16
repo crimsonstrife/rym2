@@ -10,8 +10,6 @@ if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
 
 // Include config file
 require_once(__DIR__ . '/config/app.php');
-// Include the user class
-require_once(BASEPATH . '/includes/classes/users.inc.php');
 
 // Define variables and initialize with empty values
 $username = $password = "";
