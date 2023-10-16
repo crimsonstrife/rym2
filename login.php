@@ -10,11 +10,8 @@ if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
 
 // Include config file
 require_once(__DIR__ . '/config/app.php');
-// include the database config file
-require_once(BASEPATH . '/config/database.php');
-
-// Setup the connection to MySQL
-$mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+// Include the user class
+require_once(BASEPATH . '/includes/classes/users.inc.php');
 
 // Define variables and initialize with empty values
 $username = $password = "";
@@ -39,93 +36,73 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validate credentials
     if (empty($username_error) && empty($password_error)) {
-        // Prepare a select statement
-        $loginSQL = "SELECT id, username, password FROM users WHERE username = ?";
+        //initialize the user class
+        $user = new User();
 
-        if ($login_statement = $mysqli->prepare($loginSQL)) {
-            // Bind variables to the prepared statement as parameters
-            $login_statement->bind_param("s", $param_username);
+        //check if the user exists by username, if so get the user ID
+        $user_id = $user->getUserIdByUsername($username);
 
-            // Set parameters
-            $param_username = $username;
-
-            // Attempt to execute the prepared statement
-            if ($login_statement->execute()) {
-                // Store result
-                $login_statement->store_result();
-
-                // Check if username exists, if yes then verify password
-                if ($login_statement->num_rows == 1) {
-                    // Bind result variables
-                    $login_statement->bind_result($id, $username, $hashed_password);
-                    if ($login_statement->fetch()) {
-                        if (password_verify($password, $hashed_password)) {
-                            // Password is correct, so start a new session
-                            session_start();
-
-                            // Store data in session variables
-                            $_SESSION["logged_in"] = true;
-                            $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;
-
-                            // Redirect user to admin dashboard
-                            header("location: admin/dashboard.php");
-                        } else {
-                            // Password is not valid, display a generic error message
-                            $login_error = "Invalid password.";
-                        }
-                    }
-                } else {
-                    // Username doesn't exist, display a generic error message
-                    $login_error = "Invalid username.";
+        //if the user exists, check the password
+        if ($user_id) {
+            //check the password
+            if ($user->validateUserPassword($user_id, $password)) {
+                //try to log the user in
+                try {
+                    $user->login($username, $password);
+                } catch (Exception $e) {
+                    // Log the error
+                    error_log("Failed to log the user in: " . $e->getMessage());
+                    // Display a generic error message
+                    $login_error = "Invalid username or password.";
                 }
             } else {
-                echo "Oops! Something went wrong. Please try again later.";
+                // Password is not valid, display a generic error message
+                $login_error = "Invalid username or password.";
             }
-
-            // Close statement
-            $login_statement->close();
+        } else {
+            // Username doesn't exist, display a generic error message
+            $login_error = "Invalid username or password.";
         }
+    } else {
+        // either username or password is not valid, display a generic error message
+        $login_error = "Invalid username or password.";
     }
-
-    // Close connection
-    $mysqli->close();
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <title>Login</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
 
-    <body>
-        <div>
-            <h2>Login</h2>
-            <p>Please fill in your credentials to login.</p>
-            <?php
+<body>
+    <div>
+        <h2>Login</h2>
+        <p>Please fill in your credentials to login.</p>
+        <?php
         if (!empty($login_error)) {
             echo '<div>' . $login_error . '</div>';
         }
         ?>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                <div>
-                    <label>Username</label>
-                    <input type="text" name="username" value="<?php echo $username; ?>">
-                    <span><?php echo $username_error; ?></span>
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" name="password">
-                    <span><?php echo $password_error; ?></span>
-                </div>
-                <div>
-                    <input type="submit" value="Login">
-                </div>
-            </form>
-        </div>
-    </body>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <div>
+                <label>Username</label>
+                <input type="text" name="username" value="<?php echo $username; ?>">
+                <span><?php echo $username_error; ?></span>
+            </div>
+            <div>
+                <label>Password</label>
+                <input type="password" name="password">
+                <span><?php echo $password_error; ?></span>
+            </div>
+            <div>
+                <input type="submit" value="Login">
+            </div>
+        </form>
+    </div>
+</body>
 
 </html>
