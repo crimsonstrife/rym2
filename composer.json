@@ -23,5 +23,10 @@
     "require": {
         "php": ">=7.2.5",
         "vlucas/phpdotenv": "^5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "CrimsonStrife\\RYM2\\": "includes/classes/"
+        }
     }
 }
