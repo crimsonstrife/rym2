@@ -16,28 +16,32 @@
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 
 /* This function will connect to the MySQL database and return the connection object using the provided credentials */
-function connectToDatabase(string $host, string $username, string $password, string $database, string $port): mysqli
-{
-    //convert port to int
-    $port = (int) $port;
-    /* Setup the connection to MySQL */
-    $mysqli = new mysqli($host, $username, $password, $database, $port);
+if (!function_exists('connectToDatabase')) {
+    function connectToDatabase(string $host, string $username, string $password, string $database, string $port): mysqli
+    {
+        //convert port to int
+        $port = (int) $port;
+        /* Setup the connection to MySQL */
+        $mysqli = new mysqli($host, $username, $password, $database, $port);
 
-    /* Attempt to connect to the MySQL database */
-    if ($mysqli->connect_errno) {
-        /* If the connection fails, throw an exception with the error */
-        throw new Exception("Failed to connect to Database: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error);
+        /* Attempt to connect to the MySQL database */
+        if ($mysqli->connect_errno) {
+            /* If the connection fails, throw an exception with the error */
+            throw new Exception("Failed to connect to Database: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error);
+        }
+
+        /* Return the connection object */
+        return $mysqli;
     }
-
-    /* Return the connection object */
-    return $mysqli;
 }
 
 /* This function will close the connection to the MySQL database */
-function closeDatabaseConnection(mysqli $mysqli): void
-{
-    /* Close the connection to the database */
-    $mysqli->close();
+if (!function_exists('closeDatabaseConnection')) {
+    function closeDatabaseConnection(mysqli $mysqli): void
+    {
+        /* Close the connection to the database */
+        $mysqli->close();
+    }
 }
 
 /* This function just tests the connection to the MySQL database, but only returns a boolean */
