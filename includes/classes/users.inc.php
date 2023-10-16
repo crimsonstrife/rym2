@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
-
 /**
  * User Class file for the College Recruitment Application
  * Contains all the functions for the User Class and handles all the user related tasks with the database.
@@ -16,14 +14,15 @@ declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do n
  * @requires PHP 7.2.5+
  */
 
+declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
+
 /* Include the base application config file */
+
 require_once(__DIR__ . '/../../config/app.php');
 /* Include the database config file */
 require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
-// include the roles class file
-require_once(BASEPATH . '/includes/classes/roles.inc.php');
 
 /**
  * User Class
@@ -32,7 +31,7 @@ require_once(BASEPATH . '/includes/classes/roles.inc.php');
  * @package RYM2
  * @version 1.0.0
  */
-class User
+class User implements Login
 {
     //Reference to the database
     private $mysqli;
