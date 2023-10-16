@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 /**
  * Permissions Class file for the College Recruitment Application
  * Contains all the functions for the Permissions Class and handles all role permission functions.
@@ -14,6 +13,9 @@ declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do n
  * @version 1.0.0
  * @requires PHP 7.2.5+
  */
+
+declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
+
 
 /* Include the base application config file */
 require_once(__DIR__ . '/../../config/app.php');
