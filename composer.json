@@ -33,7 +33,11 @@
             "includes/classes/areaofinterest.inc.php",
             "includes/classes/jobfield.inc.php",
             "includes/classes/job.inc.php",
-            "includes/interfaces/login.inc.php"
+            "includes/classes/grade.inc.php",
+            "includes/classes/degree.inc.php",
+            "includes/classes/school.inc.php",
+            "includes/interfaces/login.inc.php",
+            "includes/interfaces/major.inc.php"
         ]
     }
 }
