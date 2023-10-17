@@ -17,7 +17,6 @@
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 
 /* Include the base application config file */
-
 require_once(__DIR__ . '/../../config/app.php');
 /* Include the database config file */
 require_once(__DIR__ . '/../../config/database.php');
@@ -26,4 +25,18 @@ require_once(BASEPATH . '/includes/connector.inc.php');
 
 class Students
 {
-}
+    //Reference to the database
+    private $mysqli;
+
+    //Instantiate the database connection
+    public function __construct()
+    {
+        $this->mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+    }
+
+    //Close the database connection when the object is destroyed
+    public function __destruct()
+    {
+        closeDatabaseConnection($this->mysqli);
+    }
+};
