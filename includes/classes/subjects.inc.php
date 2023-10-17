@@ -16,13 +16,6 @@
 
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 
-/* Include the base application config file */
-require_once(__DIR__ . '/../../config/app.php');
-/* Include the database config file */
-require_once(__DIR__ . '/../../config/database.php');
-// include the database connector file
-require_once(BASEPATH . '/includes/connector.inc.php');
-
 /**
  * Subjects Class, contains all the functions for the interests table, which can be extended into both areas of interest, and job fields.
  */
@@ -32,14 +25,26 @@ abstract class Subject
 
     public string $aoi_name; //name of the subject
 
+    public string $created_at; //created_at date
+
+    public string $updated_at; //updated_at date
+
+    public int $created_by; //id from the users table
+
+    public int $updated_by; //id from the users table
+
     /**
      * Subjects constructor.
      *
      */
-    public function __construct($id, $name)
+    public function __construct($id, $name, $created_at, string $updated_at, $created_by, $updated_by)
     {
         $this->aoi_id = $id;
         $this->aoi_name = $name;
+        $this->created_at = $created_at;
+        $this->updated_at = $updated_at;
+        $this->created_by = $created_by;
+        $this->updated_by = $updated_by;
     }
 
     /**
