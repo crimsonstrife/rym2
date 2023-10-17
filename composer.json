@@ -36,9 +36,10 @@
             "includes/classes/grade.inc.php",
             "includes/classes/degree.inc.php",
             "includes/classes/school.inc.php",
-            "includes/classes/report.inc.php",
+            "includes/classes/reports.inc.php",
             "includes/interfaces/login.inc.php",
-            "includes/interfaces/major.inc.php"
+            "includes/interfaces/major.inc.php",
+            "includes/classes/topdegreebyschool.report.inc.php"
         ]
     }
 }
