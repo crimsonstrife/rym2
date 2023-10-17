@@ -36,6 +36,7 @@
             "includes/classes/grade.inc.php",
             "includes/classes/degree.inc.php",
             "includes/classes/school.inc.php",
+            "includes/classes/report.inc.php",
             "includes/interfaces/login.inc.php",
             "includes/interfaces/major.inc.php"
         ]
