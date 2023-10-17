@@ -29,6 +29,10 @@
             "includes/classes/roles.inc.php",
             "includes/classes/permissions.inc.php",
             "includes/classes/students.inc.php",
+            "includes/classes/subjects.inc.php",
+            "includes/classes/areaofinterest.inc.php",
+            "includes/classes/jobfield.inc.php",
+            "includes/classes/job.inc.php",
             "includes/interfaces/login.inc.php"
         ]
     }
