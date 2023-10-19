@@ -356,4 +356,201 @@ class Student
             return 'Internship';
         }
     }
+
+    /**
+     * Set a student's first name
+     *
+     * @param int $id
+     * @param string $first_name
+     * @return bool
+     */
+    public function setStudentFirstName(int $id, string $first_name): bool
+    {
+        //SQL statement to set a student's first name
+        $sql = "UPDATE students SET first_name = '$first_name' WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Set a student's last name
+     *
+     * @param int $id
+     * @param string $last_name
+     * @return bool
+     */
+    public function setStudentLastName(int $id, string $last_name): bool
+    {
+        //SQL statement to set a student's last name
+        $sql = "UPDATE students SET last_name = '$last_name' WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Set a student's email address
+     *
+     * @param int $id
+     * @param string $email
+     * @return bool
+     */
+    public function setStudentEmail(int $id, string $email): bool
+    {
+        //SQL statement to set a student's email address
+        $sql = "UPDATE students SET email = '$email' WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Set a student's degree id
+     *
+     * @param int $id
+     * @param int $degree_id
+     * @return bool
+     */
+    public function setStudentDegreeId(int $id, int $degree_id): bool
+    {
+        //SQL statement to set a student's degree level id
+        $sql = "UPDATE students SET degree = $degree_id WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Set a student's major id
+     *
+     * @param int $id
+     * @param int $major_id
+     * @return bool
+     */
+    public function setStudentMajorId(int $id, int $major_id): bool
+    {
+        //SQL statement to set a student's major id
+        $sql = "UPDATE students SET major = $major_id WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Set a student's graduation year
+     *
+     * @param int $id
+     * @param string $graduation
+     * @return bool
+     */
+    public function setStudentGraduation(int $id, string $graduation): bool
+    {
+        //SQL statement to set a student's graduation year
+        $sql = "UPDATE students SET graduation = '$graduation' WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Set a student's job type preference
+     *
+     * @param int $id
+     * @param string $position
+     * @return bool
+     */
+    public function setStudentPosition(int $id, string $position): bool
+    {
+        //SQL statement to set a student's job type preference
+        $sql = "UPDATE students SET position = '$position' WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Add a new student to the database
+     *
+     * @param string $first_name
+     * @param string $last_name
+     * @param string $email
+     * @param int $degree_id
+     * @param int $major_id
+     * @param string $school
+     * @param string $graduation
+     * @param string $position
+     * @param int $event_id
+     * @param int $area_id
+     * @return bool
+     */
+    public function addStudent(string $first_name, string $last_name, string $email, int $degree_id, int $major_id, string $school, string $graduation, string $position, int $event_id, int $area_id): bool
+    {
+        //get current timestamp to set the created_at and updated_at fields
+        $timestamp = date('Y-m-d H:i:s');
+        //SQL statement to add a new student to the database
+        $sql = "INSERT INTO students (first_name, last_name, email, degree, major, school, graduation, position, event, interest, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', $degree_id, $major_id, '$school', '$graduation', '$position', $event_id, $area_id, '$timestamp', '$timestamp')";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //Get the student id
+            $student_id = $this->mysqli->insert_id;
+            //TODO: send email to student with a thank you.
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
 };
