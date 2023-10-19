@@ -40,8 +40,8 @@ $degree_list = $degrees->getAllGrades();
 foreach ($degree_list as $key => $value) {
     //add an item to the array
     $degree_list[$key] = $arrayName = array(
-        "value" => $value['id'],
-        "label" => $value['name']
+        "value" => (string)$value['id'],
+        "label" => (string)$value['name']
     );
 }
 //sort the degree levels list alphabetically by name
@@ -58,8 +58,8 @@ $schools_list = $school->getSchools();
 foreach ($schools_list as $key => $value) {
     //add an item to the array
     $schools_list[$key] = $arrayName = array(
-        "value" => $value['id'],
-        "label" => $value['name']
+        "value" => (string)$value['id'],
+        "label" => (string)$value['name']
     );
 }
 //sort the schools list alphabetically
@@ -74,8 +74,8 @@ $majors_list = $degrees->getAllMajors();
 foreach ($majors_list as $key => $value) {
     //add an item to the array
     $majors_list[$key] = $arrayName = array(
-        "value" => $value['id'],
-        "label" => $value['name']
+        "value" => (string)$value['id'],
+        "label" => (string)$value['name']
     );
 }
 //sort the majors list alphabetically
@@ -92,9 +92,9 @@ $job_list = $job->getAllJobs();
 foreach ($job_list as $key => $value) {
     //add an item to the array
     $job_list[$key] = $arrayName = array(
-        "value" => $value['id'],
-        "label" => $value['name'],
-        "date" => $value['created_at']
+        "value" => (string)$value['id'],
+        "label" => (string)$value['name'],
+        "date" => (string)$value['created_at']
     );
 }
 //sort the job positions list by most recent created
@@ -111,8 +111,8 @@ $areaOfInterest_list = $areaOfInterest->getAllSubjects();
 foreach ($areaOfInterest_list as $key => $value) {
     //add an item to the array
     $areaOfInterest_list[$key] = $arrayName = array(
-        "value" => $value['id'],
-        "label" => $value['name']
+        "value" => (string)$value['id'],
+        "label" => (string)$value['name']
     );
 }
 //sort the areas of interest list alphabetically
@@ -212,12 +212,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $student_areaOfInterest = trim($_POST["student_areaOfInterest"]);
     }
-
-    //debugging
-    echo "<div class='container'> <div class='row'> <div class='col-md-12'> Debugging: <br> <div> Student First Name: " . $student_firstName . "</div> <div> Student Last Name: " . $student_lastName . "</div> <div> Student Email: " . $student_email . "</div> <div> Student Degree: " . $student_degree . "</div> <div> Student Major: " . $student_major . "</div> <div> Student School: " . $student_school . "</div> <div> Student Graduation Date: " . $student_graduationDate . "</div> <div> Student Job Position: " . $student_jobPosition . "</div> <div> Student Area of Interest: " . $student_areaOfInterest . "</div> </div> </div> </div>";
-
     //check if there were any errors, and that the fields are not empty
-    if ($entry_error && !empty($student_firstName) && !empty($student_lastName) && !empty($student_email) && !empty($student_degree) && !empty($student_major) && !empty($student_school) && !empty($student_graduationDate) && !empty($student_jobPosition) && !empty($student_areaOfInterest)) {
+    if ($entry_error == false && !empty($student_firstName) && !empty($student_lastName) && !empty($student_email) && !empty($student_degree) && !empty($student_major) && !empty($student_school) && !empty($student_graduationDate) && !empty($student_jobPosition) && !empty($student_areaOfInterest)) {
         //initialize the student class
         $student = new Student();
         //prepare the student_firstName
@@ -255,11 +251,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //prepare the student_graduationDate
         $student_graduationDate = prepareData($student_graduationDate);
 
-        //create the student
-        $student->addStudent($student_firstName, $student_lastName, $student_email, $student_degree, $student_major, $student_school, $student_graduationDate, $student_jobPosition, 0, $student_areaOfInterest);
-
-        //redirect to the thank you page
-        //header("location: thank_you.php");
+        //add the student, check if the add was successful
+        if ($student->addStudent($student_firstName, $student_lastName, $student_email, $student_degree, $student_major, $student_school, $student_graduationDate, $student_jobPosition, 1, $student_areaOfInterest)) {
+            //if the add was successful, display a success message
+            echo '<div class="container"> <div class="row"> <div class="col-md-12"> <div class="alert alert-success"> Student added successfully. </div> </div> </div> </div>';
+        } else {
+            //if the add was not successful, display an error message
+            echo '<div class="container"> <div class="row"> <div class="col-md-12"> <div class="alert alert-danger"> There was an error adding the student. </div> </div> </div> </div>';
+        }
     }
 }
 
@@ -334,13 +333,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col-md-6">
                         <label for="student_degree">Degree:<span class="text-danger">*</span></label>
                         <div id="degreeParent" class="col-md-12 degree-dropdown">
-                            <select name="student_degree" id="student_degree" class="select2 select2-degree form-control">
+                            <select name="student_degree" id="student_degree" class="select2 select2-degree form-control" style="width: 100%;">
                                 <?php
                                 //loop through the degree levels list
                                 foreach ($degree_list as $degree => $value) {
                                     //get the key and value from the array and set the variables
-                                    $degree_id = $value['value'];
-                                    $degree_label = $value['label'];
+                                    $degree_id = (string)$value['value'];
+                                    $degree_label = (string)$value['label'];
                                     //check if the degree level matches the student's degree level
                                     if ($student_degree == $degree_label) {
                                         //if it matches, set the selected attribute
@@ -358,13 +357,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label for="student_major">Please select or enter your major:<span class="text-danger">*</span></label>
                         <!-- Select2 dropdown, used to allow users to add custom entries alongside what is pulled -->
                         <div id="majorsParent" class="col-md-12 majors-dropdown">
-                            <select name="student_major" id="student_major" class="select2 select2-major form-control">
+                            <select name="student_major" id="student_major" class="select2 select2-major form-control" style="width: 100%;">
                                 <?php
                                 //loop through the majors list
                                 foreach ($majors_list as $major => $value) {
                                     //get the key and value from the array and set the variables
-                                    $major_id = $value['value'];
-                                    $major_label = $value['label'];
+                                    $major_id = (string)$value['value'];
+                                    $major_label = (string)$value['label'];
                                     //check if the major matches the student's major
                                     if ($student_major == $major_label) {
                                         //if it matches, set the selected attribute
@@ -392,13 +391,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col-md-6">
                         <label for="student_school">School:<span class="text-danger">*</span></label>
                         <div id="schoolParent" class="col-md-12 school-dropdown">
-                            <select name="student_school" id="student_school" class="select2 select2-school form-control">
+                            <select name="student_school" id="student_school" class="select2 select2-school form-control" style="width: 100%;">
                                 <?php
                                 //loop through the schools list
                                 foreach ($schools_list as $school => $value) {
                                     //get the key and value from the array and set the variables
-                                    $school_id = $value['value'];
-                                    $school_label = $value['label'];
+                                    $school_id = (string)$value['value'];
+                                    $school_label = (string)$value['label'];
                                     //check if the school matches the student's school
                                     if ($student_school == $school_label) {
                                         //if it matches, set the selected attribute
@@ -429,7 +428,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="row">
                     <div class="col-md-6">
                         <label for="student_jobPosition">Preferred Job Type:<span class="text-danger">*</span></label>
-                        <select name="student_jobPosition" id="student_jobPosition" class="form-control">
+                        <select name="student_jobPosition" id="student_jobPosition" class="form-control" style="width: 100%;">
                             <?php foreach ($positionType_list as $positionType) {
                                 //check if the job position matches the student's job position
                                 if ($student_jobPosition == $positionType['value']) {
@@ -445,13 +444,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col-md-6">
                         <label for="student_areaOfInterest">Field:<span class="text-danger">*</span></label>
                         <div id="aoiParent" class="col-md-12 aoi-dropdown">
-                            <select name="student_areaOfInterest" id="student_areaOfInterest" class="select2 select2-aoi form-control">
+                            <select name="student_areaOfInterest" id="student_areaOfInterest" class="select2 select2-aoi form-control" style="width: 100%;">
                                 <?php
                                 //loop through the areas of interest list
                                 foreach ($areaOfInterest_list as $areaOfInterest => $value) {
                                     //get the key and value from the array and set the variables
-                                    $areaOfInterest_id = $value['value'];
-                                    $areaOfInterest_label = $value['label'];
+                                    $areaOfInterest_id = (string)$value['value'];
+                                    $areaOfInterest_label = (string)$value['label'];
                                     //check if the area of interest matches the student's area of interest
                                     if ($student_areaOfInterest == $areaOfInterest_label) {
                                         //if it matches, set the selected attribute
