@@ -48,7 +48,7 @@ class Student
     public function getStudents(): array
     {
         //SQL statement to get all students
-        $sql = "SELECT * FROM students";
+        $sql = "SELECT * FROM student";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -74,7 +74,7 @@ class Student
     public function getStudentById(int $id): array
     {
         //SQL statement to get a student by their ID
-        $sql = "SELECT * FROM students WHERE id = $id";
+        $sql = "SELECT * FROM student WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -96,7 +96,7 @@ class Student
     public function getStudentByEmail(string $email): array
     {
         //SQL statement to get a student by their email address
-        $sql = "SELECT * FROM students WHERE email = '$email'";
+        $sql = "SELECT * FROM student WHERE email = '$email'";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -118,7 +118,7 @@ class Student
     public function getStudentFirstName(int $id): string
     {
         //SQL statement to get a student first name
-        $sql = "SELECT first_name FROM students WHERE id = $id";
+        $sql = "SELECT first_name FROM student WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -140,7 +140,7 @@ class Student
     public function getStudentLastName(int $id): string
     {
         //SQL statement to get a student last name
-        $sql = "SELECT last_name FROM students WHERE id = $id";
+        $sql = "SELECT last_name FROM student WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -180,7 +180,7 @@ class Student
     public function getStudentEmail(int $id): string
     {
         //SQL statement to get a student email
-        $sql = "SELECT email FROM students WHERE id = $id";
+        $sql = "SELECT email FROM student WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -202,7 +202,7 @@ class Student
     public function getStudentDegreeId(int $id): int
     {
         //SQL statement to get a student degree id
-        $sql = "SELECT degree FROM students WHERE id = $id";
+        $sql = "SELECT degree FROM student WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -224,7 +224,7 @@ class Student
     public function getStudentMajorId(int $id): int
     {
         //SQL statement to get a student major id
-        $sql = "SELECT major FROM students WHERE id = $id";
+        $sql = "SELECT major FROM student WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -310,7 +310,7 @@ class Student
     public function getStudentGraduation(int $id): string
     {
         //SQL statement to get a student graduation year
-        $sql = "SELECT graduation FROM students WHERE id = $id";
+        $sql = "SELECT graduation FROM student WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -332,7 +332,7 @@ class Student
     public function getStudentPosition(int $id): string
     {
         //SQL statement to get a students job type preference from the job ID
-        $sql = "SELECT position FROM students WHERE id = $id";
+        $sql = "SELECT position FROM student WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         $position = "";
@@ -538,7 +538,7 @@ class Student
         //get current timestamp to set the created_at and updated_at fields
         $timestamp = date('Y-m-d H:i:s');
         //SQL statement to add a new student to the database
-        $sql = "INSERT INTO students (first_name, last_name, email, degree, major, school, graduation, position, event, interest, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', $degree_id, $major_id, '$school', '$graduation', '$position', $event_id, $area_id, '$timestamp', '$timestamp')";
+        $sql = "INSERT INTO student (first_name, last_name, email, degree, major, school, graduation, position, event, interest, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', $degree_id, $major_id, '$school', '$graduation', '$position', $event_id, $area_id, '$timestamp', '$timestamp')";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query is successful
