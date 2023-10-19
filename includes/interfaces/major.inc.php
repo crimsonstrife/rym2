@@ -31,6 +31,10 @@ interface Major
 
     public function getMajorNameById(int $major_id): string;
 
+    public function getMajorByName(string $major_name): bool;
+
+    public function getMajorIdByName(string $major_name): int;
+
     public function getMajorCreatedDate(int $major_id): string;
 
     public function getMajorCreatedBy(int $major_id): User;
