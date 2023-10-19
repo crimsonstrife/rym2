@@ -13,6 +13,9 @@
  * Filename: app.php
  * @version 1.0.0
  * @requires PHP 7.2.5+
+ * @requires Bootstrap 5.3.2+
+ * @requires Font Awesome 6.4.2+
+ * @requires jQuery 3.7.1+
  */
 
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
@@ -49,4 +52,153 @@ if (file_exists(BASEPATH . '/.env')) {
     define('APP_VERSION', "1.0.0"); // Define the APP_VERSION constant, this is the version of the application.
     define('APP_ENV', $_ENV['APP_ENV']); // Define the APP_ENV constant, this is the environment the application is running in i.e LOCAL, PRODUCTION, TEST.
     define('APP_DEBUG', $_ENV['APP_DEBUG']); // Define the APP_DEBUG constant, this is the debug mode of the application.
+}
+
+/**
+ * Get the asset path for the application
+ * Returns the asset path for the application with trailing slash
+ *
+ * @return string asset path for the application
+ */
+function getAssetPath(): string
+{
+    /* Define the asset path for the application */
+    $assetPath = APP_URL . '/public/content/assets/';
+
+    /* Return the asset path */
+    return $assetPath;
+}
+
+/**
+ * Get the library path for the application
+ * Returns the library path for the application with trailing slash
+ *
+ * @return string library path for the application
+ */
+function getLibraryPath(): string
+{
+    /* Define the library path for the application */
+    $libraryPath = APP_URL . '/public/content/libs/';
+
+    /* Return the library path */
+    return $libraryPath;
+}
+
+/**
+ * Get vendor path for the application
+ * Returns the vendor path for the application with trailing slash
+ *
+ * @return string vendor path for the application
+ */
+function getVendorPath(): string
+{
+    /* Define the vendor path for the application */
+    $vendorPath = BASEPATH . '/vendor/';
+
+    /* Return the vendor path */
+    return $vendorPath;
+}
+
+/**
+ * Validate email address
+ * Returns true if the email address is valid, false if not
+ *
+ * @param string $email email address to validate
+ * @return bool true if the email address is valid, false if not
+ */
+function validateEmail(string $email): bool
+{
+    /* Validate the email address */
+    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        /* Return true if the email address is valid */
+        return true;
+    } else {
+        /* Return false if the email address is not valid */
+        return false;
+    }
+}
+
+/**
+ * Validate URL
+ *
+ * @param string $url URL to validate
+ * @return bool true if the URL is valid, false if not
+ */
+function validateUrl(string $url): bool
+{
+    /* Validate the URL */
+    if (filter_var($url, FILTER_VALIDATE_URL)) {
+        /* Return true if the URL is valid */
+        return true;
+    } else {
+        /* Return false if the URL is not valid */
+        return false;
+    }
+}
+
+/**
+ * Validate Timestamp
+ *
+ * @param string $timestamp timestamp to validate
+ * @return bool true if the timestamp is valid, false if not
+ */
+function validateTimestamp(string $timestamp): bool
+{
+    /* Validate the timestamp */
+    if (strtotime($timestamp)) {
+        /* Return true if the timestamp is valid */
+        return true;
+    } else {
+        /* Return false if the timestamp is not valid */
+        return false;
+    }
+}
+
+/**
+ * Validate Date
+ *
+ * @param string $date date to validate
+ * @return bool true if the date is valid, false if not
+ */
+function validateDate(string $date): bool
+{
+    /* Validate the date */
+    if (strtotime($date)) {
+        /* Return true if the date is valid */
+        return true;
+    } else {
+        /* Return false if the date is not valid */
+        return false;
+    }
+}
+
+/**
+ * Prepare data for insertion
+ * need to verify proper data formats, and escape special characters, trim strings, etc
+ * Returns the prepared data
+ */
+function prepareData($data)
+{
+    /* if string, trim and escape special characters */
+    if (is_string($data)) {
+        $data = trim($data);
+        $data = htmlspecialchars($data);
+    }
+    /* if array, loop through and trim and escape special characters */
+    if (is_array($data)) {
+        foreach ($data as $key => $value) {
+            $data[$key] = trim($value);
+            $data[$key] = htmlspecialchars($value);
+        }
+    }
+    /* if date, validate and format */
+    if (validateDate($data)) {
+        $data = date('Y-m-d', strtotime($data));
+    }
+    /* if timestamp, validate and format */
+    if (validateTimestamp($data)) {
+        $data = date('Y-m-d H:i:s', strtotime($data));
+    }
+    /* return the prepared data */
+    return $data;
 }
