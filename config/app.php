@@ -202,3 +202,51 @@ function prepareData($data)
     /* return the prepared data */
     return $data;
 }
+
+/**
+ * Include the header for the application
+ * Returns the header for the application
+ *
+ * @return string header for the application
+ */
+function includeHeader(): string
+{
+    /* CSS for the application */
+    $boostrapCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'bootstrap/css/bootstrap.min.css">';
+    $select2CSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'select2/css/select2.min.css">';
+    $fontawesomeCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'fontawesome/css/all.min.css">';
+    $CSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/style.css">';
+
+    /* JS that needs to be loaded in the header */
+
+    /* Assemble the header for the application */
+    $header = $boostrapCSS . $select2CSS . $fontawesomeCSS . $CSS;
+
+    /* Return the header for the application */
+    return $header;
+}
+
+/**
+ * Include the footer for the application
+ * Returns the footer for the application
+ *
+ * @return string footer for the application
+ */
+function includeFooter(): string
+{
+    /* JS for the application */
+    $boostrapJS = '<script src="' . getLibraryPath() . 'bootstrap/js/bootstrap.bundle.min.js"></script>';
+    $fontawesomeJS = '<script src="' . getLibraryPath() . 'fontawesome/js/all.min.js"></script>';
+    $jQuery = '<script src="' . getLibraryPath() . 'jquery/jquery.min.js"></script>';
+    $jqueryMigrate = '<script src="' . getLibraryPath() . 'jquery-migrate/jquery-migrate.min.js"></script>';
+    $select2JS = '<script src="' . getLibraryPath() . 'select2/js/select2.min.js"></script>';
+    $JS = '<script src="' . getAssetPath() . 'js/scripts.js"></script>';
+
+    $jqueryNoConflict = '<script>var $j = jQuery.noConflict();</script>';
+
+    /* Assemble the footer for the application */
+    $footer = $boostrapJS . $fontawesomeJS . $jQuery . $jqueryMigrate . $select2JS . $JS;
+
+    /* Return the footer for the application */
+    return $footer;
+}
