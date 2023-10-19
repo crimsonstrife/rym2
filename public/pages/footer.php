@@ -21,11 +21,25 @@
 ?>
 <footer>
 </footer>
-<!-- Bootstrap JavaScript -->
-<script src="<?php echo getLibraryPath(); ?>bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- Font Awesome -->
-<script src="<?php echo getLibraryPath(); ?>fontawesome/js/all.min.js"></script>
-<!-- jQuery -->
-<script src="<?php echo getLibraryPath(); ?>jquery/jquery.min.js"></script>
+<?php echo includeFooter(); ?>
+<!-- Select2 script -->
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.select2-major').select2({
+        dropdownParent: $('#majorsParent'),
+        tags: true
+    });
+    $('.select2-degree').select2({
+        dropdownParent: $('#degreeParent'),
+    });
+    $('.select2-school').select2({
+        dropdownParent: $('#schoolParent'),
+    });
+    $('.select2-aoi').select2({
+        dropdownParent: $('#aoiParent'),
+    });
+});
+</script>
+
 
 </html>
