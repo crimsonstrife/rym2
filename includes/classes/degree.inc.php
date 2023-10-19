@@ -886,4 +886,66 @@ class Degree extends Grade implements Major
         //return the string
         return $degree_program;
     }
+
+    /**
+     * Get a major by the name
+     *
+     * @param string $major_name //name of the major
+     * @return bool //true if the major exists, false if not
+     */
+    public function getMajorByName(string $major_name): bool
+    {
+        //prepare the query
+        $stmt = $this->mysqli->prepare("SELECT * FROM major WHERE name = ?");
+
+        //bind the parameters
+        $stmt->bind_param('s', $major_name);
+
+        //execute the query
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //check if the query returned any results
+        if ($result->num_rows > 0) {
+            //return true if the major exists
+            return true;
+        } else {
+            //return false if the major does not exist
+            return false;
+        }
+    }
+
+    /**
+     * Get a major ID by the name
+     *
+     * @param string $lvl_name //name of major
+     * @return int //id of the major
+     */
+    public function getMajorIdByName(string $lvl_name): int
+    {
+        //initialize an empty string to store the major id
+        $major_id = 0;
+
+        //prepare the query
+        $stmt = $this->mysqli->prepare("SELECT id FROM major WHERE name = ?");
+
+        //bind the parameters
+        $stmt->bind_param('s', $lvl_name);
+
+        //execute the query
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //loop through the result and add the major id to the array
+        while ($row = $result->fetch_assoc()) {
+            $major_id = $row['id'];
+        }
+
+        //return the array of majors
+        return $major_id;
+    }
 }
