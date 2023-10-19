@@ -25,15 +25,7 @@ require_once(__DIR__ . '/../../config/app.php');
 
 /* include autoloader */
 require_once(__DIR__ . '/../../vendor/autoload.php');
-
-use Bootstrap\Bootstrap;
-
-/* create a new student object */
-
-$student = new Student();
-
 /* Setup HTML for page header */
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,12 +38,7 @@ $student = new Student();
         echo (defined('APP_NAME') ? APP_NAME : 'College Recruitment Application');
         ?> | Student Registration
     </title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="<?php echo getLibraryPath(); ?>bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="<?php echo getLibraryPath(); ?>fontawesome/css/all.min.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo getAssetPath(); ?>css/style.css">
+    <?php echo includeHeader(); ?>
 </head>
 <?php
 /* End of file header.php */
