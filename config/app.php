@@ -23,6 +23,8 @@ declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do n
 define('BASEPATH', dirname(__DIR__, 1));
 /* Get the composer autoloader from the vendor directory */
 require_once(BASEPATH . '/vendor/autoload.php');
+/* Get the constants file */
+require_once(BASEPATH . '/includes/constants.php');
 
 if (file_exists(BASEPATH . '/.env')) {
     /* Use the phpdotenv package to read the .env file */
