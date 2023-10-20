@@ -186,11 +186,24 @@ class Degree extends Grade implements Major
      */
     public function addMajor(string $major_name, int $created_by): bool
     {
-        //prepare the query
-        $stmt = $this->mysqli->prepare("INSERT INTO major (name, created_by) VALUES (?, ?)");
+        //initialize the user class
+        $user = new User();
 
-        //bind the parameters
-        $stmt->bind_param('si', $major_name, $created_by);
+        //Empty statement to prepare
+        $stmt = "";
+
+        //verify the user id is not 0 or null and it exists in the database
+        if ($created_by != 0 && $created_by != null && $user->validateUserById($created_by)) {
+            //prepare the query
+            $stmt = $this->mysqli->prepare("INSERT INTO major (name, created_by, created_at) VALUES (?, ?)");
+            //bind the parameters
+            $stmt->bind_param('si', $major_name, $created_by);
+        } else {
+            //prepare the query
+            $stmt = $this->mysqli->prepare("INSERT INTO major (name) VALUES (?)");
+            //bind the parameters
+            $stmt->bind_param('s', $major_name);
+        }
 
         //execute the query
         $stmt->execute();
