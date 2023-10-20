@@ -645,4 +645,30 @@ class User implements Login
         //Execute the statement
         $stmt->execute();
     }
+
+    //User exists by ID
+    public function validateUserById(int $id): bool
+    {
+        //SQL statement to validate a user exists by ID
+        $sql = "SELECT id FROM users WHERE id = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the ID to the statement
+        $stmt->bind_param("i", $id);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //if the user exists, return true
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
