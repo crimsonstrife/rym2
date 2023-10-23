@@ -480,13 +480,9 @@ class Event
         $stmt->execute();
         //get the result
         $result = $stmt->get_result();
-        //if the result has rows
+        //if the result has rows, return the slug
         if ($result->num_rows > 0) {
-            //loop through the results
-            while ($row = $result->fetch_assoc()) {
-                //return the slug
-                return $row['slug'];
-            }
+            return $result->fetch_assoc()['slug'];
         } else {
             //if no results, return an empty string
             return "";
@@ -519,6 +515,36 @@ class Event
         } else {
             //if the statement failed, return false
             return false;
+        }
+    }
+
+    /**
+     * Get event by slug
+     *
+     * @param string $slug event slug
+     * @return Event event object
+     */
+    public function getEventBySlug(string $slug): Event
+    {
+        //SQL statement to get the event by slug
+        $sql = "SELECT * FROM event_slugs WHERE slug = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("s", $slug);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+        //if the result has rows, return the event
+        if ($result->num_rows > 0) {
+            $event = new Event();
+            $event = $event->getEventById($result->fetch_assoc()['event_id']);
+            //TODO: need to rework the get to return an object.
+            return new Event(); // for now just to get rid of the errors.
+        } else {
+            //if no results, return an empty event
+            return new Event();
         }
     }
 }
