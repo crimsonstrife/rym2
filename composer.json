@@ -23,7 +23,8 @@
         "components/jquery": "^3.7",
         "select2/select2": "^4.0",
         "components/jquery-migrate": "^3.0",
-        "phpmailer/phpmailer": "^6.8"
+        "phpmailer/phpmailer": "^6.8",
+        "chillerlan/php-qrcode": "^4.3"
     },
     "autoload": {
         "psr-4": {
