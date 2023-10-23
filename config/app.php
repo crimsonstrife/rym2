@@ -256,14 +256,14 @@ function includeFooter(): string
 
 /**
  * Automated emails function
- * Sends a welcome email to the student when they register, also notifies the admin that a new student has registered
+ * E.x Sends a welcome email to the student when they register, also notifies the admin that a new student has registered
  *
  * @param string $email email address to send the email to
  * @param string $name name of the student
  * @param string $message message to send to the student
  * @return bool true if the email was sent, false if not
  */
-function sendWelcomeEmail(string $email, string $name, string $subject, string $message): bool
+function sendAutoEmail(string $email, string $name, string $subject, string $message): bool
 {
     //Create a new PHPMailer instance
     $mail = new PHPMailer\PHPMailer\PHPMailer();
