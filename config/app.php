@@ -263,7 +263,7 @@ function includeFooter(): string
  * @param string $message message to send to the student
  * @return bool true if the email was sent, false if not
  */
-function sendWelcomeEmail(string $email, string $name, string $message): bool
+function sendWelcomeEmail(string $email, string $name, string $subject, string $message): bool
 {
     //Create a new PHPMailer instance
     $mail = new PHPMailer\PHPMailer\PHPMailer();
@@ -273,12 +273,20 @@ function sendWelcomeEmail(string $email, string $name, string $message): bool
     $mail->Host = $_ENV['MAIL_HOST'];
     //Set the port number - likely to be 25, 465 or 587
     $mail->Port = $_ENV['MAIL_PORT'];
-    //Set the encryption to use - ssl (deprecated) or tls
+    //Set if authentication is required
+    $mail->SMTPAuth = $_ENV['MAIL_AUTH_REQ'];
+
+    //Set the encryption to use
     $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'];
-    //Set the username to use for authentication
-    $mail->Username = $_ENV['MAIL_USERNAME'];
-    //set the password to use for authentication
-    $mail->Password = $_ENV['MAIL_PASSWORD'];
+
+    //if authentication is required, set the username and password
+    if ($_ENV['MAIL_AUTH_REQ'] == true) {
+        $mail->Username = $_ENV['MAIL_USERNAME'];
+        $mail->Password = $_ENV['MAIL_PASSWORD'];
+    } else if ($_ENV['MAIL_AUTH_REQ'] == false) {
+        $mail->Username = null;
+        $mail->Password = null;
+    }
 
     //Set who the message is to be sent from (the server will need to be configured to authenticate with this address, or to have send as permissions)
     $mail->setFrom($_ENV['MAIL_FROM_ADDRESS'], $_ENV['MAIL_FROM_NAME']);
@@ -287,7 +295,7 @@ function sendWelcomeEmail(string $email, string $name, string $message): bool
     $mail->addAddress($email, $name);
 
     //Set the subject line
-    $mail->Subject = "Thank you for registering with " . APP_NAME . "!"; //TODO: Change this to pull from either a setting in the database, a submitted variable or the ENV file.
+    $mail->Subject = $subject;
 
     //Don't use HTML
     $mail->isHTML(false);
