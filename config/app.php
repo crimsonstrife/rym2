@@ -312,3 +312,23 @@ function sendAutoEmail(string $email, string $name, string $subject, string $mes
         return true;
     }
 }
+
+/**
+ * Function to turn a provided string, such as a page title, into a slug for use in the URL
+ *
+ * @param string $string string to convert to a slug
+ * @return string slug
+ */
+function toSlug(string $string): string
+{
+    //replace spaces with hyphens
+    $string = str_replace(' ', '-', $string);
+    //convert to ASCII
+    $string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+    //remove any special characters
+    $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string);
+    //convert to lowercase
+    $string = strtolower($string);
+    //return the slug
+    return $string;
+}
