@@ -381,4 +381,144 @@ class Event
         //if no upcoming events, return false
         return false;
     }
+
+    /**
+     * Slugify the event name and add the slug to the database
+     *
+     * @param int $id event id
+     * @return bool
+     */
+    public function slugifyEvent(int $id): bool
+    {
+        //instance of event class
+        $event = new Event();
+        //get the event name
+        $name = $event->getEventName($id);
+        //slugify the name
+        $slug = toSlug($name);
+        //check if the slug already exists using event id and slug
+        $slugExists = $this->checkEventSlug($id, $slug);
+
+        //if the slug already exists, update the slug
+        if ($slugExists) {
+            return $this->updateEventSlug($id, $slug);
+        } else {
+            //if the slug does not exist, create the slug
+            return $this->createEventSlug($id);
+        }
+    }
+
+    /**
+     * Check if the event slug already exists
+     *
+     * @param int $id event id
+     * @param string $slug event slug
+     * @return bool
+     */
+    public function checkEventSlug(int $id, string $slug): bool
+    {
+        //SQL statement to check if the event slug already exists
+        $sql = "SELECT * FROM event_slugs WHERE event_id = ? AND slug = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("is", $id, $slug);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+        //if the result has rows, return true
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            //if no results, return false
+            return false;
+        }
+    }
+
+    /**
+     * Update the event slug
+     *
+     * @param int $id event id
+     * @param string $slug event slug
+     * @return bool
+     */
+    public function updateEventSlug(int $id, string $slug): bool
+    {
+        //SQL statement to update the event slug
+        $sql = "UPDATE event_slugs SET slug = ? WHERE event_id = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("si", $slug, $id);
+        //execute the statement
+        $stmt->execute();
+        //if the statement was successful, return true
+        if ($stmt) {
+            return true;
+        } else {
+            //if the statement failed, return false
+            return false;
+        }
+    }
+
+    /**
+     * Get the event slug
+     *
+     * @param int $id event id
+     * @return string
+     */
+    public function getEventSlug(int $id): string
+    {
+        //SQL statement to get the event slug
+        $sql = "SELECT slug FROM event_slugs WHERE event_id = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("i", $id);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            //loop through the results
+            while ($row = $result->fetch_assoc()) {
+                //return the slug
+                return $row['slug'];
+            }
+        } else {
+            //if no results, return an empty string
+            return "";
+        }
+    }
+
+    /**
+     * Create the event slug
+     *
+     * @param int $id event id
+     * @return bool
+     */
+    public function createEventSlug(int $id): bool
+    {
+        //SQL statement to create the event slug
+        $sql = "INSERT INTO event_slugs (event_id, slug) VALUES (?, ?)";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //get the event name
+        $name = $this->getEventName($id);
+        //slugify the name
+        $slug = toSlug($name);
+        //bind the parameters
+        $stmt->bind_param("is", $id, $slug);
+        //execute the statement
+        $stmt->execute();
+        //if the statement was successful, return true
+        if ($stmt) {
+            return true;
+        } else {
+            //if the statement failed, return false
+            return false;
+        }
+    }
 }
