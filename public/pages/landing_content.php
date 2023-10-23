@@ -259,7 +259,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $message = "Thank you for registering for the College Recruitment Program. We will be in touch with you soon."; // TODO: add more information to the email
 
             //send the email
-            sendWelcomeEmail($to, $student_name, $subject, $message);
+            sendAutoEmail($to, $student_name, $subject, $message);
         } else {
             //if the add was not successful, display an error message
             echo '<div class="container"> <div class="row"> <div class="col-md-12"> <div class="alert alert-danger"> There was an error adding the student. </div> </div> </div> </div>';
