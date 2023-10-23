@@ -20,6 +20,7 @@
 
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 /* Define the BASEPATH of the application, this is the root directory of the application since this file is in a subdirectory. */
+
 define('BASEPATH', dirname(__DIR__, 1));
 /* Get the composer autoloader from the vendor directory */
 require_once(BASEPATH . '/vendor/autoload.php');
@@ -251,4 +252,55 @@ function includeFooter(): string
 
     /* Return the footer for the application */
     return $footer;
+}
+
+/**
+ * Automated emails function
+ * Sends a welcome email to the student when they register, also notifies the admin that a new student has registered
+ *
+ * @param string $email email address to send the email to
+ * @param string $name name of the student
+ * @param string $message message to send to the student
+ * @return bool true if the email was sent, false if not
+ */
+function sendWelcomeEmail(string $email, string $name, string $message): bool
+{
+    //Create a new PHPMailer instance
+    $mail = new PHPMailer\PHPMailer\PHPMailer();
+    //Tell what protocol to use
+    $mail->Mailer = $_ENV['MAIL_MAILER'];
+    //Set the hostname of the mail server
+    $mail->Host = $_ENV['MAIL_HOST'];
+    //Set the port number - likely to be 25, 465 or 587
+    $mail->Port = $_ENV['MAIL_PORT'];
+    //Set the encryption to use - ssl (deprecated) or tls
+    $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'];
+    //Set the username to use for authentication
+    $mail->Username = $_ENV['MAIL_USERNAME'];
+    //set the password to use for authentication
+    $mail->Password = $_ENV['MAIL_PASSWORD'];
+
+    //Set who the message is to be sent from (the server will need to be configured to authenticate with this address, or to have send as permissions)
+    $mail->setFrom($_ENV['MAIL_FROM_ADDRESS'], $_ENV['MAIL_FROM_NAME']);
+
+    //Set who the message is to be sent to
+    $mail->addAddress($email, $name);
+
+    //Set the subject line
+    $mail->Subject = "Thank you for registering with " . APP_NAME . "!"; //TODO: Change this to pull from either a setting in the database, a submitted variable or the ENV file.
+
+    //Don't use HTML
+    $mail->isHTML(false);
+
+    //Set the body
+    $mail->Body = $message;
+
+    //send the message, check for errors
+    if (!$mail->send()) {
+        //if there is an error, return false
+        return false;
+    } else {
+        //if there is no error, return true
+        return true;
+    }
 }
