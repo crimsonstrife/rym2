@@ -20,6 +20,11 @@ declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do n
 /* include the base application config file */
 require_once(__DIR__ . '/config/app.php');
 
+//check the url for an event slug
+if (isset($_GET['event'])) {
+    $event_slug = $_GET['event'];
+}
+
 /* Check if the setup.php file exists */
 if (!file_exists(BASEPATH . '/ready.php')) {
     /* If the setup.php file exists, launch the installation process */

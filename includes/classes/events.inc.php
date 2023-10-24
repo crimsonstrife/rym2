@@ -54,7 +54,7 @@ class Event
     public function getEvents(): array
     {
         //SQL statement to get all events
-        $sql = "SELECT * FROM events";
+        $sql = "SELECT * FROM event";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -80,7 +80,7 @@ class Event
     public function getEventById(int $id): array
     {
         //SQL statement to get a single event by ID
-        $sql = "SELECT * FROM events WHERE id = $id";
+        $sql = "SELECT * FROM event WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -114,7 +114,7 @@ class Event
     public function getEventName(int $id): string
     {
         //SQL statement to get a single event by ID
-        $sql = "SELECT name FROM events WHERE id = $id";
+        $sql = "SELECT name FROM event WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -136,7 +136,7 @@ class Event
     public function getEventDate(int $id): string
     {
         //SQL statement to get a single event by ID
-        $sql = "SELECT event_date FROM events WHERE id = $id";
+        $sql = "SELECT event_date FROM event WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -158,7 +158,7 @@ class Event
     public function getEventLocationId(int $id): int
     {
         //SQL statement to get a single event by ID
-        $sql = "SELECT location FROM events WHERE id = $id";
+        $sql = "SELECT location FROM event WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -198,7 +198,7 @@ class Event
     public function getEventCreationDate(int $id): string
     {
         //SQL statement to get a single event by ID
-        $sql = "SELECT created_at FROM events WHERE id = $id";
+        $sql = "SELECT created_at FROM event WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -220,7 +220,7 @@ class Event
     public function getEventLastUpdatedDate(int $id): string
     {
         //SQL statement to get a single event by ID
-        $sql = "SELECT updated_at FROM events WHERE id = $id";
+        $sql = "SELECT updated_at FROM event WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
@@ -242,7 +242,7 @@ class Event
     public function getEventCreatedBy(int $id): User
     {
         //SQL statement to get a single event by ID
-        $sql = "SELECT created_by FROM events WHERE id = $id";
+        $sql = "SELECT created_by FROM event WHERE id = $id";
         $stmt = $this->mysqli->prepare($sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();
@@ -273,7 +273,7 @@ class Event
     public function getEventLastUpdatedBy(int $id): User
     {
         //SQL statement to get a single event by ID
-        $sql = "SELECT updated_by FROM events WHERE id = $id";
+        $sql = "SELECT updated_by FROM event WHERE id = $id";
         $stmt = $this->mysqli->prepare($sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();
@@ -522,9 +522,9 @@ class Event
      * Get event by slug
      *
      * @param string $slug event slug
-     * @return Event event object
+     * @return array event object
      */
-    public function getEventBySlug(string $slug): Event
+    public function getEventBySlug(string $slug): array
     {
         //SQL statement to get the event by slug
         $sql = "SELECT * FROM event_slugs WHERE slug = ?";
@@ -538,13 +538,15 @@ class Event
         $result = $stmt->get_result();
         //if the result has rows, return the event
         if ($result->num_rows > 0) {
-            $event = new Event();
-            $event = $event->getEventById($result->fetch_assoc()['event_id']);
-            //TODO: need to rework the get to return an object.
-            return new Event(); // for now just to get rid of the errors.
+            //get the event id
+            $id = $result->fetch_assoc()['event_id'];
+            //get the event
+            $event = $this->getEventById($id);
+            //return the event
+            return $event;
         } else {
-            //if no results, return an empty event
-            return new Event();
+            //if no results, return an empty array
+            return array();
         }
     }
 }

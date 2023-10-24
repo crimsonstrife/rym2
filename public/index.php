@@ -1,9 +1,10 @@
 <?php
-//check the url for an event slug
-if (isset($_GET['event'])) {
-    $event_slug = $_GET['event'];
-    $event = $db->getEventBySlug($event_slug);
-    if ($event) {
+//instance the event class
+$eventObject = new Event();
+//check the event slug
+if (isset($event_slug)) {
+    $eventForPage = $eventObject->getEventBySlug($event_slug);
+    if ($eventForPage) {
         //if the event is found in the database, show the event page
         include_once(__DIR__ . '/pages/event_content.php');
     } else {

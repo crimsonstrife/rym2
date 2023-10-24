@@ -24,14 +24,24 @@ include_once('header.php');
 // instance the event class
 $event = new Event();
 
-//get the event slug
-if (isset($_GET['event'])) {
-    $event_slug = $_GET['event'];
+//check the event slug
+if (isset($event_slug)) {
+    //get the event by the slug
     $this_event = $event->getEventBySlug($event_slug);
-    return;
 } else {
     //if no event slug is set, redirect back to the landing page
-    //TODO: redirect
+}
+
+//get the event variables if the event is set
+if (isset($this_event)) {
+    $event_id = $this_event['id'];
+    $event_name = $this_event['name'];
+    $event_date = $this_event['event_date'];
+    $event_location_id = $this_event['location'];
+    $event_created_at = $this_event['created_at'];
+    $event_updated_at = $this_event['updated_at'];
+} else {
+    //if the event is not set, redirect back to the landing page
 }
 
 // Define variables and initialize with empty values
@@ -77,6 +87,9 @@ foreach ($schools_list as $key => $value) {
 }
 //sort the schools list alphabetically
 array_multisort(array_column($schools_list, 'label'), SORT_ASC, $schools_list);
+
+//get the event location
+$event_location = $school->getSchoolName($event_location_id);
 
 /**
  * Get the majors list from the database
@@ -287,7 +300,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Welcome to the College Recruitment Application</h1>
+                <h1>Welcome to the <?php echo $event_location ?> Recruitment Application</h1>
                 <p>Students will be able to enter their information and have it sent to the database.</p>
                 <p>Uses the student class to create a new student object</p>
                 <p>Author: Patrick Barnhardt</p>
@@ -500,8 +513,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         //get the key and value from the array and set the variables
                                         $school_id = (string)$value['value'];
                                         $school_label = (string)$value['label'];
-                                        //check if the school matches the student's school
-                                        if ($student_school == $school_label) {
+                                        //check if the school matches the location of the event, if so, set the selected attribute, if not compare to the student's school
+                                        if ($school_label == $event_location) {
+                                            //if it matches, set the selected attribute
+                                            echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
+                                        } else if ($school_label == $student_school) {
                                             //if it matches, set the selected attribute
                                             echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
                                         } else {
