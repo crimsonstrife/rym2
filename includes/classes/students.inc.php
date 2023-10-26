@@ -529,23 +529,48 @@ class Student
      * @param string $school
      * @param string $graduation
      * @param string $position
-     * @param int $event_id
      * @param int $area_id
      * @return bool
      */
-    public function addStudent(string $first_name, string $last_name, string $email, int $degree_id, int $major_id, string $school, string $graduation, string $position, int $event_id, int $area_id): bool
+    public function addStudent(string $first_name, string $last_name, string $email, int $degree_id, int $major_id, string $school, string $graduation, string $position, $event_id, int $area_id): bool
     {
+        //Escape the data to prevent SQL injection attacks
+        $first_name = $this->mysqli->real_escape_string($first_name);
+        $last_name = $this->mysqli->real_escape_string($last_name);
+        $email = $this->mysqli->real_escape_string($email);
         //get current timestamp to set the created_at and updated_at fields
         $timestamp = date('Y-m-d H:i:s');
         //SQL statement to add a new student to the database
-        $sql = "INSERT INTO student (first_name, last_name, email, degree, major, school, graduation, position, event, interest, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', $degree_id, $major_id, '$school', '$graduation', '$position', $event_id, $area_id, '$timestamp', '$timestamp')";
+        $sql = "INSERT INTO student (first_name, last_name, email, degree, major, school, graduation, position, interest, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', '$degree_id', '$major_id', '$school', '$graduation', '$position', '$area_id', '$timestamp', '$timestamp')";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query is successful
         if ($result) {
-            //Get the student id
-            $student_id = $this->mysqli->insert_id;
             //TODO: send email to student with a thank you.
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Student attendance
+     * Add a student to an event
+     *
+     * @param int $event_id
+     * @param int $student_id
+     * @return bool
+     */
+    public function addStudentToEvent(int $event_id, int $student_id): bool
+    {
+        //SQL statement to add a student to an event
+        $sql = "INSERT INTO student_at_event (event_id, student_id) VALUES ('$event_id', '$student_id')";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
             //Return true
             return true;
         } else {

@@ -287,9 +287,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //prepare the student_graduationDate
         $student_graduationDate = prepareData($student_graduationDate);
 
+        //check for an event slug
+        if (isset($_POST['event'])) {
+            $event_slug = $_POST['event'];
+        }
+
+        //if there is an event slug
+        if (isset($event_slug)) {
+            //get the event by the slug
+            $this_event = $event->getEventBySlug($event_slug);
+            //get the event variables
+            $event_id = $this_event['id'];
+            //set the event page variable to true
+            $isEventPage = true;
+        }
+
+        //if this is an event page, set the event id
+        if ($isEventPage) {
+            $student_event_id = $event_id;
+            $student_event_id = (int) $student_event_id;
+        } else {
+            //if this is not an event page, set the event id to null
+            $student_event_id = NULL;
+        }
+
         //add the student, check if the add was successful
-        if ($student->addStudent($student_firstName, $student_lastName, $student_email, $student_degree, $student_major, $student_school, $student_graduationDate, $student_jobPosition, 1, $student_areaOfInterest)) {
-            //if the add was successful, display a success message
+        if ($student->addStudent($student_firstName, $student_lastName, $student_email, $student_degree, $student_major, $student_school, $student_graduationDate, $student_jobPosition, $student_event_id, $student_areaOfInterest)) {
+            //if the add was successful, get the student id
+            $studentArray = $student->getStudentByEmail($student_email);
+            $student_id = $studentArray['id'];
+
+            //if this is an event page, add the student to the event
+            if ($isEventPage) {
+                $student_event_id = (int) $event_id;
+                $student_id = (int) $student_id;
+                //initialize the student class
+                $studentObject = new Student();
+                //add the student to the event
+                if ($studentObject->addStudentToEvent($student_event_id, $student_id)) {
+                    //log the result
+                } else {
+                    //log the result
+                }
+            }
+
+            //display a success message
             echo '<div class="container"> <div class="row"> <div class="col-md-12"> <div class="alert alert-success"> Student added successfully. </div> </div> </div> </div>';
 
             //Setup the email
@@ -300,6 +342,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             //send the email
             sendAutoEmail($to, $student_name, $subject, $message);
+
+            //if this is an event page, redirect to the event page
+            if ($isEventPage) {
+                header("location: index.php?event=" . $event_slug);
+            } else {
+                //if this is not an event page, redirect to the home page
+                header("location: index.php");
+            }
         } else {
             //if the add was not successful, display an error message
             echo '<div class="container"> <div class="row"> <div class="col-md-12"> <div class="alert alert-danger"> There was an error adding the student. </div> </div> </div> </div>';
@@ -429,8 +479,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php } ?>
         <div class="container">
             <div class="row">
-                <!-- Start of form -->
                 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                    <!-- hidden field for event id or other parameters -->
+                    <?php
+                    $keys = array('event');
+                    foreach ($keys as $name) {
+                        if (!isset($_GET[$name])) {
+                            continue;
+                        }
+                        $value = htmlspecialchars($_GET[$name]);
+                        $name = htmlspecialchars($name);
+                        echo '<input type="hidden" name="' . $name . '" value="' . $value . '">';
+                    } ?>
                     <div class="row">
                         <div class="col-md-6">
                             <label for="student_firstName">First Name:<span class="text-danger">*</span></label>
