@@ -1,1 +1,7 @@
-{}
+{
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "chart.js": "^4.4.0",
+    "simple-datatables": "^8.0.0"
+  }
+}
