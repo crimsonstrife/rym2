@@ -24,7 +24,9 @@
         "select2/select2": "^4.0",
         "components/jquery-migrate": "^3.0",
         "phpmailer/phpmailer": "^6.8",
-        "chillerlan/php-qrcode": "^4.3"
+        "chillerlan/php-qrcode": "^4.3",
+        "survos/simple-datatables-bundle": "^1.5",
+        "nnnick/chartjs": "^4.4"
     },
     "autoload": {
         "psr-4": {
@@ -53,6 +55,7 @@
     },
     "scripts": {
         "post-update-cmd": [
+            "npm install",
             "rm -rf public/content/libs/bootstrap",
             "cp -R vendor/twbs/bootstrap/dist public/content/libs/bootstrap",
             "rm -rf public/content/libs/fontawesome",
@@ -62,7 +65,13 @@
             "rm -rf public/content/libs/jquery-migrate",
             "cp -R vendor/components/jquery-migrate public/content/libs/jquery-migrate",
             "rm -rf public/content/libs/select2",
-            "cp -R vendor/select2/select2/dist public/content/libs/select2"
+            "cp -R vendor/select2/select2/dist public/content/libs/select2",
+            "rm -rf public/content/libs/simple-datatables",
+            "cp -R node_modules/simple-datatables/dist public/content/libs/simple-datatables",
+            "rm -rf public/content/libs/chart.js",
+            "cp -R node_modules/chart.js/dist public/content/libs/chart.js",
+            "rm -rf public/content/libs/popper.js",
+            "cp -R node_modules/@popperjs/core/dist/umd public/content/libs/popper.js"
         ]
     }
 }
