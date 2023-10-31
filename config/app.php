@@ -216,6 +216,7 @@ function includeHeader(): string
 {
     /* CSS for the application */
     $boostrapCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'bootstrap/css/bootstrap.min.css">';
+    $datatablesCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'simple-datatables/style.css">';
     $select2CSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'select2/css/select2.min.css">';
     $fontawesomeCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'fontawesome/css/all.min.css">';
     $CSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/style.css">';
@@ -223,7 +224,7 @@ function includeHeader(): string
     /* JS that needs to be loaded in the header */
 
     /* Assemble the header for the application */
-    $header = $boostrapCSS . $select2CSS . $fontawesomeCSS . $CSS;
+    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $fontawesomeCSS . $CSS;
 
     /* Return the header for the application */
     return $header;
@@ -238,17 +239,22 @@ function includeHeader(): string
 function includeFooter(): string
 {
     /* JS for the application */
-    $boostrapJS = '<script src="' . getLibraryPath() . 'bootstrap/js/bootstrap.bundle.min.js"></script>';
-    $fontawesomeJS = '<script src="' . getLibraryPath() . 'fontawesome/js/all.min.js"></script>';
-    $jQuery = '<script src="' . getLibraryPath() . 'jquery/jquery.min.js"></script>';
-    $jqueryMigrate = '<script src="' . getLibraryPath() . 'jquery-migrate/jquery-migrate.min.js"></script>';
-    $select2JS = '<script src="' . getLibraryPath() . 'select2/js/select2.min.js"></script>';
-    $JS = '<script src="' . getAssetPath() . 'js/scripts.js"></script>';
+    $boostrapJS = '<script type="text/javascript" src="' . getLibraryPath() . 'bootstrap/js/bootstrap.bundle.min.js"></script>';
+    $fontawesomeJS = '<script type="text/javascript" src="' . getLibraryPath() . 'fontawesome/js/all.min.js"></script>';
+    $jQuery = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery/jquery.min.js"></script>';
+    $jqueryMigrate = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery-migrate/jquery-migrate.min.js"></script>';
+    $datatablesJS = '<script type="text/javascript" src="' . getLibraryPath() . 'simple-datatables/umd/simple-datatables.js"></script>';
+    $chartJS = '<script type="text/javascript" src="' . getLibraryPath() . 'chart.js/chart.umd.js"></script>';
+    $tether = '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>';
+    $select2JS = '<script type="text/javascript" src="' . getLibraryPath() . 'select2/js/select2.min.js"></script>';
+    $JS = '<script type="text/javascript" src="' . getAssetPath() . 'js/scripts.js"></script>';
+    $dataTableJS = '<script type="text/javascript" src="' . getLibraryPath() . 'datatable-master/js/datatable.min.js"></script>';
+    $dataTableJqueryJS = '<script type="text/javascript" src="' . getLibraryPath() . 'datatable-master/js/datatable.jquery.min.js"></script>';
 
     $jqueryNoConflict = '<script>var $j = jQuery.noConflict();</script>';
 
     /* Assemble the footer for the application */
-    $footer = $boostrapJS . $fontawesomeJS . $jQuery . $jqueryMigrate . $select2JS . $JS;
+    $footer = $jQuery . $jqueryMigrate . $datatablesJS . $tether . $select2JS . $chartJS . $dataTableJS . $dataTableJqueryJS . $boostrapJS . $fontawesomeJS . $JS;
 
     /* Return the footer for the application */
     return $footer;
