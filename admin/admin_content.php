@@ -72,8 +72,7 @@ include_once('header.php');
                             </table>
                             <div class="card-footer">
                                 <!-- Download CSV -->
-                                <a href="<?php echo APP_URL . '/admin/download_csv.php?students=all' ?>"
-                                    class="btn btn-primary">Download CSV</a>
+                                <a href="#" class="btn btn-primary">Download CSV</a>
                             </div>
                         </div>
                     </div>
