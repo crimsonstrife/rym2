@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
+
 // Initialize the session
 session_start();
 
@@ -10,24 +13,6 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] !== true) {
     header("location: " . APP_URL . "/login.php");
     exit;
 }
-?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-</head>
-
-<body>
-    <h1>Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>. Welcome to the dashboard.</h1>
-    <p>
-        <!-- Reset password link -->
-        <a href="<?php echo APP_URL; ?>/reset-password.php">Reset Your Password</a>
-        <!-- Logout link -->
-        <a href="<?php echo APP_URL; ?>/logout.php">Sign Out of Your Account</a>
-    </p>
-</body>
-
-</html>
+// Include the admin content
+include_once('admin_content.php');
