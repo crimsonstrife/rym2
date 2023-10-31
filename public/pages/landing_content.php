@@ -394,7 +394,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $jobObject = new Job();
                 ?>
                     <div class="table-responsive-md table-wrapper">
-                        <table class="table">
+                        <table id="dataTable" class="table">
                             <thead class="sticky-top">
                                 <tr>
                                     <th scope=" col">Job Title</th>
