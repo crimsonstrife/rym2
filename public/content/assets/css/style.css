@@ -195,4 +195,5 @@ span.select2-selection.select2-selection--single {
 	max-height: 300px;
 	overflow: auto;
 	display: inline-block;
+	width: 100%;
 }
