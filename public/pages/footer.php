@@ -19,27 +19,38 @@
  */
 /* Setup HTML for page footer */
 ?>
-<footer>
+</div>
+</body>
+<footer class="py-4 bg-light mt-auto">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between small">
+            <div class="text-muted">Copyright &copy; Patrick Barnhardt 2023</div>
+            <div>
+                <a href="#">Privacy Policy</a>
+                &middot;
+                <a href="#">Terms &amp; Conditions</a>
+            </div>
+        </div>
+    </div>
+    <?php echo includeFooter(); ?>
 </footer>
-<?php echo includeFooter(); ?>
 <!-- Select2 script -->
 <script type="text/javascript">
-$(document).ready(function() {
-    $('.select2-major').select2({
-        dropdownParent: $('#majorsParent'),
-        tags: true
+    $(document).ready(function() {
+        $('.select2-major').select2({
+            dropdownParent: $('#majorsParent'),
+            tags: true
+        });
+        $('.select2-degree').select2({
+            dropdownParent: $('#degreeParent'),
+        });
+        $('.select2-school').select2({
+            dropdownParent: $('#schoolParent'),
+        });
+        $('.select2-aoi').select2({
+            dropdownParent: $('#aoiParent'),
+        });
     });
-    $('.select2-degree').select2({
-        dropdownParent: $('#degreeParent'),
-    });
-    $('.select2-school').select2({
-        dropdownParent: $('#schoolParent'),
-    });
-    $('.select2-aoi').select2({
-        dropdownParent: $('#aoiParent'),
-    });
-});
 </script>
-
 
 </html>
