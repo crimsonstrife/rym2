@@ -2,6 +2,9 @@
 /* include autoloader */
 require_once(__DIR__ . '../../vendor/autoload.php');
 
+/* include config */
+require_once(__DIR__ . '../../config/app.php');
+
 /* Setup HTML for page header */
 ?>
 <!DOCTYPE html>
