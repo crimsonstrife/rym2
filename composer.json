@@ -35,6 +35,7 @@
         },
         "classmap": [
             "includes/classes/users.inc.php",
+            "includes/classes/auth.inc.php",
             "includes/classes/roles.inc.php",
             "includes/classes/permissions.inc.php",
             "includes/classes/students.inc.php",
