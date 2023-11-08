@@ -26,6 +26,8 @@ define('BASEPATH', dirname(__DIR__, 1));
 require_once(BASEPATH . '/vendor/autoload.php');
 /* Get the constants file */
 require_once(BASEPATH . '/includes/constants.php');
+/* Get the helpers file */
+require_once(BASEPATH . '/includes/utils/helpers.php');
 
 if (file_exists(BASEPATH . '/.env')) {
     /* Use the phpdotenv package to read the .env file */
