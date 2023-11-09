@@ -208,7 +208,7 @@ class Student
         //If the query returns a result
         if ($result) {
             //Return the student degree id
-            return $result->fetch_assoc()['degree'];
+            return intval($result->fetch_assoc()['degree']);
         } else {
             //If the query fails, return an empty string
             return 0;
@@ -230,7 +230,7 @@ class Student
         //If the query returns a result
         if ($result) {
             //Return the student major id
-            return $result->fetch_assoc()['major'];
+            return intval($result->fetch_assoc()['major']);
         } else {
             //If the query fails, return an empty string
             return 0;
@@ -577,5 +577,52 @@ class Student
             //If the query fails, return false
             return false;
         }
+    }
+
+    /**
+     * Student attendance
+     * Remove a student from an event
+     *
+     * @param int $event_id
+     * @param int $student_id
+     * @return bool
+     */
+    public function removeStudentFromEvent(int $event_id, int $student_id): bool
+    {
+        //SQL statement to remove a student from an event
+        $sql = "DELETE FROM student_at_event WHERE event_id = $event_id AND student_id = $student_id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Student attendance
+     * Get a list of students that attended an event
+     *
+     * @param int $event_id
+     * @return array
+     */
+    public function getStudentEventAttendace(int $event_id): array
+    {
+        //SQL statement to get a list of students that attended an event
+        $sql = "SELECT * FROM student_at_event WHERE event_id = $event_id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        $students = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $students[] = $row;
+            }
+        }
+        //Return the students array
+        return $students;
     }
 };

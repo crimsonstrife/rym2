@@ -164,7 +164,7 @@ class Event
         //If the query returns a result
         if ($result) {
             //Return the event
-            return $result->fetch_assoc()['location'];
+            return intval($result->fetch_assoc()['location']);
         } else {
             //If the query fails, return an empty array
             return 0;

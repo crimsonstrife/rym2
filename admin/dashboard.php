@@ -21,28 +21,32 @@ if ($logged_in === true) {
     //include the header
     include_once('header.php');
 ?>
-    <div id="layout">
+<div id="layout">
     <?php
     //include the sidebar
     include_once('sidebar.php');
 
     //switch content based on the parameter in the url
-    switch ($_GET['view']) {
-        case 'events':
-            include_once('events_content.php');
-            break;
-        case 'schools':
-            include_once('schools_content.php');
-            break;
-        case 'majors':
-            include_once('majors_content.php');
-            break;
-        case 'degrees':
-            include_once('degrees_content.php');
-            break;
-        default:
-            include_once('admin_content.php');
-            break;
+    if(isset($_GET['view'])) {
+        switch ($_GET['view']) {
+            case 'events':
+                include_once('events_content.php');
+                break;
+            case 'schools':
+                include_once('schools_content.php');
+                break;
+            case 'majors':
+                include_once('majors_content.php');
+                break;
+            case 'degrees':
+                include_once('degrees_content.php');
+                break;
+            default:
+                include_once('admin_content.php');
+                break;
+        }
+    } else {
+        include_once('admin_content.php');
     }
 
     //include the footer
