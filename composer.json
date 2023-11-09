@@ -96,7 +96,20 @@
             "rm -rf public/content/libs/popper.js",
             "mkdir -p public/content/libs/popper.js",
             "cp -R node_modules/@popperjs/core/dist/umd/popper.min.js public/content/libs/popper.js/",
-            "cp -R node_modules/@popperjs/core/dist/umd/popper.min.js.map public/content/libs/popper.js/"
+            "cp -R node_modules/@popperjs/core/dist/umd/popper.min.js.map public/content/libs/popper.js/",
+            "rm -rf public/content/libs/leaflet",
+            "mkdir -p public/content/libs/leaflet",
+            "cp -R node_modules/leaflet/dist/leaflet.css public/content/libs/leaflet/",
+            "cp -R node_modules/leaflet/dist/leaflet.js public/content/libs/leaflet/",
+            "cp -R node_modules/leaflet/dist/leaflet.js.map public/content/libs/leaflet/",
+            "cp -R node_modules/leaflet/dist/images public/content/libs/leaflet/",
+            "rm -rf public/content/libs/leaflet-geosearch",
+            "mkdir -p public/content/libs/leaflet-geosearch",
+            "mkdir -p public/content/libs/leaflet-geosearch/providers",
+            "cp -R node_modules/leaflet-geosearch/dist/geosearch.css public/content/libs/leaflet-geosearch/",
+            "cp -R node_modules/leaflet-geosearch/dist/geosearch.umd.js public/content/libs/leaflet-geosearch/",
+            "cp -R node_modules/leaflet-geosearch/dist/geosearch.umd.js.map public/content/libs/leaflet-geosearch/",
+            "cp -R node_modules/leaflet-geosearch/dist/providers/openStreetMapProvider.d.ts public/content/libs/leaflet-geosearch/providers"
         ]
     }
 }
