@@ -15,6 +15,11 @@ table {
 	max-width: 250px;
 }
 
+#map {
+	height: 100%;
+	min-height: 250px;
+}
+
 .fixed-top,
 .nav-fixed #layout #layout_nav,
 .nav-fixed .top-nav {
@@ -207,7 +212,7 @@ span.select2-selection.select2-selection--single {
 	margin: 2%;
 	display: inline-flex;
 	flex-direction: row;
-	width: 100%
+	width: 100%;
 }
 
 .event-list-item {
