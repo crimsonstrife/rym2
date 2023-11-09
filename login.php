@@ -2,6 +2,8 @@
 // Initialize the session
 session_start();
 
+define('CAN_INCLUDE', true); // Define a constant to control access to the include files
+
 // Include config file
 require_once(__DIR__ . '/config/app.php');
 // Include the helpers file
@@ -124,39 +126,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
     <title>Login</title>
+    <?php echo includeHeader(); ?>
+    <link href="<?php echo getAssetPath(); ?>css/login-style.css" rel="stylesheet">
 </head>
 
-<body>
-    <div>
-        <h2>Login</h2>
+<body class="text-center">
+    <form class="form-signin" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <h1 class="h3 mb-3 font-weight-normal">Login</h1>
         <p>Please fill in your credentials to login.</p>
         <?php
         if (!empty($login_error)) {
             echo '<div>' . $login_error . '</div>';
         }
         ?>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div>
-                <label>Username</label>
-                <input type="text" name="username" value="<?php echo $username; ?>">
-                <span><?php echo $username_error; ?></span>
-            </div>
-            <div>
-                <label>Password</label>
-                <input type="password" name="password">
-                <span><?php echo $password_error; ?></span>
-            </div>
-            <div>
-                <label>Remember Me</label>
-                <input type="checkbox" name="remember">
-            </div>
-            <div>
-                <input type="submit" value="Login">
-            </div>
-        </form>
-    </div>
+        <div>
+            <label for="inputUsername" class="sr-only">Username</label>
+            <input id="inputUsername" class="form-control" type="text" name="username" value="<?php echo $username; ?>" placeholder="Username" required autofocus>
+            <span><?php echo $username_error; ?></span>
+        </div>
+        <div>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <span><?php echo $password_error; ?></span>
+        </div>
+        <div class="checkbox mb-3">
+            <label>Remember Me</label>
+            <input type="checkbox" name="remember">
+        </div>
+        <div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+        </div>
+    </form>
 </body>
 
 </html>
