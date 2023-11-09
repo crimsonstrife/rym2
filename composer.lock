@@ -2542,16 +2542,16 @@
         },
         {
             "name": "symfony/ux-twig-component",
-            "version": "v2.13.0",
+            "version": "v2.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-twig-component.git",
-                "reference": "835d54faa24d9baa7db76167bc296c8d32ea6617"
+                "reference": "7635b2e41f222724aa7d806965da46600cf3aad4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-twig-component/zipball/835d54faa24d9baa7db76167bc296c8d32ea6617",
-                "reference": "835d54faa24d9baa7db76167bc296c8d32ea6617",
+                "url": "https://api.github.com/repos/symfony/ux-twig-component/zipball/7635b2e41f222724aa7d806965da46600cf3aad4",
+                "reference": "7635b2e41f222724aa7d806965da46600cf3aad4",
                 "shasum": ""
             },
             "require": {
@@ -2606,7 +2606,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-twig-component/tree/v2.13.0"
+                "source": "https://github.com/symfony/ux-twig-component/tree/v2.13.1"
             },
             "funding": [
                 {
@@ -2622,7 +2622,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-07T21:10:30+00:00"
+            "time": "2023-11-08T14:37:05+00:00"
         },
         {
             "name": "symfony/var-dumper",
