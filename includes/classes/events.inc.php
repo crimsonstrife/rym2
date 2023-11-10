@@ -549,4 +549,240 @@ class Event
             return array();
         }
     }
+
+    /**
+     * Get event logo
+     *
+     * @param int $id event id
+     * @return string
+     */
+    public function getEventLogo(int $id): string
+    {
+        //SQL statement to get the event logo
+        $sql = "SELECT * FROM event_branding WHERE event_id = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("i", $id);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+        //if the result has rows, return the logo
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc()['event_logo'];
+        } else {
+            //if no results, return an empty string
+            return "";
+        }
+    }
+
+    /**
+     * Get event banner image
+     *
+     * @param int $id event id
+     * @return string
+     */
+    public function getEventBanner(int $id): string
+    {
+        //SQL statement to get the event banner
+        $sql = "SELECT * FROM event_branding WHERE event_id = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("i", $id);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+        //if the result has rows, return the banner
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc()['event_banner'];
+        } else {
+            //if no results, return an empty string
+            return "";
+        }
+    }
+
+    /**
+     * Set event logo
+     *
+     * @param int $id event id
+     * @param string $logo event logo path
+     */
+    public function setEventLogo(int $id, string $logo)
+    {
+        //SQL statement to set the event logo
+        $sql = "INSERT INTO event_branding (event_id, event_logo) VALUES (?, ?)";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("is", $id, $logo);
+        //execute the statement
+        $stmt->execute();
+    }
+
+    /**
+     * Set event banner
+     *
+     * @param int $id event id
+     * @param string $banner event banner path
+     */
+    public function setEventBanner(int $id, string $banner)
+    {
+        //SQL statement to set the event banner
+        $sql = "INSERT INTO event_branding (event_id, event_banner) VALUES (?, ?)";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("is", $id, $banner);
+        //execute the statement
+        $stmt->execute();
+    }
+
+    /**
+     * Update event logo
+     *
+     * @param int $id event id
+     * @param string $logo event logo path
+     */
+    public function updateEventLogo(int $id, string $logo)
+    {
+        //SQL statement to update the event logo
+        $sql = "UPDATE event_branding SET event_logo = ? WHERE event_id = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("si", $logo, $id);
+        //execute the statement
+        $stmt->execute();
+    }
+
+    /**
+     * Update event banner
+     *
+     * @param int $id event id
+     * @param string $banner event banner path
+     */
+    public function updateEventBanner(int $id, string $banner)
+    {
+        //SQL statement to update the event banner
+        $sql = "UPDATE event_branding SET event_banner = ? WHERE event_id = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("si", $banner, $id);
+        //execute the statement
+        $stmt->execute();
+    }
+
+    /**
+     * Update event
+     *
+     * @param int $id event id
+     * @param string $name event name
+     * @param string $date event date
+     * @param int $location event location id
+     * @param int $updated_by user id of the user updating the event
+     * @return bool
+     */
+    public function updateEvent(int $id, string $name, string $date, int $location, int $updated_by): bool
+    {
+        //SQL statement to update the event
+        $sql = "UPDATE event SET name = ?, event_date = ?, location = ?, updated_by = ? WHERE id = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("ssiii", $name, $date, $location, $updated_by, $id);
+        //execute the statement
+        $stmt->execute();
+        //if the statement was successful, return true
+        if ($stmt) {
+            return true;
+        } else {
+            //if the statement failed, return false
+            return false;
+        }
+    }
+
+    /**
+     * Create event
+     *
+     * @param string $name event name
+     * @param string $date event date
+     * @param int $location event location id
+     * @param int $created_by user id of the user creating the event
+     *
+     * @return bool
+     */
+    public function createEvent(string $name, string $date, int $location, int $created_by): bool
+    {
+        //SQL statement to create the event
+        $sql = "INSERT INTO event (name, event_date, location, created_by) VALUES (?, ?, ?, ?)";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("ssii", $name, $date, $location, $created_by);
+        //execute the statement
+        $stmt->execute();
+        //if the statement was successful, return true
+        if ($stmt) {
+            return true;
+        } else {
+            //if the statement failed, return false
+            return false;
+        }
+    }
+
+    /**
+     * Delete event
+     *
+     * @param int $id event id
+     * @return bool
+     */
+    public function deleteEvent(int $id): bool
+    {
+        //SQL statement to delete the event
+        $sql = "DELETE FROM event WHERE id = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameter
+        $stmt->bind_param("i", $id);
+        //execute the statement
+        $stmt->execute();
+        //if the statement was successful, return true
+        if ($stmt) {
+            return true;
+        } else {
+            //if the statement failed, return false
+            return false;
+        }
+    }
+
+    /**
+     * Get event ID by name
+     *
+     * @param string $name event name
+     * @return int
+     */
+    public function getEventIdByName(string $name): int
+    {
+        //SQL statement to get the event id by name
+        $sql = "SELECT id FROM event WHERE name = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameter
+        $stmt->bind_param("s", $name);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+        //if the result has rows, return the id
+        if ($result->num_rows > 0) {
+            return intval($result->fetch_assoc()['id']);
+        } else {
+            //if no results, return 0
+            return 0;
+        }
+    }
 }
