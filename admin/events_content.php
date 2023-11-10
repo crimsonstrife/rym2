@@ -15,7 +15,7 @@ if (!defined('ISVALIDUSER')) {
                     include_once('view/event_list.php');
                     break;
                 case 'add':
-                    include_once('editor/event_add.php');
+                    include_once('editor/event_edit.php');
                     break;
                 case 'edit':
                     include_once('editor/event_edit.php');
