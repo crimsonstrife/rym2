@@ -51,7 +51,7 @@ if (!defined('ISVALIDUSER')) {
                                 </td>
                                 <td>
                                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single' ?>&id=<?php echo $event['id']; ?>" class="btn btn-success">View</a>
-                                    <a href="/editor/edit_event.php?id=<?php echo $event['id']; ?>" class="btn btn-primary">Edit</a>
+                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event['id']; ?>" class="btn btn-primary">Edit</a>
                                     <a href="/delete/delete_event.php?id=<?php echo $event['id']; ?>" class="btn btn-danger">Delete</a>
                                 </td>
                             </tr>
