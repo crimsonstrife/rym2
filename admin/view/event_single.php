@@ -35,11 +35,11 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                     Event Information
                 </div>
                 <div class="card-buttons">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&events=list'; ?>"
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
                         class="btn btn-primary btn-sm">Back to Events</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&events=edit&id=' . $event_id; ?>"
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event_id; ?>"
                         class="btn btn-primary btn-sm">Edit Event</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&events=delete&id=' . $event_id; ?>"
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=delete&id=' . $event_id; ?>"
                         class="btn btn-danger btn-sm">Delete Event</a>
                 </div>
             </div>
