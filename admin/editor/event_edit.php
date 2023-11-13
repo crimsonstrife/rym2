@@ -258,32 +258,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 //if the action is edit, show the event edit form
 if ($action == 'edit') { ?>
-    <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $event->getEventName($event_id); ?></h1>
-        <div class="row">
-            <div class="card mb-4">
-                <!-- Edit Form -->
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&event=' . $_GET['event'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>" method="post" enctype="multipart/form-data">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <i class="fa-solid fa-calendar-day"></i>
-                            Edit Event
-                        </div>
-                        <div class="card-buttons">
-                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>" class="btn btn-primary btn-sm">Back to Events</a>
-                        </div>
+<div class="container-fluid px-4">
+    <h1 class="mt-4"><?php echo $event->getEventName($event_id); ?></h1>
+    <div class="row">
+        <div class="card mb-4">
+            <!-- Edit Form -->
+            <form
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&event=' . $_GET['event'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>"
+                method="post" enctype="multipart/form-data">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        Edit Event
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong><label for="eventName">Event Name:</label></strong></p>
-                                <p><input type="text" id="eventName" name="event_name" class="form-control" value="<?php echo $event->getEventName($event_id); ?>" placeholder="<?php echo $event->getEventName($event_id); ?>" required></p>
-                                <p><strong><label for="eventDate">Event Date:</label></strong></p>
-                                <p><input type="date" id="eventDate" name="event_date" class="form-control" value="<?php echo $event->getEventDate($event_id); ?>" placeholder="<?php echo $event->getEventDate($event_id); ?>"></p>
-                                <p><strong><label for="eventLocation">Event Location:</label></strong></p>
-                                <div id="schoolParent" class="col-md-12 school-dropdown">
-                                    <select name="event_school" id="eventLocation" class="select2 select2-school form-control app-forms" style="width: 100%;">
-                                        <?php
+                    <div class="card-buttons">
+                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
+                            class="btn btn-primary btn-sm">Back to Events</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong><label for="eventName">Event Name:</label></strong></p>
+                            <p><input type="text" id="eventName" name="event_name" class="form-control"
+                                    value="<?php echo $event->getEventName($event_id); ?>"
+                                    placeholder="<?php echo $event->getEventName($event_id); ?>" required></p>
+                            <p><strong><label for="eventDate">Event Date:</label></strong></p>
+                            <p><input type="date" id="eventDate" name="event_date" class="form-control"
+                                    value="<?php echo $event->getEventDate($event_id); ?>"
+                                    placeholder="<?php echo $event->getEventDate($event_id); ?>"></p>
+                            <p><strong><label for="eventLocation">Event Location:</label></strong></p>
+                            <div id="schoolParent" class="col-md-12 school-dropdown">
+                                <select name="event_school" id="eventLocation"
+                                    class="select2 select2-school form-control app-forms" style="width: 100%;">
+                                    <?php
                                         //loop through the schools list
                                         foreach ($schools_list as $school => $value) {
                                             //get the key and value from the array and set the variables
@@ -312,16 +320,16 @@ if ($action == 'edit') { ?>
                                             }
                                         }
                                         ?>
-                                    </select>
-                                </div>
+                                </select>
                             </div>
-                            <div class="col-md-6">
-                                <!-- Event Branding (optional) -->
-                                <h4>Event Branding</h4>
-                                <p>
-                                    <strong><label for="eventLogo">Event Logo:</label></strong>
-                                    <!-- if there is an existing logo, show the file -->
-                                    <?php
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Event Branding (optional) -->
+                            <h4>Event Branding</h4>
+                            <p>
+                                <strong><label for="eventLogo">Event Logo:</label></strong>
+                                <!-- if there is an existing logo, show the file -->
+                                <?php
                                     if (!empty($event->getEventLogo($event_id))) {
                                         //render the file as an image
                                         echo '<div><img src="' . APP_URL . '/public/content/uploads/' . $event->getEventLogo($event_id) . '" alt="Event Logo" style="max-width: 200px; max-height: auto;"></div>';
@@ -329,12 +337,12 @@ if ($action == 'edit') { ?>
                                         echo '<div> ' . $event->getEventLogo($event_id) . '</div>';
                                     }
                                     ?>
-                                </p>
-                                <p><input type="file" id="eventLogo" name="event_logo" class="form-control"></p>
-                                <p>
-                                    <strong><label for="eventBanner">Event Banner:</label></strong>
-                                    <!-- if there is an existing banner, show the file -->
-                                    <?php
+                            </p>
+                            <p><input type="file" id="eventLogo" name="event_logo" class="form-control"></p>
+                            <p>
+                                <strong><label for="eventBanner">Event Banner:</label></strong>
+                                <!-- if there is an existing banner, show the file -->
+                                <?php
                                     if (!empty($event->getEventBanner($event_id))) {
                                         //render the file as an image
                                         echo '<div><img src="' . APP_URL . '/public/content/uploads/' . $event->getEventBanner($event_id) . '" alt="Event Banner" style="max-width: 200px; max-height: auto;"></div>';
@@ -342,16 +350,20 @@ if ($action == 'edit') { ?>
                                         echo '<div> ' . $event->getEventBanner($event_id) . '</div>';
                                     }
                                     ?>
-                                </p>
-                                <p><input type="file" id="eventBanner" name="event_banner" class="form-control"></p>
-                            </div>
+                            </p>
+                            <p><input type="file" id="eventBanner" name="event_banner" class="form-control"></p>
                         </div>
                     </div>
-                    <div class=" card-footer">
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class=" card-footer">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
+                        class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
         </div>
+    </div>
+    <?php } else if ($action == 'create') { //else if the action is create, show the event creation form
+    ?>
+
     <?php } ?>
