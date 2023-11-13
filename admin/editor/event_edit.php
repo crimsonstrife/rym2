@@ -77,21 +77,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     //if there are files to upload, upload them
     if (!empty($event_logo) || !empty($event_banner)) {
-        //Php upload script based on https://www.w3schools.com/php/php_file_upload.asp
+        //Php upload script based loosely on https://www.w3schools.com/php/php_file_upload.asp
         $target_dir = dirname(__FILE__) . '/../../public/content/uploads/';
         //get the file names if they are not empty or null
         if (!empty($event_logo)) {
             $event_logo_file = basename($_FILES["event_logo"]["name"]);
+            //log the file name
+            error_log('File name: ' . $event_logo_file);
         }
         if (!empty($event_banner)) {
             $event_banner_file = basename($_FILES["event_banner"]["name"]);
+            //log the file name
+            error_log('File name: ' . $event_banner_file);
         }
         //set the target file paths
         if (!empty($event_logo_file)) {
             $target_file_logo = $target_dir . $event_logo_file;
+            //log the target file path
+            error_log('Target file: ' . $target_file_logo);
         }
         if (!empty($event_banner_file)) {
             $target_file_banner = $target_dir . $event_banner_file;
+            //log the target file path
+            error_log('Target file: ' . $target_file_banner);
         }
         //upload status booleans
         $uploadOk_logo = 1;
@@ -130,11 +138,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Check file size
-        if ($_FILES["event_logo"]["size"] > 500000) {
+        if ($_FILES["event_logo"]["size"] > 500000) { //500kb
             $event_logo = null;
             $uploadOk_logo = 0;
         }
-        if ($_FILES["event_banner"]["size"] > 500000) {
+        if ($_FILES["event_banner"]["size"] > 500000) { //500kb
             $event_banner = null;
             $uploadOk_banner = 0;
         }
@@ -151,34 +159,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Check if $uploadOk is set to 0 by an error
-        if ($uploadOk_logo == 0 || $uploadOk_banner == 0) {
+        if ($uploadOk_logo == 0) {
             $event_logo = null;
+            // if everything is ok, try to upload file
+        } else {
+            if (!empty($target_file_logo)) {
+                if (move_uploaded_file($_FILES["event_logo"]["tmp_name"], $target_file_logo)) {
+                    $event_logo = $event_logo_file;
+                } else {
+                    $event_logo = null;
+                }
+            }
+        }
+
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk_banner == 0) {
             $event_banner = null;
             // if everything is ok, try to upload file
         } else {
-            if (move_uploaded_file($_FILES["event_logo"]["tmp_name"], $target_file_logo)) {
-                $event_logo = $event_logo_file;
-            } else {
-                $event_logo = null;
-            }
-            if (move_uploaded_file($_FILES["event_banner"]["tmp_name"], $target_file_banner)) {
-                $event_banner = $event_banner_file;
-            } else {
-                $event_banner = null;
+            if (!empty($target_file_banner)) {
+                if (move_uploaded_file($_FILES["event_banner"]["tmp_name"], $target_file_banner)) {
+                    $event_banner = $event_banner_file;
+                } else {
+                    $event_banner = null;
+                }
             }
         }
 
         //check if the event had an existing logo or banner, if so, update the record
         if ($action == 'edit') {
-            if (!empty($event_logo)) {
+            //if neither the logo or banner are empty, update the event logo and banner
+            if (!empty($event_logo) && !empty($event_banner)) {
+                $existing_logo = $event->getEventLogo($event_id);
+                $existing_banner = $event->getEventBanner($event_id);
+                //if the existing logo and banner are not empty, see if the event_ids match
+                if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null) {
+                    //if the event_ids match, update the logo and banner
+                    if ($existing_logo == $event_id) {
+                        $event->updateEventLogoAndBanner($event_id, $event_logo, $event_banner);
+                    } else {
+                        //if the event_ids don't match, run them individually - this should never happen
+                        $event->updateEventLogo($event_id, $event_logo);
+                        $event->updateEventBanner($event_id, $event_banner);
+                    }
+                } else {
+                    //if the existing logo and banner are empty, set the logo and banner
+                    $event->setEventLogoAndBanner($event_id, $event_logo, $event_banner);
+                }
+            } else if (!empty($event_logo)) {
                 $existing_logo = $event->getEventLogo($event_id);
                 if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null) {
                     $event->updateEventLogo($event_id, $event_logo);
                 } else {
                     $event->setEventLogo($event_id, $event_logo);
                 }
-            }
-            if (!empty($event_banner)) {
+            } else if (!empty($event_banner)) {
                 $existing_banner = $event->getEventBanner($event_id);
                 if (!empty($existing_banner) || $existing_banner != '' || $existing_banner != null) {
                     $event->updateEventBanner($event_id, $event_banner);
@@ -200,7 +235,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //update the event slug
         $event->updateEventSlug($event_id, $event_slug);
         //redirect to the event list
-        header("location: " . APP_URL . '/admin/dashboard.php?view=events&event=list');
+        performRedirect('/admin/dashboard.php?view=events&event=list');
+        exit();
     } else if ($action == 'create') {
         //get current user ID
         $user_id = $_SESSION['user_id'];
@@ -215,46 +251,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $event->updateEventSlug($event_id, $event_slug);
         }
         //redirect to the event list
-        header("location: " . APP_URL . '/admin/dashboard.php?view=events&event=list');
+        performRedirect('/admin/dashboard.php?view=events&event=list');
+        exit();
     }
 }
 
 //if the action is edit, show the event edit form
 if ($action == 'edit') { ?>
-<div class="container-fluid px-4">
-    <h1 class="mt-4"><?php echo $event->getEventName($event_id); ?></h1>
-    <div class="row">
-        <div class="card mb-4">
-            <!-- Edit Form -->
-            <form
-                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&event=' . $_GET['event'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>"
-                method="post" enctype="multipart/form-data">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fa-solid fa-calendar-day"></i>
-                        Edit Event
+    <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $event->getEventName($event_id); ?></h1>
+        <div class="row">
+            <div class="card mb-4">
+                <!-- Edit Form -->
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&event=' . $_GET['event'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>" method="post" enctype="multipart/form-data">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fa-solid fa-calendar-day"></i>
+                            Edit Event
+                        </div>
+                        <div class="card-buttons">
+                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>" class="btn btn-primary btn-sm">Back to Events</a>
+                        </div>
                     </div>
-                    <div class="card-buttons">
-                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
-                            class="btn btn-primary btn-sm">Back to Events</a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p><strong><label for="eventName">Event Name:</label></strong></p>
-                            <p><input type="text" id="eventName" name="event_name" class="form-control"
-                                    value="<?php echo $event->getEventName($event_id); ?>"
-                                    placeholder="<?php echo $event->getEventName($event_id); ?>" required></p>
-                            <p><strong><label for="eventDate">Event Date:</label></strong></p>
-                            <p><input type="date" id="eventDate" name="event_date" class="form-control"
-                                    value="<?php echo $event->getEventDate($event_id); ?>"
-                                    placeholder="<?php echo $event->getEventDate($event_id); ?>"></p>
-                            <p><strong><label for="eventLocation">Event Location:</label></strong></p>
-                            <div id="schoolParent" class="col-md-12 school-dropdown">
-                                <select name="event_school" id="eventLocation"
-                                    class="select2 select2-school form-control app-forms" style="width: 100%;">
-                                    <?php
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong><label for="eventName">Event Name:</label></strong></p>
+                                <p><input type="text" id="eventName" name="event_name" class="form-control" value="<?php echo $event->getEventName($event_id); ?>" placeholder="<?php echo $event->getEventName($event_id); ?>" required></p>
+                                <p><strong><label for="eventDate">Event Date:</label></strong></p>
+                                <p><input type="date" id="eventDate" name="event_date" class="form-control" value="<?php echo $event->getEventDate($event_id); ?>" placeholder="<?php echo $event->getEventDate($event_id); ?>"></p>
+                                <p><strong><label for="eventLocation">Event Location:</label></strong></p>
+                                <div id="schoolParent" class="col-md-12 school-dropdown">
+                                    <select name="event_school" id="eventLocation" class="select2 select2-school form-control app-forms" style="width: 100%;">
+                                        <?php
                                         //loop through the schools list
                                         foreach ($schools_list as $school => $value) {
                                             //get the key and value from the array and set the variables
@@ -283,25 +312,46 @@ if ($action == 'edit') { ?>
                                             }
                                         }
                                         ?>
-                                </select>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Event Branding (optional) -->
+                                <h4>Event Branding</h4>
+                                <p>
+                                    <strong><label for="eventLogo">Event Logo:</label></strong>
+                                    <!-- if there is an existing logo, show the file -->
+                                    <?php
+                                    if (!empty($event->getEventLogo($event_id))) {
+                                        //render the file as an image
+                                        echo '<div><img src="' . APP_URL . '/public/content/uploads/' . $event->getEventLogo($event_id) . '" alt="Event Logo" style="max-width: 200px; max-height: auto;"></div>';
+                                        //show the file name
+                                        echo '<div> ' . $event->getEventLogo($event_id) . '</div>';
+                                    }
+                                    ?>
+                                </p>
+                                <p><input type="file" id="eventLogo" name="event_logo" class="form-control"></p>
+                                <p>
+                                    <strong><label for="eventBanner">Event Banner:</label></strong>
+                                    <!-- if there is an existing banner, show the file -->
+                                    <?php
+                                    if (!empty($event->getEventBanner($event_id))) {
+                                        //render the file as an image
+                                        echo '<div><img src="' . APP_URL . '/public/content/uploads/' . $event->getEventBanner($event_id) . '" alt="Event Banner" style="max-width: 200px; max-height: auto;"></div>';
+                                        //show the file name
+                                        echo '<div> ' . $event->getEventBanner($event_id) . '</div>';
+                                    }
+                                    ?>
+                                </p>
+                                <p><input type="file" id="eventBanner" name="event_banner" class="form-control"></p>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <!-- Event Branding (optional) -->
-                            <h4>Event Branding</h4>
-                            <p><strong><label for="eventLogo">Event Logo:</label></strong></p>
-                            <p><input type="file" id="eventLogo" name="event_logo" class="form-control"></p>
-                            <p><strong><label for="eventBanner">Event Banner:</label></strong></p>
-                            <p><input type="file" id="eventBanner" name="event_banner" class="form-control"></p>
-                        </div>
                     </div>
-                </div>
-                <div class=" card-footer">
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
-                        class="btn btn-secondary">Cancel</a>
-                </div>
-            </form>
+                    <div class=" card-footer">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
     <?php } ?>
