@@ -437,6 +437,61 @@ class Event
     }
 
     /**
+     * Check if the event slug already exists from any event id
+     * This is used when updating the event slug
+     *
+     * @param string $slug event slug
+     * @return bool
+     */
+    public function checkEventSlugExists(string $slug): bool
+    {
+        //SQL statement to check if the event slug already exists
+        $sql = "SELECT * FROM event_slugs WHERE slug = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("s", $slug);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+        //if the result has rows, return true
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            //if no results, return false
+            return false;
+        }
+    }
+
+    /**
+     * Get the event id by slug
+     *
+     * @param string $slug event slug
+     * @return int
+     */
+    public function getEventIdBySlug(string $slug): int
+    {
+        //SQL statement to get the event id by slug
+        $sql = "SELECT event_id FROM event_slugs WHERE slug = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameter
+        $stmt->bind_param("s", $slug);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+        //if the result has rows, return the id
+        if ($result->num_rows > 0) {
+            return intval($result->fetch_assoc()['event_id']);
+        } else {
+            //if no results, return 0
+            return 0;
+        }
+    }
+
+    /**
      * Update the event slug
      *
      * @param int $id event id
@@ -445,21 +500,89 @@ class Event
      */
     public function updateEventSlug(int $id, string $slug): bool
     {
-        //SQL statement to update the event slug
-        $sql = "UPDATE event_slugs SET slug = ? WHERE event_id = ?";
-        //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
-        //bind the parameters
-        $stmt->bind_param("si", $slug, $id);
-        //execute the statement
-        $stmt->execute();
-        //if the statement was successful, return true
-        if ($stmt) {
-            return true;
+        //check if the slug already exists using on any event id
+        $slugExists = $this->checkEventSlugExists($slug);
+        //if the slug already exists, check if the event id matches the current event id
+        if ($slugExists) {
+            //get the event id by slug
+            $event_id = $this->getEventIdBySlug($slug);
+            //if the event id matches the current event id, update the slug
+            if ($event_id == $id) {
+                //SQL statement to update the event slug
+                $sql = "UPDATE event_slugs SET slug = ? WHERE event_id = ?";
+                //prepare the statement
+                $stmt = $this->mysqli->prepare($sql);
+                //bind the parameters
+                $stmt->bind_param("si", $slug, $id);
+                //execute the statement
+                $stmt->execute();
+                //if the statement was successful, return true
+                if ($stmt) {
+                    return true;
+                } else {
+                    //if the statement failed, return false
+                    return false;
+                }
+            } else {
+                //if the event id does not match the current event id, it is a duplicate slug, so increment the slug and try again
+                $slug = $this->incrementSlug($slug);
+                //update the slug
+                return $this->updateEventSlug($id, $slug);
+            }
         } else {
-            //if the statement failed, return false
-            return false;
+            //if the slug does not exist, update the slug
+            //SQL statement to update the event slug
+            $sql = "UPDATE event_slugs SET slug = ? WHERE event_id = ?";
+            //prepare the statement
+            $stmt = $this->mysqli->prepare($sql);
+            //bind the parameters
+            $stmt->bind_param("si", $slug, $id);
+            //execute the statement
+            $stmt->execute();
+            //if the statement was successful, return true
+            if ($stmt) {
+                return true;
+            } else {
+                //if the statement failed, return false
+                return false;
+            }
         }
+    }
+
+    /**
+     * Increment the slug in case of duplicate slugs
+     * adds or increments a number at the end of the slug
+     * @param string $slug event slug
+     * @return string
+     */
+    public function incrementSlug(string $slug): string
+    {
+        //get the last character of the slug
+        $lastChar = substr($slug, -1);
+        //if the last character is a number, increment it
+        if (is_numeric($lastChar)) {
+            $lastChar++;
+        } else {
+            //if the last character is not a number, add a hyphen and a 1
+            $slug .= "-1";
+        }
+        //keep incrementing until the slug does not exist
+        $slugExists = $this->checkEventSlugExists($slug);
+        while ($slugExists) {
+            //get the last character of the slug
+            $lastChar = substr($slug, -1);
+            //if the last character is a number, increment it
+            if (is_numeric($lastChar)) {
+                $lastChar++;
+            } else {
+                //if the last character is not a number, add a hyphen and a 1
+                $slug .= "-1";
+            }
+            //check if the slug already exists
+            $slugExists = $this->checkEventSlugExists($slug);
+        } //end while
+        //return the slug
+        return $slug;
     }
 
     /**
@@ -505,16 +628,35 @@ class Event
         $name = $this->getEventName($id);
         //slugify the name
         $slug = toSlug($name);
-        //bind the parameters
-        $stmt->bind_param("is", $id, $slug);
-        //execute the statement
-        $stmt->execute();
-        //if the statement was successful, return true
-        if ($stmt) {
-            return true;
+        //check if the slug already exists on any event id
+        $slugExists = $this->checkEventSlugExists($slug);
+        //if the slug already exists, increment the slug
+        if ($slugExists) {
+            $slug = $this->incrementSlug($slug);
+            //bind the parameters
+            $stmt->bind_param("is", $id, $slug);
+            //execute the statement
+            $stmt->execute();
+            //if the statement was successful, return true
+            if ($stmt) {
+                return true;
+            } else {
+                //if the statement failed, return false
+                return false;
+            }
         } else {
-            //if the statement failed, return false
-            return false;
+            //if the slug does not exist, create the slug
+            //bind the parameters
+            $stmt->bind_param("is", $id, $slug);
+            //execute the statement
+            $stmt->execute();
+            //if the statement was successful, return true
+            if ($stmt) {
+                return true;
+            } else {
+                //if the statement failed, return false
+                return false;
+            }
         }
     }
 
