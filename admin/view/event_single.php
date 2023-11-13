@@ -4,6 +4,13 @@ if (!defined('ISVALIDUSER')) {
     die('Error: Invalid request');
 }
 
+use chillerlan\QRCode\{QRCode, QROptions};
+use chillerlan\QRCode\Data\QRMatrix;
+use chillerlan\QRCode\Output\QROutputInterface;
+
+//autoload composer dependencies
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 //event class
 $event = new Event();
 
@@ -22,8 +29,8 @@ $event_id = $_GET['id'];
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet/leaflet.css'; ?>">
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.css'; ?>">
 <script>
-var mapLocationTitle = "<?php echo $event->getEventLocation($event_id); ?>";
-var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?>";
+    var mapLocationTitle = "<?php echo $event->getEventLocation($event_id); ?>";
+    var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?>";
 </script>
 <div class="container-fluid px-4">
     <h1 class="mt-4"><?php echo $event->getEventName($event_id); ?></h1>
@@ -35,12 +42,9 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                     Event Information
                 </div>
                 <div class="card-buttons">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
-                        class="btn btn-primary btn-sm">Back to Events</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event_id; ?>"
-                        class="btn btn-primary btn-sm">Edit Event</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=delete&id=' . $event_id; ?>"
-                        class="btn btn-danger btn-sm">Delete Event</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>" class="btn btn-primary btn-sm">Back to Events</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event_id; ?>" class="btn btn-primary btn-sm">Edit Event</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=delete&id=' . $event_id; ?>" class="btn btn-danger btn-sm">Delete Event</a>
                 </div>
             </div>
             <div class="card-body">
@@ -50,31 +54,52 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                         <h3>Event Details</h3>
                         <div id="info" class="">
                             <p><strong>Event Name:</strong> <?php echo $event->getEventName($event_id); ?></p>
+                            <p><strong>Event URL Slug:</strong> <a href="<?php echo APP_URL . '/index.php?event=' . $event->getEventSlug($event_id); ?>"><?php echo $event->getEventSlug($event_id); ?></a>
+                            </p>
                             <p><strong>Event Date:</strong> <?php echo $event->getEventDate($event_id); ?></p>
                             <p><strong>Event Location:</strong> <?php echo $event->getEventLocation($event_id); ?></p>
                             <!-- Formatted School address -->
-                            <p><strong>Event Address:</strong>
-                                <?php
-                                //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
-                                $address = $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id)));
-                                $address = urlencode($address);
-                                ?>
-                                <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
-                                    target="_blank"><?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?></a>
-                            </p>
+                            <div>
+                                <p><strong>Event Address:</strong>
+                                    <?php
+                                    //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
+                                    $address = $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id)));
+                                    $address = urlencode($address);
+                                    ?>
+                                    <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>" target="_blank"><?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?></a>
+                                </p>
+                            </div>
+                            <div id="map"></div>
                         </div>
-                        <div id="map"></div>
                         <br>
+                        <div>
+                            <p><strong>Event QRCode:</strong> (Links to the event page)</p>
+                            <div>
+                                <!-- QRCode -->
+                                <?php
+                                $qrCodeData = APP_URL . '/index.php?event=' . $event->getEventSlug($event_id);
+                                $qrCodeOptions = new QROptions;
+                                $qrCodeOptions->version = 10;
+                                $qrCodeOptions->outputType = QRCode::OUTPUT_IMAGE_JPG;
+                                $qrCodeOptions->scale = 20;
+                                $qrCodeOptions->outputBase64 = false;
+                                $qrCode = (new QRCode($qrCodeOptions))->render($qrCodeData); // per the documentation, https://php-qrcode.readthedocs.io/en/main/Usage/Quickstart.html
+
+                                //output the QRCode JPG
+                                echo '<img src="' . $qrCode . '" alt="QRCode" style="max-width: 200px; max-height: auto;">';
+                                ?>
+                            </div>
+                        </div>
                         <hr>
                         <br>
                         <div id="eventBranding">
                             <h3>Event Branding</h3>
                             <p><strong>Event Logo:</strong></p>
-                            <img src="#" alt="Event Logo" style="max-width: 100%; max-height: 100%;">
+                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $event->getEventLogo($event_id); ?>" alt="Event Logo" style="max-width: 200px; max-height: auto;">
                             <p><strong>Event Banner:</strong></p>
-                            <img src="#" alt="Event Banner" style="max-width: 100%; max-height: 100%;">
+                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $event->getEventBanner($event_id); ?>" alt="Event Banner" style="max-width: 200px; max-height: auto;">
                             <p><strong>School Logo:</strong></p>
-                            <img src="#" alt="School Logo" style="max-width: 100%; max-height: 100%;">
+                            <img src="#" alt="School Logo" style="max-width: 200px; max-height: auto;">
                             <p><strong>School Primary Color:</strong></p>
                             <div style="width: 100px; height: 100px; background-color: #000000;"></div>
                         </div>
@@ -94,18 +119,18 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                                             <?php
                                             if (empty($students)) {
                                             ?>
-                                            <tr>
-                                                <th>Students List</th>
-                                            </tr>
+                                                <tr>
+                                                    <th>Students List</th>
+                                                </tr>
                                             <?php
                                             } else {
                                             ?>
-                                            <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Email</th>
-                                                <th>Degree</th>
-                                            </tr>
+                                                <tr>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Email</th>
+                                                    <th>Degree</th>
+                                                </tr>
                                             <?php
                                             }
                                             ?>
@@ -117,16 +142,16 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                                             } else {
                                                 foreach ($students as $eventStudent) {
                                             ?>
-                                            <tr>
-                                                <td><?php echo $student->getStudentFirstName($eventStudent['student_id']); ?>
-                                                </td>
-                                                <td><?php echo $student->getStudentLastName($eventStudent['student_id']); ?>
-                                                </td>
-                                                <td><?php echo $student->getStudentEmail($eventStudent['student_id']); ?>
-                                                </td>
-                                                <td><?php echo $student->getStudentDegree($eventStudent['student_id']); ?>
-                                                </td>
-                                            </tr>
+                                                    <tr>
+                                                        <td><?php echo $student->getStudentFirstName($eventStudent['student_id']); ?>
+                                                        </td>
+                                                        <td><?php echo $student->getStudentLastName($eventStudent['student_id']); ?>
+                                                        </td>
+                                                        <td><?php echo $student->getStudentEmail($eventStudent['student_id']); ?>
+                                                        </td>
+                                                        <td><?php echo $student->getStudentDegree($eventStudent['student_id']); ?>
+                                                        </td>
+                                                    </tr>
                                             <?php }
                                             } ?>
                                         </tbody>

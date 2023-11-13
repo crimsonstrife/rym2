@@ -641,6 +641,27 @@ class Event
     }
 
     /**
+     * Set event logo and banner
+     *
+     * does both, helps with delays in the sql execution which appeared to keep them from adding when run back to back
+     *
+     * @param int $id event id
+     * @param string $logo event logo path
+     * @param string $banner event banner path
+     */
+    public function setEventLogoAndBanner(int $id, string $logo, string $banner)
+    {
+        //SQL statement to set the event logo
+        $sql = "INSERT INTO event_branding (event_id, event_logo, event_banner) VALUES (?, ?, ?)";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("iss", $id, $logo, $banner);
+        //execute the statement
+        $stmt->execute();
+    }
+
+    /**
      * Update event logo
      *
      * @param int $id event id
@@ -672,6 +693,26 @@ class Event
         $stmt = $this->mysqli->prepare($sql);
         //bind the parameters
         $stmt->bind_param("si", $banner, $id);
+        //execute the statement
+        $stmt->execute();
+    }
+
+    /**
+     * Update event logo and banner
+     * does both, helps with delays in the sql execution which appeared to keep them from adding when run back to back
+     *
+     * @param int $id event id
+     * @param string $logo event logo path
+     * @param string $banner event banner path
+     */
+    public function updateEventLogoAndBanner(int $id, string $logo, string $banner)
+    {
+        //SQL statement to update the event logo
+        $sql = "UPDATE event_branding SET event_logo = ?, event_banner = ? WHERE event_id = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("ssi", $logo, $banner, $id);
         //execute the statement
         $stmt->execute();
     }
