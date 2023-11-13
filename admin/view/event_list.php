@@ -9,8 +9,13 @@ if (!defined('ISVALIDUSER')) {
     <div class="row">
         <div class="card mb-4">
             <div class="card-header">
-                <i class="fa-solid fa-table"></i>
-                Event List
+                <div class="card-title">
+                    <i class="fa-solid fa-table"></i>
+                    Event List
+                </div>
+                <div class="card-tools">
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=add&action=create' ?>" class="btn btn-primary">Add Event</a>
+                </div>
             </div>
             <div class="card-body">
                 <table id="dataTable">
