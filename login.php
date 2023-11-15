@@ -1,123 +1,60 @@
 <?php
-// Initialize the session
-session_start();
-
 define('CAN_INCLUDE', true); // Define a constant to control access to the include files
 
 // Include config file
 require_once(__DIR__ . '/config/app.php');
 // Include the helpers file
 require_once(__DIR__ . '/includes/utils/helpers.php');
-// Include the validation file
-require_once(__DIR__ . '/includes/validateCookieSession.inc.php');
-
-//include the authenticator class
-$authenticator = new Authenticator();
 
 // Check if the user is already logged in, if yes redirect to the admin dashboard
-if ($logged_in === true) {
-    performRedirect('/admin/dashboard.php');
+if (isset($_SESSION["logged_in"])) {
+    //if the user is logged in, redirect to the admin dashboard
+    if ($_SESSION["logged_in"] === true) {
+        //is the user set?
+        if (isset($_SESSION['user_id'])) {
+            //get the user id
+            $user_id = $_SESSION['user_id'];
+            //redirect to the admin dashboard
+            performRedirect('/admin/dashboard.php?login=success&u=' . base64_encode($user_id));
+            exit;
+        } else {
+            //clear the session
+            session_unset();
+            //destroy the session
+            session_destroy();
+            //redirect to the login page
+            performRedirect('/login.php?error=' . urlencode(base64_encode(json_encode(array('login_error' => 'Please Login.')))));
+        }
+    } else {
+        //clear the session
+        session_unset();
+        //destroy the session
+        session_destroy();
+    }
 }
 
 // Define variables and initialize with empty values
 $username = $password = "";
 $username_error = $password_error = $login_error = "";
 
-// Processing form data when form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    //set the authentication flag to false
-    $auth_flag = false;
+//check url parameters for error messages
+if (isset($_GET['error'])) {
+    $errorArray = base64_decode(urldecode(json_decode($_GET['error'], true)));
+}
 
-    // Check if username is empty
-    if (empty(trim($_POST["username"]))) {
-        $username_error = "Please enter username.";
-    } else {
-        $username = trim($_POST["username"]);
+// if the error array is not empty, set the error messages
+if (!empty($errorArray)) {
+    if (isset($errorArray['username'])) {
+        $username_error = $errorArray['username'];
     }
-
-    // Check if password is empty
-    if (empty(trim($_POST["password"]))) {
-        $password_error = "Please enter your password.";
-    } else {
-        $password = trim($_POST["password"]);
+    if (isset($errorArray['username_error'])) {
+        $username_error = $errorArray['username_error'];
     }
-
-    // Validate credentials
-    if (empty($username_error) && empty($password_error)) {
-        //initialize the user class
-        $user = new User();
-
-        //check if the user exists by username, if so get the user ID
-        $user_id = $user->getUserIdByUsername($username);
-
-        //if the user exists, check the password
-        if ($user_id) {
-            //check the password
-            if ($user->validateUserPassword($user_id, $password)) {
-                //try to log the user in
-                try {
-                    $user->login($username, $password);
-                } catch (Exception $e) {
-                    // Log the error
-                    error_log("Failed to log the user in: " . $e->getMessage());
-                    // Display a generic error message
-                    $login_error = "Invalid username or password.";
-                } finally {
-                    //check for an error message
-                    if (empty($login_error)) {
-                        //set the authentication flag to false
-                        $auth_flag = false;
-                    }
-                }
-            } else {
-                // Password is not valid, display a generic error message
-                $login_error = "Invalid username or password.";
-            }
-        } else {
-            // Username doesn't exist, display a generic error message
-            $login_error = "Invalid username or password.";
-        }
-    } else {
-        // either username or password is not valid, display a generic error message
-        $login_error = "Invalid username or password.";
+    if (isset($errorArray['password_error'])) {
+        $password_error = $errorArray['password_error'];
     }
-
-    if ($auth_flag === true) {
-        //set the SESSION variables
-        $_SESSION["user_id"] = $user_id;
-
-        //if the remember me checkbox is checked, set the cookies
-        if (!empty($_POST["remember"])) {
-            //set the randomization variables
-            $random_selector = randomizeEncryption(32, 32);
-            $random_password = randomizeEncryption(16, 16);
-
-            //hash the randomization variables
-            $random_selector_hash = password_hash($random_selector, PASSWORD_DEFAULT);
-            $random_password_hash = password_hash($random_password, PASSWORD_DEFAULT);
-
-            //set the cookie expiry date
-            $cookie_expiry_date = date("Y-m-d H:i:s", $expiration_time);
-
-            //set the cookies
-            setcookies($user_id, $username, $random_password_hash, $random_selector_hash, $cookie_expiry_date);
-
-            //expire the existing token if it exists
-            $userToken = $authenticator->getAuthenticationToken($user_id, $username, 0);
-            if ($userToken) {
-                $authenticator->expireToken($userToken[0]["id"]);
-            }
-
-            //create the token
-            $authenticator->createToken($user_id, $username, $random_password_hash, $random_selector_hash, $cookie_expiry_date);
-        } else {
-            //clear the cookies
-            clearCookies();
-        }
-        performRedirect('/admin/dashboard.php');
-    } else {
-        //set the login error
-        $login_error = "Invalid username or password.";
+    if (isset($errorArray['login_error'])) {
+        $login_error = $errorArray['login_error'];
     }
 }
 ?>
@@ -136,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body class="text-center">
-    <form class="form-signin" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+    <form class="form-signin" action="<?php echo APP_URL . '/admin/index.php?login=true' ?>" method="post">
         <h1 class="h3 mb-3 font-weight-normal">Login</h1>
         <p>Please fill in your credentials to login.</p>
         <?php
@@ -165,3 +102,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </body>
 
 </html>
+
+<?php ?>
