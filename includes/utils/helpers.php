@@ -18,6 +18,10 @@ function clearCookies()
 
 function setCookies(int $user_id, string $username, string $password_hash, string $selector_hash, string $expiry_date)
 {
+    //convert the expiry date to a unix timestamp
+    $expiry_date = strtotime($expiry_date);
+    $expiry_date = mktime(date("H", $expiry_date), date("i", $expiry_date), date("s", $expiry_date), date("m", $expiry_date), date("d", $expiry_date), date("Y", $expiry_date));
+
     //set the cookies
     setcookie("user_id", $user_id, $expiry_date, "/");
     setcookie("user_name", $username, $expiry_date, "/");
@@ -73,4 +77,43 @@ function performRedirect(string $filePath)
     //redirect to the specified file
     header("Location: " . APP_URL . $filePath);
     exit;
+}
+
+/**
+ * Export the data from a sql query to a csv file
+ * @param array $data - the data to be exported
+ * @param string $dataType - the type of data to be exported used for naming the file
+ *
+ * @return void
+ */
+function exportData(array $data, string $dataType)
+{
+    //set the file name
+    $fileName = $dataType . "_export-" . date("Y-m-d_H-i-s") . ".csv";
+    //delimiter
+    $delimiter = ",";
+
+    //open the output stream
+    $output = fopen('php://output', 'w');
+
+    //set the column headers
+    fputcsv($output, array_keys($data[0]), $delimiter);
+
+    //loop through the data and add it to the csv file
+    foreach ($data as $row) {
+        fputcsv($output, $row, $delimiter);
+    }
+
+    //move back to beginning of file
+    fseek($output, 0);
+
+    //set the headers to download
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename=' . $fileName);
+
+    //output remaining data to the file
+    fpassthru($output);
+
+    //close the output stream
+    fclose($output);
 }
