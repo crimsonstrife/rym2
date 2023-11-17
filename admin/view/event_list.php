@@ -14,8 +14,7 @@ if (!defined('ISVALIDUSER')) {
                     Event List
                 </div>
                 <div class="card-tools">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=add&action=create' ?>"
-                        class="btn btn-primary">Add Event</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=add&action=create' ?>" class="btn btn-primary">Add Event</a>
                 </div>
             </div>
             <div class="card-body">
@@ -45,25 +44,22 @@ if (!defined('ISVALIDUSER')) {
                         //for each event, display it
                         foreach ($eventsArray as $event) {
                         ?>
-                        <tr>
-                            <td><?php echo $event['name']; ?></td>
-                            <td><?php echo $event['event_date']; ?></td>
-                            <td><?php echo $schoolsData->getSchoolById($event['location'])['name']; ?></td>
-                            <td><?php echo $event['created_at']; ?></td>
-                            <td><?php echo $usersData->getUserUsername($event['created_by']); ?>
-                            </td>
-                            <td><?php echo $event['updated_at']; ?></td>
-                            <td><?php echo $usersData->getUserUsername($event['updated_by']); ?>
-                            </td>
-                            <td>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single' ?>&id=<?php echo $event['id']; ?>"
-                                    class="btn btn-success">View</a>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event['id']; ?>"
-                                    class="btn btn-primary">Edit</a>
-                                <a href="/delete/delete_event.php?id=<?php echo $event['id']; ?>"
-                                    class="btn btn-danger">Delete</a>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td><?php echo $event['name']; ?></td>
+                                <td><?php echo $event['event_date']; ?></td>
+                                <td><?php echo $schoolsData->getSchoolById($event['location'])['name']; ?></td>
+                                <td><?php echo $event['created_at']; ?></td>
+                                <td><?php echo $usersData->getUserUsername($event['created_by']); ?>
+                                </td>
+                                <td><?php echo $event['updated_at']; ?></td>
+                                <td><?php echo $usersData->getUserUsername($event['updated_by']); ?>
+                                </td>
+                                <td>
+                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single' ?>&id=<?php echo $event['id']; ?>" class="btn btn-success">View</a>
+                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event['id']; ?>" class="btn btn-primary">Edit</a>
+                                    <a href="/delete/delete_event.php?id=<?php echo $event['id']; ?>" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
                         <?php } ?>
                     </tbody>
                 </table>
@@ -71,20 +67,14 @@ if (!defined('ISVALIDUSER')) {
                     <!-- Download CSV -->
                     <?php
                     //prepare the events array for download
-                    //set the created by and updated by to the username
-                    foreach ($eventsArray as $key => $event) {
-                        $eventsArray[$key]['created_by'] = $usersData->getUserUsername(intval($event['created_by']));
-                        $eventsArray[$key]['updated_by'] = $usersData->getUserUsername(intval($event['updated_by']));
-                    }
-                    //set the location to the school name
-                    foreach ($eventsArray as $key => $event) {
-                        $eventsArray[$key]['location'] = $schoolsData->getSchoolById(intval($event['location']))['name'];
-                    }
                     //add a column for the total number of attendees for each event
                     array_push($eventsArray, array('student_count' => ''));
-                    //get the total number of attendees for each event
+                    //set the created by and updated by to the username
                     foreach ($eventsArray as $key => $event) {
-                        $eventsArray[$key]['student_count'] = $eventsData->getStudentCount(intval($event['id']));
+                        $eventsArray[$key]['created_by'] = $usersData->getUserUsername(intval($event['created_by'])); //get the username of the user who created the event, and swap out the user id
+                        $eventsArray[$key]['updated_by'] = $usersData->getUserUsername(intval($event['updated_by'])); //get the username of the user who updated the event, and swap out the user id
+                        $eventsArray[$key]['student_count'] = $eventsData->getStudentCount(intval($event['id'])); //get the number of students attending the event
+                        $eventsArray[$key]['location'] = $schoolsData->getSchoolById(intval($event['location']))['name'];
                     }
                     //clean up the column headers to be more readable, i.e. remove underscores and capitalize
                     foreach ($eventsArray as $key => $event) {
@@ -100,9 +90,7 @@ if (!defined('ISVALIDUSER')) {
                         );
                     }
                     ?>
-                    <form target="_blank"
-                        action="<?php echo APP_URL . '/admin/download.php?payload=' . base64_encode(urlencode(json_encode($eventsArray))); ?>"
-                        method="post" enctype="multipart/form-data">
+                    <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?payload=' . base64_encode(urlencode(json_encode($eventsArray))); ?>" method="post" enctype="multipart/form-data">
                         <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                     </form>
                 </div>
