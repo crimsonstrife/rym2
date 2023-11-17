@@ -15,10 +15,40 @@ if (!defined('ISVALIDUSER')) {
                     include_once('view/event_list.php');
                     break;
                 case 'add':
-                    include_once('editor/event_edit.php');
+                    if (isset($_GET['action'])) {
+                        switch ($_GET['action']) {
+                            case 'create':
+                                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                                    include_once('editor/actions/event/create.php');
+                                } else {
+                                    include_once('editor/event_edit.php');
+                                }
+                                break;
+                            default:
+                                include_once('view/event_list.php');
+                                break;
+                        }
+                    } else {
+                        include_once('view/event_list.php');
+                    }
                     break;
                 case 'edit':
-                    include_once('editor/event_edit.php');
+                    if (isset($_GET['action'])) {
+                        switch ($_GET['action']) {
+                            case 'edit':
+                                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                                    include_once('editor/actions/event/modify.php');
+                                } else {
+                                    include_once('editor/event_edit.php');
+                                }
+                                break;
+                            default:
+                                include_once('view/event_list.php');
+                                break;
+                        }
+                    } else {
+                        include_once('view/event_list.php');
+                    }
                     break;
                 case 'single':
                     include_once('view/event_single.php');
