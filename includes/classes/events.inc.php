@@ -881,7 +881,13 @@ class Event
         $stmt->execute();
         //if the statement was successful, return true
         if ($stmt) {
-            return true;
+            //slugify the event
+            $sluggified = $this->slugifyEvent($id);
+            if ($sluggified) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             //if the statement failed, return false
             return false;
@@ -900,17 +906,25 @@ class Event
      */
     public function createEvent(string $name, string $date, int $location, int $created_by): bool
     {
+        //get the current date and time
+        $created_at = date("Y-m-d H:i:s");
         //SQL statement to create the event
-        $sql = "INSERT INTO event (name, event_date, location, created_by) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO event (name, event_date, location, created_at, created_by, updated_at, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?)";
         //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
         //bind the parameters
-        $stmt->bind_param("ssii", $name, $date, $location, $created_by);
+        $stmt->bind_param("ssisiss", $name, $date, $location, $created_at, $created_by, $created_at, $created_by);
         //execute the statement
         $stmt->execute();
         //if the statement was successful, return true
         if ($stmt) {
-            return true;
+            //slugify the event
+            $sluggified = $this->slugifyEvent($this->getEventIdByName($name));
+            if ($sluggified) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             //if the statement failed, return false
             return false;
