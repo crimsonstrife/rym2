@@ -104,9 +104,6 @@ function exportData(array $data, string $dataType)
         fputcsv($output, $row, $delimiter);
     }
 
-    //move back to beginning of file
-    fseek($output, 0);
-
     //set the headers to download
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename=' . $fileName);
