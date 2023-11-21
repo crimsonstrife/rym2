@@ -1008,4 +1008,31 @@ class Event
             return 0;
         }
     }
+
+    /**
+     * Get the number of events held at a school
+     *
+     * @param int $id school id
+     * @return int count
+     */
+    public function getHeldEvents(int $id): int
+    {
+        //SQL statement to get the number of events held at a school
+        $sql = "SELECT COUNT(*) FROM event WHERE location = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameter
+        $stmt->bind_param("i", $id);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+        //if the result has rows, return the count
+        if ($result->num_rows > 0) {
+            return intval($result->fetch_assoc()['COUNT(*)']);
+        } else {
+            //if no results, return 0
+            return 0;
+        }
+    }
 }
