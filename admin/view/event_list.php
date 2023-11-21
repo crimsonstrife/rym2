@@ -67,30 +67,29 @@ if (!defined('ISVALIDUSER')) {
                     <!-- Download CSV -->
                     <?php
                     //prepare the events array for download
-                    //add a column for the total number of attendees for each event
-                    array_push($eventsArray, array('student_count' => ''));
+                    $csvArray = $eventsArray;
                     //set the created by and updated by to the username
-                    foreach ($eventsArray as $key => $event) {
-                        $eventsArray[$key]['created_by'] = $usersData->getUserUsername(intval($event['created_by'])); //get the username of the user who created the event, and swap out the user id
-                        $eventsArray[$key]['updated_by'] = $usersData->getUserUsername(intval($event['updated_by'])); //get the username of the user who updated the event, and swap out the user id
-                        $eventsArray[$key]['student_count'] = $eventsData->getStudentCount(intval($event['id'])); //get the number of students attending the event
-                        $eventsArray[$key]['location'] = $schoolsData->getSchoolById(intval($event['location']))['name'];
+                    foreach ($csvArray as $key => $row) {
+                        $csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the event, and swap out the user id
+                        $csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the event, and swap out the user id
+                        $csvArray[$key]['student_count'] = $eventsData->getStudentCount(intval($row['id'])); //get the number of students attending the event
+                        $csvArray[$key]['location'] = $schoolsData->getSchoolById(intval($row['location']))['name'];
                     }
                     //clean up the column headers to be more readable, i.e. remove underscores and capitalize
-                    foreach ($eventsArray as $key => $event) {
-                        $eventsArray[$key] = array(
-                            'Event Name' => $event['name'],
-                            'Event Date' => $event['event_date'],
-                            'School' => $event['location'],
-                            'Date Created' => $event['created_at'],
-                            'Created By' => $event['created_by'],
-                            'Date Updated' => $event['updated_at'],
-                            'Updated By' => $event['updated_by'],
-                            'Student Count' => $event['student_count']
+                    foreach ($csvArray as $key => $row) {
+                        $csvArray[$key] = array(
+                            'Event Name' => $row['name'],
+                            'Event Date' => $row['event_date'],
+                            'School' => $row['location'],
+                            'Date Created' => $row['created_at'],
+                            'Created By' => $row['created_by'],
+                            'Date Updated' => $row['updated_at'],
+                            'Updated By' => $row['updated_by'],
+                            'Student Count' => $row['student_count']
                         );
                     }
                     ?>
-                    <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?payload=' . base64_encode(urlencode(json_encode($eventsArray))); ?>" method="post" enctype="multipart/form-data">
+                    <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
                         <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                     </form>
                 </div>
