@@ -13,7 +13,7 @@
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-calendar-day"></i></div>
                     Events
                 </a>
-                <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=schools' ?>">
+                <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&schools=list' ?>">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-school"></i></div>
                     Schools
                 </a>
