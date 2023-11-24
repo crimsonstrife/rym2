@@ -24,7 +24,7 @@
         "select2/select2": "^4.0",
         "components/jquery-migrate": "^3.0",
         "phpmailer/phpmailer": "^6.8",
-        "chillerlan/php-qrcode": "^4.3",
+        "chillerlan/php-qrcode": "^5.0",
         "survos/simple-datatables-bundle": "^1.5",
         "nnnick/chartjs": "^4.4"
     },
