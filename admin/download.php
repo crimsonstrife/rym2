@@ -23,13 +23,21 @@ if (isset($_SESSION['user_id'])) {
         $payload = null;
     }
 
+    if (isset($_GET['type'])) {
+        //get the type from the request
+        $type = $_GET['type'];
+    } else {
+        //set the type to generic if it is not set
+        $type = 'file';
+    }
+
     //if the payload is not null, download the file, otherwise close the tab
     if (!empty($payload)) {
         //json decode the payload
         $payload = json_decode($payload, true);
-        //export the eventsArray to a csv file
+        //export the array to a csv file
         if (isset($_POST['export'])) {
-            exportData($payload, "events");
+            exportData($payload, $type);
         } else {
         }
         exit;
