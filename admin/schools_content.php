@@ -8,8 +8,8 @@ if (!defined('ISVALIDUSER')) {
 <div id="layout_content">
     <main>
         <?php
-        if (isset($_GET['schools'])) {
-            switch ($_GET['schools']) {
+        if (isset($_GET['school'])) {
+            switch ($_GET['school']) {
                 case 'list':
                     include_once('view/school_list.php');
                     break;
