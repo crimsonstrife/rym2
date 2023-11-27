@@ -287,4 +287,44 @@ class School
         }
         return $updated_by;
     }
+
+    /**
+     * Get the school logo
+     *
+     * @param int $school_id
+     * @return string $school_logo
+     */
+    public function getSchoolLogo(int $school_id): string
+    {
+        $school_logo = "";
+        $sql = "SELECT school_logo FROM school_branding WHERE school_id = ?";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param("i", $school_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $school_logo = $result->fetch_assoc()['school_logo'];
+        }
+        return $school_logo;
+    }
+
+    /**
+     * Get the school color hex code
+     *
+     * @param int $school_id
+     * @return string $school_color
+     */
+    public function getSchoolColor(int $school_id): string
+    {
+        $school_color = "";
+        $sql = "SELECT school_color FROM school_branding WHERE school_id = ?";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param("i", $school_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $school_color = $result->fetch_assoc()['school_color'];
+        }
+        return $school_color;
+    }
 };
