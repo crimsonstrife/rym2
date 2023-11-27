@@ -100,7 +100,7 @@ if (!defined('ISVALIDUSER')) {
                     }
                     ?>
                     <form target="_blank"
-                        action="<?php echo APP_URL . '/admin/download.php?payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
+                        action="<?php echo APP_URL . '/admin/download.php?type=schools&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
                         method="post" enctype="multipart/form-data">
                         <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                     </form>
