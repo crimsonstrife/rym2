@@ -99,9 +99,10 @@ $event_id = $_GET['id'];
                             <p><strong>Event Banner:</strong></p>
                             <img src="<?php echo APP_URL . "/public/content/uploads/" . $event->getEventBanner($event_id); ?>" alt="Event Banner" style="max-width: 200px; max-height: auto;">
                             <p><strong>School Logo:</strong></p>
-                            <img src="#" alt="School Logo" style="max-width: 200px; max-height: auto;">
+                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $school->getSchoolLogo(intval($event->getEventLocationId($event_id))); ?>" alt="School Logo" style="max-width: 200px; max-height: auto;">
                             <p><strong>School Primary Color:</strong></p>
-                            <div style="width: 100px; height: 100px; background-color: #000000;"></div>
+                            <div style="width: 100px; height: 100px; background-color: <?php echo $school->getSchoolColor(intval($event->getEventLocationId($event_id))) ?? '#000000'; ?>;">
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6" style="height: 100%;">
