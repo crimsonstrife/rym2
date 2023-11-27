@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@jaames/iro": "^5.5.2",
     "@popperjs/core": "^2.11.8",
     "chart.js": "^4.4.0",
     "leaflet": "^1.9.4",
