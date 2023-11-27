@@ -42,20 +42,20 @@ if (!empty($_SESSION["user_id"])) {
     $session_expiry_verified = false;
 
     //Get authentication token
-    $auth_token = $auth->getAuthenticationToken($_COOKIE["user_id"], $_COOKIE["user_name"], 0);
+    $auth_token = $auth->getAuthenticationToken(intval($_COOKIE["user_id"]), $_COOKIE["user_name"], 0);
 
     //user ID cookie verification
-    if (!empty($auth_token[0]["user_id"]) && hash_equals($_COOKIE["user_id"], $auth_token[0]["user_id"])) {
+    if (!empty($auth_token[0]["user_id"]) && hash_equals($_COOKIE["user_id"], strval($auth_token[0]["user_id"]))) {
         $user_id_verified = true;
     }
 
     //password cookie verification
-    if (password_verify($_COOKIE["user_password"], $auth_token[0]["password_hash"])) {
+    if (password_verify($_COOKIE["user_password"], strval($auth_token[0]["password_hash"]))) {
         $user_password_verified = true;
     }
 
     //password selector cookie verification
-    if (hash_equals($_COOKIE["user_password_selector"], $auth_token[0]["selector_hash"])) {
+    if (hash_equals($_COOKIE["user_password_selector"], strval($auth_token[0]["password_hash"]))) {
         $user_password_selector_verified = true;
     }
 
