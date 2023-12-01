@@ -309,6 +309,40 @@ class School
     }
 
     /**
+     * Set the school logo
+     *
+     * @param int $school_id
+     * @param string $logo
+     * @return boolean $result
+     */
+    public function setSchoolLogo(int $school_id, string $logo): bool
+    {
+        $result = false;
+        $defaultColor = "#000000";
+        // Check if the school branding exists
+        $sql = "SELECT * FROM school_branding WHERE school_id = ?";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param("i", $school_id);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows > 0) {
+            // Update the school branding
+            $sql = "UPDATE school_branding SET school_logo = ? WHERE school_id = ?";
+            $stmt = $this->mysqli->prepare($sql);
+            $stmt->bind_param("si", $logo, $school_id);
+            $stmt->execute();
+            $result = true;
+        } else {
+            // Create the school branding
+            $sql = "INSERT INTO school_branding (school_id, school_logo, school_color) VALUES (?, ?, ?)";
+            $stmt = $this->mysqli->prepare($sql);
+            $stmt->bind_param("iss", $school_id, $logo, $defaultColor);
+            $stmt->execute();
+            $result = true;
+        }
+        return $result;
+    }
+
+    /**
      * Get the school color hex code
      *
      * @param int $school_id
