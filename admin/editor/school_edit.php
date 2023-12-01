@@ -303,12 +303,16 @@ if ($action == 'edit') { ?>
                                 </p>
                                 <p><input type="file" id="schoolLogo" name="school_logo" class="form-control"></p>
                                 <p>
+                                    <?php $currentColor = $school->getSchoolColor(intval($school_id)) ?? '#000000'; ?>
                                     <strong><label for="schoolColor">School Primary Color:</label></strong>
                                     <!-- if there is an existing color, show the color -->
                                     <?php
                                     if (!empty($school->getSchoolColor(intval($school_id)))) {
                                         //render the color as a div
                                         echo '<div id="color-block" style="width: 100px; height: 100px; background-color: ' . $school->getSchoolColor(intval($school_id)) . ';"></div>';
+                                    } else {
+                                        //render the color as a div
+                                        echo '<div id="color-block" style="width: 100px; height: 100px; background-color: ' . $currentColor . ';"></div>';
                                     }
                                     ?>
                                 </p>
@@ -319,10 +323,7 @@ if ($action == 'edit') { ?>
                                 <p>
                                 <div id="color-picker"></div>
                                 </p>
-                                <?php
-                                $currentColor = $school->getSchoolColor(intval($school_id)) ?? '#000000';
-                                echo "<script>var currentColor = '$currentColor';</script>";
-                                ?>
+                                <?php echo "<script>var currentColor = '$currentColor';</script>"; ?>
                             </div>
                         </div>
                     </div>
