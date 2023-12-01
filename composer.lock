@@ -259,16 +259,16 @@
         },
         {
             "name": "fortawesome/font-awesome",
-            "version": "6.4.2",
+            "version": "6.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FortAwesome/Font-Awesome.git",
-                "reference": "f0c25837a3fe0e03783b939559e088abcbfb3c4b"
+                "reference": "8302f1cca7e6c674fdb636bcc80b728548077c17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/f0c25837a3fe0e03783b939559e088abcbfb3c4b",
-                "reference": "f0c25837a3fe0e03783b939559e088abcbfb3c4b",
+                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/8302f1cca7e6c674fdb636bcc80b728548077c17",
+                "reference": "8302f1cca7e6c674fdb636bcc80b728548077c17",
                 "shasum": ""
             },
             "type": "library",
@@ -300,7 +300,7 @@
                 "issues": "https://github.com/FortAwesome/Font-Awesome/issues",
                 "source": "https://github.com/FortAwesome/Font-Awesome"
             },
-            "time": "2023-08-02T20:27:06+00:00"
+            "time": "2023-11-28T18:45:05+00:00"
         },
         {
             "name": "graham-campbell/result-type",
