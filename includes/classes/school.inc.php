@@ -361,4 +361,87 @@ class School
         }
         return $school_color;
     }
+
+    /**
+     * Set the school color hex code
+     *
+     * @param int $school_id
+     * @param string $color
+     * @return boolean $result
+     */
+    public function setSchoolColor(int $school_id, string $color): bool
+    {
+        $result = false;
+        $defaultLogo = "";
+        // Check if the school branding exists
+        $sql = "SELECT * FROM school_branding WHERE school_id = ?";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param("i", $school_id);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows > 0) {
+            // Update the school branding
+            $sql = "UPDATE school_branding SET school_color = ? WHERE school_id = ?";
+            $stmt = $this->mysqli->prepare($sql);
+            $stmt->bind_param("si", $color, $school_id);
+            $stmt->execute();
+            $result = true;
+        } else {
+            // Create the school branding
+            $sql = "INSERT INTO school_branding (school_id, school_logo, school_color) VALUES (?, ?, ?)";
+            $stmt = $this->mysqli->prepare($sql);
+            $stmt->bind_param("iss", $school_id, $defaultLogo, $color);
+            $stmt->execute();
+            $result = true;
+        }
+        return $result;
+    }
+
+    /**
+     * Update a school in the database
+     *
+     * @param int $school_id
+     * @param string $school_name
+     * @param string $school_address
+     * @param string $school_city
+     * @param string $school_state
+     * @param string $school_zip
+     * @param int $updated_by
+     * @return boolean $result
+     */
+    public function updateSchool(int $school_id, string $school_name, string $school_address, string $school_city, string $school_state, string $school_zip, int $updated_by): bool
+    {
+        //get the current date and time
+        $updated_at = date("Y-m-d H:i:s");
+        $result = false;
+        $sql = "UPDATE school SET name = ?, address = ?, city = ?, state = ?, zipcode = ?, updated_at = ?, updated_by = ? WHERE id = ?";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param("ssssssii", $school_name, $school_address, $school_city, $school_state, $school_zip, $updated_at, $updated_by, $school_id);
+        $stmt->execute();
+        $result = true;
+        return $result;
+    }
+
+    /**
+     * Create a school in the database
+     *
+     * @param string $school_name
+     * @param string $school_address
+     * @param string $school_city
+     * @param string $school_state
+     * @param string $school_zip
+     * @param int $created_by
+     * @return boolean $result
+     */
+    public function createSchool(string $school_name, string $school_address, string $school_city, string $school_state, string $school_zip, int $created_by): bool
+    {
+        //get the current date and time
+        $created_at = date("Y-m-d H:i:s");
+        $result = false;
+        $sql = "INSERT INTO school (name, address, city, state, zipcode, created_at, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param("ssssssi", $school_name, $school_address, $school_city, $school_state, $school_zip, $created_at, $created_by);
+        $stmt->execute();
+        $result = true;
+        return $result;
+    }
 };
