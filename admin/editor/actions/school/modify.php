@@ -43,14 +43,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //prepare the school name
         $school_name = prepareData($school_name);
     }
+    //get the school address from the form
+    if (isset($_POST["school_address"])) {
+        $school_address = trim($_POST["school_address"]);
+        //prepare the school address
+        $school_address = prepareData($school_address);
+    }
+    //get the school city from the form
+    if (isset($_POST["school_city"])) {
+        $school_city = trim($_POST["school_city"]);
+        //prepare the school city
+        $school_city = prepareData($school_city);
+    }
+    //get the school state from the form
+    if (isset($_POST["school_state"])) {
+        $school_state = trim($_POST["school_state"]);
+        //prepare the school state
+        $school_state = prepareData($school_state);
+    }
+    //get the school zip from the form
+    if (isset($_POST["school_zip"])) {
+        $school_zip = trim($_POST["school_zip"]);
+        //prepare the school zip
+        $school_zip = prepareData($school_zip);
+    }
     //get the school logo from the form
     if (isset($_FILES["school_logo"])) {
         $school_logo = $_FILES["school_logo"];
+    }
+    //get the school branding color from the form
+    if (isset($_POST["school_color"])) {
+        $school_color = trim($_POST["school_color"]);
+        //prepare the school branding color
+        $school_color = prepareData($school_color);
     }
 
     //if the school logo is empty, set the school logo to null
     if (empty($school_logo)) {
         $school_logo = null;
+    }
+
+    //if the school color is empty, set the school color to black
+    if (empty($school_color)) {
+        $school_color = '#000000';
     }
 
     //if there are files to upload, upload them
@@ -125,24 +160,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 //if the existing logo is not empty, see if the id matches
                 if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null) {
                     //if the file names match, update the logo incase the file has changed
-                    if ($existing_logo == $event_logo) {
-                        $event->updateEventLogoAndBanner($event_id, $event_logo, $event_banner);
+                    if ($existing_logo == $school_logo) {
+                        //should not be needed, but just in case
+                        $school->setSchoolLogo($school_id, $school_logo);
                     } else {
-                        //if the event_ids don't match, run them individually - this should never happen
-                        $event->updateEventLogo($event_id, $event_logo);
-                        $event->updateEventBanner($event_id, $event_banner);
+                        //if the file names do not match, set the logo
+                        $school->setSchoolLogo($school_id, $school_logo);
                     }
                 } else {
-                    //if the existing logo and banner are empty, set the logo and banner
-                    $event->setEventLogoAndBanner($event_id, $event_logo, $event_banner);
+                    //if the existing logo is empty, set the logo
+                    $school->setSchoolLogo($school_id, $school_logo);
                 }
-            } else if (!empty($event_logo)) {
-                $existing_logo = $event->getEventLogo($event_id);
+            } else if (!empty($school_logo)) {
+                $existing_logo = $school->getSchoolLogo($school_id);
                 if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null) {
-                    $event->updateEventLogo($event_id, $event_logo);
+                    $school->setSchoolLogo($school_id, $school_logo);
                 } else {
-                    $event->setEventLogo($event_id, $event_logo);
+                    $school->setSchoolLogo($school_id, $school_logo);
                 }
+            }
+        }
+    }
+
+    //check if the school had an existing branding color, if so, update the record
+    if ($action == 'edit') {
+        //if the color is empty, update the school color
+        if (!empty($school_color)) {
+            $existing_color = $school->getSchoolColor($school_id);
+            //if the existing color is not empty, see if the id matches
+            if (!empty($existing_color) || $existing_color != '' || $existing_color != null) {
+                //if the colors match, update the color incase the color has changed
+                if ($existing_color == $school_color) {
+                    //should not be needed, but just in case
+                    $school->setSchoolColor($school_id, $school_color);
+                } else {
+                    //if the colors do not match, set the color
+                    $school->setSchoolColor($school_id, $school_color);
+                }
+            } else {
+                //if the existing color is empty, set the color
+                $school->setSchoolColor($school_id, $school_color);
+            }
+        } else if (!empty($school_color)) {
+            $existing_color = $school->getSchoolColor($school_id);
+            if (!empty($existing_color) || $existing_color != '' || $existing_color != null) {
+                $school->setSchoolColor($school_id, $school_color);
+            } else {
+                $school->setSchoolColor($school_id, $school_color);
             }
         }
     }
@@ -152,6 +216,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //get current user ID
         $user_id = intval($_SESSION['user_id']);
         //update the event
-        $event->updateEvent($event_id, $event_name, $event_date, $event_location, $user_id);
+        $school->updateSchool(intval($school_id), $school_name, $school_address, $school_city, $school_state, $school_zip, $user_id);
     }
 }
