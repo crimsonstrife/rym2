@@ -241,38 +241,48 @@ if ($action == 'edit') {
 
 //if the action is edit, show the school edit form
 if ($action == 'edit') { ?>
-    <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $school->getSchoolName(intval($school_id)); ?></h1>
-        <div class="row">
-            <div class="card mb-4">
-                <!-- Edit Form -->
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&school=' . $_GET['school'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>" method="post" enctype="multipart/form-data">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <i class="fa-solid fa-calendar-day"></i>
-                            Edit School
-                        </div>
-                        <div class="card-buttons">
-                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=list'; ?>" class="btn btn-primary btn-sm">Back to Schools</a>
-                        </div>
+<div class="container-fluid px-4">
+    <h1 class="mt-4"><?php echo $school->getSchoolName(intval($school_id)); ?></h1>
+    <div class="row">
+        <div class="card mb-4">
+            <!-- Edit Form -->
+            <form
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&school=' . $_GET['school'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>"
+                method="post" enctype="multipart/form-data">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        Edit School
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong><label for="schoolName">School Name:</label></strong></p>
-                                <p><input type="text" id="schoolName" name="school_name" class="form-control" value="<?php echo $school->getSchoolName(intval($school_id)); ?>" placeholder="<?php echo $school->getSchoolName(intval($school_id)); ?>" required>
-                                </p>
-                                <p><strong><label for="schoolAddress">School Address:</label></strong></p>
-                                <p><input type="text" id="schoolAddress" name="school_address" class="form-control" value="<?php echo $school->getSchoolAddress(intval($school_id)); ?>" placeholder="<?php echo $school->getSchoolAddress(intval($school_id)); ?>" required>
-                                </p>
-                                <p><strong><label for="schoolCity">School City:</label></strong></p>
-                                <p><input type="text" id="schoolCity" name="school_city" class="form-control" value="<?php echo $school->getSchoolCity(intval($school_id)); ?>" placeholder="<?php echo $school->getSchoolCity(intval($school_id)); ?>" required>
-                                </p>
-                                <p><strong><label for="schoolState">School State:</label></strong></p>
-                                <div id="schoolParent" class="col-md-12 school-dropdown">
-                                    <select type="select" id="schoolState" name="school_state" class="select2 select2-school form-control app-forms" required>
-                                        <option value="">Select a State</option>
-                                        <?php
+                    <div class="card-buttons">
+                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=list'; ?>"
+                            class="btn btn-primary btn-sm">Back to Schools</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong><label for="schoolName">School Name:</label></strong></p>
+                            <p><input type="text" id="schoolName" name="school_name" class="form-control"
+                                    value="<?php echo $school->getSchoolName(intval($school_id)); ?>"
+                                    placeholder="<?php echo $school->getSchoolName(intval($school_id)); ?>" required>
+                            </p>
+                            <p><strong><label for="schoolAddress">School Address:</label></strong></p>
+                            <p><input type="text" id="schoolAddress" name="school_address" class="form-control"
+                                    value="<?php echo $school->getSchoolAddress(intval($school_id)); ?>"
+                                    placeholder="<?php echo $school->getSchoolAddress(intval($school_id)); ?>" required>
+                            </p>
+                            <p><strong><label for="schoolCity">School City:</label></strong></p>
+                            <p><input type="text" id="schoolCity" name="school_city" class="form-control"
+                                    value="<?php echo $school->getSchoolCity(intval($school_id)); ?>"
+                                    placeholder="<?php echo $school->getSchoolCity(intval($school_id)); ?>" required>
+                            </p>
+                            <p><strong><label for="schoolState">School State:</label></strong></p>
+                            <div id="schoolParent" class="col-md-12 school-dropdown">
+                                <select type="select" id="schoolState" name="school_state"
+                                    class="select2 select2-school form-control app-forms" required>
+                                    <option value="">Select a State</option>
+                                    <?php
                                         //loop through the state array
                                         foreach ($stateArray as $key => $value) {
                                             //if the state matches the school state, set the selected attribute
@@ -283,16 +293,21 @@ if ($action == 'edit') { ?>
                                             }
                                         }
                                         ?>
-                                    </select>
-                                </div>
+                                </select>
                             </div>
-                            <div class="col-md-6">
-                                <!-- School Branding (optional) -->
-                                <h4>School Branding</h4>
-                                <p>
-                                    <strong><label for="schoolLogo">School Logo:</label></strong>
-                                    <!-- if there is an existing logo, show the file -->
-                                    <?php
+                            <p><strong><label for="schoolZip">School Zip:</label></strong></p>
+                            <p><input type="text" id="schoolZip" name="school_zip" class="form-control"
+                                    value="<?php echo $school->getSchoolZip(intval($school_id)); ?>"
+                                    placeholder="<?php echo $school->getSchoolZip(intval($school_id)); ?>" required>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- School Branding (optional) -->
+                            <h4>School Branding</h4>
+                            <p>
+                                <strong><label for="schoolLogo">School Logo:</label></strong>
+                                <!-- if there is an existing logo, show the file -->
+                                <?php
                                     if (!empty($school->getSchoolLogo(intval($school_id)))) {
                                         //render the file as an image
                                         echo '<div><img src="' . APP_URL . '/public/content/uploads/' . $school->getSchoolLogo(intval($school_id)) . '" alt="School Logo" style="max-width: 200px; max-height: auto;"></div>';
@@ -300,13 +315,13 @@ if ($action == 'edit') { ?>
                                         echo '<div> ' . $school->getSchoolLogo(intval($school_id)) . '</div>';
                                     }
                                     ?>
-                                </p>
-                                <p><input type="file" id="schoolLogo" name="school_logo" class="form-control"></p>
-                                <p>
-                                    <?php $currentColor = $school->getSchoolColor(intval($school_id)) ?? '#000000'; ?>
-                                    <strong><label for="schoolColor">School Primary Color:</label></strong>
-                                    <!-- if there is an existing color, show the color -->
-                                    <?php
+                            </p>
+                            <p><input type="file" id="schoolLogo" name="school_logo" class="form-control"></p>
+                            <p>
+                                <?php $currentColor = $school->getSchoolColor(intval($school_id)) ?? '#000000'; ?>
+                                <strong><label for="schoolColor">School Primary Color:</label></strong>
+                                <!-- if there is an existing color, show the color -->
+                                <?php
                                     if (!empty($school->getSchoolColor(intval($school_id)))) {
                                         //render the color as a div
                                         echo '<div id="color-block" style="width: 100px; height: 100px; background-color: ' . $school->getSchoolColor(intval($school_id)) . ';"></div>';
@@ -315,26 +330,29 @@ if ($action == 'edit') { ?>
                                         echo '<div id="color-block" style="width: 100px; height: 100px; background-color: ' . $currentColor . ';"></div>';
                                     }
                                     ?>
-                                </p>
-                                <p><input type="text" id="schoolColor" name="school_color" class="form-control" value="<?php echo $school->getSchoolColor(intval($school_id)); ?>" placeholder="<?php echo $school->getSchoolColor(intval($school_id)); ?>"></p>
-                                <p>
-                                <div id="values"></div>
-                                </p>
-                                <p>
-                                <div id="color-picker"></div>
-                                </p>
-                                <?php echo "<script>var currentColor = '$currentColor';</script>"; ?>
-                            </div>
+                            </p>
+                            <p><input type="text" id="schoolColor" name="school_color" class="form-control"
+                                    value="<?php echo $school->getSchoolColor(intval($school_id)); ?>"
+                                    placeholder="<?php echo $school->getSchoolColor(intval($school_id)); ?>"></p>
+                            <p>
+                            <div id="values"></div>
+                            </p>
+                            <p>
+                            <div id="color-picker"></div>
+                            </p>
+                            <?php echo "<script>var currentColor = '$currentColor';</script>"; ?>
                         </div>
                     </div>
-                    <div class=" card-footer">
-                        <button name="create_Button" type="submit" class="btn btn-primary">Save Changes</button>
-                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=list'; ?>" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class=" card-footer">
+                    <button name="create_Button" type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=list'; ?>"
+                        class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 <?php } else if ($action == 'create') { //else if the action is create, show the school creation form
 ?>
 
