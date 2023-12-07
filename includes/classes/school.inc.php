@@ -437,11 +437,31 @@ class School
         //get the current date and time
         $created_at = date("Y-m-d H:i:s");
         $result = false;
-        $sql = "INSERT INTO school (name, address, city, state, zipcode, created_at, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO school (name, address, city, state, zipcode, created_at, created_by, updated_at, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param("ssssssi", $school_name, $school_address, $school_city, $school_state, $school_zip, $created_at, $created_by);
+        $stmt->bind_param("ssssssisi", $school_name, $school_address, $school_city, $school_state, $school_zip, $created_at, $created_by, $created_at, $created_by);
         $stmt->execute();
         $result = true;
         return $result;
+    }
+
+    /**
+     * Get school ID by school name
+     *
+     * @param string $school_name
+     * @return int $school_id
+     */
+    public function getSchoolIdByName(string $school_name): int
+    {
+        $school_id = 0;
+        $sql = "SELECT id FROM school WHERE name = ?";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param("s", $school_name);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $school_id = intval($result->fetch_assoc()['id']);
+        }
+        return $school_id;
     }
 };
