@@ -154,8 +154,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //check if the school had an existing logo, if so, update the record
         if ($action == 'edit') {
-            //if the logo is empty, update the school logo
-            if (!empty($school_logo)) {
+            //if the logo is not empty, update the school logo
+            if (!empty($school_logo) || $school_logo != null || isset($school_logo) || $school_logo != '') {
                 $existing_logo = $school->getSchoolLogo($school_id);
                 //if the existing logo is not empty, see if the id matches
                 if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null) {
@@ -171,12 +171,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     //if the existing logo is empty, set the logo
                     $school->setSchoolLogo($school_id, $school_logo);
                 }
-            } else if (!empty($school_logo)) {
+            } else if (empty($school_logo) || $school_logo == null || $school_logo == '') {
                 $existing_logo = $school->getSchoolLogo($school_id);
                 if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null) {
-                    $school->setSchoolLogo($school_id, $school_logo);
+                    //if the file names match, update the logo incase the file has changed
+                    if ($existing_logo == $school_logo) {
+                        //should not be needed, but just in case
+                        $school->setSchoolLogo($school_id, $existing_logo);
+                    } else {
+                        //if the file names do not match, set the logo
+                        $school->setSchoolLogo($school_id, $existing_logo);
+                    }
                 } else {
-                    $school->setSchoolLogo($school_id, $school_logo);
+                    $school->setSchoolLogo($school_id, $existing_logo);
                 }
             }
         }
