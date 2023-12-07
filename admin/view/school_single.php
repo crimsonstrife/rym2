@@ -19,8 +19,8 @@ $school_id = $_GET['id'];
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet/leaflet.css'; ?>">
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.css'; ?>">
 <script>
-var mapLocationTitle = "<?php echo $school->getSchoolName(intval($school_id)); ?>";
-var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id)); ?>";
+    var mapLocationTitle = "<?php echo $school->getSchoolName(intval($school_id)); ?>";
+    var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id)); ?>";
 </script>
 <div class="container-fluid px-4">
     <h1 class="mt-4"><?php echo $school->getSchoolName(intval($school_id)); ?></h1>
@@ -32,12 +32,9 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                     School Information
                 </div>
                 <div class="card-buttons">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=list'; ?>"
-                        class="btn btn-primary btn-sm">Back to Schools</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=edit&action=edit&id=' . $school_id; ?>"
-                        class="btn btn-primary btn-sm">Edit School</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=delete&id=' . $school_id; ?>"
-                        class="btn btn-danger btn-sm">Delete School</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=list'; ?>" class="btn btn-primary btn-sm">Back to Schools</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=edit&action=edit&id=' . $school_id; ?>" class="btn btn-primary btn-sm">Edit School</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=delete&id=' . $school_id; ?>" class="btn btn-danger btn-sm">Delete School</a>
                 </div>
             </div>
             <div class="card-body">
@@ -56,8 +53,7 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                                     $address = $school->getFormattedSchoolAddress(intval($school_id));
                                     $address = urlencode($address);
                                     ?>
-                                    <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
-                                        target="_blank"><?php echo $school->getFormattedSchoolAddress(intval($school_id)); ?></a>
+                                    <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>" target="_blank"><?php echo $school->getFormattedSchoolAddress(intval($school_id)); ?></a>
                                 </p>
                             </div>
                             <div id="map"></div>
@@ -65,11 +61,9 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                         <div id="eventBranding">
                             <h3>School Branding</h3>
                             <p><strong>School Logo:</strong></p>
-                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $school->getSchoolLogo(intval($school_id)); ?><?php echo APP_URL . "/public/content/uploads/" . $school->getSchoolLogo(intval($school_id)); ?>"
-                                alt="School Logo" style="max-width: 200px; max-height: auto;">
+                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $school->getSchoolLogo(intval($school_id)); ?>" alt="School Logo" style="max-width: 200px; max-height: auto;">
                             <p><strong>School Primary Color:</strong></p>
-                            <div
-                                style="width: 100px; height: 100px; background-color: <?php echo $school->getSchoolColor(intval($school_id)) ?? '#000000'; ?>;">
+                            <div style="width: 100px; height: 100px; background-color: <?php echo $school->getSchoolColor(intval($school_id)) ?? '#000000'; ?>;">
                             </div>
                         </div>
                     </div>
