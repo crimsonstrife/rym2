@@ -92,12 +92,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $school_color = '#000000';
     }
 
+    //get the school id using the school name
+    $school_id = $school->getSchoolIdByName($school_name);
+
     //if there are files to upload, upload them
-    if (!empty($school_logo)) {
+    if (!empty($school_logo) || $school_logo != null || isset($school_logo)) {
         //Php upload script based loosely on https://www.w3schools.com/php/php_file_upload.asp
         $target_dir = dirname(__FILE__) . '/../../../../public/content/uploads/';
         //get the file names if they are not empty or null
-        if (!empty($school_logo)) {
+        if (!empty($school_logo) || $school_logo != null || isset($school_logo)) {
             $school_logo_file = basename($_FILES["school_logo"]["name"]);
             //log the file name
             //error_log('File name: ' . $school_logo_file);
@@ -155,5 +158,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         }
+    }
+
+    if (!empty($school_logo) || $school_logo != null || isset($school_logo)) {
+        //set the school logo
+        $school->setSchoolLogo($school_id, $school_logo);
+    }
+
+    if (!empty($school_color) || $school_color != null || isset($school_color)) {
+        //set the school color
+        $school->setSchoolColor($school_id, $school_color);
     }
 }
