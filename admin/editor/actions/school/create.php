@@ -126,9 +126,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Check if file already exists
-        if (file_exists($target_file_logo)) {
-            $school_logo = null;
-            $uploadOk_logo = 0;
+        if (isset($target_file_logo)) {
+            if (file_exists($target_file_logo)) {
+                $school_logo = null;
+                $uploadOk_logo = 0;
+            }
         }
 
         // Check file size
@@ -139,7 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Allow certain file formats
         if (
-            $imageFileType_logo != "jpg" && $imageFileType_logo != "png" && $imageFileType_logo != "jpeg"
+            $imageFileType_logo != "jpg" && $imageFileType_logo != "png" && $imageFileType_logo != "jpeg" && $imageFileType_logo != "gif" && $imageFileType_logo != "svg" && $imageFileType_logo != "webp" && $imageFileType_logo != "bmp"
         ) {
             $school_logo = null;
             $uploadOk_logo = 0;
