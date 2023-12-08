@@ -9,23 +9,27 @@
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-gauge"></i></div>
                     Dashboard
                 </a>
-                <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=events&events=list' ?>">
+                <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list' ?>">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-calendar-day"></i></div>
                     Events
                 </a>
-                <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&schools=list' ?>">
+                <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=list' ?>">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-school"></i></div>
                     Schools
                 </a>
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
+                    aria-expanded="false" aria-controls="collapseLayouts">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-graduation-cap"></i></div>
                     Degree Programs
                     <div class="side-nav-collapse-arrow"><i class="fa-solid fa-chevron-down"></i></div>
                 </a>
-                <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
+                    data-bs-parent="#sidenavAccordion">
                     <nav class="side-nav-menu-nested nav">
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=majors' ?>">Majors</a>
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees' ?>">Degrees</a>
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=majors&major=list' ?>">Majors</a>
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list' ?>">Degrees</a>
                     </nav>
                 </div>
             </div>
