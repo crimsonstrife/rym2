@@ -16,6 +16,13 @@
 
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 
+/* Include the base application config file */
+require_once(__DIR__ . '/../../config/app.php');
+/* Include the database config file */
+require_once(__DIR__ . '/../../config/database.php');
+// include the database connector file
+require_once(BASEPATH . '/includes/connector.inc.php');
+
 /**
  * Degree Class, contains all the functions for the degree table.
  */
