@@ -72,9 +72,10 @@ abstract class Grade
      * Update a degree level in the database
      * @param int $lvl_id //id from the degree levels table
      * @param string $lvl_name //name of the degree level
+     * @param int $user_id //id from the users table
      * @return bool
      */
-    abstract public function updateGrade(int $lvl_id, string $lvl_name): bool;
+    abstract public function updateGrade(int $lvl_id, string $lvl_name, int $user_id): bool;
 
     /**
      * Delete a degree level from the database
