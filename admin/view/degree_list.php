@@ -14,7 +14,8 @@ if (!defined('ISVALIDUSER')) {
                     Degree List
                 </div>
                 <div class="card-tools">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=add&action=create' ?>" class="btn btn-primary">Add Degree</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=add&action=create' ?>"
+                        class="btn btn-primary">Add Degree</a>
                 </div>
             </div>
             <div class="card-body">
@@ -40,17 +41,19 @@ if (!defined('ISVALIDUSER')) {
                         //for each event, display it
                         foreach ($degreeArray as $degree) {
                         ?>
-                            <tr>
-                                <td><?php echo $degree['name']; ?></td>
-                                <td><?php echo $degree['created_at']; ?></td>
-                                <td><?php echo $usersData->getUserUsername($degree['created_by']); ?></td>
-                                <td><?php echo $degree['updated_at']; ?></td>
-                                <td><?php echo $usersData->getUserUsername($degree['updated_by']); ?></td>
-                                <td>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=edit&action=update&id=' . $degree['id']; ?>" class="btn btn-primary">Edit</a>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=delete&action=delete&id=' . $degree['id']; ?>" class="btn btn-danger">Delete</a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td><?php echo $degree['name']; ?></td>
+                            <td><?php echo $degree['created_at']; ?></td>
+                            <td><?php echo $usersData->getUserUsername($degree['created_by']); ?></td>
+                            <td><?php echo $degree['updated_at']; ?></td>
+                            <td><?php echo $usersData->getUserUsername($degree['updated_by']); ?></td>
+                            <td>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=edit&action=edit&id=' . $degree['id']; ?>"
+                                    class="btn btn-primary">Edit</a>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=delete&action=delete&id=' . $degree['id']; ?>"
+                                    class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
                         <?php } ?>
                     </tbody>
                 </table>
@@ -75,7 +78,9 @@ if (!defined('ISVALIDUSER')) {
                         );
                     }
                     ?>
-                    <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=degrees&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                    <form target="_blank"
+                        action="<?php echo APP_URL . '/admin/download.php?type=degrees&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
+                        method="post" enctype="multipart/form-data">
                         <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                     </form>
                 </div>
