@@ -63,6 +63,21 @@ if (isset($_SESSION['user_id'])) {
             case 'degrees':
                 include_once('degrees_content.php');
                 break;
+            case 'users':
+                include_once('users_content.php');
+                break;
+            case 'settings':
+                include_once('settings_content.php');
+                break;
+            case 'jobs':
+                include_once('jobs_content.php');
+                break;
+            case 'subjects':
+                include_once('subjects_content.php');
+                break;
+            case 'reports':
+                include_once('reports_content.php');
+                break;
             default:
                 include_once('admin_content.php');
                 break;
