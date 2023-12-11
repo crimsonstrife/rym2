@@ -233,15 +233,19 @@ class Degree extends Grade implements Major
      * Update a degree level in the database
      * @param int $lvl_id //id from the degree levels table
      * @param string $lvl_name //name of the degree level
+     * @param int $user_id //id from the users table
      * @return bool
      */
-    public function updateGrade(int $lvl_id, string $lvl_name): bool
+    public function updateGrade(int $lvl_id, string $lvl_name, int $user_id): bool
     {
+        //get the current date and time
+        $updated_at = date('Y-m-d H:i:s');
+
         //prepare the query
-        $stmt = $this->mysqli->prepare("UPDATE degree_lvl SET lvl_name = ? WHERE id = ?");
+        $stmt = $this->mysqli->prepare("UPDATE degree_lvl SET name = ?, updated_at = ?, updated_by = ? WHERE id = ?");
 
         //bind the parameters
-        $stmt->bind_param('si', $lvl_name, $lvl_id);
+        $stmt->bind_param('sssi', $lvl_name, $updated_at, $user_id, $lvl_id);
 
         //execute the query
         $stmt->execute();
