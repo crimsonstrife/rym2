@@ -162,15 +162,19 @@ class Degree extends Grade implements Major
     /**
      * Add a degree level to the database
      * @param string $lvl_name //name of the degree level
+     * @param int $user_id //id from the users table
      * @return bool
      */
-    public function addGrade(string $lvl_name): bool
+    public function addGrade(string $lvl_name, int $user_id): bool
     {
+        //get the current date and time
+        $created_at = date('Y-m-d H:i:s');
+
         //prepare the query
-        $stmt = $this->mysqli->prepare("INSERT INTO degree_lvl (name) VALUES (?)");
+        $stmt = $this->mysqli->prepare("INSERT INTO degree_lvl (name, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?)");
 
         //bind the parameters
-        $stmt->bind_param('s', $lvl_name);
+        $stmt->bind_param('sssss', $lvl_name, $created_at, $created_at, $user_id, $user_id);
 
         //execute the query
         $stmt->execute();
