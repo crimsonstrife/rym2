@@ -63,9 +63,10 @@ abstract class Grade
     /**
      * Add a degree level to the database
      * @param string $lvl_name //name of the degree level
+     * @param int $user_id //id from the users table
      * @return bool
      */
-    abstract public function addGrade(string $lvl_name): bool;
+    abstract public function addGrade(string $lvl_name, int $user_id): bool;
 
     /**
      * Update a degree level in the database
