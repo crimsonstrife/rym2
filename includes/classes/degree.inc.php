@@ -200,8 +200,14 @@ class Degree extends Grade implements Major
         //initialize the user class
         $user = new User();
 
-        //Empty statement to prepare
-        $stmt = "";
+        //validate the user id
+        if (!$user->validateUserById($created_by)) {
+            //if the user id is invalid, then the major is being created by a student submitting a form, so set the user to NULL
+            $creationUser = NULL;
+        } else {
+            //if the user id is valid, then the major is being created by an admin, so set the user to the user id
+            $creationUser = $created_by;
+        }
 
         //get the current date and time
         $created_at = date('Y-m-d H:i:s');
@@ -210,7 +216,7 @@ class Degree extends Grade implements Major
         $stmt = $this->mysqli->prepare("INSERT INTO major (name, created_by, created_at, updated_by, updated_at) VALUES (?, ?, ?, ?, ?)");
 
         //bind the parameters
-        $stmt->bind_param('sisis', $major_name, $created_by, $created_at, $created_by, $created_at);
+        $stmt->bind_param('sisis', $major_name, $creationUser, $created_at, $creationUser, $created_at);
 
         //execute the query
         $stmt->execute();
