@@ -87,9 +87,10 @@ class JobField extends Subject
      * Add a subject to the database
      *
      * @param string $aoi_name //name of the subject
+     * @param int $user_id //id from the users table
      * @return bool
      */
-    public function addSubject(string $aoi_name): bool
+    public function addSubject(string $aoi_name, int $user_id): bool
     {
         $sql = "INSERT INTO aoi (name) VALUES (?)";
         $stmt = $this->mysqli->prepare($sql);
@@ -107,9 +108,10 @@ class JobField extends Subject
      *
      * @param int $aoi_id //id from the areas of interest table
      * @param string $aoi_name //name of the subject
+     * @param int $user_id //id from the users table
      * @return bool
      */
-    public function updateSubject(int $aoi_id, string $aoi_name): bool
+    public function updateSubject(int $aoi_id, string $aoi_name, int $user_id): bool
     {
         $sql = "UPDATE aoi SET name = ? WHERE id = ?";
         $stmt = $this->mysqli->prepare($sql);
