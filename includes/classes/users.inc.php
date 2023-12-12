@@ -416,9 +416,15 @@ class User implements Login
         //Create a variable to hold the user's username
         $username = "";
 
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $username = $row['username'];
+        //if the user id is not null, 0, or empty, get the username
+        if ($id != null && $id != 0 && !empty($id)) {
+            //Loop through the results and add them to the array
+            while ($row = $result->fetch_assoc()) {
+                $username = $row['username'];
+            }
+        } else {
+            //if the user id is null, 0, or empty, set the username to "Submitted"
+            $username = "Submitted";
         }
 
         //Return the user's username
