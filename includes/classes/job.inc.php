@@ -298,4 +298,61 @@ class Job
         //return the user
         return $user;
     }
+
+    /**
+     * Add a job to the database
+     *
+     * @param string $name //job name
+     * @param string $description //job description
+     * @param string $type //job type
+     * @param int $field //job field
+     * @param int $created_by //user id of the user creating the job
+     * @return bool
+     */
+    public function addJob(string $name, string $description, string $type, int $field, int $created_by): bool
+    {
+        //get the current date and time
+        $date = date('Y-m-d H:i:s');
+        //prepare the sql statement
+        $sql = "INSERT INTO jobs (name, description, type, field, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param("ssssssii", $name, $description, $type, $field, $date, $date, $created_by, $created_by);
+        $stmt->execute();
+
+        //check if the query was successful
+        if ($stmt->affected_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Update a job in the database
+     *
+     * @param int $id //job id
+     * @param string $name //job name
+     * @param string $description //job description
+     * @param string $type //job type
+     * @param int $field //job field
+     * @param int $updated_by //user id of the user updating the job
+     * @return bool
+     */
+    public function updateJob(int $id, string $name, string $description, string $type, int $field, int $updated_by): bool
+    {
+        //get the current date and time
+        $date = date('Y-m-d H:i:s');
+        //prepare the sql statement
+        $sql = "UPDATE jobs SET name = ?, description = ?, type = ?, field = ?, updated_at = ?, updated_by = ? WHERE id = ?";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param("sssssii", $name, $description, $type, $field, $date, $updated_by, $id);
+        $stmt->execute();
+
+        //check if the query was successful
+        if ($stmt->affected_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
