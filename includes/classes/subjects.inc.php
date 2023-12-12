@@ -66,18 +66,20 @@ abstract class Subject
      * Add a subject to the database
      *
      * @param string $aoi_name //name of the subject
+     * @param int $user_id //id from the users table *optional
      * @return bool
      */
-    abstract public function addSubject(string $aoi_name): bool;
+    abstract public function addSubject(string $aoi_name, int $user_id): bool;
 
     /**
      * Update a subject in the database
      *
      * @param int $aoi_id //id from the areas of interest table
      * @param string $aoi_name //name of the subject
+     * @param int $user_id //id from the users table *optional
      * @return bool
      */
-    abstract public function updateSubject(int $aoi_id, string $aoi_name): bool;
+    abstract public function updateSubject(int $aoi_id, string $aoi_name, int $user_id): bool;
 
     /**
      * Delete a subject from the database
