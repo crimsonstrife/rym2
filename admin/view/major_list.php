@@ -44,9 +44,21 @@ if (!defined('ISVALIDUSER')) {
                         <tr>
                             <td><?php echo $major['name']; ?></td>
                             <td><?php echo $major['created_at']; ?></td>
+                            <?php
+                                //if the created by id is not null, get the username
+                                if ($major['created_by'] != null) { ?>
                             <td><?php echo $usersData->getUserUsername($major['created_by']); ?></td>
+                            <?php } else { ?>
+                            <td>Student Submission</td>
+                            <?php } ?>
                             <td><?php echo $major['updated_at']; ?></td>
+                            <?php
+                                //if the updated by id is not null, get the username
+                                if ($major['updated_by'] != null) { ?>
                             <td><?php echo $usersData->getUserUsername($major['updated_by']); ?></td>
+                            <?php } else { ?>
+                            <td>Student Submission</td>
+                            <?php } ?>
                             <td>
                                 <a href="<?php echo APP_URL . '/admin/dashboard.php?view=majors&major=edit&action=edit&id=' . $major['id']; ?>"
                                     class="btn btn-primary">Edit</a>
