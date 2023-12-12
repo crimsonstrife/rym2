@@ -203,18 +203,14 @@ class Degree extends Grade implements Major
         //Empty statement to prepare
         $stmt = "";
 
-        //verify the user id is not 0 or null and it exists in the database
-        if ($created_by != 0 && $created_by != null && $user->validateUserById($created_by)) {
-            //prepare the query
-            $stmt = $this->mysqli->prepare("INSERT INTO major (name, created_by, created_at) VALUES (?, ?)");
-            //bind the parameters
-            $stmt->bind_param('si', $major_name, $created_by);
-        } else {
-            //prepare the query
-            $stmt = $this->mysqli->prepare("INSERT INTO major (name) VALUES (?)");
-            //bind the parameters
-            $stmt->bind_param('s', $major_name);
-        }
+        //get the current date and time
+        $created_at = date('Y-m-d H:i:s');
+
+        //prepare the query
+        $stmt = $this->mysqli->prepare("INSERT INTO major (name, created_by, created_at, updated_by, updated_at) VALUES (?, ?, ?, ?, ?)");
+
+        //bind the parameters
+        $stmt->bind_param('sisis', $major_name, $created_by, $created_at, $created_by, $created_at);
 
         //execute the query
         $stmt->execute();
@@ -269,11 +265,14 @@ class Degree extends Grade implements Major
      */
     public function updateMajor(int $major_id, string $major_name, int $updated_by): bool
     {
+        //get the current date and time
+        $updated_at = date('Y-m-d H:i:s');
+
         //prepare the query
-        $stmt = $this->mysqli->prepare("UPDATE major SET name = ?, updated_by = ? WHERE id = ?");
+        $stmt = $this->mysqli->prepare("UPDATE major SET name = ?, updated_by = ?, updated_at = ? WHERE id = ?");
 
         //bind the parameters
-        $stmt->bind_param('sii', $major_name, $updated_by, $major_id);
+        $stmt->bind_param('sisi', $major_name, $updated_by, $updated_at, $major_id);
 
         //execute the query
         $stmt->execute();
