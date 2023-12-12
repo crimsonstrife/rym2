@@ -14,7 +14,8 @@ if (!defined('ISVALIDUSER')) {
                     Majors List
                 </div>
                 <div class="card-tools">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=majors&major=add&action=create' ?>" class="btn btn-primary">Add Major</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=majors&major=add&action=create' ?>"
+                        class="btn btn-primary">Add Major</a>
                 </div>
             </div>
             <div class="card-body">
@@ -40,17 +41,19 @@ if (!defined('ISVALIDUSER')) {
                         //for each event, display it
                         foreach ($majorArray as $major) {
                         ?>
-                            <tr>
-                                <td><?php echo $major['name']; ?></td>
-                                <td><?php echo $major['created_at']; ?></td>
-                                <td><?php echo $usersData->getUserUsername($major['created_by']); ?></td>
-                                <td><?php echo $major['updated_at']; ?></td>
-                                <td><?php echo $usersData->getUserUsername($major['updated_by']); ?></td>
-                                <td>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=majors&major=edit&action=edit&id=' . $major['id']; ?>" class="btn btn-primary">Edit</a>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=majors&major=delete&action=delete&id=' . $major['id']; ?>" class="btn btn-danger">Delete</a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td><?php echo $major['name']; ?></td>
+                            <td><?php echo $major['created_at']; ?></td>
+                            <td><?php echo $usersData->getUserUsername($major['created_by']); ?></td>
+                            <td><?php echo $major['updated_at']; ?></td>
+                            <td><?php echo $usersData->getUserUsername($major['updated_by']); ?></td>
+                            <td>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=majors&major=edit&action=edit&id=' . $major['id']; ?>"
+                                    class="btn btn-primary">Edit</a>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=majors&major=delete&action=delete&id=' . $major['id']; ?>"
+                                    class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
                         <?php } ?>
                     </tbody>
                 </table>
@@ -75,7 +78,9 @@ if (!defined('ISVALIDUSER')) {
                         );
                     }
                     ?>
-                    <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=majors&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                    <form target="_blank"
+                        action="<?php echo APP_URL . '/admin/download.php?type=majors&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
+                        method="post" enctype="multipart/form-data">
                         <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                     </form>
                 </div>
