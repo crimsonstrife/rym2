@@ -124,6 +124,44 @@ function validateEmail(string $email): bool
 }
 
 /**
+ * Validate phone number
+ * Returns true if the phone number is valid, false if not
+ *
+ * @param string $phone phone number to validate
+ * @return bool true if the phone number is valid, false if not
+ */
+function validatePhone(string $phone): bool
+{
+    /* Validate the phone number */
+    if (preg_match("/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/", $phone)) {
+        /* Return true if the phone number is valid */
+        return true;
+    } else {
+        /* Return false if the phone number is not valid */
+        return false;
+    }
+}
+
+/**
+ * Validate zip code
+ * Returns true if the zip code is valid, false if not
+ *
+ * @param string $zip zip code to validate
+ * @return bool true if the zip code is valid, false if not
+ */
+function validateZip(string $zip): bool
+{
+    /* Validate the zip code */
+    if (preg_match("/^[0-9]{5}$/", $zip)) {
+        /* Return true if the zip code is valid */
+        return true;
+    } else {
+        /* Return false if the zip code is not valid */
+        return false;
+    }
+}
+
+/**
  * Validate URL
  *
  * @param string $url URL to validate
