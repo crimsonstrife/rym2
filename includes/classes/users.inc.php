@@ -191,7 +191,9 @@ class User implements Login
 
         //loop through the roles array and get the role objects
         foreach ($roles as $roleId) {
-            $userRoles[] = $role->getRoleById($roleId['role_id']);
+            $roleObject = $role->getRoleById($roleId['role_id']);
+            //add the role object to the array
+            $userRoles[] = $roleObject;
         }
 
         //return the roles array
