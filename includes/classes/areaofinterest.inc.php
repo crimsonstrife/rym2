@@ -87,16 +87,24 @@ class AreaOfInterest extends Subject
      * Add a subject to the database
      *
      * @param string $aoi_name //name of the subject
+     * @param int $user_id //id from the users table *optional
      * @return bool
      */
-    public function addSubject(string $aoi_name): bool
+    public function addSubject(string $aoi_name, int $user_id = 0): bool
     {
-        $sql = "INSERT INTO aoi (name) VALUES (?)";
+        //get current date and time
+        $currentDateTime = date('Y-m-d H:i:s');
+        //if the user id is not set, set it to 0
+        if (!isset($user_id)) {
+            $user_id = 0;
+        }
+        $sql = "INSERT INTO aoi (name, created_at, created_by, updated_at, updated_by) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param("s", $aoi_name);
+        $stmt->bind_param("ssisi", $aoi_name, $currentDateTime, $user_id, $currentDateTime, $user_id);
         $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result) {
+
+        //check for affected rows
+        if ($stmt->affected_rows > 0) {
             return true;
         } else {
             return false;
@@ -108,16 +116,20 @@ class AreaOfInterest extends Subject
      *
      * @param int $aoi_id //id from the areas of interest table
      * @param string $aoi_name //name of the subject
+     * @param int $user_id //id from the users table *optional
      * @return bool
      */
-    public function updateSubject(int $aoi_id, string $aoi_name): bool
+    public function updateSubject(int $aoi_id, string $aoi_name, int $user_id): bool
     {
-        $sql = "UPDATE aoi SET name = ? WHERE id = ?";
+        //get current date and time
+        $currentDateTime = date('Y-m-d H:i:s');
+        $sql = "UPDATE aoi SET name = ?, updated_at = ?, updated_by = ? WHERE id = ?";
         $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param("si", $aoi_name, $aoi_id);
+        $stmt->bind_param("ssii", $aoi_name, $currentDateTime, $user_id, $aoi_id);
         $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result) {
+
+        //check for affected rows
+        if ($stmt->affected_rows > 0) {
             return true;
         } else {
             return false;
