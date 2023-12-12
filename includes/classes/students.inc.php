@@ -57,8 +57,14 @@ class Student
             while ($row = $result->fetch_assoc()) {
                 $students[] = $row;
             }
-            //Return the students array
-            return $students;
+            //if the students array is not empty
+            if (!empty($students)) {
+                //Return the students array
+                return $students;
+            } else {
+                //If the students array is empty, return an empty array
+                return array();
+            }
         } else {
             //If the query fails, return an empty array
             return array();
@@ -191,6 +197,154 @@ class Student
             //If the query fails, return an empty string
             return "";
         }
+    }
+
+    /**
+     * Get a student phone number
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentPhone(int $id): string
+    {
+        //SQL statement to get a student phone number
+        $sql = "SELECT phone FROM student WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        $phone = "";
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $phone = $row['phone'];
+            }
+        }
+        //Return the student phone number
+        return $phone;
+    }
+
+    /**
+     * Get a formatted student phone number
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentFormattedPhone(int $id): string
+    {
+        //get the student phone number
+        $phone = $this->getStudentPhone($id);
+        //format the student phone number
+        $formatted_phone = "(" . substr($phone, 0, 3) . ") " . substr($phone, 3, 3) . "-" . substr($phone, 6, 4);
+        //return the student phone number
+        return $formatted_phone;
+    }
+
+    /**
+     * Get a student address
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentAddress(int $id): string
+    {
+        //SQL statement to get a student address
+        $sql = "SELECT address FROM student WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        $address = "";
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $address = $row['address'];
+            }
+        }
+        //Return the student address
+        return $address;
+    }
+
+    /**
+     * Get a student city
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentCity(int $id): string
+    {
+        //SQL statement to get a student city
+        $sql = "SELECT city FROM student WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        $city = "";
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $city = $row['city'];
+            }
+        }
+        //Return the student city
+        return $city;
+    }
+
+    /**
+     * Get a student state
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentState(int $id): string
+    {
+        //SQL statement to get a student state
+        $sql = "SELECT state FROM student WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        $state = "";
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $state = $row['state'];
+            }
+        }
+        //Return the student state
+        return $state;
+    }
+
+    /**
+     * Get a student zip code
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentZip(int $id): string
+    {
+        //SQL statement to get a student zip code
+        $sql = "SELECT zip FROM student WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        $zip = "";
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $zip = $row['zip'];
+            }
+        }
+        //Return the student zip code
+        return $zip;
+    }
+
+    /**
+     * Get a formatted student address
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentFormattedAddress(int $id): string
+    {
+        //get the student address
+        $address = $this->getStudentAddress($id);
+        //get the student city
+        $city = $this->getStudentCity($id);
+        //get the student state
+        $state = $this->getStudentState($id);
+        //get the student zip code
+        $zip = $this->getStudentZip($id);
+        //format the student address
+        $formatted_address = $address . " " . $city . ", " . $state . " " . $zip;
+        //return the student address
+        return $formatted_address;
     }
 
     /**
@@ -524,6 +678,11 @@ class Student
      * @param string $first_name
      * @param string $last_name
      * @param string $email
+     * @param string $phone
+     * @param string $address
+     * @param string $city
+     * @param string $state
+     * @param string $zip
      * @param int $degree_id
      * @param int $major_id
      * @param string $school
@@ -532,16 +691,21 @@ class Student
      * @param int $area_id
      * @return bool
      */
-    public function addStudent(string $first_name, string $last_name, string $email, int $degree_id, int $major_id, string $school, string $graduation, string $position, $event_id, int $area_id): bool
+    public function addStudent(string $first_name, string $last_name, string $email, string $phone = NULL, string $address, string $city, string $state, string $zip, int $degree_id, int $major_id, string $school, string $graduation, string $position, $event_id, int $area_id): bool
     {
         //Escape the data to prevent SQL injection attacks
         $first_name = $this->mysqli->real_escape_string($first_name);
         $last_name = $this->mysqli->real_escape_string($last_name);
         $email = $this->mysqli->real_escape_string($email);
+        $phone = $this->mysqli->real_escape_string($phone);
+        $address = $this->mysqli->real_escape_string($address);
+        $city = $this->mysqli->real_escape_string($city);
+        $state = $this->mysqli->real_escape_string($state);
+        $zip = $this->mysqli->real_escape_string($zip);
         //get current timestamp to set the created_at and updated_at fields
         $timestamp = date('Y-m-d H:i:s');
         //SQL statement to add a new student to the database
-        $sql = "INSERT INTO student (first_name, last_name, email, degree, major, school, graduation, position, interest, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', '$degree_id', '$major_id', '$school', '$graduation', '$position', '$area_id', '$timestamp', '$timestamp')";
+        $sql = "INSERT INTO student (first_name, last_name, email, phone, address, city, state, zip, degree, major, school, graduation, position, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', '$phone', '$address', '$city', '$state', '$zip', '$degree_id', '$major_id', '$school', '$graduation', '$position', '$timestamp', '$timestamp')";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query is successful
