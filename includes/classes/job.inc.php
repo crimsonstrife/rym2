@@ -81,18 +81,19 @@ class Job
      * Get a jobs field from the field ID
      *
      * @param int $id //field id from the jobs table
-     * @return JobField
+     * @return int $fieldID //field id from the areas of interest table
      */
-    public function getJobField(int $id): JobField
+    public function getJobField(int $id): int
     {
-        //instantiate the job field class
-        $jobField = new JobField();
-        //get the matching fields from the job field class
-        $matchingFields = $jobField->getSubject($id);
-        //should only be one matching field, so set the first one
-        $jobField = $matchingFields[0];
-        //return the job field
-        return $jobField;
+        $sql = "SELECT field FROM jobs WHERE id = $id";
+        $result = $this->mysqli->query($sql);
+        $fieldID = 0;
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $fieldID = $row['field'];
+            }
+        }
+        return intval($fieldID);
     }
 
     /**
@@ -137,7 +138,7 @@ class Job
      * Get a jobs type from the job ID
      *
      * @param int $id //job id
-     * @return string //job type - 'FULL', 'PART', 'INTERN'
+     * @return string //job type - 'Full Time', 'Part Time', 'Internship'
      */
     public function getJobType(int $id): string
     {
@@ -159,6 +160,25 @@ class Job
         } else {
             return 'Internship';
         }
+    }
+
+    /**
+     * Get a jobs type enum from the job ID
+     *
+     * @param int $id //job id
+     * @return string //job type - 'FULL', 'PART', 'INTERN'
+     */
+    public function getJobTypeEnum(int $id): string
+    {
+        $sql = "SELECT type FROM jobs WHERE id = $id";
+        $result = $this->mysqli->query($sql);
+        $type = "";
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $type = $row['type'];
+            }
+        }
+        return $type;
     }
 
     /**
