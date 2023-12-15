@@ -78,6 +78,9 @@ if (isset($_SESSION['user_id'])) {
             case 'reports':
                 include_once('reports_content.php');
                 break;
+            case 'students':
+                include_once('students_content.php');
+                break;
             default:
                 include_once('admin_content.php');
                 break;
