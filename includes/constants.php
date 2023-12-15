@@ -13,6 +13,7 @@ define('JOBTYPES', array(
  * Define constant for date formats
  */
 define('DATE_FORMAT', 'm/d/Y');
+define('TIME_FORMAT', 'h:i A');
 
 /**
  * define the States array
