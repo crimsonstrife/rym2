@@ -133,7 +133,7 @@ function validateEmail(string $email): bool
 function validatePhone(string $phone): bool
 {
     /* Validate the phone number */
-    if (preg_match("/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/", $phone)) {
+    if (preg_match("/^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/", $phone)) { // Regex to validate phone formatting, by Ravi K Thapliyal, https://stackoverflow.com/questions/16699007/regular-expression-to-match-standard-10-digit-phone-number
         /* Return true if the phone number is valid */
         return true;
     } else {
