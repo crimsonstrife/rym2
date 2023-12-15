@@ -312,13 +312,13 @@ class Student
     public function getStudentZip(int $id): string
     {
         //SQL statement to get a student zip code
-        $sql = "SELECT zip FROM student WHERE id = $id";
+        $sql = "SELECT zipcode FROM student WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         $zip = "";
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $zip = $row['zip'];
+                $zip = $row['zipcode'];
             }
         }
         //Return the student zip code
@@ -478,6 +478,28 @@ class Student
     }
 
     /**
+     * Get a student's school id
+     *
+     * @param int $id
+     * @return int
+     */
+    public function getStudentSchool(int $id): int
+    {
+        //SQL statement to get a student school id
+        $sql = "SELECT school FROM student WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        $school = 0;
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $school = $row['school'];
+            }
+        }
+        //Return the student school id
+        return intval($school);
+    }
+
+    /**
      * Get a students job type preference from the job ID
      *
      * @param int $id //student id
@@ -627,7 +649,7 @@ class Student
     }
 
     /**
-     * Set a student's graduation year
+     * Set a student's graduation date
      *
      * @param int $id
      * @param string $graduation
@@ -673,6 +695,27 @@ class Student
     }
 
     /**
+     * Get a student's area of interest
+     * @param int $id
+     * @return int //area of interest id
+     */
+    public function getStudentInterest(int $id): int
+    {
+        //SQL statement to get a student's area of interest
+        $sql = "SELECT interest FROM student WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        $interest = 0;
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $interest = $row['interest'];
+            }
+        }
+        //Return the student's area of interest
+        return intval($interest);
+    }
+
+    /**
      * Add a new student to the database
      *
      * @param string $first_name
@@ -691,7 +734,7 @@ class Student
      * @param int $area_id
      * @return bool
      */
-    public function addStudent(string $first_name, string $last_name, string $email, string $phone = NULL, string $address, string $city, string $state, string $zip, int $degree_id, int $major_id, string $school, string $graduation, string $position, $event_id, int $area_id): bool
+    public function addStudent(string $first_name, string $last_name, string $email, string $phone = NULL, string $address, string $city, string $state, string $zip, int $degree_id, int $major_id, string $school, string $graduation, string $position, int $area_id): bool
     {
         //Escape the data to prevent SQL injection attacks
         $first_name = $this->mysqli->real_escape_string($first_name);
@@ -705,7 +748,7 @@ class Student
         //get current timestamp to set the created_at and updated_at fields
         $timestamp = date('Y-m-d H:i:s');
         //SQL statement to add a new student to the database
-        $sql = "INSERT INTO student (first_name, last_name, email, phone, address, city, state, zip, degree, major, school, graduation, position, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', '$phone', '$address', '$city', '$state', '$zip', '$degree_id', '$major_id', '$school', '$graduation', '$position', '$timestamp', '$timestamp')";
+        $sql = "INSERT INTO student (first_name, last_name, email, phone, address, city, state, zipcode, degree, major, school, graduation, position, interest, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', '$phone', '$address', '$city', '$state', '$zip', '$degree_id', '$major_id', '$school', '$graduation', '$position', '$area_id', '$timestamp', '$timestamp')";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query is successful
@@ -788,5 +831,27 @@ class Student
         }
         //Return the students array
         return $students;
+    }
+
+    /**
+     * Student Contact History
+     * Get the contact history for a student
+     * @param int $student_id
+     * @return array
+     */
+    public function getStudentContactHistory(int $student_id): array
+    {
+        //SQL statement to get the contact history for a student
+        $sql = "SELECT * FROM contact_log WHERE student = $student_id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        $contact_history = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $contact_history[] = $row;
+            }
+        }
+        //Return the contact history array
+        return $contact_history;
     }
 };
