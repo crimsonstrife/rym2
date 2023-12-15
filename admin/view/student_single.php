@@ -35,8 +35,10 @@ $student_id = $_GET['id'];
                     Student Information
                 </div>
                 <div class="card-buttons">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>" class="btn btn-primary btn-sm">Back to Students</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=delete&id=' . $student_id; ?>" class="btn btn-danger btn-sm">Delete Student</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>"
+                        class="btn btn-primary btn-sm">Back to Students</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=delete&id=' . $student_id; ?>"
+                        class="btn btn-danger btn-sm">Delete Student</a>
                 </div>
             </div>
             <div class="card-body">
@@ -67,7 +69,8 @@ $student_id = $_GET['id'];
                                 $address = $student->getStudentFormattedAddress($student_id);
                                 $address = urlencode($address);
                                 ?>
-                                <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>" target="_blank"><?php echo $student->getStudentFormattedAddress($student_id); ?></a>
+                                <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
+                                    target="_blank"><?php echo $student->getStudentFormattedAddress($student_id); ?></a>
                             </p>
                             <p>
                                 <strong>Field of Study/Area of Interest:</strong>
@@ -102,14 +105,14 @@ $student_id = $_GET['id'];
                             if ($events) {
                                 foreach ($events as $event) {
                             ?>
-                                    <p>
-                                        <i class="fa-solid fa-calendar-day"></i>
-                                        <strong><?php echo $eventsData->getEventName($event['event_id']) ?></strong>
-                                        <br />
-                                        <?php echo $eventsData->getEventLocation($event['event_id']); ?>
-                                        <br />
-                                        <?php echo formatDate($eventsData->getEventDate($event['event_id'])); ?>
-                                    </p>
+                            <p>
+                                <i class="fa-solid fa-calendar-day"></i>
+                                <strong><?php echo $eventsData->getEventName($event['event_id']) ?></strong>
+                                <br />
+                                <?php echo $eventsData->getEventLocation($event['event_id']); ?>
+                                <br />
+                                <?php echo formatDate($eventsData->getEventDate($event['event_id'])); ?>
+                            </p>
                             <?php
                                 }
                             } else {
@@ -135,26 +138,26 @@ $student_id = $_GET['id'];
                             //if there is contact history, display it in a table
                             if ($contactHistoryArray) {
                             ?>
-                                <table id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Time</th>
-                                            <th>Subject</th>
-                                            <th>Automated?</th>
-                                            <th>Sending User</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
+                            <table id="dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Subject</th>
+                                        <th>Automated?</th>
+                                        <th>Sending User</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
                                         //for each contact history, display it in a table row
                                         foreach ($contactHistoryArray as $contactHistory) {
                                         ?>
-                                            <tr>
-                                                <td><?php echo formatDate($contactHistory['send_date']); ?></td>
-                                                <td><?php echo formatTime($contactHistory['send_date']); ?></td>
-                                                <td><?php echo $contactHistory['subject']; ?></td>
-                                                <?php
+                                    <tr>
+                                        <td><?php echo formatDate($contactHistory['send_date']); ?></td>
+                                        <td><?php echo formatTime($contactHistory['send_date']); ?></td>
+                                        <td><?php echo $contactHistory['subject']; ?></td>
+                                        <?php
                                                 //if the contact history is automated, display yes, otherwise display no
                                                 if ($contactHistory['auto'] == 1) {
                                                     $contactHistory['auto'] = "Yes";
@@ -162,14 +165,22 @@ $student_id = $_GET['id'];
                                                     $contactHistory['auto'] = "No";
                                                 }
                                                 ?>
-                                                <td><?php echo $contactHistory['auto']; ?></td>
-                                                <td><?php echo $user->getUserUsername($contactHistory['sender']); ?></td>
-                                            </tr>
+                                        <td><?php echo $contactHistory['auto']; ?></td>
                                         <?php
+                                                //if the user id is NULL, display "SYSTEM", otherwise display the user's username
+                                                if ($contactHistory['sender'] == NULL) {
+                                                    $contactHistory['sender'] = "SYSTEM";
+                                                } else {
+                                                    $contactHistory['sender'] = $user->getUserUsername($contactHistory['sender']);
+                                                }
+                                                ?>
+                                        <td><?php echo $contactHistory['sender']; ?></td>
+                                    </tr>
+                                    <?php
                                         }
                                         ?>
-                                    </tbody>
-                                </table>
+                                </tbody>
+                            </table>
                             <?php
                             } else {
                                 //otherwise, display a message
@@ -187,8 +198,10 @@ $student_id = $_GET['id'];
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>" class="btn btn-primary btn-sm">Back to Students</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=delete&id=' . $student_id; ?>" class="btn btn-danger btn-sm">Delete Student</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>"
+                        class="btn btn-primary btn-sm">Back to Students</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=delete&id=' . $student_id; ?>"
+                        class="btn btn-danger btn-sm">Delete Student</a>
                 </div>
             </div>
         </div>
