@@ -834,7 +834,7 @@ class Student
     }
 
     /**
-     * Student Contact History
+     * Get Student Contact History
      * Get the contact history for a student
      * @param int $student_id
      * @return array
@@ -853,5 +853,38 @@ class Student
         }
         //Return the contact history array
         return $contact_history;
+    }
+
+    /**
+     * Add Student Contact History
+     * Add a new contact log entry for a student
+     *
+     * @param int $student_id
+     * @param string $dateTime
+     * @param int $isAuto is the email automated or manual, 1 = automated, 0 = manual
+     * @param int $sender_id is the id of the user that sent the email, will be null if automated
+     * @param string $subject
+     * @param string $message
+     * @return bool
+     */
+    public function logContactHistory(int $student_id, string $dateTime, int $isAuto, int $sender_id = NULL, string $subject, string $message): bool
+    {
+        //if the sender id is null, do not include it in the query
+        if ($sender_id == NULL) {
+            //SQL statement to add a new contact log entry for a student
+            $sql = "INSERT INTO contact_log (student, send_date, auto, subject, message) VALUES ('$student_id', '$dateTime', '$isAuto', '$subject', '$message')";
+        } else {
+            //SQL statement to add a new contact log entry for a student
+            $sql = "INSERT INTO contact_log (student, send_date, auto, sender, subject, message) VALUES ('$student_id', '$dateTime', '$isAuto', '$sender_id', '$subject', '$message')";
+        }
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
     }
 };
