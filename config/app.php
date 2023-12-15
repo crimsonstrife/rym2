@@ -334,6 +334,15 @@ function sendAutoEmail(string $email, string $name, string $subject, string $mes
         $mail->Password = null;
     }
 
+    //include the student class
+    $studentData = new Student();
+
+    //get student data by email
+    $student = $studentData->getStudentByEmail($email);
+
+    //get current date and time
+    $date = date('Y-m-d H:i:s');
+
     //Set who the message is to be sent from (the server will need to be configured to authenticate with this address, or to have send as permissions)
     $mail->setFrom($_ENV['MAIL_FROM_ADDRESS'], $_ENV['MAIL_FROM_NAME']);
 
@@ -354,7 +363,8 @@ function sendAutoEmail(string $email, string $name, string $subject, string $mes
         //if there is an error, return false
         return false;
     } else {
-        //if there is no error, return true
+        //if there is no error, log the email and return true
+        $studentData->logContactHistory(intval($student['id']), $date, 1, NULL, $subject, $message);
         return true;
     }
 }
