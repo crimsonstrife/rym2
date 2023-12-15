@@ -7,6 +7,53 @@ function formatDate(string $date, string $format = DATE_FORMAT): string
     return $date->format($format);
 };
 
+function formatTime(string $time, string $format = TIME_FORMAT): string
+{
+    $time = new DateTime($time);
+    return $time->format($format);
+};
+
+/**
+ * Format an email address to a clickable link
+ * @param string $email - the email address to be formatted
+ * @return string
+ */
+function formatEmail(string $email): string
+{
+    //remove any spaces
+    $email = str_replace(" ", "", $email);
+    //return the formatted email address
+    return "<a href='mailto:$email'>$email</a>";
+};
+
+/**
+ * Format a phone number to a clickable link
+ * @param string $phone - the phone number to be formatted
+ * @return string
+ */
+function formatPhone(string $phone): string
+{
+    //remove any spaces
+    $phone = str_replace(" ", "", $phone);
+    //remove any dashes
+    $phone = str_replace("-", "", $phone);
+    //remove any parentheses
+    $phone = str_replace("(", "", $phone);
+    //remove any periods
+    $phone = str_replace(".", "", $phone);
+
+    //if the phone number is 10 digits, format it as (xxx) xxx-xxxx
+    if (strlen($phone) == 10) {
+        $phoneString = "(" . substr($phone, 0, 3) . ") " . substr($phone, 3, 3) . "-" . substr($phone, 6);
+    } else {
+        //otherwise, format it as xxx-xxx-xxxx
+        $phoneString = substr($phone, 0, 3) . "-" . substr($phone, 3, 3) . "-" . substr($phone, 6);
+    }
+
+    //return the formatted phone number
+    return "<a href='tel:$phone'>$phoneString</a>";
+};
+
 function clearCookies()
 {
     //clear the cookies
