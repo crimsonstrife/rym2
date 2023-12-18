@@ -224,3 +224,27 @@ define('STATES', array(
         "label" => "Wyoming"
     )
 ));
+
+/**
+ * Define the MAILER enum constants for the mail settings
+ */
+define('MAILER', array(
+    array(
+        "value" => "smtp",
+        "label" => "SMTP"
+    )
+));
+
+/**
+ * Define the MAILER_ENCRYPTION enum constants for the mail settings
+ */
+define('MAILER_ENCRYPTION', array(
+    array(
+        "value" => "ssl",
+        "label" => "SSL"
+    ),
+    array(
+        "value" => "tls",
+        "label" => "TLS"
+    )
+));
