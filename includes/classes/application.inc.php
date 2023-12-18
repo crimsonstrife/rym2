@@ -66,6 +66,47 @@ class Application
     }
 
     /**
+     * Get Setting
+     *
+     * Get a setting from the database settings table
+     *
+     * @param string $setting //the setting to get
+     * @return string //the setting value
+     */
+    public function getSetting($setting)
+    {
+        //SQL statement to get the setting
+        $sql = "SELECT $setting FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $setting_statement = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $setting_statement->execute();
+
+        //Get the results
+        $result = $setting_statement->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the setting is set or not
+            if (isset($row[$setting])) {
+                //Return the setting
+                return $row[$setting];
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
      * Get Application Name
      *
      * Get the application name from the settings table
@@ -671,8 +712,16 @@ class Application
         if ($row) {
             //check if the mailer_password is set or not
             if (isset($row['mail_password'])) {
+                //if OPENSSL is installed, decrypt the password
+                if (OPENSSL_INSTALLED) {
+                    //Decrypt the password
+                    $decrypted_password = openssl_decrypt($row['mail_password'], 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+                } else {
+                    //store the password as plain text
+                    $decrypted_password = $row['mail_password'];
+                }
                 //Return the mailer_password
-                return $row['mail_password'];
+                return $decrypted_password;
             } else {
                 //Return an empty string
                 return '';
@@ -1061,7 +1110,7 @@ class Application
     public function getMailerAuthRequired()
     {
         //SQL statement to get the mailer authentication required status
-        $sql = "SELECT mail_auth_required FROM settings WHERE isSet = 'SET'";
+        $sql = "SELECT mail_auth_req FROM settings WHERE isSet = 'SET'";
 
         //Prepare the SQL statement for execution
         $role_statement = $this->mysqli->prepare($sql);
@@ -1109,7 +1158,7 @@ class Application
         //Check if the mailer authentication required status is set in the settings table already
         if ($this->getMailerAuthRequired() != '' || $this->getMailerAuthRequired() != null) {
             //SQL statement to update the mailer authentication required status
-            $sql = "UPDATE settings SET mail_auth_required = ? WHERE isSet = 'SET'";
+            $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
@@ -1143,7 +1192,7 @@ class Application
             }
         } else {
             //SQL statement to insert the mailer authentication required status, but also set the isSet column to SET
-            $sql = "INSERT INTO settings (mail_auth_required, isSet) VALUES (?, 'SET')";
+            $sql = "INSERT INTO settings (mail_auth_req, isSet) VALUES (?, 'SET')";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
