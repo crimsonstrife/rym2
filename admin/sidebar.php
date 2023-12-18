@@ -25,15 +25,19 @@
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-people-group"></i></div>
                     Students
                 </a>
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutDegrees"
+                    aria-expanded="false" aria-controls="collapseLayoutDegrees">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-graduation-cap"></i></div>
                     Degree Programs
                     <div class="side-nav-collapse-arrow"><i class="fa-solid fa-chevron-down"></i></div>
                 </a>
-                <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <div class="collapse" id="collapseLayoutDegrees" aria-labelledby="headingOne"
+                    data-bs-parent="#sidenavAccordion">
                     <nav class="side-nav-menu-nested nav">
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=majors&major=list' ?>">Majors</a>
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list' ?>">Degrees</a>
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=majors&major=list' ?>">Majors</a>
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list' ?>">Degrees</a>
                     </nav>
                 </div>
                 <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=list' ?>">
@@ -44,9 +48,24 @@
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-book"></i></div>
                     Subjects/Fields
                 </a>
-                <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list' ?>">
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutUsers"
+                    aria-expanded="false" aria-controls="collapseLayoutUsers">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
-                    Users
+                    Users/Roles
+                    <div class="side-nav-collapse-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+                </a>
+                <div class="collapse" id="collapseLayoutUsers" aria-labelledby="headingOne"
+                    data-bs-parent="#sidenavAccordion">
+                    <nav class="side-nav-menu-nested nav">
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list' ?>">Users</a>
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=list' ?>">Roles</a>
+                    </nav>
+                </div>
+                <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=settings' ?>">
+                    <div class="sb-nav-link-icon"><i class="fa-solid fa-gears"></i></div>
+                    Settings
                 </a>
             </div>
         </div>
