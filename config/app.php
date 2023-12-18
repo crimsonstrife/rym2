@@ -46,6 +46,19 @@ if (file_exists(BASEPATH . '/.env')) {
     define('APP_VERSION', "1.0.0"); // Define the APP_VERSION constant, this is the version of the application.
     define('APP_ENV', $_ENV['APP_ENV']); // Define the APP_ENV constant, this is the environment the application is running in i.e LOCAL, PRODUCTION, TEST.
     define('APP_DEBUG', $_ENV['APP_DEBUG']); // Define the APP_DEBUG constant, this is the debug mode of the application.
+    define('OPENSSL_INSTALLED', extension_loaded('openssl')); // Define the OPENSSL_INSTALLED constant, this is whether or not the openssl extension is installed.
+
+    /* Define the mail constants */
+    define('MAIL_MAILER', $_ENV['MAIL_MAILER']); // Define the MAIL_MAILER constant, this is the mail protocol to use.
+    define('MAIL_HOST', $_ENV['MAIL_HOST']); // Define the MAIL_HOST constant, this is the hostname of the mail server.
+    define('MAIL_PORT', $_ENV['MAIL_PORT']); // Define the MAIL_PORT constant, this is the port number of the mail server.
+    define('MAIL_AUTH_REQ', $_ENV['MAIL_AUTH_REQ']); // Define the MAIL_AUTH_REQ constant, this is whether or not authentication is required.
+    define('MAIL_ENCRYPTION', $_ENV['MAIL_ENCRYPTION']); // Define the MAIL_ENCRYPTION constant, this is the encryption to use.
+    define('MAIL_USERNAME', $_ENV['MAIL_USERNAME']); // Define the MAIL_USERNAME constant, this is the username to use for authentication.
+    define('MAIL_PASSWORD', $_ENV['MAIL_PASSWORD']); // Define the MAIL_PASSWORD constant, this is the password to use for authentication.
+    define('MAIL_FROM_ADDRESS', $_ENV['MAIL_FROM_ADDRESS']); // Define the MAIL_FROM_ADDRESS constant, this is the email address to send the email from.
+    define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME']); // Define the MAIL_FROM_NAME constant, this is the name to send the email from.
+    define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
 } else {
     /*load the .env.example file if the .env file does not exist */
     $dotenv = Dotenv\Dotenv::createImmutable(BASEPATH, '.env.example');
@@ -57,6 +70,19 @@ if (file_exists(BASEPATH . '/.env')) {
     define('APP_VERSION', "1.0.0"); // Define the APP_VERSION constant, this is the version of the application.
     define('APP_ENV', $_ENV['APP_ENV']); // Define the APP_ENV constant, this is the environment the application is running in i.e LOCAL, PRODUCTION, TEST.
     define('APP_DEBUG', $_ENV['APP_DEBUG']); // Define the APP_DEBUG constant, this is the debug mode of the application.
+    define('OPENSSL_INSTALLED', extension_loaded('openssl')); // Define the OPENSSL_INSTALLED constant, this is whether or not the openssl extension is installed.
+
+    /* Define the mail constants */
+    define('MAIL_MAILER', $_ENV['MAIL_MAILER']); // Define the MAIL_MAILER constant, this is the mail protocol to use.
+    define('MAIL_HOST', $_ENV['MAIL_HOST']); // Define the MAIL_HOST constant, this is the hostname of the mail server.
+    define('MAIL_PORT', $_ENV['MAIL_PORT']); // Define the MAIL_PORT constant, this is the port number of the mail server.
+    define('MAIL_AUTH_REQ', $_ENV['MAIL_AUTH_REQ']); // Define the MAIL_AUTH_REQ constant, this is whether or not authentication is required.
+    define('MAIL_ENCRYPTION', $_ENV['MAIL_ENCRYPTION']); // Define the MAIL_ENCRYPTION constant, this is the encryption to use.
+    define('MAIL_USERNAME', $_ENV['MAIL_USERNAME']); // Define the MAIL_USERNAME constant, this is the username to use for authentication.
+    define('MAIL_PASSWORD', $_ENV['MAIL_PASSWORD']); // Define the MAIL_PASSWORD constant, this is the password to use for authentication.
+    define('MAIL_FROM_ADDRESS', $_ENV['MAIL_FROM_ADDRESS']); // Define the MAIL_FROM_ADDRESS constant, this is the email address to send the email from.
+    define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME']); // Define the MAIL_FROM_NAME constant, this is the name to send the email from.
+    define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
 }
 
 /**
