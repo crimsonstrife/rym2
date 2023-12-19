@@ -76,6 +76,10 @@ if (isset($_POST['generate_report'])) {
                         $usersData = new User();
                         //get all reports
                         $reportsArray = $reportClass->getReports();
+                        //sort the reports by date created
+                        usort($reportsArray, function ($a, $b) {
+                            return strtotime($b['created_at']) - strtotime($a['created_at']);
+                        });
                         //for each report, display it
                         foreach ($reportsArray as $report) {
                         ?>
