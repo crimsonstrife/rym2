@@ -9,10 +9,30 @@
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-gauge"></i></div>
                     Dashboard
                 </a>
-                <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=reports' ?>">
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutReports"
+                    aria-expanded="false" aria-controls="collapseLayoutReports">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-chart-bar"></i></div>
                     Reports
+                    <div class="side-nav-collapse-arrow"><i class="fa-solid fa-chevron-down"></i></div>
                 </a>
+                <div class="collapse" id="collapseLayoutReports" aria-labelledby="headingOne"
+                    data-bs-parent="#sidenavAccordion">
+                    <nav class="side-nav-menu-nested nav">
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Top Degree by School'); ?>">Top
+                            Degrees by School</a>
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Top Field by School'); ?>">Top
+                            Field by School</a>
+                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=reports' ?>">Major to
+                            Field Ratio by School
+                        </a>
+                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=reports' ?>">Jobs by
+                            Field</a>
+                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=reports' ?>">Contact
+                            Follow-Up Percentage</a>
+                    </nav>
+                </div>
                 <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list' ?>">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-calendar-day"></i></div>
                     Events
