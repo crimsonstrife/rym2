@@ -80,6 +80,12 @@ $report = $reportClass->getReportById($reportId);
                 </div>
                 <div class="row">
                     <div class="col-md-12">
+                        <!-- display the report data with chart.js -->
+                        <canvas id="reportChartJS"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <h3>Report Data</h3>
                         <!-- display the report datatable -->
                         <?php $reportData = $report['data'] ?>
@@ -120,9 +126,9 @@ $report = $reportClass->getReportById($reportId);
                 $csvArray[] = $report;
 
                 //debug
-                echo '<pre>';
-                print_r($csvArray);
-                echo '</pre>';
+                //echo '<pre>';
+                //print_r($csvArray);
+                //echo '</pre>';
                 ?>
                 <form target="_blank"
                     action="<?php echo APP_URL . '/admin/download.php?type=reports&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
@@ -130,6 +136,27 @@ $report = $reportClass->getReportById($reportId);
                     <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                 </form>
             </div>
+            <script type="text/javascript" src="<?php echo getLibraryPath() . 'chart.js/chart.umd.js'; ?>"></script>
+            <script type="text/javascript">
+            //get the chart element
+            const ctx = document.getElementById('reportChartJS');
+
+            //prepare the report data for the chart
+            //TODO: make this
+
+            //use the chart.js library to create a chart
+            const reportChartJS = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: <?php echo json_encode(array_keys($reportData[0])); ?>,
+                    datasets: [{
+                        label: 'Report Data',
+                        data: <?php echo json_encode(array_values($reportData[0])); ?>,
+                    }]
+                },
+                options: {}
+            });
+            </script>
         </div>
     </div>
 </div>
