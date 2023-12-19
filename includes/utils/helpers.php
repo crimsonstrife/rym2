@@ -126,6 +126,15 @@ function performRedirect(string $filePath)
     exit;
 }
 
+function flattenArray(array $array): array
+{
+    $return = array();
+    array_walk_recursive($array, function ($a) use (&$return) {
+        $return[] = $a;
+    });
+    return $return;
+}
+
 /**
  * Export the data from a sql query to a csv file
  * @param array $data - the data to be exported
@@ -142,6 +151,17 @@ function exportData(array $data, string $dataType)
 
     //open the output stream
     $output = fopen('php://output', 'w');
+
+    //determine if there are sub arrays
+    if (is_array($data[0])) {
+        //if there are sub arrays, flatten the array
+        $data = flattenArray($data);
+
+        //log for debugging
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+    }
 
     //set the column headers
     fputcsv($output, array_keys($data[0]), $delimiter);
