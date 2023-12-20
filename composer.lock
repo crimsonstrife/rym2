@@ -762,7 +762,7 @@
         },
         {
             "name": "survos/core-bundle",
-            "version": "1.5.116",
+            "version": "1.5.118",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosCoreBundle.git",
@@ -838,27 +838,27 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosCoreBundle/issues",
-                "source": "https://github.com/survos/SurvosCoreBundle/tree/1.5.116"
+                "source": "https://github.com/survos/SurvosCoreBundle/tree/1.5.118"
             },
             "time": "2023-11-26T12:38:06+00:00"
         },
         {
             "name": "survos/simple-datatables-bundle",
-            "version": "1.5.116",
+            "version": "1.5.118",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/SurvosSimpleDatatablesBundle.git",
-                "reference": "f04dced8230dec4491521e6e80e3f679cdc5de51"
+                "reference": "809c32d0dc438123d1fde4d133c06c5a5c4ff367"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/SurvosSimpleDatatablesBundle/zipball/f04dced8230dec4491521e6e80e3f679cdc5de51",
-                "reference": "f04dced8230dec4491521e6e80e3f679cdc5de51",
+                "url": "https://api.github.com/repos/survos/SurvosSimpleDatatablesBundle/zipball/809c32d0dc438123d1fde4d133c06c5a5c4ff367",
+                "reference": "809c32d0dc438123d1fde4d133c06c5a5c4ff367",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.1",
-                "survos/core-bundle": "^1.5.116",
+                "survos/core-bundle": "^1.5.118",
                 "symfony/config": "^7.0 || ^6.4",
                 "symfony/dependency-injection": "^7.0 || ^6.4",
                 "symfony/http-kernel": "^7.0 || ^6.4",
@@ -910,9 +910,9 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/SurvosSimpleDatatablesBundle/issues",
-                "source": "https://github.com/survos/SurvosSimpleDatatablesBundle/tree/1.5.116"
+                "source": "https://github.com/survos/SurvosSimpleDatatablesBundle/tree/1.5.118"
             },
-            "time": "2023-12-17T20:07:04+00:00"
+            "time": "2023-12-20T14:55:32+00:00"
         },
         {
             "name": "symfony/config",
