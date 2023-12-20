@@ -47,13 +47,13 @@ abstract class Report
     public abstract function findReport(string $search): array;
 
     /**
-     * Log report
+     * Store report
      * Stores the report as a JSON string in the database reports table
      * @param string $report
      * @param int $created_by
-     * @return int The id of the report that was logged
+     * @return int The id of the report that was stored
      */
-    public abstract function logReport(string $report, int $created_by): int;
+    public abstract function storeReport(string $report, int $created_by): int;
 
     /**
      * Generate report
@@ -63,4 +63,28 @@ abstract class Report
      * @return int The id of the report that was generated
      */
     public abstract function generateReport(int $created_by): int;
+
+    /**
+     * Log report activity
+     * @param int $report_id
+     * @param string $action
+     * @param int $user_id
+     * @return bool
+     */
+    public abstract function logReportActivity(int $report_id, string $action, int $user_id): bool;
+
+    /**
+     * Delete report
+     * @param int $id
+     * @return bool
+     */
+    public abstract function deleteReport(int $id): bool;
+
+    /**
+     * Get chartable report data
+     * formats the report data into a format that can be used by chart.js for a bar chart
+     * @param int $id - the id of the report to get the data for
+     * @return array
+     */
+    public abstract function getChartableReportData(int $id): array;
 }
