@@ -152,17 +152,6 @@ function exportData(array $data, string $dataType)
     //open the output stream
     $output = fopen('php://output', 'w');
 
-    //determine if there are sub arrays
-    if (is_array($data[0])) {
-        //if there are sub arrays, flatten the array
-        $data = flattenArray($data);
-
-        //log for debugging
-        echo '<pre>';
-        print_r($data);
-        echo '</pre>';
-    }
-
     //set the column headers
     fputcsv($output, array_keys($data[0]), $delimiter);
 
@@ -180,4 +169,23 @@ function exportData(array $data, string $dataType)
 
     //close the output stream
     fclose($output);
+}
+
+/**
+ * Get a random hex color
+ * @return string
+ */
+function getRandomHexColor(): string
+{
+    //characters to use in the hex color
+    $chars = '0123456789ABCDEF';
+    $color = '#';
+
+    //generate a random hex color
+    for ($i = 0; $i < 6; $i++) {
+        $color .= $chars[randomizeEncryption(0, strlen($chars))];
+    }
+
+    //return the hex color
+    return $color;
 }
