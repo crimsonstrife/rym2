@@ -165,13 +165,13 @@ class TopDegreeBySchoolReport extends Report
     }
 
     /**
-     * Log report
+     * Store report
      * Stores the report as a JSON string in the database reports table
      * @param string $report
      * @param int $created_by
-     * @return int The id of the report that was logged
+     * @return int The id of the report that was stored.
      */
-    public function logReport(string $report, int $created_by): int
+    public function storeReport(string $report, int $created_by): int
     {
         //get the current date and time
         $date = date("Y-m-d H:i:s");
@@ -268,8 +268,8 @@ class TopDegreeBySchoolReport extends Report
         //prepare the report for JSON encoding
         $report = json_encode($report);
 
-        //log the report and get the id of the report that was logged
-        $reportId = $this->logReport($report, $created_by);
+        //store the report and get the id of the report that was stored
+        $reportId = $this->storeReport($report, $created_by);
 
         //return the id of the report that was generated
         return $reportId;
@@ -332,5 +332,123 @@ class TopDegreeBySchoolReport extends Report
 
         //return the reports
         return $reports;
+    }
+
+    /**
+     * Log report activity
+     * @param int $report_id
+     * @param string $action
+     * @param int $user_id
+     * @return bool
+     */
+    public function logReportActivity(int $report_id, string $action, int $user_id): bool
+    {
+        return false;
+    }
+
+    /**
+     * Delete report
+     * @param int $id
+     * @return bool
+     */
+    public function deleteReport(int $id): bool
+    {
+        return false;
+    }
+
+    /**
+     * Get chartable report data
+     * formats the report data into a format that can be used by chart.js for a chart
+     * this report is a pie chart
+     * @param int $id - the id of the report to get the data for
+     * @return array
+     */
+    public function getChartableReportData(int $id): array
+    {
+        //include the school class
+        $schoolsObject = new School();
+
+        //get the report by id
+        $report = $this->getReportById($id);
+
+        //get the report data
+        $reportData = $report['data'];
+
+        //declare the chart type
+        $chartType = 'pie';
+
+        //create an array to store the chart labels
+        $labels = array();
+
+        //create an array to store the chart data
+        $data = array();
+
+        //create an array to store the chart colors
+        $colors = array();
+
+        //loop through the report data to format the data for the chart
+        foreach ($reportData as $row) {
+            //get the school name
+            $school = $row['school'];
+
+            //get the degree level name
+            $degree = $row['degree'];
+
+            //get the major name
+            $major = $row['major'];
+
+            //get the student count
+            $studentCount = $row['student_count'];
+
+            //setup the label to be the school name, degree level name, and major name
+            $label = $school . ' - ' . $degree . ' - ' . $major;
+
+            //add the label to the labels array
+            $labels[] = $label;
+
+            //add the student count to the data array
+            $data[] = $studentCount;
+
+            //get the school id
+            $schoolId = $schoolsObject->getSchoolIdByName($school);
+
+            //get the school color
+            $color = $schoolsObject->getSchoolColor($schoolId);
+
+            //add the school color to the colors array
+            $colors[] = $color;
+        }
+
+        //create an array to store the chart data
+        $chartData = array(
+            'type' => $chartType,
+            'labels' => $labels,
+            'datasets' => array(
+                array(
+                    'label' => 'Top Degree by School',
+                    'data' => $data,
+                    'backgroundColor' => $colors,
+                ),
+            ),
+            'title' => 'Top Degree by School',
+            'colors' => $colors,
+            'options' => array(
+                'responsive' => true,
+                'maintainAspectRatio' => true,
+                'aspectRatio' => 2,
+                'plugins' => array(
+                    'legend' => array(
+                        'position' => 'right',
+                    ),
+                    'title' => array(
+                        'display' => true,
+                        'text' => 'Top Degree by School',
+                    ),
+                ),
+            ),
+        );
+
+        //return the chart data
+        return $chartData;
     }
 }
