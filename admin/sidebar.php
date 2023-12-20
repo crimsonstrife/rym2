@@ -24,12 +24,17 @@
                         <a class="nav-link"
                             href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Top Field by School'); ?>">Top
                             Field by School</a>
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=reports' ?>">Major to
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Major to Field Ratio by School'); ?>">Major
+                            to
                             Field Ratio by School
                         </a>
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=reports' ?>">Jobs by
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Jobs by Field'); ?>">Jobs
+                            by
                             Field</a>
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=reports' ?>">Contact
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Contact Follow-Up Percentage'); ?>">Contact
                             Follow-Up Percentage</a>
                     </nav>
                 </div>
