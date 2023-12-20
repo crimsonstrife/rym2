@@ -44,22 +44,18 @@ $report = $reportClass->getReportById($reportId);
                     Report
                 </div>
                 <div class="card-buttons">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType); ?>"
-                        class="btn btn-primary">Back to Report List</a>
-                    <form
-                        action="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType); ?>"
-                        method="post">
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType); ?>" class="btn btn-primary">Back to Report List</a>
+                    <form action="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType); ?>" method="post">
                         <input type="hidden" name="generate_report" value="true">
                         <button type="submit" class="btn btn-primary">Generate Updated Report</button>
                     </form>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=delete&type=' . urlencode($reportType) . '&id=' . $reportId; ?>"
-                        class="btn btn-danger">Delete Report</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=delete&type=' . urlencode($reportType) . '&id=' . $reportId; ?>" class="btn btn-danger">Delete Report</a>
                 </div>
             </div>
             <div class="card-body">
                 <!-- Single Report information -->
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <h3>Report Metadata</h3>
                         <div id="info" class="">
                             <div class="row">
@@ -80,12 +76,6 @@ $report = $reportClass->getReportById($reportId);
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <!-- display the report data with chart.js -->
-                        <canvas id="reportChartJS"></canvas>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
                         <h3>Report Data</h3>
                         <!-- display the report datatable -->
                         <?php $reportData = $report['data'] ?>
@@ -95,6 +85,11 @@ $report = $reportClass->getReportById($reportId);
                                     <?php
                                     //get the report data headers
                                     $reportDataHeaders = array_keys($reportData[0]);
+
+                                    //clean up the report data headers to be more readable, i.e. remove underscores and capitalize
+                                    foreach ($reportDataHeaders as $key => $header) {
+                                        $reportDataHeaders[$key] = ucwords(str_replace('_', ' ', $header));
+                                    }
 
                                     //display the report data headers
                                     foreach ($reportDataHeaders as $header) {
@@ -118,44 +113,71 @@ $report = $reportClass->getReportById($reportId);
                         </table>
                     </div>
                 </div>
+                <div class="row">
+                    <!-- display the report chart -->
+                    <div class="col-md-10">
+                        <h3>Report Chart</h3>
+                        <canvas id="reportChartJS" class="center"></canvas>
+                    </div>
+                </div>
             </div>
             <div class="card-footer">
                 <!-- Download CSV -->
                 <?php
                 //prepare the report array for download
-                $csvArray[] = $report;
+                $csvArray = $reportData;
 
-                //debug
-                //echo '<pre>';
-                //print_r($csvArray);
-                //echo '</pre>';
+                //clean up the key headers to be more readable, i.e. remove underscores and capitalize
+                foreach ($csvArray as $key => $row) {
+                    foreach ($row as $column => $value) {
+                        $csvArray[$key][ucwords(str_replace('_', ' ', $column))] = $value;
+                        unset($csvArray[$key][$column]);
+                    }
+                }
                 ?>
-                <form target="_blank"
-                    action="<?php echo APP_URL . '/admin/download.php?type=reports&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
-                    method="post" enctype="multipart/form-data">
+                <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=reports&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
                     <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                 </form>
             </div>
             <script type="text/javascript" src="<?php echo getLibraryPath() . 'chart.js/chart.umd.js'; ?>"></script>
             <script type="text/javascript">
-            //get the chart element
-            const ctx = document.getElementById('reportChartJS');
+                //get the chart element
+                const ctx = document.getElementById('reportChartJS');
 
-            //prepare the report data for the chart
-            //TODO: make this
+                <?php
+                //get the report's chart data
+                $chartData = $reportClass->getChartableReportData($reportId);
 
-            //use the chart.js library to create a chart
-            const reportChartJS = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: <?php echo json_encode(array_keys($reportData[0])); ?>,
-                    datasets: [{
-                        label: 'Report Data',
-                        data: <?php echo json_encode(array_values($reportData[0])); ?>,
-                    }]
-                },
-                options: {}
-            });
+                //get the report's chart labels
+                $reportChartLabels = $chartData['labels'];
+
+                //get the report's chart data
+                $reportChartData = $chartData['datasets'];
+
+                //format the report's chart data
+                $reportChartData = json_encode($reportChartData);
+
+                //get the report's chart type
+                $reportChartType = $chartData['type'];
+
+                //get the report's chart title
+                $reportChartTitle = $chartData['title'];
+
+                //get the report's chart options
+                $reportChartOptions = $chartData['options'];
+
+                //format the report's chart options
+                $reportChartOptions = json_encode($reportChartOptions);
+                ?>
+                //setup the chart
+                new Chart(ctx, {
+                    type: '<?php echo $reportChartType; ?>',
+                    data: {
+                        labels: <?php echo json_encode($reportChartLabels); ?>,
+                        datasets: <?php echo $reportChartData; ?>
+                    },
+                    options: <?php echo $reportChartOptions; ?>
+                });
             </script>
         </div>
     </div>
