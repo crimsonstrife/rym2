@@ -52,6 +52,8 @@
             "includes/interfaces/login.inc.php",
             "includes/interfaces/major.inc.php",
             "includes/classes/topdegreebyschool.report.inc.php",
+            "includes/classes/topfieldbyschool.report.inc.php",
+            "includes/classes/majortofieldratiobyschool.report.inc.php",
             "includes/classes/students.report.inc.php"
         ]
     },
