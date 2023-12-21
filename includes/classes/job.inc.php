@@ -355,4 +355,22 @@ class Job
             return false;
         }
     }
+
+    /**
+     * Get Jobs by field
+     * @param int $field //field id
+     * @return array
+     */
+    public function getJobsByField(int $field): array
+    {
+        $sql = "SELECT * FROM jobs WHERE field = $field";
+        $result = $this->mysqli->query($sql);
+        $jobs = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $jobs[] = $row;
+            }
+        }
+        return $jobs;
+    }
 }
