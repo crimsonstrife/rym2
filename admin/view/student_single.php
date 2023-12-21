@@ -19,11 +19,28 @@ $schoolsData = new School();
 //events class
 $eventsData = new Event();
 
+//contact class
+$contact = new Contact();
+
 //user class
 $user = new User();
 
 //get the student id from the url parameter
 $student_id = $_GET['id'];
+
+//if the contact form has been submitted, send the email
+if (isset($_POST['submitContact'])) {
+    //get the form data
+    $student_id = $_POST['studentId'];
+    $student_name = $_POST['studentName'];
+    $student_email = $_POST['studentEmail'];
+    $sender_id = $_POST['senderId'];
+    $subject = $_POST['subject'];
+    $message = $_POST['message'];
+
+    //send the email
+    $contact->sendEmail($student_id, $student_email, $student_name, $subject, $message, $sender_id);
+}
 ?>
 <div class="container-fluid px-4">
     <h1 class="mt-4"><?php echo $student->getStudentFullName($student_id); ?></h1>
@@ -190,10 +207,71 @@ $student_id = $_GET['id'];
                         </div>
                     </div>
                     <!-- Contact Menu -->
+                    <?php
+                    //set student name and email variables
+                    $student_name = $student->getStudentFullName($student_id);
+                    $student_email = $student->getStudentEmail($student_id);
+                    ?>
                     <div class="col-md-6">
                         <h5>Contact Student</h5>
                         <div id="info" class="">
-                            <a href="#" class="btn btn-primary btn-sm">Contact Student</a>
+                            <!-- Contact Student Form Modal-->
+                            <button type="button" id="openContactModal" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#contactStudentModal">
+                                Contact Student
+                            </button>
+                            <!-- Modal -->
+                            <div id="contactStudentModal" class="modal fade contact" tabindex="-1" role="dialog"
+                                aria-labelledby="#studentContactForm" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title" id="studentContactForm">Contact Student -
+                                                <?php echo $student_name; ?></h3>
+                                            <button type="button" class="btn-close close" data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                                <i class="fa-solid fa-times"></i>
+                                            </button>
+                                        </div>
+                                        <form id=" contactForm" action="#" method="post">
+                                            <div class="modal-body">
+                                                <label for="studentName">Student Name:</label>
+                                                <input class="form-control" type="text" id="studentName"
+                                                    name="studentName" value="<?php echo $student_name; ?>"
+                                                    placeholder="<?php echo $student_name; ?>" disabled required>
+
+                                                <label for="studentEmail">Student Email:</label>
+                                                <input class="form-control" type="email" id="studentEmail"
+                                                    name="studentEmail" value="<?php echo $student_email; ?>"
+                                                    placeholder="<?php echo $student_email; ?>" disabled required>
+
+                                                <label for="subject">Subject:</label>
+                                                <input class="form-control" type="text" id="subject" name="subject"
+                                                    required>
+
+                                                <label for="message">Message:</label>
+                                                <textarea class="form-control" id="message" name="message"
+                                                    required></textarea>
+
+                                                <input class="form-control" type="hidden" id="studentId"
+                                                    name="studentId" value="<?php echo $student_id; ?>">
+                                                <input class="form-control" type="hidden" id="studentName"
+                                                    name="studentName" value="<?php echo $student_name; ?>">
+                                                <input class="form-control" type="hidden" id="studentEmail"
+                                                    name="studentEmail" value="<?php echo $student_email; ?>">
+                                                <input class="form-control" type="hidden" id="senderId" name="senderId"
+                                                    value="<?php echo $_SESSION['user_id']; ?>">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Cancel</button>
+                                                <input class="form-control" type="submit" id="submitContact"
+                                                    name="submitContact" value="Send">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
