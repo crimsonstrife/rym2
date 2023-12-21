@@ -74,6 +74,8 @@ if (!defined('ISVALIDUSER')) {
                                 $schoolsData = new School();
                                 //include the degree class
                                 $degreesData = new Degree();
+                                //include the field class
+                                $fieldsData = new AreaOfInterest();
                                 //get all students
                                 $studentsArray = $studentsData->getStudents();
                                 //order the students by most recent
@@ -95,10 +97,42 @@ if (!defined('ISVALIDUSER')) {
                                 <?php } ?>
                             </tbody>
                         </table>
-                        <div class="card-footer">
-                            <!-- Download CSV -->
-                            <a href="#" class="btn btn-primary">Download CSV</a>
-                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <!-- Download CSV -->
+                        <?php
+                        //prepare the user array for download
+                        $csvArray = $studentsArray;
+                        //substitute the school id for the school name, degree id for the degree name, field id for the field name, and the major id for the major name
+                        foreach ($csvArray as $key => $row) {
+                            $csvArray[$key]['school'] = $schoolsData->getSchoolName($row['school']);
+                            $csvArray[$key]['degree'] = $degreesData->getGradeNameById($row['degree']);
+                            $csvArray[$key]['major'] = $degreesData->getMajorNameById($row['major']);
+                            $csvArray[$key]['interest'] = $fieldsData->getSubjectName($row['interest']);
+                        }
+                        //clean up the column headers to be more readable, i.e. remove underscores and capitalize
+                        foreach ($csvArray as $key => $row) {
+                            $csvArray[$key] = array(
+                                'First Name' => $row['first_name'],
+                                'Last Name' => $row['last_name'],
+                                'Email' => $row['email'],
+                                'Phone' => $row['phone'],
+                                'Address' => $row['address'],
+                                'City' => $row['city'],
+                                'State' => $row['state'],
+                                'Zipcode' => $row['zipcode'],
+                                'Field' => $row['interest'],
+                                'Position Type' => $row['position'],
+                                'Degree' => $row['degree'],
+                                'Major' => $row['major'],
+                                'Graduation Date' => $row['graduation'],
+                                'School' => $row['school'],
+                                'Date Submitted' => $row['created_at']
+                            );
+                        } ?>
+                        <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=students&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                            <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
+                        </form>
                     </div>
                 </div>
             </div>
