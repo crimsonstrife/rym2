@@ -81,6 +81,12 @@ if (isset($_SESSION['user_id'])) {
             case 'students':
                 include_once('students_content.php');
                 break;
+            case 'contact-log':
+                include_once('contactlog_content.php');
+                break;
+            case 'search':
+                include_once('search.php');
+                break;
             default:
                 include_once('admin_content.php');
                 break;
