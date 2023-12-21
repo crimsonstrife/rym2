@@ -24,6 +24,9 @@ include_once('header.php');
 // instance the event class
 $event = new Event();
 
+// instance the contact class
+$contact = new Contact();
+
 //check the event slug
 if (isset($event_slug)) {
     //get the event by the slug
@@ -396,7 +399,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $message = "Thank you for registering for the College Recruitment Program. We will be in touch with you soon."; // TODO: add more information to the email
 
             //send the email
-            sendAutoEmail($to, $student_name, $subject, $message);
+            $contact->sendAutoEmail($to, $student_name, $subject, $message);
 
             //if this is an event page, redirect to the event page
             if ($isEventPage) {
