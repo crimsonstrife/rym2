@@ -1221,4 +1221,60 @@ class Application
             }
         }
     }
+
+    /**
+     * Search the database with a given search term or string
+     *
+     * @param string $searchTerm - the search term to search for
+     *
+     * @return array
+     */
+    public function search(string $searchTerm): array
+    {
+        //include the student class
+        $studentData = new Student();
+
+        //include the school class
+        $schoolData = new School();
+
+        //include the event class
+        $eventData = new Event();
+
+        //create an array to store the results
+        $results = array(
+            'students' => array(),
+            'schools' => array(),
+            'events' => array()
+        );
+
+        //search the students table
+        $studentResults = $studentData->searchStudents($searchTerm);
+
+        //search the schools table
+        $schoolResults = $schoolData->searchSchools($searchTerm);
+
+        //search the events table
+        $eventResults = $eventData->searchEvents($searchTerm);
+
+        //loop through the student results
+        foreach ($studentResults as $studentResult) {
+            //add the student result to the results array
+            array_push($results['students'], $studentResult);
+        }
+
+        //loop through the school results
+        foreach ($schoolResults as $schoolResult) {
+            //add the school result to the results array
+            array_push($results['schools'], $schoolResult);
+        }
+
+        //loop through the event results
+        foreach ($eventResults as $eventResult) {
+            //add the event result to the results array
+            array_push($results['events'], $eventResult);
+        }
+
+        //return the results array
+        return $results;
+    }
 }
