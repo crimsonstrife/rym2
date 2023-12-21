@@ -175,14 +175,14 @@ class MajorToFieldRatioBySchoolReport extends Report
         $userObject = new User();
 
         //create the SQL query
-        $sql = "SELECT * FROM reports WHERE report_type = 'Major to Field Ratio by School' AND data LIKE ?";
-        $search = '%' . $search . '%';
+        $sql = "SELECT * FROM reports WHERE report_type = 'Major to Field Ratio by School' AND (data LIKE ? OR created_at LIKE ? OR updated_at LIKE ?)";
 
         //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
 
         //bind the parameters
-        $stmt->bind_param('s', $search);
+        $search = '%' . $search . '%';
+        $stmt->bind_param('sss', $search, $search, $search);
 
         //execute the statement
         $stmt->execute();
@@ -379,6 +379,7 @@ class MajorToFieldRatioBySchoolReport extends Report
             if (!isset($formattedReportData[$school]['datasets'][$major])) {
                 //if the major is not in the array, add it
                 $formattedReportData[$school]['datasets'][$major] = array(
+                    'school' => $school,
                     'label' => $major,
                     'data' => array(), //the ratio will be the data
                     'backgroundColor' => getRandomHexColor(),
@@ -394,9 +395,6 @@ class MajorToFieldRatioBySchoolReport extends Report
             $formattedReportData[$school]['datasets'][$major]['data'][] = $ratio;
         }
 
-        //debug log the formatted report data
-        error_log('Formatted Report Data: ' . print_r($formattedReportData, true));
-
         //chart type
         $chartType = 'bar';
 
@@ -407,24 +405,24 @@ class MajorToFieldRatioBySchoolReport extends Report
             'datasets' => array(),
             'title' => 'Major to Field Ratio by School',
             'options' => array(
-                'responsive' => true,
-                'maintainAspectRatio' => true,
+                'responsive' => 'true',
+                'maintainAspectRatio' => 'true',
                 'aspectRatio' => 2,
                 'plugins' => array(
                     'legend' => array(
                         'position' => 'right',
                     ),
                     'title' => array(
-                        'display' => true,
+                        'display' => 'true',
                         'text' => 'Major to Field Ratio by School',
                     ),
                 ),
                 'scales' => array(
                     'x' => array(
-                        'stacked' => false,
+                        'stacked' => 'true',
                     ),
                     'y' => array(
-                        'stacked' => false,
+                        'stacked' => 'true',
                     ),
                 ),
             ),
@@ -446,9 +444,18 @@ class MajorToFieldRatioBySchoolReport extends Report
                     'backgroundColor' => $dataset['backgroundColor'],
                     'stack' => strval($stack),
                 );
-                $stack++;
+                //increment the stack number
+                foreach ($dataset['school'] as $data) {
+                    //if the school changes, increment the stack number
+                    if ($data != $school) {
+                        $stack++;
+                    }
+                }
             }
         }
+
+        //debug
+        error_log(print_r($chartData, true));
 
         //return the chart data
         return $chartData;
