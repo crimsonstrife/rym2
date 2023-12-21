@@ -464,4 +464,41 @@ class School
         }
         return $school_id;
     }
+
+    /**
+     * Search Schools
+     * Search the schools table for a school name, address, city, state, or zip code using a search term
+     *
+     * @param string $searchTerm
+     *
+     * @return array $schools
+     */
+    public function searchSchools(string $searchTerm): array
+    {
+        //SQL statement to search for a school name, address, city, state, or zip code using a search term
+        $sql = "SELECT * FROM school WHERE name LIKE ? OR address LIKE ? OR city LIKE ? OR state LIKE ? OR zipcode LIKE ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //setup the search term
+        $searchTerm = "%" . $searchTerm . "%";
+        //bind the parameters
+        $stmt->bind_param("sssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to store the schools
+        $schools = array();
+
+        //if there are schools in the database, add them to the array
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                array_push($schools, $row);
+            }
+        }
+
+        //return the schools array
+        return $schools;
+    }
 };
