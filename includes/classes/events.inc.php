@@ -1035,4 +1035,41 @@ class Event
             return 0;
         }
     }
+
+    /**
+     * Search Events
+     * Search events by name, date, or location, gets the location name from the school database
+     *
+     * @param string $searchTerm search string
+     *
+     * @return array
+     */
+    public function searchEvents(string $searchTerm): array
+    {
+        //SQL statement to search events, cross referencing the location with the school database id
+        $sql = "SELECT event.id, event.name, event.event_date, school.name AS location FROM event INNER JOIN school ON event.location = school.id WHERE event.name LIKE ? OR event.event_date LIKE ? OR school.name LIKE ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //setup the search term
+        $searchTerm = "%" . $searchTerm . "%";
+        //bind the parameters
+        $stmt->bind_param("sss", $searchTerm, $searchTerm, $searchTerm);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+
+        //array to hold the events
+        $events = array();
+
+        //if the result has rows, loop through the rows and add them to the events array
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $events[] = $row;
+            }
+        }
+
+        //return the events array
+        return $events;
+    }
 }
