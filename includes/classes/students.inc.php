@@ -841,18 +841,14 @@ class Student
      */
     public function getStudentContactHistory(int $student_id): array
     {
-        //SQL statement to get the contact history for a student
-        $sql = "SELECT * FROM contact_log WHERE student = $student_id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        $contact_history = array();
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $contact_history[] = $row;
-            }
-        }
-        //Return the contact history array
-        return $contact_history;
+        //include the contact class, so we can get the contact history
+        $contactObject = new Contact();
+
+        //get the contact history for the student
+        $contactHistory = $contactObject->getStudentContactLog($student_id);
+
+        //return the contact history
+        return $contactHistory;
     }
 
     /**
@@ -869,22 +865,67 @@ class Student
      */
     public function logContactHistory(int $student_id, string $dateTime, int $isAuto, int $sender_id = NULL, string $subject, string $message): bool
     {
+        //include the contact class, so we can log the contact
+        $contactObject = new Contact();
+
+        //convert the isAuto value to a boolean
+        if ($isAuto == 1) {
+            $isAuto = true;
+        } else {
+            $isAuto = false;
+        }
+
+        //placeholder for the result
+        $result = false;
+
         //if the sender id is null, do not include it in the query
         if ($sender_id == NULL) {
-            //SQL statement to add a new contact log entry for a student
-            $sql = "INSERT INTO contact_log (student, send_date, auto, subject, message) VALUES ('$student_id', '$dateTime', '$isAuto', '$subject', '$message')";
+            //use the contact class to log the contact
+            $result = $contactObject->logContact($student_id, $isAuto, NULL, $dateTime, $subject, $message);
         } else {
-            //SQL statement to add a new contact log entry for a student
-            $sql = "INSERT INTO contact_log (student, send_date, auto, sender, subject, message) VALUES ('$student_id', '$dateTime', '$isAuto', '$sender_id', '$subject', '$message')";
+            //use the contact class to log the contact
+            $result = $contactObject->logContact($student_id, $isAuto, $sender_id, $dateTime, $subject, $message);
         }
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        //If the query is successful
-        if ($result) {
-            return true;
-        } else {
-            //If the query fails, return false
-            return false;
+
+        //return the result
+        return $result;
+    }
+
+    /**
+     * Search Students
+     * Search for students by their first name, last name, email, or phone number using a search term
+     *
+     * @param string $searchTerm
+     * @return array
+     */
+    public function searchStudents(string $searchTerm): array
+    {
+        //SQL statement to search for students by their first name, last name, email, or phone number using a search term
+        $sql = "SELECT * FROM student WHERE first_name LIKE ? OR last_name LIKE ? OR email LIKE ? OR phone LIKE ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //setup the search term
+        $searchTerm = "%" . $searchTerm . "%";
+        //bind the parameters
+        $stmt->bind_param("ssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the students
+        $students = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            //loop through the rows
+            while ($row = $result->fetch_assoc()) {
+                //add the row to the students array
+                $students[] = $row;
+            }
         }
+
+        //Return the students array
+        return $students;
     }
 };
