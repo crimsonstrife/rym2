@@ -20,6 +20,8 @@ if ($reportType == 'all') {
 
 //setup to include the report class
 $reportClassName = str_replace(' ', '', ucwords($reportType)) . 'Report';
+//also remove any hyphens
+$reportClassName = str_replace('-', '', $reportClassName);
 
 //include the report class
 $reportClass = new $reportClassName();
