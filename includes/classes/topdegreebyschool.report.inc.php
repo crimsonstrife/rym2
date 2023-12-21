@@ -286,14 +286,14 @@ class TopDegreeBySchoolReport extends Report
         $userObject = new User();
 
         //create the SQL query
-        $sql = "SELECT * FROM reports WHERE report_type = 'Top Degree by School' AND data LIKE ?";
-        $search = '%' . $search . '%';
+        $sql = "SELECT * FROM reports WHERE report_type = 'Top Degree by School' AND (data LIKE ? OR created_at LIKE ? OR updated_at LIKE ?)";
 
         //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
 
         //bind the parameters
-        $stmt->bind_param('s', $search);
+        $search = '%' . $search . '%';
+        $stmt->bind_param('sss', $search, $search, $search);
 
         //execute the statement
         $stmt->execute();
@@ -416,7 +416,10 @@ class TopDegreeBySchoolReport extends Report
             $color = $schoolsObject->getSchoolColor($schoolId);
 
             //add the school color to the colors array
-            $colors[] = $color;
+            //$colors[] = $color;
+
+            //add a random hex color to the colors array
+            $colors[] = getRandomHexColor();
         }
 
         //create an array to store the chart data
