@@ -425,8 +425,8 @@ class User implements Login
                 $username = $row['username'];
             }
         } else {
-            //if the user id is null, 0, or empty, set the username to "Submitted"
-            $username = "Submitted";
+            //if the user id is null, 0, or empty, set the username to "SYSTEM"
+            $username = "SYSTEM";
         }
 
         //Return the user's username
