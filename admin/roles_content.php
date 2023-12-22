@@ -50,7 +50,7 @@ if (!defined('ISVALIDUSER')) {
                     }
                     break;
                 case 'single':
-                    include_once('view/role_list.php');
+                    include_once('view/role_single.php');
                     break;
                 default:
                     include_once('view/role_list.php');
