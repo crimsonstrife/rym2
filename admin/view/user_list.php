@@ -13,7 +13,8 @@ if (!defined('ISVALIDUSER')) {
                     User List
                 </div>
                 <div class="card-tools">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=add&action=create' ?>" class="btn btn-primary">Add User</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=add&action=create' ?>"
+                        class="btn btn-primary">Add User</a>
                 </div>
             </div>
             <div class="card-body">
@@ -24,9 +25,9 @@ if (!defined('ISVALIDUSER')) {
                             <th>Email</th>
                             <th>Roles</th>
                             <th>Date Created</th>
-                            <!-- <th>Created By</th> -->
+                            <th>Created By</th>
                             <th>Date Updated</th>
-                            <!-- <th>Updated By</th> -->
+                            <th>Updated By</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,10 +42,10 @@ if (!defined('ISVALIDUSER')) {
                         //for each user, display it
                         foreach ($userArray as $user) {
                         ?>
-                            <tr>
-                                <td><?php echo $user['username']; ?></td>
-                                <td><?php echo $user['email']; ?></td>
-                                <?php
+                        <tr>
+                            <td><?php echo $user['username']; ?></td>
+                            <td><?php echo $user['email']; ?></td>
+                            <?php
                                 //get the roles of the user as a list
                                 $roles = $usersData->getUserRoles($user['id']);
                                 //create a string to hold the roles
@@ -63,18 +64,20 @@ if (!defined('ISVALIDUSER')) {
                                     }
                                 }
                                 ?>
-                                <td><?php echo $rolesString; ?></td>
-                                <td><?php echo $user['created_at']; ?></td>
-                                <!-- <td><?php //echo $usersData->getUserUsername($user['created_by']);
-                                            ?></td> -->
-                                <td><?php echo $user['updated_at']; ?></td>
-                                <!-- <td><?php //echo $usersData->getUserUsername($user['updated_by']);
-                                            ?></td> -->
-                                <td>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $user['id']; ?>" class="btn btn-primary">Edit</a>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=delete&action=delete&id=' . $user['id']; ?>" class="btn btn-danger">Delete</a>
-                                </td>
-                            </tr>
+                            <td><?php echo $rolesString; ?></td>
+                            <td><?php echo $user['created_at']; ?></td>
+                            <td><?php echo $usersData->getUserUsername(intval($user['created_by'])); ?></td>
+                            <td><?php echo $user['updated_at']; ?></td>
+                            <td><?php echo $usersData->getUserUsername(intval($user['updated_by'])); ?></td>
+                            <td>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=single' ?>&id=<?php echo $user['id']; ?>"
+                                    class="btn btn-success">View</a>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $user['id']; ?>"
+                                    class="btn btn-primary">Edit</a>
+                                <a href="/delete/delete_user.php?id=<?php echo $user['id']; ?>"
+                                    class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
                         <?php } ?>
                     </tbody>
                 </table>
@@ -94,12 +97,14 @@ if (!defined('ISVALIDUSER')) {
                             'Username' => $row['username'],
                             'Email' => $row['email'],
                             'Date Created' => $row['created_at'],
-                            //'Created By' => $row['created_by'],
+                            'Created By' => $row['created_by'],
                             'Date Updated' => $row['updated_at'],
-                            //'Updated By' => $row['updated_by']
+                            'Updated By' => $row['updated_by']
                         );
                     } ?>
-                    <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                    <form target="_blank"
+                        action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
+                        method="post" enctype="multipart/form-data">
                         <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                     </form>
                 </div>
