@@ -235,14 +235,22 @@ class Roles
 
         //check if the permission is already assigned to the role
         if (in_array($permissionId, $permissions)) {
+
             //return true as the permission is already assigned to the role
             return true;
         } else {
             //check if the permission exists
             $allPermissions = new Permission();
             $permissionsList = $allPermissions->getAllPermissions();
+
+            //trim out the permission IDs
+            foreach ($permissionsList as $key => $value) {
+                $permissionsList[$key] = $value['id'];
+            }
+
             //is the permission ID in the list of permissions
             if (!in_array($permissionId, $permissionsList)) {
+
                 //return false
                 return false;
             } else {
@@ -258,8 +266,11 @@ class Roles
                 //Execute the statement
                 $role_statement->execute();
 
+                //get the result
+                $result = $role_statement->get_result();
+
                 //if the statement was successful, return true
-                if ($role_statement) {
+                if ($result) {
                     return true;
                 } else {
                     return false;
@@ -392,29 +403,43 @@ class Roles
         //get current date and time
         $date = date('Y-m-d H:i:s');
 
-        //SQL statement to create a role
-        $sql = "INSERT INTO roles (name, created_by, created_at, updated_by, updated_at) VALUES (?, ?, ?, ?, ?)";
+        //check if the role name already exists
+        $roleNameExists = $this->getRoleByName($roleName);
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //if the role name does not exist, create the role
+        if ($roleNameExists == 0 || $roleNameExists == "" || $roleNameExists == null) {
+            //SQL statement to create a role
+            $sql = "INSERT INTO roles (name, created_by, created_at, updated_by, updated_at) VALUES (?, ?, ?, ?, ?)";
 
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("sisis", $roleName, $createdBy, $date, $createdBy, $date);
+            //Prepare the SQL statement for execution
+            $stmt = $this->mysqli->prepare($sql);
 
-        //Execute the statement
-        $stmt->execute();
+            //Bind the parameters to the SQL statement
+            $stmt->bind_param("sisis", $roleName, $createdBy, $date, $createdBy, $date);
 
-        //Get the ID of the role
-        $roleId = $stmt->insert_id;
+            //Execute the statement
+            $stmt->execute();
 
-        //Loop through the permissions and assign them to the role
-        foreach ($permissions as $permission) {
-            $this->giveRolePermission($roleId, intval($permission), $createdBy);
-        }
+            //Get the ID of the role
+            $roleId = $stmt->insert_id;
 
-        //If the statement was successful, return true
-        if ($stmt) {
-            return true;
+            //Loop through the permissions and assign them to the role
+            foreach ($permissions as $permission) {
+                //debug
+                error_log("Permission: " . $permission);
+
+                $permissionAdded = $this->giveRolePermission($roleId, intval($permission), $createdBy);
+
+                //debug
+                error_log("Permission Added: " . strval($permissionAdded));
+            }
+
+            //If the statement was successful, return true
+            if ($stmt) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
@@ -452,5 +477,153 @@ class Roles
         } else {
             return false;
         }
+    }
+
+    /**
+     * Set Role Permissions
+     *
+     * @param int $roleId The ID of the role to set the permissions for
+     * @param int $userId The ID of the user setting the permissions
+     * @param array $permissions The array of permissions to set for the role
+     *
+     * @return array if the role permissions were set, and which ones were set or not.
+     */
+    public function setRolePermissions(int $roleId, int $userId, array $permissions): array
+    {
+        //get current date and time
+        $date = date('Y-m-d H:i:s');
+
+        //array of permissions that were set or not
+        $permissionsSet = array(
+            "set" => array(
+                "permissions" => array()
+            ),
+            "not_set" => array(
+                "permissions" => array()
+            )
+        );
+
+        //for each permission, give the role the permission
+        foreach ($permissions as $permission) {
+            $successful = $this->giveRolePermission($roleId, intval($permission), $userId);
+
+            //if the permission was set, add it to the permissionsSet array
+            if ($successful) {
+                $permissionsSet['set']['permissions'][] = $permission;
+            } else {
+                $permissionsSet['not_set']['permissions'][] = $permission;
+            }
+        }
+
+        //return the permissionsSet array
+        return $permissionsSet;
+    }
+
+    /**
+     * Update Role
+     *
+     * @param int $roleId The ID of the role to update
+     * @param int $userId The ID of the user updating the role
+     * @param string $roleName The name of the role to update
+     * @param array $permissions The array of permissions to update for the role
+     *
+     * @return bool True if the role was updated, false if not
+     */
+    public function updateRole(int $roleId, int $userId, string $roleName, array $permissions): bool
+    {
+        //check if role name has changed
+        $currentRoleName = $this->getRoleNameById($roleId);
+
+        //if the role name has changed, try to set the role name
+        if ($currentRoleName != $roleName) {
+            //see if the name already exists
+            $roleNameExists = $this->getRoleByName($roleName);
+
+            //if the role name does not exist, set the role name
+            if ($roleNameExists == 0) {
+                $roleNameSet = $this->setRoleName($roleId, $userId, $roleName);
+            } else {
+                $roleNameSet = false;
+            }
+        } else {
+            $roleNameSet = true;
+        }
+
+        //set the role permissions if not empty
+        if (!empty($permissions)) {
+            $rolePermissionsSetArray = $this->setRolePermissions($roleId, $userId, $permissions);
+
+            //check if the role permissions were set
+            if (empty($rolePermissionsSetArray['not_set']['permissions'])) {
+                $rolePermissionsSet = true;
+            } else {
+                //as long as some of the permissions were set, return true
+                if (count($rolePermissionsSetArray['set']['permissions']) > 0) {
+                    $rolePermissionsSet = true;
+                    $this->reportPermissionsSetFailure($rolePermissionsSetArray['not_set']['permissions']);
+                } else {
+                    $rolePermissionsSet = false;
+                }
+            }
+        } else {
+            $rolePermissionsSet = false;
+        }
+
+        //if the role name and permissions were set or the permissions were empty, return true
+        if ($roleNameSet && ($rolePermissionsSet || empty($permissions))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Report Permissions Set Failure
+     * Logs the permissions that were not set for a role to a session variable
+     *
+     * @param array $permissionsSet The array of permissions that were not set
+     *
+     * @return void
+     */
+    public function reportPermissionsSetFailure(array $permissionsSet): void
+    {
+        //set the session variable
+        $_SESSION['permissions_set_failed'] = $permissionsSet;
+    }
+
+    /**
+     * Get Role by Name
+     *
+     * @param string $roleName The name of the role to get
+     *
+     * @return int The ID of the role
+     */
+    public function getRoleByName(string $roleName): int
+    {
+        //SQL statement to get the role by name
+        $sql = "SELECT id FROM roles WHERE name = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the parameters to the SQL statement
+        $stmt->bind_param("s", $roleName);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Create a variable to hold the role ID
+        $roleId = 0;
+
+        //Loop through the results and add them to the array
+        while ($row = $result->fetch_assoc()) {
+            $roleId = $row['id'];
+        }
+
+        //Return the role ID
+        return intval($roleId);
     }
 }
