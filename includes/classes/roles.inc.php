@@ -98,7 +98,7 @@ class Roles
 
         //Loop through the results and add them to the array
         while ($row = $result->fetch_assoc()) {
-            $role[] = $row;
+            $role = $row;
         }
 
         //Return the array of roles
@@ -225,15 +225,18 @@ class Roles
     }
 
     //give a role a permission
-    public function giveRolePermission(int $roleId, int $permissionId): bool
+    public function giveRolePermission(int $roleId, int $permissionId, int $userId): bool
     {
+        //get the current date and time
+        $date = date('Y-m-d H:i:s');
+
         //get list of permissions for the role
         $permissions = $this->getPermissionsIdByRoleId($roleId);
 
         //check if the permission is already assigned to the role
         if (in_array($permissionId, $permissions)) {
-            //return false
-            return false;
+            //return true as the permission is already assigned to the role
+            return true;
         } else {
             //check if the permission exists
             $allPermissions = new Permission();
@@ -244,13 +247,13 @@ class Roles
                 return false;
             } else {
                 //SQL statement to give a role a permission
-                $sql = "INSERT INTO role_has_permission (role_id, permission_id) VALUES (?, ?)";
+                $sql = "INSERT INTO role_has_permission (role_id, permission_id, created_at, created_by, updated_at, updated_by) VALUES (?, ?, ?, ?, ?, ?)";
 
                 //Prepare the SQL statement for execution
                 $role_statement = $this->mysqli->prepare($sql);
 
                 //Bind the parameters to the SQL statement
-                $role_statement->bind_param("ii", $roleId, $permissionId);
+                $role_statement->bind_param("iisisi", $roleId, $permissionId, $date, $userId, $date, $userId);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -262,6 +265,192 @@ class Roles
                     return false;
                 }
             }
+        }
+    }
+
+    /**
+     * Get Users with Role
+     * Get a list of users with a specific role by role ID
+     *
+     * @param int $roleId The ID of the role to get the users for
+     * @return array An array of users with the role
+     */
+    public function getUsersWithRole(int $roleId): array
+    {
+        //SQL statement to get the users with a specific role
+        $sql = "SELECT * FROM user_has_role WHERE role_id = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the parameters to the SQL statement
+        $stmt->bind_param("i", $roleId);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Create an array to hold the users
+        $users = array();
+
+        //Loop through the results and add them to the array
+        while ($row = $result->fetch_assoc()) {
+            $users[] = $row;
+        }
+
+        //Return the array of users
+        return $users;
+    }
+
+    /**
+     * Get the Date a Role was Given to a User
+     *
+     * @param int $userId The ID of the user to get the role date for
+     * @param int $roleId The ID of the role to get the date for
+     *
+     * @return string The date the role was given to the user
+     */
+    public function getUserRoleGivenDate(int $userId, int $roleId): string
+    {
+        //SQL statement to get the date a role was given to a user
+        $sql = "SELECT created_at FROM user_has_role WHERE user_id = ? AND role_id = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the parameters to the SQL statement
+        $stmt->bind_param("ii", $userId, $roleId);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Create a variable to hold the date
+        $date = "";
+
+        //Loop through the results and add them to the array
+        while ($row = $result->fetch_assoc()) {
+            $date = $row['created_at'];
+        }
+
+        //Return the date
+        return $date;
+    }
+
+    /**
+     * Get the Date a Role was Modified on a User
+     *
+     * @param int $userId The ID of the user to get the role date for
+     * @param int $roleId The ID of the role to get the date for
+     *
+     * @return string The date the role was modified on the user
+     */
+    public function getUserRoleModifiedDate(int $userId, int $roleId): string
+    {
+        //SQL statement to get the date a role was modified on a user
+        $sql = "SELECT updated_at FROM user_has_role WHERE user_id = ? AND role_id = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the parameters to the SQL statement
+        $stmt->bind_param("ii", $userId, $roleId);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Create a variable to hold the date
+        $date = "";
+
+        //Loop through the results and add them to the array
+        while ($row = $result->fetch_assoc()) {
+            $date = $row['updated_at'];
+        }
+
+        //Return the date
+        return $date;
+    }
+
+    /**
+     * Create a Role
+     *
+     * @param string $roleName The name of the role to create
+     * @param int $createdBy The ID of the user creating the role
+     * @param array $permissions The array of permissions to assign to the role
+     *
+     * @return bool True if the role was created, false if not
+     */
+    public function createRole(string $roleName, int $createdBy, array $permissions): bool
+    {
+        //get current date and time
+        $date = date('Y-m-d H:i:s');
+
+        //SQL statement to create a role
+        $sql = "INSERT INTO roles (name, created_by, created_at, updated_by, updated_at) VALUES (?, ?, ?, ?, ?)";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the parameters to the SQL statement
+        $stmt->bind_param("sisis", $roleName, $createdBy, $date, $createdBy, $date);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the ID of the role
+        $roleId = $stmt->insert_id;
+
+        //Loop through the permissions and assign them to the role
+        foreach ($permissions as $permission) {
+            $this->giveRolePermission($roleId, intval($permission), $createdBy);
+        }
+
+        //If the statement was successful, return true
+        if ($stmt) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Set Role Name
+     *
+     * @param int $roleId The ID of the role to set the name for
+     * @param int $userId The ID of the user setting the role name
+     * @param string $roleName The name of the role to set
+     *
+     * @return bool True if the role name was set, false if not
+     */
+    public function setRoleName(int $roleId, int $userId, string $roleName): bool
+    {
+        //get current date and time
+        $date = date('Y-m-d H:i:s');
+
+        //SQL statement to set the role name
+        $sql = "UPDATE roles SET name = ?, updated_at = ?, updated_by = ? WHERE id = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the parameters to the SQL statement
+        $stmt->bind_param("ssii", $roleName, $date, $roleId, $userId);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //If the statement was successful, return true
+        if ($stmt) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
