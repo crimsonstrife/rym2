@@ -1244,7 +1244,14 @@ class Application
         $results = array(
             'students' => array(),
             'schools' => array(),
-            'events' => array()
+            'events' => array(),
+            'jobs' => array(),
+            'wildcard' => array(
+                'students' => array(),
+                'schools' => array(),
+                'events' => array(),
+                'jobs' => array()
+            )
         );
 
         //search the students table
@@ -1255,6 +1262,8 @@ class Application
 
         //search the events table
         $eventResults = $eventData->searchEvents($searchTerm);
+
+        //TODO: search the jobs table
 
         //loop through the student results
         foreach ($studentResults as $studentResult) {
@@ -1273,6 +1282,42 @@ class Application
             //add the event result to the results array
             array_push($results['events'], $eventResult);
         }
+
+        //TODO: loop through the job results
+
+        //set the wildcard search term, replacing spaces with % signs
+        $wildcardSearchTerm = str_replace(' ', '%', $searchTerm);
+
+        //search the students table
+        $wildcardStudentResults = $studentData->searchStudents($wildcardSearchTerm);
+
+        //search the schools table
+        $wildcardSchoolResults = $schoolData->searchSchools($wildcardSearchTerm);
+
+        //search the events table
+        $wildcardEventResults = $eventData->searchEvents($wildcardSearchTerm);
+
+        //TODO: search the jobs table
+
+        //loop through the student results
+        foreach ($wildcardStudentResults as $wildcardStudentResult) {
+            //add the student result to the results array
+            array_push($results['wildcard']['students'], $wildcardStudentResult);
+        }
+
+        //loop through the school results
+        foreach ($wildcardSchoolResults as $wildcardSchoolResult) {
+            //add the school result to the results array
+            array_push($results['wildcard']['schools'], $wildcardSchoolResult);
+        }
+
+        //loop through the event results
+        foreach ($wildcardEventResults as $wildcardEventResult) {
+            //add the event result to the results array
+            array_push($results['wildcard']['events'], $wildcardEventResult);
+        }
+
+        //TODO: loop through the wildcard job results
 
         //return the results array
         return $results;
