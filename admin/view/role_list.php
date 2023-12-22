@@ -13,8 +13,7 @@ if (!defined('ISVALIDUSER')) {
                     Role List
                 </div>
                 <div class="card-tools">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=add&action=create' ?>"
-                        class="btn btn-primary">Add Role</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=add&action=create' ?>" class="btn btn-primary">Add Role</a>
                 </div>
             </div>
             <div class="card-body">
@@ -23,6 +22,10 @@ if (!defined('ISVALIDUSER')) {
                         <tr>
                             <th>Role Name</th>
                             <th>Permissions</th>
+                            <th>Role Created</th>
+                            <th>Role Created By</th>
+                            <th>Role Updated</th>
+                            <th>Role Updated By</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,17 +35,14 @@ if (!defined('ISVALIDUSER')) {
                         $rolesData = new Roles();
                         //include the Permissions class
                         $permissionsData = new Permission();
+                        //include the User class
+                        $userData = new User();
                         //get all the roles
                         $rolesArray = $rolesData->getAllRoles();
                         //for each user, display it
                         foreach ($rolesArray as $role) {
                             //get the permissions for the role
                             $permissionsArray = $rolesData->getRolePermissions(intval($role['id']));
-
-                            //debug
-                            //echo "<pre>";
-                            //print_r($permissionsArray);
-                            //echo "</pre>";
 
                             //create a string of the permissions
                             $permissionsString = "";
@@ -64,16 +64,19 @@ if (!defined('ISVALIDUSER')) {
                                 $permissionsString = "No permissions assigned";
                             }
                         ?>
-                        <tr>
-                            <td><?php echo $role['name']; ?></td>
-                            <td><?php echo $permissionsString; ?></td>
-                            <td>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=edit&action=edit&id=' . $role['id']; ?>"
-                                    class="btn btn-primary">Edit</a>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=delete&action=delete&id=' . $role['id']; ?>"
-                                    class="btn btn-danger">Delete</a>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td><?php echo $role['name']; ?></td>
+                                <td><?php echo $permissionsString; ?></td>
+                                <td><?php echo $role['created_at']; ?></td>
+                                <td><?php echo $userData->getUserUsername(intval($role['created_by'])); ?></td>
+                                <td><?php echo $role['updated_at']; ?></td>
+                                <td><?php echo $userData->getUserUsername(intval($role['updated_by'])); ?></td>
+                                <td>
+                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=single' ?>&id=<?php echo $role['id']; ?>" class="btn btn-success">View</a>
+                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=edit&action=edit&id=' . $role['id']; ?>" class="btn btn-primary">Edit</a>
+                                    <a href="/delete/delete_role.php?id=<?php echo $role['id']; ?>" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
                         <?php } ?>
                     </tbody>
                 </table>
