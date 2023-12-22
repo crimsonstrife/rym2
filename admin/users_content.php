@@ -50,7 +50,7 @@ if (!defined('ISVALIDUSER')) {
                     }
                     break;
                 case 'single':
-                    include_once('view/user_list.php');
+                    include_once('view/user_single.php');
                     break;
                 default:
                     include_once('view/user_list.php');
