@@ -250,7 +250,7 @@ class User implements Login
 
         //Loop through the results and add them to the array
         while ($row = $result->fetch_assoc()) {
-            $user[] = $row;
+            $user = $row;
         }
 
         //Return the array of users
@@ -547,7 +547,7 @@ class User implements Login
     }
 
     //Add a user
-    public function addUser(string $email, string $first_name, string $last_name, string $password, string $username): void
+    public function addUser(string $email, string $password, string $username, int $created_by = null): int
     {
         //hash the password
         $password = $this->hashPassword($password);
@@ -556,16 +556,22 @@ class User implements Login
         $timestamp = date("Y-m-d H:i:s");
 
         //SQL statement to add a user with current timestamp as created_at and updated_at
-        $sql = "INSERT INTO users (email, first_name, last_name, password, username, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO users (email, password, username, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         //Prepare the SQL statement for execution
         $stmt = $this->mysqli->prepare($sql);
 
         //Bind the parameters to the SQL statement
-        $stmt->bind_param("sssssss", $email, $first_name, $last_name, $password, $username, $timestamp, $timestamp);
+        $stmt->bind_param("sssssii", $email, $password, $username, $timestamp, $timestamp, $created_by, $created_by);
 
         //Execute the statement
         $stmt->execute();
+
+        //get the user ID
+        $user_id = $stmt->insert_id;
+
+        //return the user ID as an integer
+        return intval($user_id);
     }
 
     //Delete a user
@@ -585,7 +591,7 @@ class User implements Login
     }
 
     //Update a user
-    public function updateUser(int $id, string $email, string $first_name, string $last_name, string $password, string $username): void
+    public function updateUser(int $id, string $email, string $password, string $username, int $updated_by): void
     {
         //hash the password
         $password = $this->hashPassword($password);
@@ -594,13 +600,13 @@ class User implements Login
         $timestamp = date("Y-m-d H:i:s");
 
         //SQL statement to update a user
-        $sql = "UPDATE users SET email = ?, first_name = ?, last_name = ?, password = ?, username = ?, updated_at = ? WHERE id = ?";
+        $sql = "UPDATE users SET email = ?, password = ?, username = ?, updated_at = ?, updated_by = ? WHERE id = ?";
 
         //Prepare the SQL statement for execution
         $stmt = $this->mysqli->prepare($sql);
 
         //Bind the parameters to the SQL statement
-        $stmt->bind_param("ssssssi", $email, $first_name, $last_name, $password, $username, $timestamp, $id);
+        $stmt->bind_param("ssssii", $email, $password, $username, $timestamp, $updated_by, $id);
 
         //Execute the statement
         $stmt->execute();
@@ -678,5 +684,216 @@ class User implements Login
         } else {
             return false;
         }
+    }
+
+    /**
+     * User exists by username
+     *
+     * @param string $username The username to check
+     *
+     * @return bool True if the user exists, false if not
+     */
+    public function validateUserByUsername(string $username): bool
+    {
+        //SQL statement to validate a user exists by username
+        $sql = "SELECT id FROM users WHERE username = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the username to the statement
+        $stmt->bind_param("s", $username);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //if the user exists, return true
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //User exists by email
+    public function validateUserByEmail(string $email): bool
+    {
+        //SQL statement to validate a user exists by email
+        $sql = "SELECT id FROM users WHERE email = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the email to the statement
+        $stmt->bind_param("s", $email);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //if the user exists, return true
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Create a user and assign them a role
+     *
+     * @param string $email The user's email
+     * @param string $username The user's username
+     * @param string $password The user's password
+     * @param int $created_by The user ID of the user who created the user, default is null which will set the user ID to the system, or null
+     * @param array $roles The roles to assign to the user, default is an empty array which will assign the user no roles
+     *
+     * @return bool True if the user was created, false if not
+     */
+    public function createUser(string $email, string $username, string $password, int $created_by = null, array $roles = array()): bool
+    {
+        //get the current date and time
+        $date = date("Y-m-d H:i:s");
+
+        //trim the email
+        $email = trim($email);
+
+        //trim the username
+        $username = trim($username);
+
+        //add the user
+        $user_id = $this->addUser($email, $password, $username, $created_by);
+
+        //if the user was created, assign the roles
+        if ($user_id > 0 && !empty($user_id) && $user_id != null) {
+            //if the roles array is not empty, assign the roles
+            if (!empty($roles)) {
+                //loop through the roles array and assign the roles
+                foreach ($roles as $role) {
+                    $this->giveRoleToUser($user_id, $role);
+                }
+            } else {
+                //do nothing, roles should remain null
+            }
+
+            //if the user was created, notify the user
+            $this->notifyUserCreated($email, $username, $password);
+
+            //return true
+            return true;
+        } else if ($user_id == 0 || empty($user_id) || $user_id == null) {
+            //if no user was created, return false
+            return false;
+        }
+
+        //if no user was created, return false
+        return false;
+    }
+
+    /**
+     * Notifies the user of their account creation, sends an email to the user with their username and password
+     *
+     * @param string $email The user's email
+     * @param string $username The user's username
+     * @param string $password The user's password
+     *
+     * @return bool True if the email was sent, false if not
+     */
+    public function notifyUserCreated(string $email, string $username, string $password): bool
+    {
+        //include the contact class
+        $contact = new Contact();
+
+        //trim the email
+        $email = trim($email);
+
+        //trim the username
+        $username = trim($username);
+
+        //trim the password
+        $password = trim($password);
+
+        //send the email
+        $mail = $contact->sendAccountCreationEmail($email, $username, $password);
+
+        //if the email was sent, return true
+        if ($mail == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Modify a user and or their roles
+     *
+     * @param int $id The user ID of the user to modify
+     * @param string $email The user's email
+     * @param string $username The user's username
+     * @param string $password The user's password
+     * @param int $updated_by The user ID of the user who updated the user, default is null which will set the user ID to the system, or null
+     * @param array $roles The roles to assign to the user, default is an empty array which will assign the user no roles
+     *
+     * @return bool True if the user was modified, false if not
+     */
+    public function modifyUser(int $id, string $email, string $username, string $password, int $updated_by = null, array $roles = array()): bool
+    {
+        //get the current date and time
+        $date = date("Y-m-d H:i:s");
+
+        //trim the email
+        $email = trim($email);
+
+        //trim the username
+        $username = trim($username);
+
+        //trim the password
+        $password = trim($password);
+
+        //update the user
+        $this->updateUser($id, $email, $password, $username, $updated_by);
+
+        //get the user's current roles
+        $currentRoles = $this->getUserRoles($id);
+
+        //get just the role IDs from the current roles
+        $currentRoleIDs = array();
+
+        //loop through the current roles and get the role IDs
+        foreach ($currentRoles as $role) {
+            $currentRoleIDs[] = $role->getId();
+        }
+
+        //if the roles array is not empty, compare the roles to the id of the current roles and assign or remove roles as needed
+        if (!empty($roles)) {
+            //loop through the roles array and assign the roles
+            foreach ($roles as $role) {
+                //if the role is not in the current roles, assign the role
+                if (!in_array($role, $currentRoleIDs)) {
+                    $this->giveRoleToUser($id, $role);
+                }
+            }
+
+            //loop through the current roles and remove the roles that are not in the roles array
+            foreach ($currentRoleIDs as $currentRole) {
+                //if the current role is not in the roles array, remove the role
+                if (!in_array($currentRole, $roles)) {
+                    $this->removeRoleFromUser($id, $currentRole);
+                }
+            }
+        } else {
+            //if the roles array is empty, remove all the roles from the user
+            foreach ($currentRoleIDs as $currentRole) {
+                $this->removeRoleFromUser($id, $currentRole);
+            }
+        }
+
+        //if the user was modified, return true
+        return true;
     }
 }
