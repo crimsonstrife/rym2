@@ -373,4 +373,76 @@ class Contact
             return true;
         }
     }
+
+    /**
+     * Send Account Creation Email to User
+     * Sends an email to the user with their username and password
+     * @param string $email - the email address to send the email to
+     * @param string $username - the username of the user
+     * @param string $password - the password of the user
+     *
+     * @return bool
+     */
+    public function sendAccountCreationEmail(string $email, string $username, string $password): bool
+    {
+        //include the application class
+        $APP = new Application();
+        //Create a new PHPMailer instance
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
+        //Tell what protocol to use
+        $mail->Mailer = MAIL_MAILER;
+        //Set the hostname of the mail server
+        $mail->Host = MAIL_HOST;
+        //Set the port number - likely to be 25, 465 or 587
+        $mail->Port = MAIL_PORT;
+        //Set if authentication is required
+        $mail->SMTPAuth = MAIL_AUTH_REQ;
+
+        //Set the encryption system to use - ssl (deprecated) or tls
+        if (MAIL_ENCRYPTION == 'ssl') {
+            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+        } else if (MAIL_ENCRYPTION == 'tls') {
+            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        }
+
+        //if authentication is required, set the username and password
+        if (MAIL_AUTH_REQ == 'true') {
+            $mail->Username = MAIL_USERNAME;
+            //if the password was set in the database
+            if ($APP->getMailerPassword() != null || $APP->getMailerPassword() != '') {
+                //if openssl is installed, decrypt the password
+                if (OPENSSL_INSTALLED) {
+                    $mail->Password = openssl_decrypt(MAIL_PASSWORD, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+                } else {
+                    $mail->Password = MAIL_PASSWORD;
+                }
+            } else {
+                $mail->Password = MAIL_PASSWORD;
+            }
+        }
+
+        //Set who the message is to be sent from (the server will need to be configured to authenticate with this address, or to have send as permissions)
+        $mail->setFrom(MAIL_FROM_ADDRESS, MAIL_FROM_NAME);
+
+        //Set who the message is to be sent to
+        $mail->addAddress($email);
+
+        //Set the subject line
+        $mail->Subject = 'Account Created';
+
+        //Don't use HTML
+        $mail->isHTML(false);
+
+        //Set the body
+        $mail->Body = "Your account has been created. Your username is: " . $username . " and your password is: " . $password;
+
+        //send the message, check for errors
+        if (!$mail->send()) {
+            //if there is an error, return false
+            return false;
+        } else {
+            //if there is no error, return true
+            return true;
+        }
+    }
 }
