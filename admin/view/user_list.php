@@ -13,7 +13,8 @@ if (!defined('ISVALIDUSER')) {
                     User List
                 </div>
                 <div class="card-tools">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=add&action=create' ?>" class="btn btn-primary">Add User</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=add&action=create' ?>"
+                        class="btn btn-primary">Add User</a>
                 </div>
             </div>
             <div class="card-body">
@@ -41,15 +42,12 @@ if (!defined('ISVALIDUSER')) {
                         //for each user, display it
                         foreach ($userArray as $user) {
                         ?>
-                            <tr>
-                                <td><?php echo $user['username']; ?></td>
-                                <td><?php echo $user['email']; ?></td>
-                                <?php
+                        <tr>
+                            <td><?php echo $user['username']; ?></td>
+                            <td><?php echo $user['email']; ?></td>
+                            <?php
                                 //get the roles of the user as a list
                                 $roles = $usersData->getUserRoles($user['id']);
-
-                                //debug
-                                error_log("roles: " . print_r($roles, true));
 
                                 //create a string to hold the roles
                                 $rolesString = "";
@@ -63,18 +61,34 @@ if (!defined('ISVALIDUSER')) {
                                         $rolesString = $rolesString . ", " . $role['name'];
                                     }
                                 }
+
+                                /* Display the roles */
+                                //first, check if the roles string is empty, if it is, display a message
+                                if ($rolesString == "") {
+                                    echo "<td>No Roles</td>";
+                                } else {
+                                    //if the roles string is not empty, break the string by the comma and display each role on a new line
+                                    $rolesArray = explode(", ", $rolesString);
+                                    echo "<td>";
+                                    foreach ($rolesArray as $role) {
+                                        echo $role . "<br>";
+                                    }
+                                    echo "</td>";
+                                }
                                 ?>
-                                <td><?php echo $rolesString; ?></td>
-                                <td><?php echo $user['created_at']; ?></td>
-                                <td><?php echo $usersData->getUserUsername(intval($user['created_by'])); ?></td>
-                                <td><?php echo $user['updated_at']; ?></td>
-                                <td><?php echo $usersData->getUserUsername(intval($user['updated_by'])); ?></td>
-                                <td>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=single' ?>&id=<?php echo $user['id']; ?>" class="btn btn-success">View</a>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $user['id']; ?>" class="btn btn-primary">Edit</a>
-                                    <a href="/delete/delete_user.php?id=<?php echo $user['id']; ?>" class="btn btn-danger">Delete</a>
-                                </td>
-                            </tr>
+                            <td><?php echo $user['created_at']; ?></td>
+                            <td><?php echo $usersData->getUserUsername(intval($user['created_by'])); ?></td>
+                            <td><?php echo $user['updated_at']; ?></td>
+                            <td><?php echo $usersData->getUserUsername(intval($user['updated_by'])); ?></td>
+                            <td>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $user['id']; ?>"
+                                    class="btn btn-success">View</a>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $user['id']; ?>"
+                                    class="btn btn-primary">Edit</a>
+                                <a href="/delete/delete_user.php?id=<?php echo $user['id']; ?>"
+                                    class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
                         <?php } ?>
                     </tbody>
                 </table>
@@ -99,7 +113,9 @@ if (!defined('ISVALIDUSER')) {
                             'Updated By' => $row['updated_by']
                         );
                     } ?>
-                    <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                    <form target="_blank"
+                        action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
+                        method="post" enctype="multipart/form-data">
                         <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                     </form>
                 </div>
