@@ -426,12 +426,12 @@ class Roles
             //Loop through the permissions and assign them to the role
             foreach ($permissions as $permission) {
                 //debug
-                error_log("Permission: " . $permission);
+                //error_log("Permission: " . $permission);
 
                 $permissionAdded = $this->giveRolePermission($roleId, intval($permission), $createdBy);
 
                 //debug
-                error_log("Permission Added: " . strval($permissionAdded));
+                //error_log("Permission Added: " . strval($permissionAdded));
             }
 
             //If the statement was successful, return true
