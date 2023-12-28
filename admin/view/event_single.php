@@ -28,8 +28,8 @@ $event_id = $_GET['id'];
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet/leaflet.css'; ?>">
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.css'; ?>">
 <script>
-    var mapLocationTitle = "<?php echo $event->getEventLocation($event_id); ?>";
-    var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?>";
+var mapLocationTitle = "<?php echo $event->getEventLocation($event_id); ?>";
+var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?>";
 </script>
 <div class="container-fluid px-4">
     <h1 class="mt-4"><?php echo $event->getEventName($event_id); ?></h1>
@@ -41,9 +41,12 @@ $event_id = $_GET['id'];
                     Event Information
                 </div>
                 <div class="card-buttons">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>" class="btn btn-primary btn-sm">Back to Events</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event_id; ?>" class="btn btn-primary btn-sm">Edit Event</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=delete&id=' . $event_id; ?>" class="btn btn-danger btn-sm">Delete Event</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
+                        class="btn btn-primary btn-sm">Back to Events</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event_id; ?>"
+                        class="btn btn-primary btn-sm">Edit Event</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=delete&id=' . $event_id; ?>"
+                        class="btn btn-danger btn-sm">Delete Event</a>
                 </div>
             </div>
             <div class="card-body">
@@ -53,7 +56,8 @@ $event_id = $_GET['id'];
                         <h3>Event Details</h3>
                         <div id="info" class="">
                             <p><strong>Event Name:</strong> <?php echo $event->getEventName($event_id); ?></p>
-                            <p><strong>Event URL Slug:</strong> <a href="<?php echo APP_URL . '/index.php?event=' . $event->getEventSlug($event_id); ?>"><?php echo $event->getEventSlug($event_id); ?></a>
+                            <p><strong>Event URL Slug:</strong> <a
+                                    href="<?php echo APP_URL . '/index.php?event=' . $event->getEventSlug($event_id); ?>"><?php echo $event->getEventSlug($event_id); ?></a>
                             </p>
                             <p><strong>Event Date:</strong> <?php echo $event->getEventDate($event_id); ?></p>
                             <p><strong>Event Location:</strong> <?php echo $event->getEventLocation($event_id); ?></p>
@@ -65,7 +69,8 @@ $event_id = $_GET['id'];
                                     $address = $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id)));
                                     $address = urlencode($address);
                                     ?>
-                                    <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>" target="_blank"><?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?></a>
+                                    <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
+                                        target="_blank"><?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?></a>
                                 </p>
                             </div>
                             <div id="map"></div>
@@ -94,13 +99,17 @@ $event_id = $_GET['id'];
                         <div id="eventBranding">
                             <h3>Event Branding</h3>
                             <p><strong>Event Logo:</strong></p>
-                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $event->getEventLogo($event_id); ?>" alt="Event Logo" style="max-width: 200px; max-height: auto;">
+                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $event->getEventLogo($event_id); ?>"
+                                alt="Event Logo" style="max-width: 200px; max-height: auto;">
                             <p><strong>Event Banner:</strong></p>
-                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $event->getEventBanner($event_id); ?>" alt="Event Banner" style="max-width: 200px; max-height: auto;">
+                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $event->getEventBanner($event_id); ?>"
+                                alt="Event Banner" style="max-width: 200px; max-height: auto;">
                             <p><strong>School Logo:</strong></p>
-                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $school->getSchoolLogo(intval($event->getEventLocationId($event_id))); ?>" alt="School Logo" style="max-width: 200px; max-height: auto;">
+                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $school->getSchoolLogo(intval($event->getEventLocationId($event_id))); ?>"
+                                alt="School Logo" style="max-width: 200px; max-height: auto;">
                             <p><strong>School Primary Color:</strong></p>
-                            <div style="width: 100px; height: 100px; background-color: <?php echo $school->getSchoolColor(intval($event->getEventLocationId($event_id))) ?? '#000000'; ?>;">
+                            <div
+                                style="width: 100px; height: 100px; background-color: <?php echo $school->getSchoolColor(intval($event->getEventLocationId($event_id))) ?? '#000000'; ?>;">
                             </div>
                         </div>
                     </div>
@@ -114,23 +123,23 @@ $event_id = $_GET['id'];
                             ?>
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    <table id="dataTable">
+                                    <table id="dataTable" class="table table-striped table-bordered">
                                         <thead>
                                             <?php
                                             if (empty($students)) {
                                             ?>
-                                                <tr>
-                                                    <th>Students List</th>
-                                                </tr>
+                                            <tr>
+                                                <th>Students List</th>
+                                            </tr>
                                             <?php
                                             } else {
                                             ?>
-                                                <tr>
-                                                    <th>First Name</th>
-                                                    <th>Last Name</th>
-                                                    <th>Email</th>
-                                                    <th>Degree</th>
-                                                </tr>
+                                            <tr>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Email</th>
+                                                <th>Degree</th>
+                                            </tr>
                                             <?php
                                             }
                                             ?>
@@ -142,16 +151,16 @@ $event_id = $_GET['id'];
                                             } else {
                                                 foreach ($students as $eventStudent) {
                                             ?>
-                                                    <tr>
-                                                        <td><?php echo $student->getStudentFirstName($eventStudent['student_id']); ?>
-                                                        </td>
-                                                        <td><?php echo $student->getStudentLastName($eventStudent['student_id']); ?>
-                                                        </td>
-                                                        <td><?php echo $student->getStudentEmail($eventStudent['student_id']); ?>
-                                                        </td>
-                                                        <td><?php echo $student->getStudentDegree($eventStudent['student_id']); ?>
-                                                        </td>
-                                                    </tr>
+                                            <tr>
+                                                <td><?php echo $student->getStudentFirstName($eventStudent['student_id']); ?>
+                                                </td>
+                                                <td><?php echo $student->getStudentLastName($eventStudent['student_id']); ?>
+                                                </td>
+                                                <td><?php echo $student->getStudentEmail($eventStudent['student_id']); ?>
+                                                </td>
+                                                <td><?php echo $student->getStudentDegree($eventStudent['student_id']); ?>
+                                                </td>
+                                            </tr>
                                             <?php }
                                             } ?>
                                         </tbody>
