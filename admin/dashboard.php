@@ -43,7 +43,7 @@ if (isset($_SESSION['user_id'])) {
     //include the header
     include_once('header.php');
 ?>
-<div id="layout">
+    <div id="layout">
     <?php
     //include the sidebar
     include_once('sidebar.php');
@@ -86,6 +86,9 @@ if (isset($_SESSION['user_id'])) {
                 break;
             case 'contact-log':
                 include_once('contactlog_content.php');
+                break;
+            case 'activity-log':
+                include_once('activitylog_content.php');
                 break;
             case 'search':
                 include_once('search.php');
