@@ -81,7 +81,7 @@ $report = $reportClass->getReportById($reportId);
                         <h3>Report Data</h3>
                         <!-- display the report datatable -->
                         <?php $reportData = $report['data'] ?>
-                        <table id="dataTable striped">
+                        <table id="dataTable" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <?php
