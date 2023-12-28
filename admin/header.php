@@ -49,7 +49,9 @@ require_once(__DIR__ . '../../config/app.php');
                         </li>
                         <li><a class="dropdown-item"
                                 href="<?php echo APP_URL . '/admin/dashboard.php?view=settings' ?>">Settings</a></li>
-                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                        <li><a class="dropdown-item"
+                                href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $_SESSION["user_id"] . '#activity_log'; ?>">Activity
+                                Log</a></li>
                         <li>
                             <hr class="dropdown-divider" />
                         </li>
