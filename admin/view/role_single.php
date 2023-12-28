@@ -90,7 +90,7 @@ $roleData = $role->getRoleById(intval($roleId));
                                     <?php $usersWithRole = $role->getUsersWithRole(intval($roleId));
                                     if (!empty($usersWithRole)) { ?>
                                     <p><strong>Users:</strong></p>
-                                    <table id="dataTable">
+                                    <table id="dataTable" class="table table-striped table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>Username</th>
