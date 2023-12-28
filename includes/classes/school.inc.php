@@ -418,6 +418,10 @@ class School
         $stmt->bind_param("ssssssii", $school_name, $school_address, $school_city, $school_state, $school_zip, $updated_at, $updated_by, $school_id);
         $stmt->execute();
         $result = true;
+
+        //log the school activity
+        $activity = new Activity();
+        $activity->logActivity($updated_by, 'Updated School', 'School ' . $school_name);
         return $result;
     }
 
@@ -442,6 +446,10 @@ class School
         $stmt->bind_param("ssssssisi", $school_name, $school_address, $school_city, $school_state, $school_zip, $created_at, $created_by, $created_at, $created_by);
         $stmt->execute();
         $result = true;
+
+        //log the school activity
+        $activity = new Activity();
+        $activity->logActivity($created_by, 'Created School', 'School ' . $school_name);
         return $result;
     }
 
