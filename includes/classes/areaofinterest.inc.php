@@ -90,14 +90,10 @@ class AreaOfInterest extends Subject
      * @param int $user_id //id from the users table *optional
      * @return bool
      */
-    public function addSubject(string $aoi_name, int $user_id = 0): bool
+    public function addSubject(string $aoi_name, int $user_id = null): bool
     {
         //get current date and time
         $currentDateTime = date('Y-m-d H:i:s');
-        //if the user id is not set, set it to 0
-        if (!isset($user_id)) {
-            $user_id = 0;
-        }
         $sql = "INSERT INTO aoi (name, created_at, created_by, updated_at, updated_by) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->mysqli->prepare($sql);
         $stmt->bind_param("ssisi", $aoi_name, $currentDateTime, $user_id, $currentDateTime, $user_id);
@@ -105,6 +101,9 @@ class AreaOfInterest extends Subject
 
         //check for affected rows
         if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($user_id, "Added a new subject: " . $aoi_name, "Subject");
             return true;
         } else {
             return false;
@@ -119,7 +118,7 @@ class AreaOfInterest extends Subject
      * @param int $user_id //id from the users table *optional
      * @return bool
      */
-    public function updateSubject(int $aoi_id, string $aoi_name, int $user_id): bool
+    public function updateSubject(int $aoi_id, string $aoi_name, int $user_id = null): bool
     {
         //get current date and time
         $currentDateTime = date('Y-m-d H:i:s');
@@ -130,6 +129,9 @@ class AreaOfInterest extends Subject
 
         //check for affected rows
         if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($user_id, "Updated subject: " . $aoi_name, "Subject");
             return true;
         } else {
             return false;
