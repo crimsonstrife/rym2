@@ -13,11 +13,12 @@ if (!defined('ISVALIDUSER')) {
                     Role List
                 </div>
                 <div class="card-tools">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=add&action=create' ?>" class="btn btn-primary">Add Role</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=add&action=create' ?>"
+                        class="btn btn-primary">Add Role</a>
                 </div>
             </div>
             <div class="card-body">
-                <table id="dataTable">
+                <table id="dataTable" class="table table-striped table-bordered">
                     <thead>
                         <tr>
                             <th>Role Name</th>
@@ -64,19 +65,22 @@ if (!defined('ISVALIDUSER')) {
                                 $permissionsString = "No permissions assigned";
                             }
                         ?>
-                            <tr>
-                                <td><?php echo $role['name']; ?></td>
-                                <td><?php echo $permissionsString; ?></td>
-                                <td><?php echo $role['created_at']; ?></td>
-                                <td><?php echo $userData->getUserUsername(intval($role['created_by'])); ?></td>
-                                <td><?php echo $role['updated_at']; ?></td>
-                                <td><?php echo $userData->getUserUsername(intval($role['updated_by'])); ?></td>
-                                <td>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=single' ?>&id=<?php echo $role['id']; ?>" class="btn btn-success">View</a>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=edit&action=edit&id=' . $role['id']; ?>" class="btn btn-primary">Edit</a>
-                                    <a href="/delete/delete_role.php?id=<?php echo $role['id']; ?>" class="btn btn-danger">Delete</a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td><?php echo $role['name']; ?></td>
+                            <td><?php echo $permissionsString; ?></td>
+                            <td><?php echo $role['created_at']; ?></td>
+                            <td><?php echo $userData->getUserUsername(intval($role['created_by'])); ?></td>
+                            <td><?php echo $role['updated_at']; ?></td>
+                            <td><?php echo $userData->getUserUsername(intval($role['updated_by'])); ?></td>
+                            <td>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=single' ?>&id=<?php echo $role['id']; ?>"
+                                    class="btn btn-success">View</a>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=edit&action=edit&id=' . $role['id']; ?>"
+                                    class="btn btn-primary">Edit</a>
+                                <a href="/delete/delete_role.php?id=<?php echo $role['id']; ?>"
+                                    class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
                         <?php } ?>
                     </tbody>
                 </table>
