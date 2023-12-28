@@ -49,16 +49,18 @@ if (isset($_POST['generate_report'])) {
                     <?php
                     //button to trigger the generate report function only if the report type is not all
                     if ($reportType != 'all') { ?>
-                        <form action="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType); ?>" method="post">
-                            <input type="hidden" name="generate_report" value="true">
-                            <button type="submit" class="btn btn-primary">Generate Report</button>
-                        </form>
+                    <form
+                        action="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType); ?>"
+                        method="post">
+                        <input type="hidden" name="generate_report" value="true">
+                        <button type="submit" class="btn btn-primary">Generate Report</button>
+                    </form>
                     <?php } ?>
                 </div>
             </div>
             <div class="card-body">
                 <!-- display the report list for the report type -->
-                <table id="dataTable">
+                <table id="dataTable" class="table table-striped table-bordered">
                     <thead>
                         <tr>
                             <th>Report ID</th>
@@ -83,20 +85,22 @@ if (isset($_POST['generate_report'])) {
                         //for each report, display it
                         foreach ($reportsArray as $report) {
                         ?>
-                            <tr>
-                                <td><?php echo $report['id']; ?></td>
-                                <td><?php echo $report['report_type']; ?></td>
-                                <td><?php echo $report['created_at']; ?></td>
-                                <td><?php echo $report['created_by']; ?>
-                                </td>
-                                <td><?php echo $report['updated_at']; ?></td>
-                                <td><?php echo $report['updated_by']; ?>
-                                </td>
-                                <td>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=single&type=' . urlencode($reportType) . '&id=' . $report['id']; ?>" class="btn btn-success">View</a>
-                                    <a href="/delete/delete_report.php?id=<?php echo $report['id']; ?>" class="btn btn-danger">Delete</a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td><?php echo $report['id']; ?></td>
+                            <td><?php echo $report['report_type']; ?></td>
+                            <td><?php echo $report['created_at']; ?></td>
+                            <td><?php echo $report['created_by']; ?>
+                            </td>
+                            <td><?php echo $report['updated_at']; ?></td>
+                            <td><?php echo $report['updated_by']; ?>
+                            </td>
+                            <td>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=single&type=' . urlencode($reportType) . '&id=' . $report['id']; ?>"
+                                    class="btn btn-success">View</a>
+                                <a href="/delete/delete_report.php?id=<?php echo $report['id']; ?>"
+                                    class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
                         <?php } ?>
                     </tbody>
                 </table>
