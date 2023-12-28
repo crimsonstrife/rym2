@@ -591,13 +591,28 @@ class User implements Login
     }
 
     //Update a user
-    public function updateUser(int $id, string $email, string $password, string $username, int $updated_by): void
+    public function updateUser(int $id, string $email = null, string $password = null, string $username = null, int $updated_by): void
     {
-        //hash the password
-        $password = $this->hashPassword($password);
+        //if the email is null, get the current email
+        if ($email == null) {
+            $email = $this->getUserEmail($id);
+        }
 
-        //get current timestamp
-        $timestamp = date("Y-m-d H:i:s");
+        //if the password is null, get the current password
+        if ($password == null) {
+            $password = $this->getUserPassword($id);
+        } else {
+            //if the password is not null, hash the password
+            $password = $this->hashPassword($password);
+        }
+
+        //if the username is null, get the current username
+        if ($username == null) {
+            $username = $this->getUserUsername($id);
+        }
+
+        //get current date and time
+        $date = date("Y-m-d H:i:s");
 
         //SQL statement to update a user
         $sql = "UPDATE users SET email = ?, password = ?, username = ?, updated_at = ?, updated_by = ? WHERE id = ?";
@@ -606,7 +621,7 @@ class User implements Login
         $stmt = $this->mysqli->prepare($sql);
 
         //Bind the parameters to the SQL statement
-        $stmt->bind_param("ssssii", $email, $password, $username, $timestamp, $updated_by, $id);
+        $stmt->bind_param("ssssii", $email, $password, $username, $date, $updated_by, $id);
 
         //Execute the statement
         $stmt->execute();
@@ -615,8 +630,8 @@ class User implements Login
     //Add a role to a user
     public function giveRoleToUser(int $user_id, int $role_id): void
     {
-        //get current timestamp
-        $timestamp = date("Y-m-d H:i:s");
+        //get current date and time
+        $date = date("Y-m-d H:i:s");
 
         //boolean to check if the role exists
         $roleExists = false;
@@ -634,7 +649,7 @@ class User implements Login
             $stmt = $this->mysqli->prepare($sql);
 
             //Bind the parameters to the SQL statement
-            $stmt->bind_param("iiss", $user_id, $role_id, $timestamp, $timestamp);
+            $stmt->bind_param("iiss", $user_id, $role_id, $date, $date);
 
             //Execute the statement
             $stmt->execute();
@@ -775,7 +790,7 @@ class User implements Login
             if (!empty($roles)) {
                 //loop through the roles array and assign the roles
                 foreach ($roles as $role) {
-                    $this->giveRoleToUser($user_id, $role);
+                    $this->giveRoleToUser($user_id, intval($role));
                 }
             } else {
                 //do nothing, roles should remain null
@@ -841,19 +856,34 @@ class User implements Login
      *
      * @return bool True if the user was modified, false if not
      */
-    public function modifyUser(int $id, string $email, string $username, string $password, int $updated_by = null, array $roles = array()): bool
+    public function modifyUser(int $id, string $email = null, string $username = null, string $password = null, int $updated_by = null, array $roles = array()): bool
     {
         //get the current date and time
         $date = date("Y-m-d H:i:s");
 
-        //trim the email
-        $email = trim($email);
+        //if the email is null, get the current email
+        if ($email == null) {
+            $email = $this->getUserEmail($id);
+        } else {
+            //trim the email
+            $email = trim($email);
+        }
 
-        //trim the username
-        $username = trim($username);
+        //if the username is null, get the current username
+        if ($username == null) {
+            $username = $this->getUserUsername($id);
+        } else {
+            //trim the username
+            $username = trim($username);
+        }
 
-        //trim the password
-        $password = trim($password);
+        //if the password is null, get the current password
+        if ($password == null) {
+            $password = $this->getUserPassword($id);
+        } else {
+            //trim the password
+            $password = trim($password);
+        }
 
         //update the user
         $this->updateUser($id, $email, $password, $username, $updated_by);
@@ -866,7 +896,7 @@ class User implements Login
 
         //loop through the current roles and get the role IDs
         foreach ($currentRoles as $role) {
-            $currentRoleIDs[] = $role->getId();
+            $currentRoleIDs[] = $role['id'];
         }
 
         //if the roles array is not empty, compare the roles to the id of the current roles and assign or remove roles as needed
@@ -875,7 +905,7 @@ class User implements Login
             foreach ($roles as $role) {
                 //if the role is not in the current roles, assign the role
                 if (!in_array($role, $currentRoleIDs)) {
-                    $this->giveRoleToUser($id, $role);
+                    $this->giveRoleToUser($id, intval($role));
                 }
             }
 
@@ -883,13 +913,13 @@ class User implements Login
             foreach ($currentRoleIDs as $currentRole) {
                 //if the current role is not in the roles array, remove the role
                 if (!in_array($currentRole, $roles)) {
-                    $this->removeRoleFromUser($id, $currentRole);
+                    $this->removeRoleFromUser($id, intval($currentRole));
                 }
             }
         } else {
             //if the roles array is empty, remove all the roles from the user
             foreach ($currentRoleIDs as $currentRole) {
-                $this->removeRoleFromUser($id, $currentRole);
+                $this->removeRoleFromUser($id, intval($currentRole));
             }
         }
 
