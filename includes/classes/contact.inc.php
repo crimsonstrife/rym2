@@ -93,6 +93,10 @@ class Contact
 
         //check if the statement was successful
         if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $studentClass = new Student();
+            $activity->logActivity($senderId, 'Contacted Student', $studentClass->getStudentFullName($studentId));
             //return true
             return true;
         } else {
@@ -438,9 +442,15 @@ class Contact
 
         //send the message, check for errors
         if (!$mail->send()) {
+            //log the error
+            $activity = new Activity();
+            $activity->logActivity(null, 'Error Sending Account Creation Email', $mail->ErrorInfo);
             //if there is an error, return false
             return false;
         } else {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(null, 'Account Creation Email Sent', $email);
             //if there is no error, return true
             return true;
         }
