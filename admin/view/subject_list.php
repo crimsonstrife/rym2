@@ -13,11 +13,12 @@ if (!defined('ISVALIDUSER')) {
                     Subjects List
                 </div>
                 <div class="card-tools">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=add&action=create' ?>" class="btn btn-primary">Add Subject</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=add&action=create' ?>"
+                        class="btn btn-primary">Add Subject</a>
                 </div>
             </div>
             <div class="card-body">
-                <table id="dataTable">
+                <table id="dataTable" class="table table-striped table-bordered">
                     <thead>
                         <tr>
                             <th>Subject/Field Name</th>
@@ -39,17 +40,19 @@ if (!defined('ISVALIDUSER')) {
                         //for each event, display it
                         foreach ($subjectArray as $subject) {
                         ?>
-                            <tr>
-                                <td><?php echo $subject['name']; ?></td>
-                                <td><?php echo $subject['created_at']; ?></td>
-                                <td><?php echo $usersData->getUserUsername($subject['created_by']); ?></td>
-                                <td><?php echo $subject['updated_at']; ?></td>
-                                <td><?php echo $usersData->getUserUsername($subject['updated_by']); ?></td>
-                                <td>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=edit&action=edit&id=' . $subject['id']; ?>" class="btn btn-primary">Edit</a>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=delete&action=delete&id=' . $subject['id']; ?>" class="btn btn-danger">Delete</a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td><?php echo $subject['name']; ?></td>
+                            <td><?php echo $subject['created_at']; ?></td>
+                            <td><?php echo $usersData->getUserUsername($subject['created_by']); ?></td>
+                            <td><?php echo $subject['updated_at']; ?></td>
+                            <td><?php echo $usersData->getUserUsername($subject['updated_by']); ?></td>
+                            <td>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=edit&action=edit&id=' . $subject['id']; ?>"
+                                    class="btn btn-primary">Edit</a>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=delete&action=delete&id=' . $subject['id']; ?>"
+                                    class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
                         <?php } ?>
                     </tbody>
                 </table>
@@ -74,7 +77,9 @@ if (!defined('ISVALIDUSER')) {
                         );
                     }
                     ?>
-                    <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                    <form target="_blank"
+                        action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
+                        method="post" enctype="multipart/form-data">
                         <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                     </form>
                 </div>
