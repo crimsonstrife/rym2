@@ -271,6 +271,9 @@ class Roles
 
                 //if the statement was successful, return true
                 if ($result) {
+                    //log the activity
+                    $activity = new Activity();
+                    $activity->logActivity($userId, "Role " . strval($roleId) . " was given permission " . strval($permissionId), "Role " . strval($roleId) . " was given permission " . strval($permissionId));
                     return true;
                 } else {
                     return false;
@@ -429,13 +432,23 @@ class Roles
                 //error_log("Permission: " . $permission);
 
                 $permissionAdded = $this->giveRolePermission($roleId, intval($permission), $createdBy);
-
                 //debug
                 //error_log("Permission Added: " . strval($permissionAdded));
+                //log the activity
+                $activity = new Activity();
+                if ($permissionAdded) {
+                    $activity->logActivity($createdBy, "Role Updated", "Role " . strval($roleId) . " was given permission " . strval($permission));
+                } else {
+                    $activity->logActivity($createdBy, "Role Not Updated", "Role " . strval($roleId) . " was not given permission " . strval($permission));
+                }
             }
 
             //If the statement was successful, return true
             if ($stmt) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($createdBy, "Role Created", "Role " . strval($roleId) . " was created");
+                //return true
                 return true;
             } else {
                 return false;
