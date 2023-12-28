@@ -18,7 +18,7 @@ if (!defined('ISVALIDUSER')) {
                         class="btn btn-primary">Add Event</a>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body table-scroll">
                 <table id="dataTable" class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -67,38 +67,38 @@ if (!defined('ISVALIDUSER')) {
                         <?php } ?>
                     </tbody>
                 </table>
-                <div class="card-footer">
-                    <!-- Download CSV -->
-                    <?php
-                    //prepare the events array for download
-                    $csvArray = $eventsArray;
-                    //set the created by and updated by to the username
-                    foreach ($csvArray as $key => $row) {
-                        $csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the event, and swap out the user id
-                        $csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the event, and swap out the user id
-                        $csvArray[$key]['student_count'] = $eventsData->getStudentCount(intval($row['id'])); //get the number of students attending the event
-                        $csvArray[$key]['location'] = $schoolsData->getSchoolById(intval($row['location']))['name'];
-                    }
-                    //clean up the column headers to be more readable, i.e. remove underscores and capitalize
-                    foreach ($csvArray as $key => $row) {
-                        $csvArray[$key] = array(
-                            'Event Name' => $row['name'],
-                            'Event Date' => $row['event_date'],
-                            'School' => $row['location'],
-                            'Date Created' => $row['created_at'],
-                            'Created By' => $row['created_by'],
-                            'Date Updated' => $row['updated_at'],
-                            'Updated By' => $row['updated_by'],
-                            'Student Count' => $row['student_count']
-                        );
-                    }
-                    ?>
-                    <form target="_blank"
-                        action="<?php echo APP_URL . '/admin/download.php?type=events&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
-                        method="post" enctype="multipart/form-data">
-                        <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
-                    </form>
-                </div>
+            </div>
+            <div class="card-footer">
+                <!-- Download CSV -->
+                <?php
+                //prepare the events array for download
+                $csvArray = $eventsArray;
+                //set the created by and updated by to the username
+                foreach ($csvArray as $key => $row) {
+                    $csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the event, and swap out the user id
+                    $csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the event, and swap out the user id
+                    $csvArray[$key]['student_count'] = $eventsData->getStudentCount(intval($row['id'])); //get the number of students attending the event
+                    $csvArray[$key]['location'] = $schoolsData->getSchoolById(intval($row['location']))['name'];
+                }
+                //clean up the column headers to be more readable, i.e. remove underscores and capitalize
+                foreach ($csvArray as $key => $row) {
+                    $csvArray[$key] = array(
+                        'Event Name' => $row['name'],
+                        'Event Date' => $row['event_date'],
+                        'School' => $row['location'],
+                        'Date Created' => $row['created_at'],
+                        'Created By' => $row['created_by'],
+                        'Date Updated' => $row['updated_at'],
+                        'Updated By' => $row['updated_by'],
+                        'Student Count' => $row['student_count']
+                    );
+                }
+                ?>
+                <form target="_blank"
+                    action="<?php echo APP_URL . '/admin/download.php?type=events&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
+                    method="post" enctype="multipart/form-data">
+                    <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
+                </form>
             </div>
         </div>
     </div>

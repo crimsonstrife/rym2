@@ -122,7 +122,7 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                             $students = $student->getStudentEventAttendace($event_id);
                             ?>
                             <div class="card mb-4">
-                                <div class="card-body">
+                                <div class="card-body table-scroll">
                                     <table id="dataTable" class="table table-striped table-bordered">
                                         <thead>
                                             <?php

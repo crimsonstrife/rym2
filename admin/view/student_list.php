@@ -13,7 +13,7 @@ if (!defined('ISVALIDUSER')) {
                     Student List
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body table-scroll">
                 <table id="dataTable" class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -54,68 +54,72 @@ if (!defined('ISVALIDUSER')) {
                         //for each student, display it
                         foreach ($studentArray as $student) {
                         ?>
-                            <tr>
-                                <td>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single' ?>&id=<?php echo $student['id']; ?>" class="btn btn-success">View</a>
-                                </td>
-                                <td><?php echo $student['first_name']; ?></td>
-                                <td><?php echo $student['last_name']; ?></td>
-                                <td><?php echo formatEmail($student['email']); ?></td>
-                                <td><?php echo formatPhone($student['phone']); ?></td>
-                                <td><?php echo $student['address']; ?></td>
-                                <td><?php echo $student['city']; ?></td>
-                                <td><?php echo $student['state']; ?></td>
-                                <td><?php echo $student['zipcode']; ?></td>
-                                <td><?php echo $fieldsData->getSubjectName($student['interest']); ?></td>
-                                <td><?php echo $student['position']; ?></td>
-                                <td><?php echo $degreesData->getGradeNameById($student['degree']); ?></td>
-                                <td><?php echo $degreesData->getMajorNameById($student['major']); ?></td>
-                                <td><?php echo $student['graduation']; ?></td>
-                                <td><?php echo $schoolsData->getSchoolName($student['school']); ?></td>
-                                <td><?php echo $student['created_at']; ?></td>
-                                <td>
-                                    <a href="/delete/delete_student.php?id=<?php echo $student['id']; ?>" class="btn btn-danger">Delete</a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single' ?>&id=<?php echo $student['id']; ?>"
+                                    class="btn btn-success">View</a>
+                            </td>
+                            <td><?php echo $student['first_name']; ?></td>
+                            <td><?php echo $student['last_name']; ?></td>
+                            <td><?php echo formatEmail($student['email']); ?></td>
+                            <td><?php echo formatPhone($student['phone']); ?></td>
+                            <td><?php echo $student['address']; ?></td>
+                            <td><?php echo $student['city']; ?></td>
+                            <td><?php echo $student['state']; ?></td>
+                            <td><?php echo $student['zipcode']; ?></td>
+                            <td><?php echo $fieldsData->getSubjectName($student['interest']); ?></td>
+                            <td><?php echo $student['position']; ?></td>
+                            <td><?php echo $degreesData->getGradeNameById($student['degree']); ?></td>
+                            <td><?php echo $degreesData->getMajorNameById($student['major']); ?></td>
+                            <td><?php echo $student['graduation']; ?></td>
+                            <td><?php echo $schoolsData->getSchoolName($student['school']); ?></td>
+                            <td><?php echo $student['created_at']; ?></td>
+                            <td>
+                                <a href="/delete/delete_student.php?id=<?php echo $student['id']; ?>"
+                                    class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
                         <?php } ?>
                     </tbody>
                 </table>
-                <div class="card-footer">
-                    <!-- Download CSV -->
-                    <?php
-                    //prepare the user array for download
-                    $csvArray = $studentArray;
-                    //substitute the school id for the school name, degree id for the degree name, field id for the field name, and the major id for the major name
-                    foreach ($csvArray as $key => $row) {
-                        $csvArray[$key]['school'] = $schoolsData->getSchoolName($row['school']);
-                        $csvArray[$key]['degree'] = $degreesData->getGradeNameById($row['degree']);
-                        $csvArray[$key]['major'] = $degreesData->getMajorNameById($row['major']);
-                        $csvArray[$key]['interest'] = $fieldsData->getSubjectName($row['interest']);
-                    }
-                    //clean up the column headers to be more readable, i.e. remove underscores and capitalize
-                    foreach ($csvArray as $key => $row) {
-                        $csvArray[$key] = array(
-                            'First Name' => $row['first_name'],
-                            'Last Name' => $row['last_name'],
-                            'Email' => $row['email'],
-                            'Phone' => $row['phone'],
-                            'Address' => $row['address'],
-                            'City' => $row['city'],
-                            'State' => $row['state'],
-                            'Zipcode' => $row['zipcode'],
-                            'Field' => $row['interest'],
-                            'Position Type' => $row['position'],
-                            'Degree' => $row['degree'],
-                            'Major' => $row['major'],
-                            'Graduation Date' => $row['graduation'],
-                            'School' => $row['school'],
-                            'Date Submitted' => $row['created_at']
-                        );
-                    } ?>
-                    <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=students&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
-                        <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
-                    </form>
-                </div>
+            </div>
+            <div class="card-footer">
+                <!-- Download CSV -->
+                <?php
+                //prepare the user array for download
+                $csvArray = $studentArray;
+                //substitute the school id for the school name, degree id for the degree name, field id for the field name, and the major id for the major name
+                foreach ($csvArray as $key => $row) {
+                    $csvArray[$key]['school'] = $schoolsData->getSchoolName($row['school']);
+                    $csvArray[$key]['degree'] = $degreesData->getGradeNameById($row['degree']);
+                    $csvArray[$key]['major'] = $degreesData->getMajorNameById($row['major']);
+                    $csvArray[$key]['interest'] = $fieldsData->getSubjectName($row['interest']);
+                }
+                //clean up the column headers to be more readable, i.e. remove underscores and capitalize
+                foreach ($csvArray as $key => $row) {
+                    $csvArray[$key] = array(
+                        'First Name' => $row['first_name'],
+                        'Last Name' => $row['last_name'],
+                        'Email' => $row['email'],
+                        'Phone' => $row['phone'],
+                        'Address' => $row['address'],
+                        'City' => $row['city'],
+                        'State' => $row['state'],
+                        'Zipcode' => $row['zipcode'],
+                        'Field' => $row['interest'],
+                        'Position Type' => $row['position'],
+                        'Degree' => $row['degree'],
+                        'Major' => $row['major'],
+                        'Graduation Date' => $row['graduation'],
+                        'School' => $row['school'],
+                        'Date Submitted' => $row['created_at']
+                    );
+                } ?>
+                <form target="_blank"
+                    action="<?php echo APP_URL . '/admin/download.php?type=students&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
+                    method="post" enctype="multipart/form-data">
+                    <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
+                </form>
             </div>
         </div>
     </div>

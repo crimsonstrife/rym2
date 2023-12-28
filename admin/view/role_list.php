@@ -17,7 +17,7 @@ if (!defined('ISVALIDUSER')) {
                         class="btn btn-primary">Add Role</a>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body table-scroll">
                 <table id="dataTable" class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -84,8 +84,8 @@ if (!defined('ISVALIDUSER')) {
                         <?php } ?>
                     </tbody>
                 </table>
-                <div class="card-footer">
-                </div>
+            </div>
+            <div class="card-footer">
             </div>
         </div>
     </div>

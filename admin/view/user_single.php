@@ -108,29 +108,31 @@ $rolesData = $user->getUserRoles(intval($userId));
                         <div id="info" class="">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table id="dataTable" class="table table-striped table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Action</th>
-                                                <th scope="col">Performed On</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            //get the activity data by user id
-                                            $activityData = $activity->getAllActivityByUser(intval($userId));
-                                            //loop through the activity data and display it
-                                            foreach ($activityData as $activity) {
-                                                echo "<tr>";
-                                                echo "<td>" . $activity['action_date'] . "</td>";
-                                                echo "<td>" . $activity['action'] . "</td>";
-                                                echo "<td>" . $activity['performed_on'] . "</td>";
-                                                echo "</tr>";
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
+                                    <div class="table-scroll">
+                                        <table id="dataTable" class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Date</th>
+                                                    <th scope="col">Action</th>
+                                                    <th scope="col">Performed On</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                //get the activity data by user id
+                                                $activityData = $activity->getAllActivityByUser(intval($userId));
+                                                //loop through the activity data and display it
+                                                foreach ($activityData as $activity) {
+                                                    echo "<tr>";
+                                                    echo "<td>" . $activity['action_date'] . "</td>";
+                                                    echo "<td>" . $activity['action'] . "</td>";
+                                                    echo "<td>" . $activity['performed_on'] . "</td>";
+                                                    echo "</tr>";
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -237,3 +237,7 @@ span.select2-selection.select2-selection--single {
 .event-list-item-content:hover {
 	background-color: var(--bs-gray-100);
 }
+
+.table-scroll {
+	overflow: scroll;
+}

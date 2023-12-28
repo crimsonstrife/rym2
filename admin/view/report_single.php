@@ -81,38 +81,40 @@ $report = $reportClass->getReportById($reportId);
                         <h3>Report Data</h3>
                         <!-- display the report datatable -->
                         <?php $reportData = $report['data'] ?>
-                        <table id="dataTable" class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
+                        <div class="table-scroll">
+                            <table id="dataTable" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <?php
+                                        //get the report data headers
+                                        $reportDataHeaders = array_keys($reportData[0]);
+
+                                        //clean up the report data headers to be more readable, i.e. remove underscores and capitalize
+                                        foreach ($reportDataHeaders as $key => $header) {
+                                            $reportDataHeaders[$key] = ucwords(str_replace('_', ' ', $header));
+                                        }
+
+                                        //display the report data headers
+                                        foreach ($reportDataHeaders as $header) {
+                                            echo '<th>' . $header . '</th>';
+                                        }
+                                        ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     <?php
-                                    //get the report data headers
-                                    $reportDataHeaders = array_keys($reportData[0]);
-
-                                    //clean up the report data headers to be more readable, i.e. remove underscores and capitalize
-                                    foreach ($reportDataHeaders as $key => $header) {
-                                        $reportDataHeaders[$key] = ucwords(str_replace('_', ' ', $header));
-                                    }
-
-                                    //display the report data headers
-                                    foreach ($reportDataHeaders as $header) {
-                                        echo '<th>' . $header . '</th>';
+                                    //display the report data
+                                    foreach ($reportData as $row) {
+                                        echo '<tr>';
+                                        foreach ($row as $column) {
+                                            echo '<td>' . $column . '</td>';
+                                        }
+                                        echo '</tr>';
                                     }
                                     ?>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                //display the report data
-                                foreach ($reportData as $row) {
-                                    echo '<tr>';
-                                    foreach ($row as $column) {
-                                        echo '<td>' . $column . '</td>';
-                                    }
-                                    echo '</tr>';
-                                }
-                                ?>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="row">

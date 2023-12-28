@@ -58,7 +58,7 @@ if (isset($_POST['generate_report'])) {
                     <?php } ?>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body table-scroll">
                 <!-- display the report list for the report type -->
                 <table id="dataTable" class="table table-striped table-bordered">
                     <thead>

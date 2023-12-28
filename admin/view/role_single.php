@@ -30,12 +30,9 @@ $roleData = $role->getRoleById(intval($roleId));
                     Role Details
                 </div>
                 <div class="card-buttons">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=list'; ?>"
-                        class="btn btn-primary btn-sm">Back to Roles</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=edit&action=edit&id=' . $roleId; ?>"
-                        class="btn btn-primary btn-sm">Edit Role</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=delete&id=' . $roleId; ?>"
-                        class="btn btn-danger btn-sm">Delete Role</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=list'; ?>" class="btn btn-primary btn-sm">Back to Roles</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=edit&action=edit&id=' . $roleId; ?>" class="btn btn-primary btn-sm">Edit Role</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=delete&id=' . $roleId; ?>" class="btn btn-danger btn-sm">Delete Role</a>
                 </div>
             </div>
             <div class="card-body">
@@ -72,7 +69,7 @@ $roleData = $role->getRoleById(intval($roleId));
                                     <p><strong>Permissions:</strong></p>
                                     <?php foreach ($rolePermissions as $permissionArray) {
                                         foreach ($permissionArray as $permission) { ?>
-                                    <p><?php echo $permission['name']; ?></p>
+                                            <p><?php echo $permission['name']; ?></p>
                                     <?php }
                                     } ?>
                                 </div>
@@ -89,43 +86,45 @@ $roleData = $role->getRoleById(intval($roleId));
                                 <div class="col-md-12">
                                     <?php $usersWithRole = $role->getUsersWithRole(intval($roleId));
                                     if (!empty($usersWithRole)) { ?>
-                                    <p><strong>Users:</strong></p>
-                                    <table id="dataTable" class="table table-striped table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Username</th>
-                                                <th>Email</th>
-                                                <th>Created</th>
-                                                <th>Created By</th>
-                                                <th>Updated</th>
-                                                <th>Updated By</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($usersWithRole as $userHasRole) {
-                                                    $userDetails = $user->getUserById(intval($userHasRole['user_id'])); ?>
-                                            <tr>
-                                                <td><?php echo $userDetails['username']; ?></td>
-                                                <td><?php echo $userDetails['email']; ?></td>
-                                                <td><?php echo $role->getUserRoleGivenDate(intval($userDetails['id']), intval($roleId)); ?>
-                                                </td>
-                                                <td><?php echo $user->getUserUsername(intval($userHasRole['created_by'])); ?>
-                                                </td>
-                                                <td><?php echo $role->getUserRoleModifiedDate(intval($userDetails['id']), intval($roleId)); ?>
-                                                </td>
-                                                <td><?php echo $user->getUserUsername(intval($userHasRole['updated_by'])); ?>
-                                                </td>
-                                            </tr>
-                                            <?php }
-                                            } ?>
-                                    </table>
+                                        <p><strong>Users:</strong></p>
+                                        <div class="table-scroll">
+                                            <table id="dataTable" class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Username</th>
+                                                        <th>Email</th>
+                                                        <th>Created</th>
+                                                        <th>Created By</th>
+                                                        <th>Updated</th>
+                                                        <th>Updated By</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach ($usersWithRole as $userHasRole) {
+                                                        $userDetails = $user->getUserById(intval($userHasRole['user_id'])); ?>
+                                                        <tr>
+                                                            <td><?php echo $userDetails['username']; ?></td>
+                                                            <td><?php echo $userDetails['email']; ?></td>
+                                                            <td><?php echo $role->getUserRoleGivenDate(intval($userDetails['id']), intval($roleId)); ?>
+                                                            </td>
+                                                            <td><?php echo $user->getUserUsername(intval($userHasRole['created_by'])); ?>
+                                                            </td>
+                                                            <td><?php echo $role->getUserRoleModifiedDate(intval($userDetails['id']), intval($roleId)); ?>
+                                                            </td>
+                                                            <td><?php echo $user->getUserUsername(intval($userHasRole['updated_by'])); ?>
+                                                            </td>
+                                                        </tr>
+                                                <?php }
+                                                } ?>
+                                            </table>
+                                        </div>
                                 </div>
-                            </div>
-                            <div class="card-footer">
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="card-footer">
             </div>
         </div>
     </div>

@@ -17,7 +17,7 @@ if (!defined('ISVALIDUSER')) {
                         class="btn btn-primary">Add User</a>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body table-scroll">
                 <table id="dataTable" class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -92,33 +92,33 @@ if (!defined('ISVALIDUSER')) {
                         <?php } ?>
                     </tbody>
                 </table>
-                <div class="card-footer">
-                    <!-- Download CSV -->
-                    <?php
-                    //prepare the user array for download
-                    $csvArray = $userArray;
-                    //set the created by and updated by to the username
-                    foreach ($csvArray as $key => $row) {
-                        //$csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the user, and swap out the user id
-                        //$csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the user, and swap out the user id
-                    }
-                    //clean up the column headers to be more readable, i.e. remove underscores and capitalize
-                    foreach ($csvArray as $key => $row) {
-                        $csvArray[$key] = array(
-                            'Username' => $row['username'],
-                            'Email' => $row['email'],
-                            'Date Created' => $row['created_at'],
-                            'Created By' => $row['created_by'],
-                            'Date Updated' => $row['updated_at'],
-                            'Updated By' => $row['updated_by']
-                        );
-                    } ?>
-                    <form target="_blank"
-                        action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
-                        method="post" enctype="multipart/form-data">
-                        <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
-                    </form>
-                </div>
+            </div>
+            <div class="card-footer">
+                <!-- Download CSV -->
+                <?php
+                //prepare the user array for download
+                $csvArray = $userArray;
+                //set the created by and updated by to the username
+                foreach ($csvArray as $key => $row) {
+                    //$csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the user, and swap out the user id
+                    //$csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the user, and swap out the user id
+                }
+                //clean up the column headers to be more readable, i.e. remove underscores and capitalize
+                foreach ($csvArray as $key => $row) {
+                    $csvArray[$key] = array(
+                        'Username' => $row['username'],
+                        'Email' => $row['email'],
+                        'Date Created' => $row['created_at'],
+                        'Created By' => $row['created_by'],
+                        'Date Updated' => $row['updated_at'],
+                        'Updated By' => $row['updated_by']
+                    );
+                } ?>
+                <form target="_blank"
+                    action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
+                    method="post" enctype="multipart/form-data">
+                    <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
+                </form>
             </div>
         </div>
     </div>
