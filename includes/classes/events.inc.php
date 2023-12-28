@@ -401,8 +401,14 @@ class Event
 
         //if the slug already exists, update the slug
         if ($slugExists) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($id, "Event Slug Updated", "Event");
             return $this->updateEventSlug($id, $slug);
         } else {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($id, "Event Slug Created", "Event");
             //if the slug does not exist, create the slug
             return $this->createEventSlug($id);
         }
@@ -518,6 +524,9 @@ class Event
                 $stmt->execute();
                 //if the statement was successful, return true
                 if ($stmt) {
+                    //log the activity
+                    $activity = new Activity();
+                    $activity->logActivity($id, "Event Slug Updated", "Event");
                     return true;
                 } else {
                     //if the statement failed, return false
@@ -541,6 +550,9 @@ class Event
             $stmt->execute();
             //if the statement was successful, return true
             if ($stmt) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($id, "Event Slug Updated", "Event");
                 return true;
             } else {
                 //if the statement failed, return false
@@ -639,6 +651,9 @@ class Event
             $stmt->execute();
             //if the statement was successful, return true
             if ($stmt) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($id, "Event Slug Created", "Event");
                 return true;
             } else {
                 //if the statement failed, return false
@@ -652,6 +667,9 @@ class Event
             $stmt->execute();
             //if the statement was successful, return true
             if ($stmt) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($id, "Event Slug Created", "Event");
                 return true;
             } else {
                 //if the statement failed, return false
@@ -762,6 +780,13 @@ class Event
         $stmt->bind_param("is", $id, $logo);
         //execute the statement
         $stmt->execute();
+
+        //if the statement was successful, log the activity
+        if ($stmt) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($id, "Event Logo Created", "Event");
+        }
     }
 
     /**
@@ -780,6 +805,13 @@ class Event
         $stmt->bind_param("is", $id, $banner);
         //execute the statement
         $stmt->execute();
+
+        //if the statement was successful, log the activity
+        if ($stmt) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($id, "Event Banner Created", "Event");
+        }
     }
 
     /**
@@ -884,6 +916,9 @@ class Event
             //slugify the event
             $sluggified = $this->slugifyEvent($id);
             if ($sluggified) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($id, "Event Updated", "Event");
                 return true;
             } else {
                 return false;
@@ -921,6 +956,9 @@ class Event
             //slugify the event
             $sluggified = $this->slugifyEvent($this->getEventIdByName($name));
             if ($sluggified) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($this->getEventIdByName($name), "Event Created", "Event");
                 return true;
             } else {
                 return false;
