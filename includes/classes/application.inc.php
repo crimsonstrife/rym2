@@ -172,6 +172,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Application Name Changed', 'The application name was changed to ' . $app_name . '.');
                 //Return true
                 return true;
             } else {
@@ -193,6 +196,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Application Name Changed', 'The application name was changed to ' . $app_name . '.');
                 //Return true
                 return true;
             } else {
@@ -268,6 +274,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Application URL Changed', 'The application URL was changed to ' . $app_url . '.');
                 //Return true
                 return true;
             } else {
@@ -289,6 +298,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Application URL Changed', 'The application URL was changed to ' . $app_url . '.');
                 //Return true
                 return true;
             } else {
@@ -366,6 +378,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Type Changed', 'The mailer type was changed to ' . $mailer_type . '.');
                 //Return true
                 return true;
             } else {
@@ -387,6 +402,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Type Changed', 'The mailer type was changed to ' . $mailer_type . '.');
                 //Return true
                 return true;
             } else {
@@ -462,6 +480,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Host Changed', 'The mailer host was changed to ' . $mailer_host . '.');
                 //Return true
                 return true;
             } else {
@@ -483,6 +504,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Host Changed', 'The mailer host was changed to ' . $mailer_host . '.');
                 //Return true
                 return true;
             } else {
@@ -558,6 +582,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Port Changed', 'The mailer port was changed to ' . $mailer_port . '.');
                 //Return true
                 return true;
             } else {
@@ -579,6 +606,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Port Changed', 'The mailer port was changed to ' . $mailer_port . '.');
                 //Return true
                 return true;
             } else {
@@ -654,6 +684,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Username Changed', 'The mailer username was changed to ' . $mailer_username . '.');
                 //Return true
                 return true;
             } else {
@@ -675,6 +708,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Username Changed', 'The mailer username was changed to ' . $mailer_username . '.');
                 //Return true
                 return true;
             } else {
@@ -770,6 +806,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Password Changed', 'The mailer password was changed.');
                 //Return true
                 return true;
             } else {
@@ -803,6 +842,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Password Changed', 'The mailer password was changed.');
                 //Return true
                 return true;
             } else {
@@ -878,6 +920,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Encryption Changed', 'The mailer encryption was changed to ' . $mailer_encryption . '.');
                 //Return true
                 return true;
             } else {
@@ -899,6 +944,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Encryption Changed', 'The mailer encryption was changed to ' . $mailer_encryption . '.');
                 //Return true
                 return true;
             } else {
@@ -974,6 +1022,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Address Changed', 'The mailer from address was changed to ' . $mailer_from_address . '.');
                 //Return true
                 return true;
             } else {
@@ -995,6 +1046,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Address Changed', 'The mailer from address was changed to ' . $mailer_from_address . '.');
                 //Return true
                 return true;
             } else {
@@ -1070,6 +1124,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Name Changed', 'The mailer from name was changed to ' . $mailer_from_name . '.');
                 //Return true
                 return true;
             } else {
@@ -1091,6 +1148,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Name Changed', 'The mailer from name was changed to ' . $mailer_from_name . '.');
                 //Return true
                 return true;
             } else {
@@ -1180,6 +1240,9 @@ class Application
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0) {
                 if ($mailer_auth_required) {
+                    //log the activity
+                    $activity = new Activity();
+                    $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
                     //Return true
                     return true;
                 } else {
@@ -1213,6 +1276,9 @@ class Application
 
             //Check if the statement was executed successfully
             if ($role_statement->affected_rows > 0 && $mailer_auth_required) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
                 //Return true
                 return true;
             } else {
