@@ -43,8 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class="row">
                     <!-- Main Settings Form -->
-                    <form class="form-inline" method="post" enctype="multipart/form-data"
-                        action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view']; ?>">
+                    <form class="form-inline" method="post" enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view']; ?>">
                         <div class="form-row">
                             <label for="main-app-settings">
                                 <h3>Application</h3>
@@ -182,8 +181,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </div>
                                     <div class="form-row">
                                         <label for="mail-password">Password</label>
-                                        <input type="password" class="form-control" id="mail-password"
-                                            placeholder="<?php
+                                        <input type="password" class="form-control" id="mail-password" placeholder="<?php
                                                                                                                     //if mail_password is set and not blank
                                                                                                                     if (isset($mail_password) && $mail_password != '') {
                                                                                                                         //mask the password with asterisks
@@ -227,8 +225,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </div>
                                     <div class="form-row">
                                         <label for="mail-from-address">From Address</label>
-                                        <input type="text" class="form-control" id="mail-from-address"
-                                            placeholder="<?php
+                                        <input type="text" class="form-control" id="mail-from-address" placeholder="<?php
                                                                                                                     //if mail_from_address is set and not blank
                                                                                                                     if (isset($mail_from_address) && $mail_from_address != '') {
                                                                                                                         echo $mail_from_address;
@@ -238,8 +235,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </div>
                                     <div class="form-row">
                                         <label for="mail-from-name">From Name</label>
-                                        <input type="text" class="form-control" id="mail-from-name"
-                                            placeholder="<?php
+                                        <input type="text" class="form-control" id="mail-from-name" placeholder="<?php
                                                                                                                     //if mail_from_name is set and not blank
                                                                                                                     if (isset($mail_from_name) && $mail_from_name != '') {
                                                                                                                         echo $mail_from_name;
@@ -256,8 +252,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="form-group col-md-6">
                                     <div class="form-row">
                                         <label for="privacy-policy">Privacy Policy</label>
-                                        <textarea class="form-control" id="privacy-policy" rows="15"
-                                            placeholder='<?php
+                                        <textarea class="form-control" id="privacy-policy" rows="15" placeholder='<?php
                                                                                                                     //if privacy_policy is set and not blank
                                                                                                                     if (isset($privacy_policy) && $privacy_policy != '') {
                                                                                                                         echo $privacy_policy;
@@ -280,8 +275,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="form-group col-md-6">
                                     <div class="form-row">
                                         <label for="terms-conditions">Terms and Conditions</label>
-                                        <textarea class="form-control" id="terms-conditions" rows="15"
-                                            placeholder='<?php
+                                        <textarea class="form-control" id="terms-conditions" rows="15" placeholder='<?php
                                                                                                                     //if terms_conditions is set and not blank
                                                                                                                     if (isset($terms_conditions) && $terms_conditions != '') {
                                                                                                                         echo $terms_conditions;
