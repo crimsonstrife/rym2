@@ -321,6 +321,9 @@ class Job
 
         //check if the query was successful
         if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($created_by, 'JOB', 'CREATED' . $name);
             return true;
         } else {
             return false;
@@ -350,6 +353,9 @@ class Job
 
         //check if the query was successful
         if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($updated_by, 'JOB', 'UPDATED' . $name);
             return true;
         } else {
             return false;
