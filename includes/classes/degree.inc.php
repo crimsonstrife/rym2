@@ -181,6 +181,9 @@ class Degree extends Grade implements Major
 
         //check if the query was successful
         if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($user_id, "Added degree level", "degree_lvl");
             //return true if successful
             return true;
         } else {
@@ -223,6 +226,9 @@ class Degree extends Grade implements Major
 
         //check if the query was successful
         if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($created_by, "Added major", "major");
             //return true if successful
             return true;
         } else {
@@ -254,6 +260,9 @@ class Degree extends Grade implements Major
 
         //check if the query was successful
         if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($user_id, "Updated degree level", "degree_lvl");
             //return true if successful
             return true;
         } else {
@@ -285,6 +294,9 @@ class Degree extends Grade implements Major
 
         //check if the query was successful
         if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($updated_by, "Updated major", "major");
             //return true if successful
             return true;
         } else {
