@@ -271,6 +271,9 @@ class TopDegreeBySchoolReport extends Report
         //store the report and get the id of the report that was stored
         $reportId = $this->storeReport($report, $created_by);
 
+        //log the report activity
+        $this->logReportActivity($reportId, 'Generated Top Degree by School Report', $created_by);
+
         //return the id of the report that was generated
         return $reportId;
     }
@@ -341,9 +344,14 @@ class TopDegreeBySchoolReport extends Report
      * @param int $user_id
      * @return bool
      */
-    public function logReportActivity(int $report_id, string $action, int $user_id): bool
+    public function logReportActivity(int $report_id, string $action, int $user_id = null): bool
     {
-        return false;
+        //log the report activity
+        $activity = new Activity();
+        $activity->logActivity($user_id, $action, 'Report ' . strval($report_id));
+
+        //return true
+        return true;
     }
 
     /**
