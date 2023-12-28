@@ -97,6 +97,9 @@ class JobField extends Subject
         $stmt->bind_param("s", $aoi_name);
         $stmt->execute();
         if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($user_id, "Subject Added", "Subject " . $aoi_name . " was added to the database.");
             return true;
         } else {
             return false;
@@ -118,6 +121,9 @@ class JobField extends Subject
         $stmt->bind_param("si", $aoi_name, $aoi_id);
         $stmt->execute();
         if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($user_id, "Subject Updated", "Subject " . $aoi_name . " was updated in the database.");
             return true;
         } else {
             return false;
