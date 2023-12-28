@@ -13,6 +13,9 @@ $role = new Roles();
 //user class
 $user = new User();
 
+//include the activity class
+$activity = new Activity();
+
 //get the user id from the url
 $userId = $_GET['id'];
 
@@ -32,9 +35,12 @@ $rolesData = $user->getUserRoles(intval($userId));
                     User Details
                 </div>
                 <div class="card-buttons">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>" class="btn btn-primary btn-sm">Back to Users</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $userId; ?>" class="btn btn-primary btn-sm">Edit User</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=delete&id=' . $userId; ?>" class="btn btn-danger btn-sm">Delete User</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>"
+                        class="btn btn-primary btn-sm">Back to Users</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $userId; ?>"
+                        class="btn btn-primary btn-sm">Edit User</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=delete&id=' . $userId; ?>"
+                        class="btn btn-danger btn-sm">Delete User</a>
                 </div>
             </div>
             <div class="card-body">
@@ -90,6 +96,41 @@ $rolesData = $user->getUserRoles(intval($userId));
                                         echo $rolesString;
                                         ?>
                                     </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- User Activity -->
+                    <div class="col-md-12" style="height: 100%;">
+                        <h3 id="activity_log">User Activity</h3>
+                        <div id="info" class="">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="dataTable" class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Action</th>
+                                                <th scope="col">Performed On</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            //get the activity data by user id
+                                            $activityData = $activity->getAllActivityByUser(intval($userId));
+                                            //loop through the activity data and display it
+                                            foreach ($activityData as $activity) {
+                                                echo "<tr>";
+                                                echo "<td>" . $activity['action_date'] . "</td>";
+                                                echo "<td>" . $activity['action'] . "</td>";
+                                                echo "<td>" . $activity['performed_on'] . "</td>";
+                                                echo "</tr>";
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
