@@ -14,7 +14,7 @@ if (!defined('ISVALIDUSER')) {
                 </div>
             </div>
             <div class="card-body">
-                <table id="dataTable">
+                <table id="dataTable" class="table table-striped table-bordered">
                     <thead>
                         <tr>
                             <th></th>
@@ -54,31 +54,29 @@ if (!defined('ISVALIDUSER')) {
                         //for each student, display it
                         foreach ($studentArray as $student) {
                         ?>
-                        <tr>
-                            <td>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single' ?>&id=<?php echo $student['id']; ?>"
-                                    class="btn btn-success">View</a>
-                            </td>
-                            <td><?php echo $student['first_name']; ?></td>
-                            <td><?php echo $student['last_name']; ?></td>
-                            <td><?php echo formatEmail($student['email']); ?></td>
-                            <td><?php echo formatPhone($student['phone']); ?></td>
-                            <td><?php echo $student['address']; ?></td>
-                            <td><?php echo $student['city']; ?></td>
-                            <td><?php echo $student['state']; ?></td>
-                            <td><?php echo $student['zipcode']; ?></td>
-                            <td><?php echo $fieldsData->getSubjectName($student['interest']); ?></td>
-                            <td><?php echo $student['position']; ?></td>
-                            <td><?php echo $degreesData->getGradeNameById($student['degree']); ?></td>
-                            <td><?php echo $degreesData->getMajorNameById($student['major']); ?></td>
-                            <td><?php echo $student['graduation']; ?></td>
-                            <td><?php echo $schoolsData->getSchoolName($student['school']); ?></td>
-                            <td><?php echo $student['created_at']; ?></td>
-                            <td>
-                                <a href="/delete/delete_student.php?id=<?php echo $student['id']; ?>"
-                                    class="btn btn-danger">Delete</a>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single' ?>&id=<?php echo $student['id']; ?>" class="btn btn-success">View</a>
+                                </td>
+                                <td><?php echo $student['first_name']; ?></td>
+                                <td><?php echo $student['last_name']; ?></td>
+                                <td><?php echo formatEmail($student['email']); ?></td>
+                                <td><?php echo formatPhone($student['phone']); ?></td>
+                                <td><?php echo $student['address']; ?></td>
+                                <td><?php echo $student['city']; ?></td>
+                                <td><?php echo $student['state']; ?></td>
+                                <td><?php echo $student['zipcode']; ?></td>
+                                <td><?php echo $fieldsData->getSubjectName($student['interest']); ?></td>
+                                <td><?php echo $student['position']; ?></td>
+                                <td><?php echo $degreesData->getGradeNameById($student['degree']); ?></td>
+                                <td><?php echo $degreesData->getMajorNameById($student['major']); ?></td>
+                                <td><?php echo $student['graduation']; ?></td>
+                                <td><?php echo $schoolsData->getSchoolName($student['school']); ?></td>
+                                <td><?php echo $student['created_at']; ?></td>
+                                <td>
+                                    <a href="/delete/delete_student.php?id=<?php echo $student['id']; ?>" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
                         <?php } ?>
                     </tbody>
                 </table>
@@ -114,9 +112,7 @@ if (!defined('ISVALIDUSER')) {
                             'Date Submitted' => $row['created_at']
                         );
                     } ?>
-                    <form target="_blank"
-                        action="<?php echo APP_URL . '/admin/download.php?type=students&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
-                        method="post" enctype="multipart/form-data">
+                    <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=students&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
                         <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                     </form>
                 </div>
