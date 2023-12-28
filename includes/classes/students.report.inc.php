@@ -2,42 +2,63 @@
 
 class StudentReports extends Report
 {
-    /**
-     * Summary of Students sorted by date created
-     * @return array
-     */
-    public function getReport(): array
+    public function getReports(): array
     {
-        //instantiates a new student object
-        $students = new Student();
-        //calls the getStudents method from the Students class
-        $students_array = $students->getStudents();
-        //sorts the students by date created, newest to oldest
-        usort($students_array, function ($a, $b) {
-            return $b['date_created'] <=> $a['date_created'];
-        });
-        //returns the sorted students array
-        return $students_array;
-    }
-
-    /**
-     * Save report to database
-     * @param array $report
-     * @return bool
-     */
-    public function saveReport(array $report): bool
-    {
-        //TODO: Implement saveReport() method.
-        return true;
+        // implementation goes here
+        return array();
     }
 
     public function getReportById(int $id): array
     {
+        // implementation goes here
         return array();
     }
 
     public function findReport(string $search): array
     {
+        // implementation goes here
         return array();
     }
+
+    public function storeReport(string $report, int $created_by): int
+    {
+        // implementation goes here
+        return 0;
+    }
+
+    public function generateReport(int $created_by): int
+    {
+        // implementation goes here
+        return 0;
+    }
+
+    /**
+     * Log report activity
+     * @param int $report_id
+     * @param string $action
+     * @param int $user_id
+     * @return bool
+     */
+    public function logReportActivity(int $report_id, string $action, int $user_id = null): bool
+    {
+        //log the report activity
+        $activity = new Activity();
+        $activity->logActivity($user_id, $action, 'Report ' . strval($report_id));
+
+        //return true
+        return true;
+    }
+
+    public function deleteReport(int $id): bool
+    {
+        // implementation goes here
+        return false;
+    }
+
+    public function getChartableReportData(int $id): array
+    {
+        // implementation goes here
+        return array();
+    }
+} {
 }
