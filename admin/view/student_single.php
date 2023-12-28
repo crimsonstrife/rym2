@@ -155,7 +155,7 @@ if (isset($_POST['submitContact'])) {
                             //if there is contact history, display it in a table
                             if ($contactHistoryArray) {
                             ?>
-                            <table id="dataTable">
+                            <table id="dataTable" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Date</th>
