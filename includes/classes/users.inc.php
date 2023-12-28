@@ -111,6 +111,10 @@ class User implements Login
                 $_SESSION["user_id"] = $user_id;
                 $_SESSION["username"] = $username;
                 $_SESSION["user_roles"] = $this->getUserRoles($user_id);
+
+                // log the activity
+                $activity = new Activity();
+                $activity->logActivity(null, "User logged in.", 'User ' . strval($user_id));
             } else {
                 // Password is not valid, display a generic error message
                 throw new Exception("Invalid username or password.");
@@ -118,6 +122,9 @@ class User implements Login
         } catch (Exception $e) {
             // Log the error
             error_log("Failed to log the user in: " . $e->getMessage());
+            // log the activity
+            $activity = new Activity();
+            $activity->logActivity(null, "Failed to log the user in: " . $e->getMessage(), 'User ' . strval($user_id));
             // Display a generic error message
             throw new Exception("Invalid username or password.");
         }
@@ -653,6 +660,10 @@ class User implements Login
 
             //Execute the statement
             $stmt->execute();
+
+            // log the activity
+            $activity = new Activity();
+            $activity->logActivity(null, "Role " . strval($role_id) . " added to user " . strval($user_id), "Role " . strval($role_id) . " added to user " . strval($user_id));
         } else {
             //if the role does not exist, throw an exception
             throw new Exception("Role does not exist.");
@@ -799,6 +810,10 @@ class User implements Login
             //if the user was created, notify the user
             $this->notifyUserCreated($email, $username, $password);
 
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($created_by, "User Created.", 'User ' . $username);
+
             //return true
             return true;
         } else if ($user_id == 0 || empty($user_id) || $user_id == null) {
@@ -922,6 +937,10 @@ class User implements Login
                 $this->removeRoleFromUser($id, intval($currentRole));
             }
         }
+
+        // log the activity
+        $activity = new Activity();
+        $activity->logActivity($updated_by, "User Modified.", 'User ' . $username);
 
         //if the user was modified, return true
         return true;
