@@ -19,7 +19,7 @@ if (!defined('ISVALIDUSER')) {
                 </div>
             </div>
             <div class="card-body">
-                <table id="dataTable">
+                <table id="dataTable" class="table table-striped table-bordered">
                     <thead>
                         <tr>
                             <th>Major Name/Title</th>
