@@ -71,7 +71,7 @@ abstract class Report
      * @param int $user_id
      * @return bool
      */
-    public abstract function logReportActivity(int $report_id, string $action, int $user_id): bool;
+    public abstract function logReportActivity(int $report_id, string $action, int $user_id = null): bool;
 
     /**
      * Delete report
