@@ -18,7 +18,7 @@ if (!defined('ISVALIDUSER')) {
                             Student Outreach Contact Log
                         </div>
                         <div class="card-body">
-                            <table id="dataTable">
+                            <table id="dataTable" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Student Name</th>
@@ -87,22 +87,22 @@ if (!defined('ISVALIDUSER')) {
                                             $automaticEmail = "Manual";
                                         }
                                     ?>
-                                    <tr>
-                                        <td><?php echo $studentName; ?></td>
-                                        <td><?php echo $studentEmail; ?></td>
-                                        <td><?php echo $schoolName; ?></td>
-                                        <td><?php echo $degreeName; ?></td>
-                                        <td><?php echo $automaticEmail; ?></td>
-                                        <td><?php echo $sendDate; ?></td>
-                                        <td><?php echo $sendingUserName; ?></td>
-                                        <td><?php echo $subject; ?></td>
-                                    </tr>
+                                        <tr>
+                                            <td><?php echo $studentName; ?></td>
+                                            <td><?php echo $studentEmail; ?></td>
+                                            <td><?php echo $schoolName; ?></td>
+                                            <td><?php echo $degreeName; ?></td>
+                                            <td><?php echo $automaticEmail; ?></td>
+                                            <td><?php echo $sendDate; ?></td>
+                                            <td><?php echo $sendingUserName; ?></td>
+                                            <td><?php echo $subject; ?></td>
+                                        </tr>
                                     <?php
                                         //setup a download array
                                         $studentContactArray[] = array(
                                             'Student Name' => $studentName,
                                             'Student Email' => $studentEmail,
-                                            'School' => $student_name,
+                                            'School' => $schoolName,
                                             'Degree' => $degreeName,
                                             'Automatic Email' => $automaticEmail,
                                             'Sent Date' => $sendDate,
@@ -120,9 +120,7 @@ if (!defined('ISVALIDUSER')) {
                             <?php
                             //prepare the user array for download
                             $csvArray = $studentContactArray; ?>
-                            <form target="_blank"
-                                action="<?php echo APP_URL . '/admin/download.php?type=contact_log&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
-                                method="post" enctype="multipart/form-data">
+                            <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=contact_log&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
                                 <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                             </form>
                         </div>
