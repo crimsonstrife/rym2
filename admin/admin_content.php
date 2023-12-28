@@ -29,18 +29,21 @@ if (!defined('ISVALIDUSER')) {
                             foreach ($eventsArray as $event) {
                                 if (strtotime($event['event_date']) > strtotime(date('Y-m-d'))) {
                             ?>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single&id=' . $event['id']; ?>" id="event-card-<?php echo $event['id']; ?>" class="link-offset-2 link-underline link-underline-opacity-0 event-list-item dash-event-cards">
-                                        <li class="list-group-item list-group-item-action flex-column align-items-start event-list-item">
-                                            <div class="d-flex w-100 justify-content-between event-list-item-content">
-                                                <h4 class="mb-1"><?php echo $event['name']; ?></h4>
-                                                <p><?php echo $eventSchoolsData->getSchoolById($event['location'])['name']; ?>
-                                                </p>
-                                                <small>
-                                                    <?php echo formatDate($event['event_date']); ?>
-                                                </small>
-                                            </div>
-                                        </li>
-                                    </a>
+                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single&id=' . $event['id']; ?>"
+                                id="event-card-<?php echo $event['id']; ?>"
+                                class="link-offset-2 link-underline link-underline-opacity-0 event-list-item dash-event-cards">
+                                <li
+                                    class="list-group-item list-group-item-action flex-column align-items-start event-list-item">
+                                    <div class="d-flex w-100 justify-content-between event-list-item-content">
+                                        <h4 class="mb-1"><?php echo $event['name']; ?></h4>
+                                        <p><?php echo $eventSchoolsData->getSchoolById($event['location'])['name']; ?>
+                                        </p>
+                                        <small>
+                                            <?php echo formatDate($event['event_date']); ?>
+                                        </small>
+                                    </div>
+                                </li>
+                            </a>
                             <?php }
                             } ?>
                         </ul>
@@ -54,7 +57,7 @@ if (!defined('ISVALIDUSER')) {
                         Student Records
                     </div>
                     <div class="card-body">
-                        <table id="dataTable">
+                        <table id="dataTable" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th>First Name</th>
@@ -82,18 +85,20 @@ if (!defined('ISVALIDUSER')) {
                                 $studentsArray = array_reverse($studentsArray);
                                 foreach ($studentsArray as $student) {
                                 ?>
-                                    <tr>
-                                        <td><?php echo $student['first_name']; ?></td>
-                                        <td><?php echo $student['last_name']; ?></td>
-                                        <td><?php echo $student['email']; ?></td>
-                                        <td><?php echo $degreesData->getDegreeProgram($student['degree'], $student['major']); ?>
-                                        </td>
-                                        <td><?php echo $schoolsData->getSchoolById($student['school'])['name']; ?></td>
-                                        <td>
-                                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single' ?>&id=<?php echo $student['id']; ?>" class="btn btn-success">View</a>
-                                            <a href="/delete/delete_student.php?id=<?php echo $student['id']; ?>" class="btn btn-danger">Delete</a>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td><?php echo $student['first_name']; ?></td>
+                                    <td><?php echo $student['last_name']; ?></td>
+                                    <td><?php echo $student['email']; ?></td>
+                                    <td><?php echo $degreesData->getDegreeProgram($student['degree'], $student['major']); ?>
+                                    </td>
+                                    <td><?php echo $schoolsData->getSchoolById($student['school'])['name']; ?></td>
+                                    <td>
+                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single' ?>&id=<?php echo $student['id']; ?>"
+                                            class="btn btn-success">View</a>
+                                        <a href="/delete/delete_student.php?id=<?php echo $student['id']; ?>"
+                                            class="btn btn-danger">Delete</a>
+                                    </td>
+                                </tr>
                                 <?php } ?>
                             </tbody>
                         </table>
@@ -130,7 +135,9 @@ if (!defined('ISVALIDUSER')) {
                                 'Date Submitted' => $row['created_at']
                             );
                         } ?>
-                        <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=students&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                        <form target="_blank"
+                            action="<?php echo APP_URL . '/admin/download.php?type=students&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
+                            method="post" enctype="multipart/form-data">
                             <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
                         </form>
                     </div>
