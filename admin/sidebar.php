@@ -9,26 +9,36 @@
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-gauge"></i></div>
                     Dashboard
                 </a>
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutReports" aria-expanded="false" aria-controls="collapseLayoutReports">
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutReports"
+                    aria-expanded="false" aria-controls="collapseLayoutReports">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-chart-bar"></i></div>
                     Reports
                     <div class="side-nav-collapse-arrow"><i class="fa-solid fa-chevron-down"></i></div>
                 </a>
-                <div class="collapse" id="collapseLayoutReports" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <div class="collapse" id="collapseLayoutReports" aria-labelledby="headingOne"
+                    data-bs-parent="#sidenavAccordion">
                     <nav class="side-nav-menu-nested nav">
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=contact-log'; ?>">Contact Log</a>
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Top Degree by School'); ?>">Top
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=activity-log'; ?>">Activity Log</a>
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=contact-log'; ?>">Contact Log</a>
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Top Degree by School'); ?>">Top
                             Degrees by School</a>
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Top Field by School'); ?>">Top
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Top Field by School'); ?>">Top
                             Field by School</a>
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Major to Field Ratio by School'); ?>">Major
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Major to Field Ratio by School'); ?>">Major
                             to
                             Field Ratio by School
                         </a>
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Jobs by Field'); ?>">Jobs
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Jobs by Field'); ?>">Jobs
                             by
                             Field</a>
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Contact Follow-Up Percentage'); ?>">Contact
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode('Contact Follow-Up Percentage'); ?>">Contact
                             Follow-Up Percentage</a>
                     </nav>
                 </div>
@@ -44,15 +54,19 @@
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-people-group"></i></div>
                     Students
                 </a>
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutDegrees" aria-expanded="false" aria-controls="collapseLayoutDegrees">
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutDegrees"
+                    aria-expanded="false" aria-controls="collapseLayoutDegrees">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-graduation-cap"></i></div>
                     Degree Programs
                     <div class="side-nav-collapse-arrow"><i class="fa-solid fa-chevron-down"></i></div>
                 </a>
-                <div class="collapse" id="collapseLayoutDegrees" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <div class="collapse" id="collapseLayoutDegrees" aria-labelledby="headingOne"
+                    data-bs-parent="#sidenavAccordion">
                     <nav class="side-nav-menu-nested nav">
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=majors&major=list' ?>">Majors</a>
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list' ?>">Degrees</a>
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=majors&major=list' ?>">Majors</a>
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list' ?>">Degrees</a>
                     </nav>
                 </div>
                 <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=list' ?>">
@@ -63,15 +77,19 @@
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-book"></i></div>
                     Subjects/Fields
                 </a>
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutUsers" aria-expanded="false" aria-controls="collapseLayoutUsers">
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutUsers"
+                    aria-expanded="false" aria-controls="collapseLayoutUsers">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
                     Users/Roles
                     <div class="side-nav-collapse-arrow"><i class="fa-solid fa-chevron-down"></i></div>
                 </a>
-                <div class="collapse" id="collapseLayoutUsers" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <div class="collapse" id="collapseLayoutUsers" aria-labelledby="headingOne"
+                    data-bs-parent="#sidenavAccordion">
                     <nav class="side-nav-menu-nested nav">
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list' ?>">Users</a>
-                        <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=list' ?>">Roles</a>
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list' ?>">Users</a>
+                        <a class="nav-link"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=list' ?>">Roles</a>
                     </nav>
                 </div>
                 <a class="nav-link" href="<?php echo APP_URL . '/admin/dashboard.php?view=settings' ?>">
