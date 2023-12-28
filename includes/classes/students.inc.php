@@ -754,6 +754,9 @@ class Student
         //If the query is successful
         if ($result) {
             //TODO: send email to student with a thank you.
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(null, 'Student Added', $first_name . ' ' . $last_name . ' Added');
             //Return true
             return true;
         } else {
@@ -778,6 +781,11 @@ class Student
         $result = $this->mysqli->query($sql);
         //If the query is successful
         if ($result) {
+            //log the activity
+            $activity = new Activity();
+            $event = new Event();
+            $student = new Student();
+            $activity->logActivity(null, 'Student Added to Event', $student->getStudentFullName($student_id) . ' Added to Event ' . $event->getEventName($event_id));
             //Return true
             return true;
         } else {
