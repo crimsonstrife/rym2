@@ -9,6 +9,8 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
+use Michelf\Markdown;
+
 /**
  * The Application Class
  *
@@ -1387,5 +1389,165 @@ class Application
 
         //return the results array
         return $results;
+    }
+
+    /**
+     * Get the Privacy Policy Content
+     * Get the privacy policy content from the settings table, and coverts it from Markdown to HTML,
+     * returns a string with the HTML content
+     *
+     * @return string //the privacy policy content
+     */
+    public function getPrivacyPolicy()
+    {
+        //include the php-markdown library
+        require_once 'vendor/autoload.php';
+
+        //SQL statement to get the privacy policy content
+        $sql = "SELECT privacy_policy FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the privacy_policy is set or not
+            if (isset($row['privacy_policy'])) {
+                //convert the privacy policy content from Markdown to HTML
+                $privacy_policy = Markdown::defaultTransform($row['privacy_policy']);
+
+                //Return the privacy_policy
+                return $privacy_policy;
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Set the Privacy Policy Content
+     * Set the privacy policy content in the settings table
+     *
+     * @param string $privacy_policy //the privacy policy content, passed in as Markdown
+     * @return bool //true if the privacy policy content was set, false if not
+     */
+    public function setPrivacyPolicy($privacy_policy)
+    {
+        //SQL statement to update the privacy policy content
+        $sql = "UPDATE settings SET privacy_policy = ? WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the parameters
+        $stmt->bind_param('s', $privacy_policy);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Privacy Policy Updated', 'The privacy policy was changed.');
+            //Return true
+            return true;
+        } else {
+            //Return false
+            return false;
+        }
+    }
+
+    /**
+     * Get the Terms and Conditions Content
+     * Get the terms and conditions content from the settings table, and coverts it from Markdown to HTML,
+     * returns a string with the HTML content
+     *
+     * @return string //the terms content
+     */
+    public function getTerms()
+    {
+        //include the php-markdown library
+        require_once 'vendor/autoload.php';
+
+        //SQL statement to get the terms and conditions content
+        $sql = "SELECT terms_conditions FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the terms_conditions is set or not
+            if (isset($row['terms_conditions'])) {
+                //convert the terms_conditions content from Markdown to HTML
+                $terms = Markdown::defaultTransform($row['terms_conditions']);
+
+                //Return the terms
+                return $terms;
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Set the Terms and Conditions Content
+     * Set the terms and conditions content in the settings table
+     *
+     * @param string $terms //the terms and conditions content, passed in as Markdown
+     * @return bool //true if the terms and conditions content was set, false if not
+     */
+    public function setTerms($terms)
+    {
+        //SQL statement to update the terms and conditions content
+        $sql = "UPDATE settings SET terms_conditions = ? WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the parameters
+        $stmt->bind_param('s', $terms);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Terms and Conditions Updated', 'The terms and conditions were changed.');
+            //Return true
+            return true;
+        } else {
+            //Return false
+            return false;
+        }
     }
 }
