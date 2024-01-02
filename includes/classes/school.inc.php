@@ -509,4 +509,47 @@ class School
         //return the schools array
         return $schools;
     }
+
+    /**
+     * Delete a school from the database
+     *
+     * @param int $school_id
+     * @return boolean $result
+     */
+    public function deleteSchool(int $school_id): bool
+    {
+        //get the current date and time
+        $date = date("Y-m-d H:i:s");
+
+        //set the placeholder for the result
+        $result = false;
+
+        //create the sql statement
+        $sql = "DELETE FROM school WHERE id = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $school_id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //check the result
+        if ($stmt->affected_rows > 0) {
+            $result = true;
+        } else {
+            $result = false;
+        }
+
+        //log the school activity if the school was deleted
+        if ($result) {
+            $activity = new Activity();
+            $activity->logActivity($_SESSION['user_id'], 'Deleted School', 'School ID: ' . $school_id);
+        }
+
+        //return the result
+        return $result;
+    }
 };
