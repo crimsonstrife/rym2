@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RedirectMatch 301 ^/privacy-policy$ /index.php?path=privacy
+    RedirectMatch 301 ^/privacy-policy.php /index.php?path=privacy
+    RedirectMatch 301 ^/privacy$ /index.php?path=privacy
+    RedirectMatch 301 ^/privacy.php /index.php?path=privacy
+    RedirectMatch 301 ^/terms-and-conditions$ /index.php?path=terms
+    RedirectMatch 301 ^/terms-and-conditions.php /index.php?path=terms
+    RedirectMatch 301 ^/terms-conditions$ /index.php?path=terms
+    RedirectMatch 301 ^/terms-conditions.php /index.php?path=terms
+    RedirectMatch 301 ^/terms$ /index.php?path=terms
+    RedirectMatch 301 ^/terms.php /index.php?path=terms
+    ErrorDocument 404 /index.php?path=error&error=404
+    ErrorDocument 403 /index.php?path=error&error=403
+    ErrorDocument 500 /index.php?path=error&error=500
+</IfModule>
