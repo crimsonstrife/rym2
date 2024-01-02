@@ -11,6 +11,150 @@ $APP = new Application();
 
 //check if the form has been submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    //check if the submit button was clicked
+    if (isset($_POST['submit'])) {
+        //check if the app name is set
+        if (isset($_POST['app_name']) && $_POST['app_name'] != '') {
+            //prevent XSS attacks by removing html tags
+            $_POST['app_name'] = strip_tags($_POST['app_name']);
+            //prepare the app name
+            $_POST['app_name'] = htmlspecialchars($_POST['app_name']);
+            //trim whitespace from the app name
+            $_POST['app_name'] = trim($_POST['app_name']);
+            //set the app name
+            $APP->setAppName($_POST['app_name']);
+        } else {
+            //set the app name to null
+            $APP->setAppName(null);
+        }
+        //check if the app url is set
+        if (isset($_POST['app_url']) && $_POST['app_url'] != '') {
+            //prevent XSS attacks by removing html tags
+            $_POST['app_url'] = strip_tags($_POST['app_url']);
+            //trim whitespace from the app url
+            $_POST['app_url'] = trim($_POST['app_url']);
+            //set the app url
+            $APP->setAppURL($_POST['app_url']);
+        }
+        //check if the mailer is set
+        if (isset($_POST['mail_mailer'])) {
+            //make sure the mailer is a valid option
+            if (in_array($_POST['mail_mailer'], MAILER)) {
+                //make sure the mailer is not null or none
+                if ($_POST['mail_mailer'] != '' && $_POST['mail_mailer'] != 'none' && $_POST['mail_mailer'] != null && $_POST['mail_mailer'] != 'NONE') {
+                    //set the mailer
+                    $APP->setMailerType($_POST['mail_mailer']);
+                }
+            }
+        }
+        //check if the mail host is set
+        if (isset($_POST['mail_host']) && $_POST['mail_host'] != '') {
+            //prevent XSS attacks by removing html tags
+            $_POST['mail_host'] = strip_tags($_POST['mail_host']);
+            //trim whitespace from the mail host
+            $_POST['mail_host'] = trim($_POST['mail_host']);
+            //set the mail host
+            $APP->setMailerHost($_POST['mail_host']);
+        }
+        //check if the mail port is set
+        if (isset($_POST['mail_port']) && $_POST['mail_port'] != '') {
+            //prevent XSS attacks by removing html tags
+            $_POST['mail_port'] = strip_tags($_POST['mail_port']);
+            //trim whitespace from the mail port
+            $_POST['mail_port'] = trim($_POST['mail_port']);
+            //set the mail port
+            $APP->setMailerPort($_POST['mail_port']);
+        }
+        //check if the mail auth req is set
+        if (isset($_POST['mail_auth_req'])) {
+            //filter the mail auth req as a boolean
+            $_POST['mail_auth_req'] = filter_var($_POST['mail_auth_req'], FILTER_VALIDATE_BOOLEAN);
+            //set the mail auth req
+            $APP->setMailerAuthRequired($_POST['mail_auth_req']);
+        }
+        //check if the mail username is set
+        if (isset($_POST['mail_username']) && $_POST['mail_username'] != '') {
+            //prevent XSS attacks by removing html tags
+            $_POST['mail_username'] = strip_tags($_POST['mail_username']);
+            //trim whitespace from the mail username
+            $_POST['mail_username'] = trim($_POST['mail_username']);
+            //prepare the mail username
+            $_POST['mail_username'] = htmlspecialchars($_POST['mail_username']);
+            //set the mail username
+            $APP->setMailerUsername($_POST['mail_username']);
+        }
+        //check if the mail password is set
+        if (isset($_POST['mail_password']) && $_POST['mail_password'] != '') {
+            //prevent XSS attacks by removing html tags
+            $_POST['mail_password'] = strip_tags($_POST['mail_password']);
+            //trim whitespace from the mail password
+            $_POST['mail_password'] = trim($_POST['mail_password']);
+            //prepare the mail password
+            $_POST['mail_password'] = htmlspecialchars($_POST['mail_password']);
+            //set the mail password
+            $APP->setMailerPassword($_POST['mail_password']);
+        }
+        //check if the mail encryption is set
+        if (isset($_POST['mail_encryption']) && $_POST['mail_encryption'] != '') {
+            //make sure the mail encryption is a valid option
+            if (in_array($_POST['mail_encryption'], MAILER_ENCRYPTION)) {
+                //make sure the mail encryption is not null or none
+                if ($_POST['mail_encryption'] != '' && $_POST['mail_encryption'] != 'none' && $_POST['mail_encryption'] != null && $_POST['mail_encryption'] != 'NONE') {
+                    //set the mail encryption
+                    $APP->setMailerEncryption($_POST['mail_encryption']);
+                }
+            }
+        }
+        //check if the mail from address is set
+        if (isset($_POST['mail_from_address']) && $_POST['mail_from_address'] != '') {
+            //prevent XSS attacks by removing html tags
+            $_POST['mail_from_address'] = strip_tags($_POST['mail_from_address']);
+            //trim whitespace from the mail from address
+            $_POST['mail_from_address'] = trim($_POST['mail_from_address']);
+            //set the mail from address
+            $APP->setMailerFromAddress($_POST['mail_from_address']);
+        }
+        //check if the mail from name is set
+        if (isset($_POST['mail_from_name']) && $_POST['mail_from_name'] != '') {
+            //prevent XSS attacks by removing html tags
+            $_POST['mail_from_name'] = strip_tags($_POST['mail_from_name']);
+            //trim whitespace from the mail from name
+            $_POST['mail_from_name'] = trim($_POST['mail_from_name']);
+            //prepare the mail from name
+            $_POST['mail_from_name'] = htmlspecialchars($_POST['mail_from_name']);
+            //set the mail from name
+            $APP->setMailerFromName($_POST['mail_from_name']);
+        }
+
+        //check if the privacy policy is set
+        if (isset($_POST['privacy_policy']) && $_POST['privacy_policy'] != '') {
+            //prevent XSS attacks by removing html tags
+            $_POST['privacy_policy'] = strip_tags($_POST['privacy_policy']);
+            //trim whitespace from the privacy policy
+            $_POST['privacy_policy'] = trim($_POST['privacy_policy']);
+            //set the privacy policy
+            $APP->setPrivacyPolicy($_POST['privacy_policy']);
+        }
+
+        //check if the terms and conditions is set
+        if (isset($_POST['terms_conditions']) && $_POST['terms_conditions'] != '') {
+            //prevent XSS attacks by removing html tags
+            $_POST['terms_conditions'] = strip_tags($_POST['terms_conditions']);
+            //trim whitespace from the terms and conditions
+            $_POST['terms_conditions'] = trim($_POST['terms_conditions']);
+            //set the terms and conditions
+            $APP->setTerms($_POST['terms_conditions']);
+        }
+
+        //refresh the page
+        header('Location: ' . htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view']);
+    } else if (isset($_POST['reset'])) {
+        //reset the settings
+        $APP->resetSettings();
+
+        //refresh the page
+        header('Location: ' . htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view']);
+    }
 }
 ?>
 <!-- main content -->
@@ -43,7 +187,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class="row">
                     <!-- Main Settings Form -->
-                    <form class="form-inline" method="post" enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view']; ?>">
+                    <form class="form-inline" method="post" enctype="multipart/form-data"
+                        action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view']; ?>">
                         <div class="form-row">
                             <label for="main-app-settings">
                                 <h3>Application</h3>
@@ -181,7 +326,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </div>
                                     <div class="form-row">
                                         <label for="mail-password">Password</label>
-                                        <input type="password" class="form-control" id="mail-password" placeholder="<?php
+                                        <input type="password" class="form-control" id="mail-password"
+                                            placeholder="<?php
                                                                                                                     //if mail_password is set and not blank
                                                                                                                     if (isset($mail_password) && $mail_password != '') {
                                                                                                                         //mask the password with asterisks
@@ -225,7 +371,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </div>
                                     <div class="form-row">
                                         <label for="mail-from-address">From Address</label>
-                                        <input type="text" class="form-control" id="mail-from-address" placeholder="<?php
+                                        <input type="text" class="form-control" id="mail-from-address"
+                                            placeholder="<?php
                                                                                                                     //if mail_from_address is set and not blank
                                                                                                                     if (isset($mail_from_address) && $mail_from_address != '') {
                                                                                                                         echo $mail_from_address;
@@ -235,7 +382,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </div>
                                     <div class="form-row">
                                         <label for="mail-from-name">From Name</label>
-                                        <input type="text" class="form-control" id="mail-from-name" placeholder="<?php
+                                        <input type="text" class="form-control" id="mail-from-name"
+                                            placeholder="<?php
                                                                                                                     //if mail_from_name is set and not blank
                                                                                                                     if (isset($mail_from_name) && $mail_from_name != '') {
                                                                                                                         echo $mail_from_name;
@@ -252,7 +400,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="form-group col-md-6">
                                     <div class="form-row">
                                         <label for="privacy-policy">Privacy Policy</label>
-                                        <textarea class="form-control" id="privacy-policy" rows="15" placeholder='<?php
+                                        <textarea class="form-control" id="privacy-policy" rows="15"
+                                            placeholder='<?php
                                                                                                                     //if privacy_policy is set and not blank
                                                                                                                     if (isset($privacy_policy) && $privacy_policy != '') {
                                                                                                                         echo $privacy_policy;
@@ -275,7 +424,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="form-group col-md-6">
                                     <div class="form-row">
                                         <label for="terms-conditions">Terms and Conditions</label>
-                                        <textarea class="form-control" id="terms-conditions" rows="15" placeholder='<?php
+                                        <textarea class="form-control" id="terms-conditions" rows="15"
+                                            placeholder='<?php
                                                                                                                     //if terms_conditions is set and not blank
                                                                                                                     if (isset($terms_conditions) && $terms_conditions != '') {
                                                                                                                         echo $terms_conditions;
