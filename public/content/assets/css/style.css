@@ -51,8 +51,34 @@ table {
 	top: 56px;
 }
 
+.icon::before {
+	display: inline-block;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+}
+
+.nav-fixed nav button#sidebarToggle .toggleIcon::before {
+	font: var(--fa-font-solid);
+	content: "\f00d";
+	font-size: 2.5em;
+}
+
+.nav-fixed.side-nav-toggled nav button#sidebarToggle .toggleIcon::before {
+	font: var(--fa-font-solid);
+	content: "\f0c9";
+	font-size: 2.5em;
+}
+
+#layout {
+	min-height: 100vh;
+}
+
 #layout_content {
 	margin-top: 5%;
+}
+
+#sidebarToggle {
+	margin-left: 1%;
 }
 
 .side-nav-toggled #layout #layout_nav {
