@@ -156,7 +156,7 @@ class Application
      * @param string $app_name //the application name
      * @return bool //true if the application name was set, false if not
      */
-    public function setAppName($app_name)
+    public function setAppName($app_name = null)
     {
         //Check if the application name is set in the settings table already
         if ($this->getAppName() != '' || $this->getAppName() != null) {
@@ -258,7 +258,7 @@ class Application
      * @param string $app_url //the application URL
      * @return bool //true if the application URL was set, false if not
      */
-    public function setAppURL($app_url)
+    public function setAppURL($app_url = null)
     {
         //Check if the application URL is set in the settings table already
         if ($this->getAppURL() != '' || $this->getAppURL() != null) {
@@ -362,7 +362,7 @@ class Application
      * @param string $mailer_type //the mailer type
      * @return bool //true if the mailer type was set, false if not
      */
-    public function setMailerType($mailer_type)
+    public function setMailerType($mailer_type = null)
     {
         //Check if the mailer type is set in the settings table already
         if ($this->getMailerType() != '' || $this->getMailerType() != null) {
@@ -464,7 +464,7 @@ class Application
      * @param string $mailer_host //the mailer host
      * @return bool //true if the mailer host was set, false if not
      */
-    public function setMailerHost($mailer_host)
+    public function setMailerHost($mailer_host = null)
     {
         //Check if the mailer host is set in the settings table already
         if ($this->getMailerHost() != '' || $this->getMailerHost() != null) {
@@ -566,7 +566,7 @@ class Application
      * @param string $mailer_port //the mailer port
      * @return bool //true if the mailer port was set, false if not
      */
-    public function setMailerPort($mailer_port)
+    public function setMailerPort($mailer_port = null)
     {
         //Check if the mailer port is set in the settings table already
         if ($this->getMailerPort() != '' || $this->getMailerPort() != null) {
@@ -668,7 +668,7 @@ class Application
      * @param string $mailer_username //the mailer username
      * @return bool //true if the mailer username was set, false if not
      */
-    public function setMailerUsername($mailer_username)
+    public function setMailerUsername($mailer_username = null)
     {
         //Check if the mailer username is set in the settings table already
         if ($this->getMailerUsername() != '' || $this->getMailerUsername() != null) {
@@ -778,7 +778,7 @@ class Application
      * @param string $mailer_password //the mailer password
      * @return bool //true if the mailer password was set, false if not
      */
-    public function setMailerPassword($mailer_password)
+    public function setMailerPassword($mailer_password = null)
     {
         //Check if the mailer password is set in the settings table already
         if ($this->getMailerPassword() != '' || $this->getMailerPassword() != null) {
@@ -904,7 +904,7 @@ class Application
      * @param string $mailer_encryption //the mailer encryption
      * @return bool //true if the mailer encryption was set, false if not
      */
-    public function setMailerEncryption($mailer_encryption)
+    public function setMailerEncryption($mailer_encryption = null)
     {
         //Check if the mailer encryption is set in the settings table already
         if ($this->getMailerEncryption() != '' || $this->getMailerEncryption() != null) {
@@ -1006,7 +1006,7 @@ class Application
      * @param string $mailer_from_address //the mailer from address
      * @return bool //true if the mailer from address was set, false if not
      */
-    public function setMailerFromAddress($mailer_from_address)
+    public function setMailerFromAddress($mailer_from_address = null)
     {
         //Check if the mailer from address is set in the settings table already
         if ($this->getMailerFromAddress() != '' || $this->getMailerFromAddress() != null) {
@@ -1108,7 +1108,7 @@ class Application
      * @param string $mailer_from_name //the mailer from name
      * @return bool //true if the mailer from name was set, false if not
      */
-    public function setMailerFromName($mailer_from_name)
+    public function setMailerFromName($mailer_from_name = null)
     {
         //Check if the mailer from name is set in the settings table already
         if ($this->getMailerFromName() != '' || $this->getMailerFromName() != null) {
@@ -1215,7 +1215,7 @@ class Application
      * @param bool $mailer_auth_required //the mailer authentication required status
      * @return bool //true if the mailer authentication required status was set, false if not
      */
-    public function setMailerAuthRequired($mailer_auth_required)
+    public function setMailerAuthRequired($mailer_auth_required = null)
     {
         //Check if the mailer authentication required status is set in the settings table already
         if ($this->getMailerAuthRequired() != '' || $this->getMailerAuthRequired() != null) {
@@ -1428,8 +1428,14 @@ class Application
                 //Return the privacy_policy
                 return $privacy_policy;
             } else {
-                //Return an empty string
-                return '';
+                //get the default privacy policy
+                $privacy_policy = strval(PRIVACY_POLICY);
+
+                //convert the privacy policy content from Markdown to HTML
+                $privacy_policy = Markdown::defaultTransform($privacy_policy);
+
+                //Return the privacy_policy
+                return $privacy_policy;
             }
         } else {
             //Return an empty string
@@ -1444,7 +1450,7 @@ class Application
      * @param string $privacy_policy //the privacy policy content, passed in as Markdown
      * @return bool //true if the privacy policy content was set, false if not
      */
-    public function setPrivacyPolicy($privacy_policy)
+    public function setPrivacyPolicy($privacy_policy = null)
     {
         //SQL statement to update the privacy policy content
         $sql = "UPDATE settings SET privacy_policy = ? WHERE isSet = 'SET'";
@@ -1508,8 +1514,14 @@ class Application
                 //Return the terms
                 return $terms;
             } else {
-                //Return an empty string
-                return '';
+                //get the default terms and conditions
+                $terms = strval(TERMS_CONDITIONS);
+
+                //convert the terms_conditions content from Markdown to HTML
+                $terms = Markdown::defaultTransform($terms);
+
+                //Return the terms
+                return $terms;
             }
         } else {
             //Return an empty string
@@ -1524,7 +1536,7 @@ class Application
      * @param string $terms //the terms and conditions content, passed in as Markdown
      * @return bool //true if the terms and conditions content was set, false if not
      */
-    public function setTerms($terms)
+    public function setTerms($terms = null)
     {
         //SQL statement to update the terms and conditions content
         $sql = "UPDATE settings SET terms_conditions = ? WHERE isSet = 'SET'";
@@ -1543,6 +1555,42 @@ class Application
             //log the activity
             $activity = new Activity();
             $activity->logActivity(intval($_SESSION['user_id']), 'Terms and Conditions Updated', 'The terms and conditions were changed.');
+            //Return true
+            return true;
+        } else {
+            //Return false
+            return false;
+        }
+    }
+
+    /**
+     * Reset all of the settings to their default values
+     *
+     * @return bool //true if the settings were reset, false if not
+     */
+    public function resetSettings()
+    {
+        //SQL statement to reset the settings
+        $sql = "UPDATE settings SET mail_host = null, mail_port = null, mail_username = null, mail_password = null, mail_encryption = null, mail_from_address = null, mail_from_name = null, mail_auth_req = null, privacy_policy = ?, terms_conditions = ? WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //set the privacy policy and terms and conditions to their default values
+        $terms_conditions = strval(TERMS_CONDITIONS);
+        $privacy_policy = strval(PRIVACY_POLICY);
+
+        //Bind the parameters
+        $stmt->bind_param('ss', $privacy_policy, $terms_conditions);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Settings Reset', 'The settings were reset to their default values.');
             //Return true
             return true;
         } else {
