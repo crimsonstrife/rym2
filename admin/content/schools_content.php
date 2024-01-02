@@ -50,7 +50,18 @@ if (!defined('ISVALIDUSER')) {
                     }
                     break;
                 case 'single':
-                    include_once('./view/school_single.php');
+                    if (isset($_GET['action'])) {
+                        switch ($_GET['action']) {
+                            case 'delete':
+                                include_once('./editor/actions/school/delete.php');
+                                break;
+                            default:
+                                include_once('./view/school_single.php');
+                                break;
+                        }
+                    } else {
+                        include_once('./view/school_single.php');
+                    }
                     break;
                 default:
                     include_once('./view/school_list.php');
