@@ -36,8 +36,10 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                         class="btn btn-primary btn-sm">Back to Schools</a>
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=edit&action=edit&id=' . $school_id; ?>"
                         class="btn btn-primary btn-sm">Edit School</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=delete&id=' . $school_id; ?>"
-                        class="btn btn-danger btn-sm">Delete School</a>
+                    <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#deleteSchoolModal">
+                        Delete School
+                    </button>
                 </div>
             </div>
             <div class="card-body">
@@ -75,6 +77,38 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                     </div>
                 </div>
                 <div class="card-footer">
+                </div>
+                <div id="info" class="">
+                    <!-- Delete School Modal-->
+                    <!-- Modal -->
+                    <div id="deleteSchoolModal" class="modal fade delete" tabindex="-1" role="dialog"
+                        aria-labelledby="#schoolDeleteModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title" id="schoolDeleteModal">Delete School -
+                                        <?php echo $school->getSchoolName(intval($school_id)); ?></h3>
+                                    <button type="button" class="btn-close close" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete this school?</p>
+                                    <p>This action cannot be undone.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <form
+                                        action="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=single&action=delete&id=' . $school_id; ?>"
+                                        method="post">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-danger">Delete School</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
