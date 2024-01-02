@@ -41,68 +41,68 @@ if (isset($_SESSION['user_id'])) {
     define('ISVALIDUSER', true); // idea from https://stackoverflow.com/a/409515 (user UnkwnTech)
 
     //include the header
-    include_once('header.php');
+    include_once('./header.php');
 ?>
-    <div id="layout">
+<div id="layout">
     <?php
     //include the sidebar
-    include_once('sidebar.php');
+    include_once('./sidebar.php');
 
     //switch content based on the parameter in the url
     if (isset($_GET['view'])) {
         switch ($_GET['view']) {
             case 'events':
-                include_once('events_content.php');
+                include_once('content/events_content.php');
                 break;
             case 'schools':
-                include_once('schools_content.php');
+                include_once('content/schools_content.php');
                 break;
             case 'majors':
-                include_once('majors_content.php');
+                include_once('content/majors_content.php');
                 break;
             case 'degrees':
-                include_once('degrees_content.php');
+                include_once('content/degrees_content.php');
                 break;
             case 'users':
-                include_once('users_content.php');
+                include_once('content/users_content.php');
                 break;
             case 'roles':
-                include_once('roles_content.php');
+                include_once('content/roles_content.php');
                 break;
             case 'settings':
-                include_once('settings_content.php');
+                include_once('content/settings_content.php');
                 break;
             case 'jobs':
-                include_once('jobs_content.php');
+                include_once('content/jobs_content.php');
                 break;
             case 'subjects':
-                include_once('subjects_content.php');
+                include_once('content/subjects_content.php');
                 break;
             case 'reports':
-                include_once('reports_content.php');
+                include_once('content/reports_content.php');
                 break;
             case 'students':
-                include_once('students_content.php');
+                include_once('content/students_content.php');
                 break;
             case 'contact-log':
-                include_once('contactlog_content.php');
+                include_once('content/contactlog_content.php');
                 break;
             case 'activity-log':
-                include_once('activitylog_content.php');
+                include_once('content/activitylog_content.php');
                 break;
             case 'search':
-                include_once('search.php');
+                include_once('content/search.php');
                 break;
             default:
-                include_once('admin_content.php');
+                include_once('content/admin_content.php');
                 break;
         }
     } else {
-        include_once('admin_content.php');
+        include_once('content/admin_content.php');
     }
 
     //include the footer
-    include_once('footer.php');
+    include_once('./footer.php');
 } else {
     performRedirect('/login.php');
 }
