@@ -8,27 +8,27 @@ if (!defined('ISVALIDUSER')) {
 <div id="layout_content">
     <main>
         <?php
-        if (isset($_GET['role'])) {
-            switch ($_GET['role']) {
+        if (isset($_GET['job'])) {
+            switch ($_GET['job']) {
                 case 'list':
-                    include_once('view/role_list.php');
+                    include_once('./view/job_list.php');
                     break;
                 case 'add':
                     if (isset($_GET['action'])) {
                         switch ($_GET['action']) {
                             case 'create':
                                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                                    include_once('editor/actions/role/create.php');
+                                    include_once('./editor/actions/job/create.php');
                                 } else {
-                                    include_once('editor/role_edit.php');
+                                    include_once('./editor/job_edit.php');
                                 }
                                 break;
                             default:
-                                include_once('view/role_list.php');
+                                include_once('./view/job_list.php');
                                 break;
                         }
                     } else {
-                        include_once('view/role_list.php');
+                        include_once('./view/job_list.php');
                     }
                     break;
                 case 'edit':
@@ -36,28 +36,28 @@ if (!defined('ISVALIDUSER')) {
                         switch ($_GET['action']) {
                             case 'edit':
                                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                                    include_once('editor/actions/role/modify.php');
+                                    include_once('./editor/actions/job/modify.php');
                                 } else {
-                                    include_once('editor/role_edit.php');
+                                    include_once('./editor/job_edit.php');
                                 }
                                 break;
                             default:
-                                include_once('view/role_list.php');
+                                include_once('./view/job_list.php');
                                 break;
                         }
                     } else {
-                        include_once('view/role_list.php');
+                        include_once('./view/job_list.php');
                     }
                     break;
                 case 'single':
-                    include_once('view/role_single.php');
+                    include_once('./view/job_list.php');
                     break;
                 default:
-                    include_once('view/role_list.php');
+                    include_once('./view/job_list.php');
                     break;
             }
         } else {
-            include_once('view/role_list.php');
+            include_once('./view/job_list.php');
         }
         ?>
     </main>

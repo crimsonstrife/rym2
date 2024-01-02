@@ -11,24 +11,24 @@ if (!defined('ISVALIDUSER')) {
         if (isset($_GET['subject'])) {
             switch ($_GET['subject']) {
                 case 'list':
-                    include_once('view/subject_list.php');
+                    include_once('./view/subject_list.php');
                     break;
                 case 'add':
                     if (isset($_GET['action'])) {
                         switch ($_GET['action']) {
                             case 'create':
                                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                                    include_once('editor/actions/subject/create.php');
+                                    include_once('./editor/actions/subject/create.php');
                                 } else {
-                                    include_once('editor/subject_edit.php');
+                                    include_once('./editor/subject_edit.php');
                                 }
                                 break;
                             default:
-                                include_once('view/subject_list.php');
+                                include_once('./view/subject_list.php');
                                 break;
                         }
                     } else {
-                        include_once('view/subject_list.php');
+                        include_once('./view/subject_list.php');
                     }
                     break;
                 case 'edit':
@@ -36,28 +36,28 @@ if (!defined('ISVALIDUSER')) {
                         switch ($_GET['action']) {
                             case 'edit':
                                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                                    include_once('editor/actions/subject/modify.php');
+                                    include_once('./editor/actions/subject/modify.php');
                                 } else {
-                                    include_once('editor/subject_edit.php');
+                                    include_once('./editor/subject_edit.php');
                                 }
                                 break;
                             default:
-                                include_once('view/subject_list.php');
+                                include_once('./view/subject_list.php');
                                 break;
                         }
                     } else {
-                        include_once('view/subject_list.php');
+                        include_once('./view/subject_list.php');
                     }
                     break;
                 case 'single':
-                    include_once('view/subject_list.php');
+                    include_once('./view/subject_list.php');
                     break;
                 default:
-                    include_once('view/subject_list.php');
+                    include_once('./view/subject_list.php');
                     break;
             }
         } else {
-            include_once('view/subject_list.php');
+            include_once('./view/subject_list.php');
         }
         ?>
     </main>

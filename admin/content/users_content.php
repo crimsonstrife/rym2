@@ -8,27 +8,27 @@ if (!defined('ISVALIDUSER')) {
 <div id="layout_content">
     <main>
         <?php
-        if (isset($_GET['major'])) {
-            switch ($_GET['major']) {
+        if (isset($_GET['user'])) {
+            switch ($_GET['user']) {
                 case 'list':
-                    include_once('view/major_list.php');
+                    include_once('./view/user_list.php');
                     break;
                 case 'add':
                     if (isset($_GET['action'])) {
                         switch ($_GET['action']) {
                             case 'create':
                                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                                    include_once('editor/actions/major/create.php');
+                                    include_once('./editor/actions/user/create.php');
                                 } else {
-                                    include_once('editor/major_edit.php');
+                                    include_once('./editor/user_edit.php');
                                 }
                                 break;
                             default:
-                                include_once('view/major_list.php');
+                                include_once('./view/user_list.php');
                                 break;
                         }
                     } else {
-                        include_once('view/major_list.php');
+                        include_once('./view/user_list.php');
                     }
                     break;
                 case 'edit':
@@ -36,28 +36,28 @@ if (!defined('ISVALIDUSER')) {
                         switch ($_GET['action']) {
                             case 'edit':
                                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                                    include_once('editor/actions/major/modify.php');
+                                    include_once('./editor/actions/user/modify.php');
                                 } else {
-                                    include_once('editor/major_edit.php');
+                                    include_once('./editor/user_edit.php');
                                 }
                                 break;
                             default:
-                                include_once('view/major_list.php');
+                                include_once('./view/user_list.php');
                                 break;
                         }
                     } else {
-                        include_once('view/major_list.php');
+                        include_once('./view/user_list.php');
                     }
                     break;
                 case 'single':
-                    include_once('view/major_list.php');
+                    include_once('./view/user_single.php');
                     break;
                 default:
-                    include_once('view/major_list.php');
+                    include_once('./view/user_list.php');
                     break;
             }
         } else {
-            include_once('view/major_list.php');
+            include_once('./view/user_list.php');
         }
         ?>
     </main>

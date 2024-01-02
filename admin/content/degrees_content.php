@@ -8,27 +8,27 @@ if (!defined('ISVALIDUSER')) {
 <div id="layout_content">
     <main>
         <?php
-        if (isset($_GET['school'])) {
-            switch ($_GET['school']) {
+        if (isset($_GET['degree'])) {
+            switch ($_GET['degree']) {
                 case 'list':
-                    include_once('view/school_list.php');
+                    include_once('./view/degree_list.php');
                     break;
                 case 'add':
                     if (isset($_GET['action'])) {
                         switch ($_GET['action']) {
                             case 'create':
                                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                                    include_once('editor/actions/school/create.php');
+                                    include_once('./editor/actions/degree/create.php');
                                 } else {
-                                    include_once('editor/school_edit.php');
+                                    include_once('./editor/degree_edit.php');
                                 }
                                 break;
                             default:
-                                include_once('view/school_list.php');
+                                include_once('./view/degree_list.php');
                                 break;
                         }
                     } else {
-                        include_once('view/school_list.php');
+                        include_once('./view/degree_list.php');
                     }
                     break;
                 case 'edit':
@@ -36,28 +36,28 @@ if (!defined('ISVALIDUSER')) {
                         switch ($_GET['action']) {
                             case 'edit':
                                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                                    include_once('editor/actions/school/modify.php');
+                                    include_once('./editor/actions/degree/modify.php');
                                 } else {
-                                    include_once('editor/school_edit.php');
+                                    include_once('./editor/degree_edit.php');
                                 }
                                 break;
                             default:
-                                include_once('view/school_list.php');
+                                include_once('./view/degree_list.php');
                                 break;
                         }
                     } else {
-                        include_once('view/school_list.php');
+                        include_once('./view/degree_list.php');
                     }
                     break;
                 case 'single':
-                    include_once('view/school_single.php');
+                    include_once('./view/degree_list.php');
                     break;
                 default:
-                    include_once('view/school_list.php');
+                    include_once('./view/degree_list.php');
                     break;
             }
         } else {
-            include_once('view/school_list.php');
+            include_once('./view/degree_list.php');
         }
         ?>
     </main>
