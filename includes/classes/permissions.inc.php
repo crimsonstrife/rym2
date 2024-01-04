@@ -168,6 +168,6 @@ class Permission
         }
 
         //Return the permission ID
-        return $permission_id;
+        return intval($permission_id);
     }
 }
