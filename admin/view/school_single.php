@@ -7,14 +7,60 @@ if (!defined('ISVALIDUSER')) {
 //autoload composer dependencies
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-//school class
-$school = new School();
+//include the permissions class
+$permissionsObject = new Permission();
+
+//include the role class
+$rolesObject = new Roles();
 
 //user class
 $user = new User();
 
-//get the school id from the url parameter
-$school_id = $_GET['id'];
+/*confirm user has a role with read school permissions*/
+//get the user's roles
+$userRoles = $user->getUserRoles(intval($_SESSION['user_id']));
+
+//get the id of the read school permission
+$relevantPermissionID = $permissionsObject->getPermissionIdByName('READ SCHOOL');
+
+//boolean to track if the user has the read school permission
+$hasPermission = false;
+
+//loop through the user's roles, for each role, get the permissions
+foreach ($userRoles as $role) {
+    $rolePermissions = $rolesObject->getRolePermissions(intval($role['id']));
+
+    //loop through the permissions and check if the user has the relevant permission
+    foreach ($rolePermissions as $permission) {
+        foreach ($permission as $key => $value) {
+            //if hasPermission is true, break out of the loop
+            if (!$hasPermission) {
+                //get the id of the permission
+                $permissionID = intval($value['id']);
+
+                //if the permission id matches the relevant permission id, set the hasPermission boolean to true
+                if ($permissionID == $relevantPermissionID) {
+                    $hasPermission = true;
+                } else {
+                    $hasPermission = false;
+                }
+            } else {
+                break;
+            }
+        }
+    }
+}
+
+//prevent the user from accessing the page if they do not have the relevant permission
+if (!$hasPermission) {
+    die('Error: You do not have permission to perform this request.');
+} else {
+
+    //school class
+    $school = new School();
+
+    //get the school id from the url parameter
+    $school_id = $_GET['id'];
 ?>
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet/leaflet.css'; ?>">
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.css'; ?>">
@@ -33,13 +79,80 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                 </div>
                 <div class="card-buttons">
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=list'; ?>"
-                        class="btn btn-primary btn-sm">Back to Schools</a>
+                        class="btn btn-secondary">Back to Schools</a>
+                    <?php
+                        $hasUpdatePermission = false;
+
+                        //get the update school permission id
+                        $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE SCHOOL');
+
+                        //loop through the user's roles, for each role, get the permissions
+                        foreach ($userRoles as $role) {
+                            $rolePermissions = $rolesObject->getRolePermissions(intval($role['id']));
+
+                            //loop through the permissions and check if the user has the relevant permission
+                            foreach ($rolePermissions as $permission) {
+                                foreach ($permission as $key => $value) {
+                                    //if hasPermission is true, break out of the loop
+                                    if (!$hasUpdatePermission) {
+                                        //get the id of the permission
+                                        $permissionID = intval($value['id']);
+
+                                        //if the permission id matches the relevant permission id, set the hasPermission boolean to true
+                                        if ($permissionID == $updatePermissionID) {
+                                            $hasUpdatePermission = true;
+                                        } else {
+                                            $hasUpdatePermission = false;
+                                        }
+                                    } else {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        //only show the edit button if the user has the update school permission
+                        if ($hasUpdatePermission) { ?>
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=edit&action=edit&id=' . $school_id; ?>"
-                        class="btn btn-primary btn-sm">Edit School</a>
+                        class="btn btn-primary">Edit School</a>
+                    <?php } ?>
+                    <?php
+                        $hasDeletePermission = false;
+
+                        //get the delete school permission id
+                        $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE SCHOOL');
+
+                        //loop through the user's roles, for each role, get the permissions
+                        foreach ($userRoles as $role) {
+                            $rolePermissions = $rolesObject->getRolePermissions(intval($role['id']));
+
+                            //loop through the permissions and check if the user has the relevant permission
+                            foreach ($rolePermissions as $permission) {
+                                foreach ($permission as $key => $value) {
+                                    //if hasPermission is true, break out of the loop
+                                    if (!$hasDeletePermission) {
+                                        //get the id of the permission
+                                        $permissionID = intval($value['id']);
+
+                                        //if the permission id matches the relevant permission id, set the hasPermission boolean to true
+                                        if ($permissionID == $deletePermissionID) {
+                                            $hasDeletePermission = true;
+                                        } else {
+                                            $hasDeletePermission = false;
+                                        }
+                                    } else {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        //only show the delete button if the user has the delete school permission
+                        if ($hasDeletePermission) { ?>
                     <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
                         data-bs-target="#deleteSchoolModal">
                         Delete School
                     </button>
+                    <?php } ?>
                 </div>
             </div>
             <div class="card-body">
@@ -54,10 +167,10 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                             <div>
                                 <p><strong>School Address:</strong>
                                     <?php
-                                    //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
-                                    $address = $school->getFormattedSchoolAddress(intval($school_id));
-                                    $address = urlencode($address);
-                                    ?>
+                                        //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
+                                        $address = $school->getFormattedSchoolAddress(intval($school_id));
+                                        $address = urlencode($address);
+                                        ?>
                                     <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
                                         target="_blank"><?php echo $school->getFormattedSchoolAddress(intval($school_id)); ?></a>
                                 </p>
@@ -78,6 +191,7 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                 </div>
                 <div class="card-footer">
                 </div>
+                <?php if ($hasDeletePermission) { ?>
                 <div id="info" class="">
                     <!-- Delete School Modal-->
                     <!-- Modal -->
@@ -110,6 +224,7 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                         </div>
                     </div>
                 </div>
+                <?php } ?>
             </div>
         </div>
     </div>
@@ -122,4 +237,4 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
 <script type="module" src="<?php echo getAssetPath() . 'js/event-map.js'; ?>">
 </script>
 <script type="text/javascript" src="<?php echo getAssetPath() . 'js/color-picker.js'; ?>"></script>
-<?php ?>
+<?php } ?>
