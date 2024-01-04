@@ -190,6 +190,48 @@ class Event
     }
 
     /**
+     * Get events by location
+     * returns an array of events at a specific location
+     *
+     * @param int $locationId school id
+     * @return array
+     */
+    public function getEventsByLocation(int $locationId): array
+    {
+        //SQL statement to get all events by location
+        $sql = "SELECT * FROM event WHERE location = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $locationId);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //array to hold the events
+        $events = array();
+
+        //if the result has rows
+        if (
+            $result->num_rows > 0
+        ) {
+            //loop through the rows
+            while ($row = $result->fetch_assoc()) {
+                //add the row to the students array
+                $events[] = $row;
+            }
+        }
+
+        //return the events array
+        return $events;
+    }
+
+    /**
      * Get the event creation date
      *
      * @param int $id event id
