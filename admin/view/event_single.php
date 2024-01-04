@@ -43,10 +43,30 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                 <div class="card-buttons">
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
                         class="btn btn-primary btn-sm">Back to Events</a>
+                    <?php /*confirm user has a role with update event permissions*/
+                    //get the update event permission id
+                    $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE EVENT');
+
+                    //boolean to check if the user has the update event permission
+                    $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
+
+                    //only show the edit button if the user has the update event permission
+                    if ($hasUpdatePermission) { ?>
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event_id; ?>"
                         class="btn btn-primary btn-sm">Edit Event</a>
+                    <?php } ?>
+                    <?php /*confirm user has a role with delete event permissions*/
+                    //get the delete event permission id
+                    $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE EVENT');
+
+                    //boolean to check if the user has the delete event permission
+                    $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
+
+                    //only show the delete button if the user has the delete event permission
+                    if ($hasDeletePermission) { ?>
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=delete&id=' . $event_id; ?>"
                         class="btn btn-danger btn-sm">Delete Event</a>
+                    <?php } ?>
                 </div>
             </div>
             <div class="card-body">
@@ -149,7 +169,15 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                                             if (empty($students)) {
                                                 echo '<tr><td colspan="4">No students have signed up for this event, or this event has not occurred.</td></tr>';
                                             } else {
-                                                foreach ($students as $eventStudent) {
+                                                //check if the user has the permission to read students
+                                                $readStudentPermissionID = $permissionsObject->getPermissionIdByName('READ STUDENT');
+
+                                                //boolean to check if the user has the read student permission
+                                                $hasReadStudentPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readStudentPermissionID);
+
+                                                //if the user has the read student permission, display the student information
+                                                if ($hasReadStudentPermission) {
+                                                    foreach ($students as $eventStudent) {
                                             ?>
                                             <tr>
                                                 <td><?php echo $student->getStudentFirstName($eventStudent['student_id']); ?>
@@ -162,6 +190,9 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                                                 </td>
                                             </tr>
                                             <?php }
+                                                } else {
+                                                    echo '<tr><td colspan="4">You do not have permission to view student information.</td></tr>';
+                                                }
                                             } ?>
                                         </tbody>
                                     </table>
