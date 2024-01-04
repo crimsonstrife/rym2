@@ -500,6 +500,46 @@ class Student
     }
 
     /**
+     * Get students by school id
+     * Get a list of students associated with a school by the school id
+     *
+     * @param int $school_id
+     * @return array
+     */
+    public function getStudentsBySchool(int $school_id): array
+    {
+        //SQL statement to get a list of students associated with a school by the school id
+        $sql = "SELECT * FROM student WHERE school = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $school_id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the students
+        $students = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            //loop through the rows
+            while ($row = $result->fetch_assoc()) {
+                //add the row to the students array
+                $students[] = $row;
+            }
+        }
+
+        //Return the students array
+        return $students;
+    }
+
+    /**
      * Get a students job type preference from the job ID
      *
      * @param int $id //student id
