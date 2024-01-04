@@ -27,6 +27,16 @@ if (!isset($hasViewDashboardPermission)) {
     <main>
         <div class="container-fluid px-4">
             <h1 class="mt-4">Dashboard</h1>
+            <?php /*check if the user has the read events permission */
+                    //get the id of the read events permission
+                    $readEventsPermissionId = $permissionsObject->getPermissionIdByName('READ EVENT');
+
+                    //boolean to check if the user has the read events permission
+                    $hasReadEventsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readEventsPermissionId);
+
+                    //only display the events table if the user has the read events permission
+                    if ($hasReadEventsPermission) {
+                    ?>
             <div class="row">
                 <!-- Upcoming Events -->
                 <div id="upcoming-events" class="card mb-4">
@@ -36,17 +46,17 @@ if (!isset($hasViewDashboardPermission)) {
                     <div class="card-body table-scroll">
                         <ul class="list-group events-list">
                             <?php
-                                    /* Setup upcoming events */
-                                    //include the event class
-                                    $eventsData = new Event();
-                                    //include the school class
-                                    $eventSchoolsData = new School();
-                                    //get all events
-                                    $eventsArray = $eventsData->getEvents();
-                                    //for each event, if the date is in the future, display it
-                                    foreach ($eventsArray as $event) {
-                                        if (strtotime($event['event_date']) > strtotime(date('Y-m-d'))) {
-                                    ?>
+                                        /* Setup upcoming events */
+                                        //include the event class
+                                        $eventsData = new Event();
+                                        //include the school class
+                                        $eventSchoolsData = new School();
+                                        //get all events
+                                        $eventsArray = $eventsData->getEvents();
+                                        //for each event, if the date is in the future, display it
+                                        foreach ($eventsArray as $event) {
+                                            if (strtotime($event['event_date']) > strtotime(date('Y-m-d'))) {
+                                        ?>
                             <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single&id=' . $event['id']; ?>"
                                 id="event-card-<?php echo $event['id']; ?>"
                                 class="link-offset-2 link-underline link-underline-opacity-0 event-list-item dash-event-cards">
@@ -63,11 +73,12 @@ if (!isset($hasViewDashboardPermission)) {
                                 </li>
                             </a>
                             <?php }
-                                    } ?>
+                                        } ?>
                         </ul>
                     </div>
                 </div>
             </div>
+            <?php } ?>
             <?php /*check if the user has the read students permission */
                     //get the id of the read students permission
                     $readStudentsPermissionId = $permissionsObject->getPermissionIdByName('READ STUDENT');
