@@ -521,6 +521,9 @@ class School
         //get the current date and time
         $date = date("Y-m-d H:i:s");
 
+        //get the name of the school
+        $school_name = $this->getSchoolName($school_id);
+
         //set the placeholder for the result
         $result = false;
 
@@ -546,7 +549,7 @@ class School
         //log the school activity if the school was deleted
         if ($result) {
             $activity = new Activity();
-            $activity->logActivity($_SESSION['user_id'], 'Deleted School', 'School ID: ' . $school_id);
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted School', 'School ID: ' . $school_id . ' School Name: ' . $school_name);
         }
 
         //return the result
