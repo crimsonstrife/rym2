@@ -125,4 +125,55 @@ class Authenticator extends User
         //return the result
         return $result;
     }
+
+    /**
+     * Check if any of the user's roles have the specified permission
+     *
+     * @param int $user_id The user ID
+     * @param int $permission_id The permission ID
+     *
+     * @return bool True if the user has the permission, false if not
+     */
+    function checkUserPermission(int $user_id, int $permission_id)
+    {
+        //include the role class
+        $rolesObject = new Roles();
+
+        //reference the user class
+        $user = new User();
+
+        //get the user's roles
+        $userRoles = $user->getUserRoles($user_id);
+
+        //boolean to check if the user has the permission
+        $hasPermission = false;
+
+        //loop through the user's roles, for each role, get the permissions
+        foreach ($userRoles as $role) {
+            $rolePermissions = $rolesObject->getRolePermissions(intval($role['id']));
+
+            //loop through the permissions and check if the user has the relevant permission
+            foreach ($rolePermissions as $permission) {
+                foreach ($permission as $key => $value) {
+                    //if hasPermission is true, break out of the loop
+                    if (!$hasPermission) {
+                        //get the id of the permission
+                        $permissionID = intval($value['id']);
+
+                        //if the permission id matches the relevant permission id, set the hasPermission boolean to true
+                        if ($permissionID == $permission_id) {
+                            $hasPermission = true;
+                        } else {
+                            $hasPermission = false;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        //return the hasPermission boolean
+        return $hasPermission;
+    }
 }

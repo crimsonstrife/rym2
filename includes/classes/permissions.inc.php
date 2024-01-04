@@ -134,4 +134,40 @@ class Permission
         //Return the permission name
         return $permission_name;
     }
+
+    /**
+     * Get permission ID by name
+     *
+     * @param string $name The name of the permission
+     *
+     * @return int The ID of the permission
+     */
+    public function getPermissionIdByName(string $name): int
+    {
+        //SQL statement to get the permission ID by name
+        $sql = "SELECT id FROM permissions WHERE name = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the name to the statement
+        $stmt->bind_param("s", $name);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Create a variable to hold the permission ID
+        $permission_id = null;
+
+        //Loop through the results and add them to the array
+        while ($row = $result->fetch_assoc()) {
+            $permission_id = $row['id'];
+        }
+
+        //Return the permission ID
+        return $permission_id;
+    }
 }
