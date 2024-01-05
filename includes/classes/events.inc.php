@@ -445,12 +445,12 @@ class Event
         if ($slugExists) {
             //log the activity
             $activity = new Activity();
-            $activity->logActivity($id, "Event Slug Updated", "Event");
+            $activity->logActivity(intval($_SESSION['user_id']), "Event Sluggified", "Event Slug for Event:" . $event->getEventName($id) . " already exists, incrementing slug");
             return $this->updateEventSlug($id, $slug);
         } else {
             //log the activity
             $activity = new Activity();
-            $activity->logActivity($id, "Event Slug Created", "Event");
+            $activity->logActivity(intval($_SESSION['user_id']), "Event Sluggified", "Event Slug for Event:" . $event->getEventName($id) . " does not exist, creating slug");
             //if the slug does not exist, create the slug
             return $this->createEventSlug($id);
         }
@@ -568,7 +568,7 @@ class Event
                 if ($stmt) {
                     //log the activity
                     $activity = new Activity();
-                    $activity->logActivity($id, "Event Slug Updated", "Event");
+                    $activity->logActivity(intval($_SESSION['user_id']), "Event Slug Updated", "Event ID: " . $id . " Event Name: " . $this->getEventName($id) . " was sluggified with Slug: " . $slug . "");
                     return true;
                 } else {
                     //if the statement failed, return false
@@ -594,7 +594,7 @@ class Event
             if ($stmt) {
                 //log the activity
                 $activity = new Activity();
-                $activity->logActivity($id, "Event Slug Updated", "Event");
+                $activity->logActivity(intval($_SESSION['user_id']), "Event Slug Updated", "Event ID: " . $id . " Event Name: " . $this->getEventName($id) . " was sluggified with Slug: " . $slug . "");
                 return true;
             } else {
                 //if the statement failed, return false
@@ -695,7 +695,7 @@ class Event
             if ($stmt) {
                 //log the activity
                 $activity = new Activity();
-                $activity->logActivity($id, "Event Slug Created", "Event");
+                $activity->logActivity(intval($_SESSION['user_id']), "Event Slug Created", "Event ID: " . $id . " Event Name: " . $this->getEventName($id) . " was sluggified with Slug: " . $slug . "");
                 return true;
             } else {
                 //if the statement failed, return false
@@ -711,7 +711,7 @@ class Event
             if ($stmt) {
                 //log the activity
                 $activity = new Activity();
-                $activity->logActivity($id, "Event Slug Created", "Event");
+                $activity->logActivity(intval($_SESSION['user_id']), "Event Slug Created", "Event ID: " . $id . " Event Name: " . $this->getEventName($id) . " was sluggified with Slug: " . $slug . "");
                 return true;
             } else {
                 //if the statement failed, return false
@@ -827,7 +827,7 @@ class Event
         if ($stmt) {
             //log the activity
             $activity = new Activity();
-            $activity->logActivity($id, "Event Logo Created", "Event");
+            $activity->logActivity(intval($_SESSION['user_id']), "Event Logo Added", "Logo Image added to Event ID: " . $id . " Event Name: " . $this->getEventName($id) . "");
         }
     }
 
@@ -852,7 +852,7 @@ class Event
         if ($stmt) {
             //log the activity
             $activity = new Activity();
-            $activity->logActivity($id, "Event Banner Created", "Event");
+            $activity->logActivity(intval($_SESSION['user_id']), "Event Banner Added", "Banner Image added to Event ID: " . $id . " Event Name: " . $this->getEventName($id) . "");
         }
     }
 
@@ -958,9 +958,13 @@ class Event
             //slugify the event
             $sluggified = $this->slugifyEvent($id);
             if ($sluggified) {
+                //get the event name
+                $event_name = $this->getEventName($id);
+                //set the event id
+                $event_id = $id;
                 //log the activity
                 $activity = new Activity();
-                $activity->logActivity($id, "Event Updated", "Event");
+                $activity->logActivity(intval($_SESSION['user_id']), "Event Updated", 'Event ID: ' . $event_id . ' Event Name: ' . $event_name);
                 return true;
             } else {
                 return false;
@@ -998,9 +1002,13 @@ class Event
             //slugify the event
             $sluggified = $this->slugifyEvent($this->getEventIdByName($name));
             if ($sluggified) {
+                //get the event id
+                $event_id = $this->getEventIdByName($name);
+                //get the event name
+                $event_name = $this->getEventName($event_id);
                 //log the activity
                 $activity = new Activity();
-                $activity->logActivity($this->getEventIdByName($name), "Event Created", "Event");
+                $activity->logActivity(intval($_SESSION['user_id']), "Event Created", 'Event ID: ' . $event_id . ' Event Name: ' . $event_name);
                 return true;
             } else {
                 return false;
