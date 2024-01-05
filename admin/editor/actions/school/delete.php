@@ -46,6 +46,9 @@ if (!$hasPermission) {
         //get the intvalue of the school id
         $school_id = intval($school_id);
 
+        //get the school name
+        $school_name = $school->getSchoolName($school_id);
+
         //boolean to track if the school can be deleted
         $canDelete = true;
 
