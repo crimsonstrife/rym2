@@ -26,6 +26,12 @@ array_multisort(array_column($schools_list, 'label'), SORT_ASC, $schools_list);
 //user class
 $user = new User();
 
+//auth class
+$auth = new Authenticator();
+
+//permissions class
+$permissionsObject = new Permission();
+
 //student class
 $student = new Student();
 
@@ -46,7 +52,20 @@ if ($action == 'edit') {
 }
 
 //if the action is edit, show the event edit form
-if ($action == 'edit') { ?>
+if ($action == 'edit') {
+
+    /*confirm user has a role with update event permissions*/
+    //get the id of the update event permission
+    $updateEventPermissionID = $permissionsObject->getPermissionIdByName('UPDATE EVENT');
+
+    //boolean to track if the user has the update event permission
+    $hasEventUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updateEventPermissionID);
+
+    //prevent the user from accessing the page if they do not have the relevant permission
+    if (!$hasEventUpdatePermission) {
+        die('Error: You do not have permission to perform this request.');
+    } else {
+?>
 <div class="container-fluid px-4">
     <h1 class="mt-4"><?php echo $event->getEventName($event_id); ?></h1>
     <div class="row">
@@ -81,34 +100,34 @@ if ($action == 'edit') { ?>
                                 <select name="event_school" id="eventLocation"
                                     class="select2 select2-school form-control app-forms" style="width: 100%;">
                                     <?php
-                                        //loop through the schools list
-                                        foreach ($schools_list as $school => $value) {
-                                            //get the key and value from the array and set the variables
-                                            $school_id = (string)$value['value'];
-                                            $school_label = (string)$value['label'];
-                                            //check if the school matches the location of the event, if so, set the selected attribute, if not compare to the student's school
-                                            if ($action == 'edit') {
-                                                if ($school_label == $event_location) {
-                                                    //if it matches, set the selected attribute
-                                                    echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
-                                                } else if ($school_label == $event_location) {
-                                                    //if it matches, set the selected attribute
-                                                    echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
+                                            //loop through the schools list
+                                            foreach ($schools_list as $school => $value) {
+                                                //get the key and value from the array and set the variables
+                                                $school_id = (string) $value['value'];
+                                                $school_label = (string) $value['label'];
+                                                //check if the school matches the location of the event, if so, set the selected attribute, if not compare to the student's school
+                                                if ($action == 'edit') {
+                                                    if ($school_label == $event_location) {
+                                                        //if it matches, set the selected attribute
+                                                        echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
+                                                    } else if ($school_label == $event_location) {
+                                                        //if it matches, set the selected attribute
+                                                        echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
+                                                    } else {
+                                                        //if it doesn't match, don't set the selected attribute
+                                                        echo '<option value="' . $school_id . '">' . $school_label . '</option>';
+                                                    }
                                                 } else {
-                                                    //if it doesn't match, don't set the selected attribute
-                                                    echo '<option value="' . $school_id . '">' . $school_label . '</option>';
-                                                }
-                                            } else {
-                                                if ($school_label == $event_location) {
-                                                    //if it matches, set the selected attribute
-                                                    echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
-                                                } else {
-                                                    //if it doesn't match, don't set the selected attribute
-                                                    echo '<option value="' . $school_id . '">' . $school_label . '</option>';
+                                                    if ($school_label == $event_location) {
+                                                        //if it matches, set the selected attribute
+                                                        echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
+                                                    } else {
+                                                        //if it doesn't match, don't set the selected attribute
+                                                        echo '<option value="' . $school_id . '">' . $school_label . '</option>';
+                                                    }
                                                 }
                                             }
-                                        }
-                                        ?>
+                                            ?>
                                 </select>
                             </div>
                         </div>
@@ -119,26 +138,26 @@ if ($action == 'edit') { ?>
                                 <strong><label for="eventLogo">Event Logo:</label></strong>
                                 <!-- if there is an existing logo, show the file -->
                                 <?php
-                                    if (!empty($event->getEventLogo($event_id))) {
-                                        //render the file as an image
-                                        echo '<div><img src="' . APP_URL . '/public/content/uploads/' . $event->getEventLogo($event_id) . '" alt="Event Logo" style="max-width: 200px; max-height: auto;"></div>';
-                                        //show the file name
-                                        echo '<div> ' . $event->getEventLogo($event_id) . '</div>';
-                                    }
-                                    ?>
+                                        if (!empty($event->getEventLogo($event_id))) {
+                                            //render the file as an image
+                                            echo '<div><img src="' . APP_URL . '/public/content/uploads/' . $event->getEventLogo($event_id) . '" alt="Event Logo" style="max-width: 200px; max-height: auto;"></div>';
+                                            //show the file name
+                                            echo '<div> ' . $event->getEventLogo($event_id) . '</div>';
+                                        }
+                                        ?>
                             </p>
                             <p><input type="file" id="eventLogo" name="event_logo" class="form-control"></p>
                             <p>
                                 <strong><label for="eventBanner">Event Banner:</label></strong>
                                 <!-- if there is an existing banner, show the file -->
                                 <?php
-                                    if (!empty($event->getEventBanner($event_id))) {
-                                        //render the file as an image
-                                        echo '<div><img src="' . APP_URL . '/public/content/uploads/' . $event->getEventBanner($event_id) . '" alt="Event Banner" style="max-width: 200px; max-height: auto;"></div>';
-                                        //show the file name
-                                        echo '<div> ' . $event->getEventBanner($event_id) . '</div>';
-                                    }
-                                    ?>
+                                        if (!empty($event->getEventBanner($event_id))) {
+                                            //render the file as an image
+                                            echo '<div><img src="' . APP_URL . '/public/content/uploads/' . $event->getEventBanner($event_id) . '" alt="Event Banner" style="max-width: 200px; max-height: auto;"></div>';
+                                            //show the file name
+                                            echo '<div> ' . $event->getEventBanner($event_id) . '</div>';
+                                        }
+                                        ?>
                             </p>
                             <p><input type="file" id="eventBanner" name="event_banner" class="form-control"></p>
                         </div>
@@ -153,8 +172,21 @@ if ($action == 'edit') { ?>
         </div>
     </div>
 </div>
-<?php } else if ($action == 'create') { //else if the action is create, show the event creation form
-?>
+<?php }
+} else if ($action == 'create') { //else if the action is create, show the event creation form
+
+    /*confirm user has a role with create event permissions*/
+    //get the id of the create event permission
+    $createEventPermissionID = $permissionsObject->getPermissionIdByName('CREATE EVENT');
+
+    //boolean to track if the user has the create event permission
+    $hasEventCreatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $createEventPermissionID);
+
+    //prevent the user from accessing the page if they do not have the relevant permission
+    if (!$hasEventCreatePermission) {
+        die('Error: You do not have permission to perform this request.');
+    } else {
+    ?>
 <div class="container-fluid px-4">
     <h1 class="mt-4">New Event</h1>
     <div class="row">
@@ -188,34 +220,34 @@ if ($action == 'edit') { ?>
                                 <select name="event_school" id="eventLocation"
                                     class="select2 select2-school form-control app-forms" style="width: 100%;">
                                     <?php
-                                        //loop through the schools list
-                                        foreach ($schools_list as $school => $value) {
-                                            //get the key and value from the array and set the variables
-                                            $school_id = (string)$value['value'];
-                                            $school_label = (string)$value['label'];
-                                            //check if the school matches the location of the event, if so, set the selected attribute, if not compare to the student's school
-                                            if ($action == 'edit') {
-                                                if ($school_label == $event_location) {
-                                                    //if it matches, set the selected attribute
-                                                    echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
-                                                } else if ($school_label == $event_location) {
-                                                    //if it matches, set the selected attribute
-                                                    echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
+                                            //loop through the schools list
+                                            foreach ($schools_list as $school => $value) {
+                                                //get the key and value from the array and set the variables
+                                                $school_id = (string) $value['value'];
+                                                $school_label = (string) $value['label'];
+                                                //check if the school matches the location of the event, if so, set the selected attribute, if not compare to the student's school
+                                                if ($action == 'edit') {
+                                                    if ($school_label == $event_location) {
+                                                        //if it matches, set the selected attribute
+                                                        echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
+                                                    } else if ($school_label == $event_location) {
+                                                        //if it matches, set the selected attribute
+                                                        echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
+                                                    } else {
+                                                        //if it doesn't match, don't set the selected attribute
+                                                        echo '<option value="' . $school_id . '">' . $school_label . '</option>';
+                                                    }
                                                 } else {
-                                                    //if it doesn't match, don't set the selected attribute
-                                                    echo '<option value="' . $school_id . '">' . $school_label . '</option>';
-                                                }
-                                            } else {
-                                                if ($school_label == $event_location) {
-                                                    //if it matches, set the selected attribute
-                                                    echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
-                                                } else {
-                                                    //if it doesn't match, don't set the selected attribute
-                                                    echo '<option value="' . $school_id . '">' . $school_label . '</option>';
+                                                    if ($school_label == $event_location) {
+                                                        //if it matches, set the selected attribute
+                                                        echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
+                                                    } else {
+                                                        //if it doesn't match, don't set the selected attribute
+                                                        echo '<option value="' . $school_id . '">' . $school_label . '</option>';
+                                                    }
                                                 }
                                             }
-                                        }
-                                        ?>
+                                            ?>
                                 </select>
                             </div>
                         </div>
@@ -242,4 +274,5 @@ if ($action == 'edit') { ?>
         </div>
     </div>
 </div>
-<?php } ?>
+<?php }
+} ?>

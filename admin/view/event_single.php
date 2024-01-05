@@ -16,14 +16,32 @@ $event = new Event();
 //school class
 $school = new School();
 
+//auth class
+$auth = new Authenticator();
+
+//permissions class
+$permissionsObject = new Permission();
+
 //user class
 $user = new User();
 
 //student class
 $student = new Student();
 
-//get the event id from the url parameter
-$event_id = $_GET['id'];
+/*confirm user has a role with read event permissions*/
+//get the id of the read event permission
+$relevantPermissionID = $permissionsObject->getPermissionIdByName('READ EVENT');
+
+//boolean to track if the user has the read event permission
+$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+
+//prevent the user from accessing the page if they do not have the relevant permission
+if (!$hasPermission) {
+    die('Error: You do not have permission to perform this request.');
+} else {
+
+    //get the event id from the url parameter
+    $event_id = $_GET['id'];
 ?>
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet/leaflet.css'; ?>">
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.css'; ?>">
@@ -44,26 +62,26 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
                         class="btn btn-primary btn-sm">Back to Events</a>
                     <?php /*confirm user has a role with update event permissions*/
-                    //get the update event permission id
-                    $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE EVENT');
+                        //get the update event permission id
+                        $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE EVENT');
 
-                    //boolean to check if the user has the update event permission
-                    $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
+                        //boolean to check if the user has the update event permission
+                        $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
 
-                    //only show the edit button if the user has the update event permission
-                    if ($hasUpdatePermission) { ?>
+                        //only show the edit button if the user has the update event permission
+                        if ($hasUpdatePermission) { ?>
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event_id; ?>"
                         class="btn btn-primary btn-sm">Edit Event</a>
                     <?php } ?>
                     <?php /*confirm user has a role with delete event permissions*/
-                    //get the delete event permission id
-                    $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE EVENT');
+                        //get the delete event permission id
+                        $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE EVENT');
 
-                    //boolean to check if the user has the delete event permission
-                    $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
+                        //boolean to check if the user has the delete event permission
+                        $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
 
-                    //only show the delete button if the user has the delete event permission
-                    if ($hasDeletePermission) { ?>
+                        //only show the delete button if the user has the delete event permission
+                        if ($hasDeletePermission) { ?>
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=delete&id=' . $event_id; ?>"
                         class="btn btn-danger btn-sm">Delete Event</a>
                     <?php } ?>
@@ -85,10 +103,10 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                             <div>
                                 <p><strong>Event Address:</strong>
                                     <?php
-                                    //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
-                                    $address = $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id)));
-                                    $address = urlencode($address);
-                                    ?>
+                                        //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
+                                        $address = $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id)));
+                                        $address = urlencode($address);
+                                        ?>
                                     <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
                                         target="_blank"><?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?></a>
                                 </p>
@@ -101,17 +119,17 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                             <div>
                                 <!-- QRCode -->
                                 <?php
-                                $qrCodeData = APP_URL . '/index.php?event=' . $event->getEventSlug($event_id);
-                                $qrCodeOptions = new QROptions;
-                                $qrCodeOptions->version = 7;
-                                $qrCodeOptions->outputType = QROutputInterface::GDIMAGE_PNG;
-                                $qrCodeOptions->scale = 20;
-                                $qrCodeOptions->outputBase64 = true;
-                                $qrCode = (new QRCode($qrCodeOptions))->render($qrCodeData); // per the documentation, https://php-qrcode.readthedocs.io/en/main/Usage/Quickstart.html
-                                //output the QRCode JPG
-                                header('Content-type: image/png');
-                                echo '<img src="' . $qrCode . '" alt="QRCode" style="max-width: 200px; max-height: auto;">';
-                                ?>
+                                    $qrCodeData = APP_URL . '/index.php?event=' . $event->getEventSlug($event_id);
+                                    $qrCodeOptions = new QROptions;
+                                    $qrCodeOptions->version = 7;
+                                    $qrCodeOptions->outputType = QROutputInterface::GDIMAGE_PNG;
+                                    $qrCodeOptions->scale = 20;
+                                    $qrCodeOptions->outputBase64 = true;
+                                    $qrCode = (new QRCode($qrCodeOptions))->render($qrCodeData); // per the documentation, https://php-qrcode.readthedocs.io/en/main/Usage/Quickstart.html
+                                    //output the QRCode JPG
+                                    header('Content-type: image/png');
+                                    echo '<img src="' . $qrCode . '" alt="QRCode" style="max-width: 200px; max-height: auto;">';
+                                    ?>
                             </div>
                         </div>
                         <hr>
@@ -138,22 +156,22 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                         <div>
                             <!-- list of students that signed up at this event -->
                             <?php
-                            //get the list of students that signed up at this event, and display them. If there are none, display a message.
-                            $students = $student->getStudentEventAttendace($event_id);
-                            ?>
+                                //get the list of students that signed up at this event, and display them. If there are none, display a message.
+                                $students = $student->getStudentEventAttendace($event_id);
+                                ?>
                             <div class="card mb-4">
                                 <div class="card-body table-scroll">
                                     <table id="dataTable" class="table table-striped table-bordered">
                                         <thead>
                                             <?php
-                                            if (empty($students)) {
-                                            ?>
+                                                if (empty($students)) {
+                                                ?>
                                             <tr>
                                                 <th>Students List</th>
                                             </tr>
                                             <?php
-                                            } else {
-                                            ?>
+                                                } else {
+                                                ?>
                                             <tr>
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
@@ -161,24 +179,24 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                                                 <th>Degree</th>
                                             </tr>
                                             <?php
-                                            }
-                                            ?>
+                                                }
+                                                ?>
                                         </thead>
                                         <tbody>
                                             <?php
-                                            if (empty($students)) {
-                                                echo '<tr><td colspan="4">No students have signed up for this event, or this event has not occurred.</td></tr>';
-                                            } else {
-                                                //check if the user has the permission to read students
-                                                $readStudentPermissionID = $permissionsObject->getPermissionIdByName('READ STUDENT');
+                                                if (empty($students)) {
+                                                    echo '<tr><td colspan="4">No students have signed up for this event, or this event has not occurred.</td></tr>';
+                                                } else {
+                                                    //check if the user has the permission to read students
+                                                    $readStudentPermissionID = $permissionsObject->getPermissionIdByName('READ STUDENT');
 
-                                                //boolean to check if the user has the read student permission
-                                                $hasReadStudentPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readStudentPermissionID);
+                                                    //boolean to check if the user has the read student permission
+                                                    $hasReadStudentPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readStudentPermissionID);
 
-                                                //if the user has the read student permission, display the student information
-                                                if ($hasReadStudentPermission) {
-                                                    foreach ($students as $eventStudent) {
-                                            ?>
+                                                    //if the user has the read student permission, display the student information
+                                                    if ($hasReadStudentPermission) {
+                                                        foreach ($students as $eventStudent) {
+                                                ?>
                                             <tr>
                                                 <td><?php echo $student->getStudentFirstName($eventStudent['student_id']); ?>
                                                 </td>
@@ -190,10 +208,10 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                                                 </td>
                                             </tr>
                                             <?php }
-                                                } else {
-                                                    echo '<tr><td colspan="4">You do not have permission to view student information.</td></tr>';
-                                                }
-                                            } ?>
+                                                    } else {
+                                                        echo '<tr><td colspan="4">You do not have permission to view student information.</td></tr>';
+                                                    }
+                                                } ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -212,3 +230,4 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
 </script>
 <script type="module" src="<?php echo getAssetPath() . 'js/event-map.js'; ?>"></script>
 <?php ?>
+<?php } ?>
