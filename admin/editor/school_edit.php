@@ -267,8 +267,16 @@ if ($action == 'edit') {
         </div>
     </div>
 </div>
+<?php
+    }
+} ?>
 <script type="text/javascript" src="<?php echo getLibraryPath() . 'irojs/iro.min.js'; ?>">
 </script>
-<script type="text/javascript" src="<?php echo getAssetPath() . 'js/color-picker.js'; ?>"></script>
-<?php }
-} ?>
+<?php
+//if color-picker.min.js exists, use it, otherwise use color-picker.js
+if (file_exists(BASEPATH . '/public/content/assets/js/color-picker.min.js')) {
+echo '<script type="text/javascript" src="' . getAssetPath() . 'js/color-picker.min.js"></script>';
+} else {
+echo '<script type="text/javascript" src="' . getAssetPath() . 'js/color-picker.js"></script>';
+}
+?>

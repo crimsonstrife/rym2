@@ -228,6 +228,15 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
 <script type="text/javascript" src="<?php echo getLibraryPath() . 'leaflet/leaflet.js'; ?>"></script>
 <script type="text/javascript" src="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.umd.js'; ?>">
 </script>
+<?php
+    //if event-map.min.js exists, load it. Otherwise, load event-map.js
+    if (file_exists(BASEPATH . '/public/content/assets/js/event-map.min.js')) {
+    ?>
+<script type="module" src="<?php echo getAssetPath() . 'js/event-map.min.js'; ?>"></script>
+<?php
+    } else {
+    ?>
 <script type="module" src="<?php echo getAssetPath() . 'js/event-map.js'; ?>"></script>
-<?php ?>
-<?php } ?>
+<?php
+    }
+} ?>

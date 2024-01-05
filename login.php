@@ -62,44 +62,51 @@ if (!empty($errorArray)) {
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Login</title>
-    <?php echo includeHeader(); ?>
-    <link href="<?php echo getAssetPath(); ?>css/login-style.css" rel="stylesheet">
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Login</title>
+        <?php echo includeHeader(); ?>
+        <?php //if login-style.min.css exists, use it, otherwise use login-style.css
+    if (file_exists(BASEPATH . '/public/content/assets/css/login-style.min.css')) {
+        echo '<link rel="stylesheet" href="' . getAssetPath() . 'css/login-style.min.css">';
+    } else {
+        echo '<link rel="stylesheet" href="' . getAssetPath() . 'css/login-style.css">';
+    } ?>
+    </head>
 
-<body class="text-center">
-    <form class="form-signin" action="<?php echo APP_URL . '/admin/index.php?login=true' ?>" method="post">
-        <h1 class="h3 mb-3 font-weight-normal">Login</h1>
-        <p>Please fill in your credentials to login.</p>
-        <?php
+    <body class="text-center">
+        <form class="form-signin" action="<?php echo APP_URL . '/admin/index.php?login=true' ?>" method="post">
+            <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+            <p>Please fill in your credentials to login.</p>
+            <?php
         if (!empty($login_error)) {
             echo '<div>' . $login_error . '</div>';
         }
         ?>
-        <div>
-            <label for="inputUsername" class="sr-only">Username</label>
-            <input id="inputUsername" class="form-control" type="text" name="username" value="<?php echo $username; ?>" placeholder="Username" required autofocus>
-            <span><?php echo $username_error; ?></span>
-        </div>
-        <div>
-            <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-            <span><?php echo $password_error; ?></span>
-        </div>
-        <div class="checkbox mb-3">
-            <label>Remember Me</label>
-            <input type="checkbox" name="remember">
-        </div>
-        <div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
-        </div>
-    </form>
-</body>
+            <div>
+                <label for="inputUsername" class="sr-only">Username</label>
+                <input id="inputUsername" class="form-control" type="text" name="username"
+                    value="<?php echo $username; ?>" placeholder="Username" required autofocus>
+                <span><?php echo $username_error; ?></span>
+            </div>
+            <div>
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password"
+                    required>
+                <span><?php echo $password_error; ?></span>
+            </div>
+            <div class="checkbox mb-3">
+                <label>Remember Me</label>
+                <input type="checkbox" name="remember">
+            </div>
+            <div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+            </div>
+        </form>
+    </body>
 
 </html>
 

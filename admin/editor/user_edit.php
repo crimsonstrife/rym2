@@ -52,48 +52,56 @@ if (isset($userId)) {
 
 //if the action is edit, show the user edit form
 if ($action == 'edit') { ?>
-    <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $userData['username']; ?></h1>
-        <div class="row">
-            <div class="card mb-4">
-                <!-- Edit Form -->
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&user=' . $_GET['user'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>" method="post" enctype="multipart/form-data" class="needs-validation">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <i class="fa-solid fa-user"></i>
-                            Edit User
-                        </div>
-                        <div class="card-buttons">
-                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>" class="btn btn-primary btn-sm">Back to Users</a>
-                        </div>
+<div class="container-fluid px-4">
+    <h1 class="mt-4"><?php echo $userData['username']; ?></h1>
+    <div class="row">
+        <div class="card mb-4">
+            <!-- Edit Form -->
+            <form
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&user=' . $_GET['user'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>"
+                method="post" enctype="multipart/form-data" class="needs-validation">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-user"></i>
+                        Edit User
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <!-- User Details -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <p>
-                                        <strong>
-                                            <label for="username">Username:</label>
-                                        </strong>
-                                    </p>
-                                    <p>
-                                        <input type="text" id="username" name="user_name" class="form-control" value="<?php echo $user->getUserUsername($userId); ?>" placeholder="<?php echo $user->getUserUsername($userId); ?>" required disabled readonly>
-                                    </p>
-                                    <p>
-                                        <strong>
-                                            <label for="email">Email:</label>
-                                        </strong>
-                                    </p>
-                                    <p>
-                                        <input type="email" id="email" name="user_email" class="form-control" value="<?php echo $user->getUserEmail($userId); ?>" placeholder="<?php echo $user->getUserEmail($userId); ?>" required>
-                                    </p>
-                                    <p>
-                                        <strong>
-                                            <label for="password">Password:</label>
-                                        </strong>
-                                    </p>
-                                    <?php if ($editingSelf) {
+                    <div class="card-buttons">
+                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>"
+                            class="btn btn-primary btn-sm">Back to Users</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- User Details -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <p>
+                                    <strong>
+                                        <label for="username">Username:</label>
+                                    </strong>
+                                </p>
+                                <p>
+                                    <input type="text" id="username" name="user_name" class="form-control"
+                                        value="<?php echo $user->getUserUsername($userId); ?>"
+                                        placeholder="<?php echo $user->getUserUsername($userId); ?>" required disabled
+                                        readonly>
+                                </p>
+                                <p>
+                                    <strong>
+                                        <label for="email">Email:</label>
+                                    </strong>
+                                </p>
+                                <p>
+                                    <input type="email" id="email" name="user_email" class="form-control"
+                                        value="<?php echo $user->getUserEmail($userId); ?>"
+                                        placeholder="<?php echo $user->getUserEmail($userId); ?>" required>
+                                </p>
+                                <p>
+                                    <strong>
+                                        <label for="password">Password:</label>
+                                    </strong>
+                                </p>
+                                <?php if ($editingSelf) {
                                         //hidden input to be used to check if the user is editing their own account on submission
                                         echo '<input type="hidden" name="editing_self" value="true">';
 
@@ -103,38 +111,48 @@ if ($action == 'edit') { ?>
                                         //mask the password with asterisks
                                         $userPass = str_repeat("*", strlen($userPass));
                                     ?>
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <!-- current password -->
-                                                <input type="password" id="currentPassword_view" name="current_password_view" class="form-control" value="<?php echo $userPass ?>" placeholder="<?php echo $userPass ?>" disabled readonly>
-                                            </div>
-                                            <br />
-                                            <p class="form-text text-muted">Leave blank if you do not wish to change your
-                                                password.</p>
-                                            <div class="input-group">
-                                                <input type="password" id="currentPassword" name="current_password" class="form-control" value="" placeholder="Enter current password">
-                                                <button type="button" class="btn btn-secondary" id="showCurrentPassword" onclick="showCurrentPasswordValue()">Show</button>
-                                            </div>
-                                            <br />
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <input type="password" id="password" name="user_password" class="form-control" value="" placeholder="Enter new password" aria-describedby="passwordHelpBlock">
-                                                    <button type="button" class="btn btn-secondary" id="showPassword" onclick="showPasswordValue()">Show</button>
-                                                </div>
-                                                <small id="passwordHelpBlock" class="form-text text-muted">
-                                                    Must be 8-20 characters long.
-                                                </small>
-                                            </div>
-                                            <!-- button to generate a random password -->
-                                            <button type="button" class="btn btn-secondary" id="generatePassword" onclick="generateRandomPassword()">Generate Password</button>
-                                            <br />
-                                            <br />
-                                            <div class="input-group">
-                                                <input type="password" id="confirmPassword" name="confirm_password" class="form-control" value="" placeholder="Confirm new password">
-                                                <button type="button" class="btn btn-secondary" id="showConfirmPassword" onclick="showConfirmPasswordValue()">Show</button>
-                                            </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <!-- current password -->
+                                        <input type="password" id="currentPassword_view" name="current_password_view"
+                                            class="form-control" value="<?php echo $userPass ?>"
+                                            placeholder="<?php echo $userPass ?>" disabled readonly>
+                                    </div>
+                                    <br />
+                                    <p class="form-text text-muted">Leave blank if you do not wish to change your
+                                        password.</p>
+                                    <div class="input-group">
+                                        <input type="password" id="currentPassword" name="current_password"
+                                            class="form-control" value="" placeholder="Enter current password">
+                                        <button type="button" class="btn btn-secondary" id="showCurrentPassword"
+                                            onclick="showCurrentPasswordValue()">Show</button>
+                                    </div>
+                                    <br />
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="password" id="password" name="user_password"
+                                                class="form-control" value="" placeholder="Enter new password"
+                                                aria-describedby="passwordHelpBlock">
+                                            <button type="button" class="btn btn-secondary" id="showPassword"
+                                                onclick="showPasswordValue()">Show</button>
                                         </div>
-                                    <?php } else {
+                                        <small id="passwordHelpBlock" class="form-text text-muted">
+                                            Must be 8-20 characters long.
+                                        </small>
+                                    </div>
+                                    <!-- button to generate a random password -->
+                                    <button type="button" class="btn btn-secondary" id="generatePassword"
+                                        onclick="generateRandomPassword()">Generate Password</button>
+                                    <br />
+                                    <br />
+                                    <div class="input-group">
+                                        <input type="password" id="confirmPassword" name="confirm_password"
+                                            class="form-control" value="" placeholder="Confirm new password">
+                                        <button type="button" class="btn btn-secondary" id="showConfirmPassword"
+                                            onclick="showConfirmPasswordValue()">Show</button>
+                                    </div>
+                                </div>
+                                <?php } else {
                                         echo '<input type="hidden" name="editing_self" value="false">';
 
                                         //get the user password by id
@@ -143,26 +161,28 @@ if ($action == 'edit') { ?>
                                         //mask the password with asterisks
                                         $userPass = str_repeat("*", strlen($userPass));
                                     ?>
-                                        <p>
-                                            <input type="password" id="password" name="user_password" class="form-control" value="<?php echo $userPass ?>" placeholder="<?php echo $userPass; ?>" disabled>
-                                        </p>
-                                    <?php } ?>
-                                </div>
+                                <p>
+                                    <input type="password" id="password" name="user_password" class="form-control"
+                                        value="<?php echo $userPass ?>" placeholder="<?php echo $userPass; ?>" disabled>
+                                </p>
+                                <?php } ?>
                             </div>
                         </div>
-                        <div class="row">
-                            <!-- User Roles -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <br />
-                                    <p>
-                                        <strong>
-                                            <label for="userRoles">User Roles:</label>
-                                        </strong>
-                                    </p>
-                                    <p>
-                                        <select multiple class="form-control form-control-lg" id="userRoles" name="user_roles[]" required>
-                                            <?php
+                    </div>
+                    <div class="row">
+                        <!-- User Roles -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <br />
+                                <p>
+                                    <strong>
+                                        <label for="userRoles">User Roles:</label>
+                                    </strong>
+                                </p>
+                                <p>
+                                    <select multiple class="form-control form-control-lg" id="userRoles"
+                                        name="user_roles[]" required>
+                                        <?php
                                             //get the user roles
                                             $userRoles = $user->getUserRoles(intval($userId));
 
@@ -184,110 +204,129 @@ if ($action == 'edit') { ?>
                                                 }
                                             }
                                             ?>
-                                        </select>
-                                    </p>
-                                </div>
+                                    </select>
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div class=" card-footer">
-                        <button name="create_Button" type="submit" class="btn btn-primary">Save Changes</button>
-                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class=" card-footer">
+                    <button name="create_Button" type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>"
+                        class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 <?php } else if ($action == 'create') { //else if the action is create, show the user creation form
 ?>
-    <div class="container-fluid px-4">
-        <h1 class="mt-4">New User</h1>
-        <div class="row">
-            <div class="card mb-4">
-                <!-- Create Form -->
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&user=' . $_GET['user'] . '&action=' . $_GET['action']; ?>" method="post" enctype="multipart/form-data" class="needs-validation">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <i class="fa-solid fa-user"></i>
-                            Create User
-                        </div>
-                        <div class="card-buttons">
-                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>" class="btn btn-primary btn-sm">Back to Users</a>
-                        </div>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">New User</h1>
+    <div class="row">
+        <div class="card mb-4">
+            <!-- Create Form -->
+            <form
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&user=' . $_GET['user'] . '&action=' . $_GET['action']; ?>"
+                method="post" enctype="multipart/form-data" class="needs-validation">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-user"></i>
+                        Create User
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <!-- User Details -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <p>
-                                        <strong>
-                                            <label for="username">Username:</label>
-                                        </strong>
-                                    </p>
-                                    <p>
-                                        <input type="text" id="username" name="user_name" class="form-control" placeholder="Enter username" autocomplete="username" required>
-                                    </p>
-                                    <p>
-                                        <strong>
-                                            <label for="email">Email:</label>
-                                        </strong>
-                                    </p>
-                                    <p>
-                                        <input type="email" id="email" name="user_email" class="form-control" placeholder="Enter email" autocomplete="email" required>
-                                    </p>
-                                    <p>
-                                        <strong>
-                                            <label for="password">Password:</label>
-                                        </strong>
-                                    </p>
-                                    <p>
-                                    <div class="input-group">
-                                        <input type="password" id="password" name="user_password" class="form-control" placeholder="Enter password" autocomplete="current-password" required>
-                                        <button type="button" class="btn btn-secondary" id="showPassword" onclick="showPasswordValue()">Show</button>
-                                    </div>
-                                    <!-- button to generate a random password -->
-                                    <button type="button" class="btn btn-secondary" id="generatePassword" onclick="generateRandomPassword()">Generate Password</button>
-                                    </p>
-                                    <p>
-                                        <strong>
-                                            <label for="confirmPassword">Confirm Password:</label>
-                                        </strong>
-                                    </p>
-                                    <p>
-                                    <div class="input-group">
-                                        <input type="password" id="confirmPassword" name="confirm_password" class="form-control" placeholder="Confirm password" autocomplete="current-password" required>
-                                        <button type="button" class="btn btn-secondary" id="showConfirmPassword" onclick="showConfirmPasswordValue()">Show</button>
-                                    </div>
-                                    </p>
+                    <div class="card-buttons">
+                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>"
+                            class="btn btn-primary btn-sm">Back to Users</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- User Details -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <p>
+                                    <strong>
+                                        <label for="username">Username:</label>
+                                    </strong>
+                                </p>
+                                <p>
+                                    <input type="text" id="username" name="user_name" class="form-control"
+                                        placeholder="Enter username" autocomplete="username" required>
+                                </p>
+                                <p>
+                                    <strong>
+                                        <label for="email">Email:</label>
+                                    </strong>
+                                </p>
+                                <p>
+                                    <input type="email" id="email" name="user_email" class="form-control"
+                                        placeholder="Enter email" autocomplete="email" required>
+                                </p>
+                                <p>
+                                    <strong>
+                                        <label for="password">Password:</label>
+                                    </strong>
+                                </p>
+                                <p>
+                                <div class="input-group">
+                                    <input type="password" id="password" name="user_password" class="form-control"
+                                        placeholder="Enter password" autocomplete="current-password" required>
+                                    <button type="button" class="btn btn-secondary" id="showPassword"
+                                        onclick="showPasswordValue()">Show</button>
                                 </div>
-                                <div class="form-group">
-                                    <p>
-                                        <strong>
-                                            <label for="userRoles">User Roles:</label>
-                                        </strong>
-                                    </p>
-                                    <p>
-                                        <select multiple class="form-control form-control-lg" id="userRoles" name="user_roles[]" required>
-                                            <?php
+                                <!-- button to generate a random password -->
+                                <button type="button" class="btn btn-secondary" id="generatePassword"
+                                    onclick="generateRandomPassword()">Generate Password</button>
+                                </p>
+                                <p>
+                                    <strong>
+                                        <label for="confirmPassword">Confirm Password:</label>
+                                    </strong>
+                                </p>
+                                <p>
+                                <div class="input-group">
+                                    <input type="password" id="confirmPassword" name="confirm_password"
+                                        class="form-control" placeholder="Confirm password"
+                                        autocomplete="current-password" required>
+                                    <button type="button" class="btn btn-secondary" id="showConfirmPassword"
+                                        onclick="showConfirmPasswordValue()">Show</button>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <p>
+                                    <strong>
+                                        <label for="userRoles">User Roles:</label>
+                                    </strong>
+                                </p>
+                                <p>
+                                    <select multiple class="form-control form-control-lg" id="userRoles"
+                                        name="user_roles[]" required>
+                                        <?php
                                             //loop through the roles and display the roles
                                             foreach ($roles as $role) {
                                                 echo '<option value="' . $role['id'] . '">' . $role['name'] . '</option>';
                                             }
                                             ?>
-                                        </select>
-                                    </p>
-                                </div>
+                                    </select>
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div class=" card-footer">
-                        <button name="create_Button" type="submit" class="btn btn-primary">Create User</button>
-                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class=" card-footer">
+                    <button name="create_Button" type="submit" class="btn btn-primary">Create User</button>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>"
+                        class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 <?php } ?>
-<script src="<?php echo getAssetPath() . 'js/passwords.js'; ?>" type="text/javascript"></script>
+<?php //if passwords.min.js exists, use it, otherwise use passwords.js
+if (file_exists(BASEPATH . '/public/content/assets/js/passwords.min.js')) {
+    echo '<script src="' . getAssetPath() . 'js/passwords.min.js"></script>';
+} else {
+    echo '<script src="' . getAssetPath() . 'js/passwords.js"></script>';
+} ?>

@@ -432,7 +432,12 @@ function includeHeader(): string
     $datatablesCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'simple-datatables/style.css">';
     $select2CSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'select2/css/select2.min.css">';
     $fontawesomeCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'fontawesome/css/all.min.css">';
-    $CSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/style.css">';
+    //if style.min.css exists, load it, otherwise load the original
+    if (file_exists(BASEPATH . '/public/content/assets/css/style.min.css')) {
+        $CSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/style.min.css">';
+    } else {
+        $CSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/style.css">';
+    }
 
     /* JS that needs to be loaded in the header */
 
@@ -460,7 +465,12 @@ function includeFooter(): string
     $chartJS = '<script type="text/javascript" src="' . getLibraryPath() . 'chart.js/chart.umd.js"></script>';
     $tether = '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>';
     $select2JS = '<script type="text/javascript" src="' . getLibraryPath() . 'select2/js/select2.min.js"></script>';
-    $JS = '<script type="text/javascript" src="' . getAssetPath() . 'js/scripts.js"></script>';
+    //if scripts.min.js exists, load it, otherwise load the original
+    if (file_exists(BASEPATH . '/public/content/assets/js/scripts.min.js')) {
+        $JS = '<script type="text/javascript" src="' . getAssetPath() . 'js/scripts.min.js"></script>';
+    } else {
+        $JS = '<script type="text/javascript" src="' . getAssetPath() . 'js/scripts.js"></script>';
+    }
     $dataTableJS = '<script type="text/javascript" src="' . getLibraryPath() . 'datatable-master/js/datatable.min.js"></script>';
     $dataTableJqueryJS = '<script type="text/javascript" src="' . getLibraryPath() . 'datatable-master/js/datatable.jquery.min.js"></script>';
 
