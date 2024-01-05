@@ -1,4 +1,5 @@
 /** @format */
+
 var OpenStreetMapProvider = window.GeoSearch.OpenStreetMapProvider;
 var addressNotFound = false;
 
