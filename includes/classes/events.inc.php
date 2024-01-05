@@ -1012,31 +1012,6 @@ class Event
     }
 
     /**
-     * Delete event
-     *
-     * @param int $id event id
-     * @return bool
-     */
-    public function deleteEvent(int $id): bool
-    {
-        //SQL statement to delete the event
-        $sql = "DELETE FROM event WHERE id = ?";
-        //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
-        //bind the parameter
-        $stmt->bind_param("i", $id);
-        //execute the statement
-        $stmt->execute();
-        //if the statement was successful, return true
-        if ($stmt) {
-            return true;
-        } else {
-            //if the statement failed, return false
-            return false;
-        }
-    }
-
-    /**
      * Get event ID by name
      *
      * @param string $name event name
@@ -1151,5 +1126,52 @@ class Event
 
         //return the events array
         return $events;
+    }
+
+    /**
+     * Delete event
+     * Delete an event from the database
+     *
+     * @param int $event_id
+     * @return boolean $result
+     */
+    public function deleteEvent(int $event_id): bool
+    {
+        //get the current date and time
+        $date = date("Y-m-d H:i:s");
+
+        //get the event name
+        $event_name = $this->getEventName($event_id);
+
+        //set the placeholder for the result
+        $result = false;
+
+        //create the sql statement
+        $sql = "DELETE FROM event WHERE id = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $event_id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //check the result
+        if ($stmt->affected_rows > 0) {
+            $result = true;
+        } else {
+            $result = false;
+        }
+
+        //log the event activity if the event was deleted
+        if ($result) {
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Event', 'Event ID: ' . $event_id . ' Event Name: ' . $event_name);
+        }
+
+        //return the result
+        return $result;
     }
 }
