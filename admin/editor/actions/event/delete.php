@@ -25,15 +25,15 @@ if (!$hasPermission) {
     die('Error: You do not have permission to perform this request.');
 } else {
 ?>
-<!-- Completion page content -->
-<div class="container-fluid px-4">
-    <div class="row">
-        <div class="card mb-4">
-            <!-- show completion message -->
-            <div class="card-header">
-                <div class="card-title">
-                    <div>
-                        <?php
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <div>
+                            <?php
                             if ($action == 'delete') {
                                 if ($eventDeleted) {
                                     echo '<i class="fa-solid fa-check"></i>';
@@ -44,9 +44,9 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
-                    </div>
-                    <div>
-                        <?php
+                        </div>
+                        <div>
+                            <?php
                             if ($action == 'delete') {
                                 if ($canDelete && !$eventDeleted) {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
@@ -57,17 +57,14 @@ if (!$hasPermission) {
                                     if (count($studentsAtEvent) > 0) {
                                         echo '<li>There are ' . strval(count($studentsAtEvent)) . ' students associated with the event</li>';
                                     }
-                                    if (count($schoolsWithEvent) > 0) {
-                                        echo '<li>There are ' . strval(count($schoolsWithEvent)) . ' schools associated with the event</li>';
-                                    }
                                     echo '</ul>';
                                 }
                             }
                             ?>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 <?php } ?>
