@@ -7,6 +7,9 @@ if (!defined('ISVALIDUSER')) {
 //include the permissions class
 $permissionsObject = new Permission();
 
+//include the authenticator class
+$auth = new Authenticator();
+
 //include the user class
 $user = new User();
 
@@ -69,15 +72,15 @@ if (!$hasPermission) {
             $schoolDeleted = false;
         }
     } ?>
-<!-- Completion page content -->
-<div class="container-fluid px-4">
-    <div class="row">
-        <div class="card mb-4">
-            <!-- show completion message -->
-            <div class="card-header">
-                <div class="card-title">
-                    <div>
-                        <?php
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <div>
+                            <?php
                             if ($action == 'delete') {
                                 if ($schoolDeleted) {
                                     echo '<i class="fa-solid fa-check"></i>';
@@ -88,9 +91,9 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
-                    </div>
-                    <div>
-                        <?php
+                        </div>
+                        <div>
+                            <?php
                             if ($action == 'delete') {
                                 if ($canDelete && !$schoolDeleted) {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
@@ -108,10 +111,10 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 <?php } ?>

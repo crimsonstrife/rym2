@@ -197,16 +197,16 @@ if (!$hasPermission) {
             $schoolColorSet = false;
         }
     } ?>
-<!-- Completion page content -->
-<div class="container-fluid px-4">
-    <div class="row">
-        <div class="card mb-4">
-            <!-- show completion message -->
-            <div class="card-header">
-                <div class="card-title">
-                    <div>
-                        <i class="fa-solid fa-check"></i>
-                        <?php
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <div>
+                            <i class="fa-solid fa-check"></i>
+                            <?php
                             if ($action == 'create') {
                                 if ($schoolCreated) {
                                     echo 'School Created';
@@ -215,9 +215,9 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
-                    </div>
-                    <div>
-                        <?php
+                        </div>
+                        <div>
+                            <?php
                             if ($schoolLogoSet && !empty($school_logo)) {
                                 echo 'School Logo Set';
                             } else {
@@ -232,9 +232,9 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
-                    </div>
-                    <div>
-                        <?php
+                        </div>
+                        <div>
+                            <?php
                             if ($schoolColorSet && !empty($school_color)) {
                                 echo 'School Color Set';
                             } else {
@@ -249,10 +249,10 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 <?php } ?>

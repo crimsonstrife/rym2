@@ -35,8 +35,7 @@ $user = new User();
                     //if the user has the create school permission, display the add school button
                     if ($hasCreatePermission) {
                     ?>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=add&action=create' ?>"
-                        class="btn btn-primary">Add School</a>
+                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=add&action=create' ?>" class="btn btn-primary">Add School</a>
                     <?php } ?>
                 </div>
             </div>
@@ -70,21 +69,21 @@ $user = new User();
                         //for each event, display it
                         foreach ($schoolsArray as $school) {
                         ?>
-                        <tr>
-                            <td><?php echo $school['name']; ?></td>
-                            <td><?php echo $school['address']; ?></td>
-                            <td><?php echo $school['city']; ?></td>
-                            <td><?php echo $school['state']; ?></td>
-                            <td><?php echo $school['zipcode']; ?></td>
-                            <td><?php echo $eventsData->getHeldEvents(intval($school['id'])); ?></td>
-                            <td><?php echo $school['created_at']; ?></td>
-                            <td><?php echo $usersData->getUserUsername($school['created_by']); ?>
-                            </td>
-                            <td><?php echo $school['updated_at']; ?></td>
-                            <td><?php echo $usersData->getUserUsername($school['updated_by']); ?>
-                            </td>
-                            <td>
-                                <?php /*confirm user has a role with read school permissions*/
+                            <tr>
+                                <td><?php echo $school['name']; ?></td>
+                                <td><?php echo $school['address']; ?></td>
+                                <td><?php echo $school['city']; ?></td>
+                                <td><?php echo $school['state']; ?></td>
+                                <td><?php echo $school['zipcode']; ?></td>
+                                <td><?php echo $eventsData->getHeldEvents(intval($school['id'])); ?></td>
+                                <td><?php echo $school['created_at']; ?></td>
+                                <td><?php echo $usersData->getUserUsername($school['created_by']); ?>
+                                </td>
+                                <td><?php echo $school['updated_at']; ?></td>
+                                <td><?php echo $usersData->getUserUsername($school['updated_by']); ?>
+                                </td>
+                                <td>
+                                    <?php /*confirm user has a role with read school permissions*/
                                     //get the read school permission id
                                     $updatePermissionID = $permissionsObject->getPermissionIdByName('READ SCHOOL');
 
@@ -93,10 +92,9 @@ $user = new User();
 
                                     //only show the edit button if the user has the read school permission
                                     if ($hasReadPermission) { ?>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=single' ?>&id=<?php echo $school['id']; ?>"
-                                    class="btn btn-success">View</a>
-                                <?php } ?>
-                                <?php /*confirm user has a role with update school permissions*/
+                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=single' ?>&id=<?php echo $school['id']; ?>" class="btn btn-success">View</a>
+                                    <?php } ?>
+                                    <?php /*confirm user has a role with update school permissions*/
                                     //get the update school permission id
                                     $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE SCHOOL');
 
@@ -105,10 +103,9 @@ $user = new User();
 
                                     //only show the edit button if the user has the update school permission
                                     if ($hasUpdatePermission) { ?>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=edit&action=edit&id=' . $school['id']; ?>"
-                                    class="btn btn-primary">Edit</a>
-                                <?php } ?>
-                                <?php /*confirm user has a role with delete school permissions*/
+                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=edit&action=edit&id=' . $school['id']; ?>" class="btn btn-primary">Edit</a>
+                                    <?php } ?>
+                                    <?php /*confirm user has a role with delete school permissions*/
                                     //get the delete school permission id
                                     $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE SCHOOL');
 
@@ -117,11 +114,10 @@ $user = new User();
 
                                     //only show the delete button if the user has the delete school permission
                                     if ($hasDeletePermission) { ?>
-                                <a href="/delete/delete_school.php?id=<?php echo $school['id']; ?>"
-                                    class="btn btn-danger">Delete</a>
-                                <?php } ?>
-                            </td>
-                        </tr>
+                                        <a href="/delete/delete_school.php?id=<?php echo $school['id']; ?>" class="btn btn-danger">Delete</a>
+                                    <?php } ?>
+                                </td>
+                            </tr>
                         <?php } ?>
                     </tbody>
                 </table>
@@ -159,14 +155,12 @@ $user = new User();
                         );
                     }
                 ?>
-                <form target="_blank"
-                    action="<?php echo APP_URL . '/admin/download.php?type=schools&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
-                    method="post" enctype="multipart/form-data">
-                    <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
-                </form>
+                    <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=schools&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                        <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
+                    </form>
                 <?php } else { ?>
-                <p class="text-danger">You do not have permission to download the CSV of schools.</p>
-                <button class="btn btn-success" disabled>Export to CSV</button>
+                    <p class="text-danger">You do not have permission to download the CSV of schools.</p>
+                    <button class="btn btn-success" disabled>Export to CSV</button>
                 <?php } ?>
             </div>
         </div>

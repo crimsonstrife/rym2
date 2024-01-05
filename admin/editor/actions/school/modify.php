@@ -7,6 +7,9 @@ if (!defined('ISVALIDUSER')) {
 //include the permissions class
 $permissionsObject = new Permission();
 
+//include the authenticator class
+$auth = new Authenticator();
+
 //include the user class
 $user = new User();
 

@@ -10,46 +10,18 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 //include the permissions class
 $permissionsObject = new Permission();
 
-//include the role class
-$rolesObject = new Roles();
+//auth class
+$auth = new Authenticator();
 
 //user class
 $user = new User();
 
 /*confirm user has a role with read school permissions*/
-//get the user's roles
-$userRoles = $user->getUserRoles(intval($_SESSION['user_id']));
-
 //get the id of the read school permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('READ SCHOOL');
 
 //boolean to track if the user has the read school permission
-$hasPermission = false;
-
-//loop through the user's roles, for each role, get the permissions
-foreach ($userRoles as $role) {
-    $rolePermissions = $rolesObject->getRolePermissions(intval($role['id']));
-
-    //loop through the permissions and check if the user has the relevant permission
-    foreach ($rolePermissions as $permission) {
-        foreach ($permission as $key => $value) {
-            //if hasPermission is true, break out of the loop
-            if (!$hasPermission) {
-                //get the id of the permission
-                $permissionID = intval($value['id']);
-
-                //if the permission id matches the relevant permission id, set the hasPermission boolean to true
-                if ($permissionID == $relevantPermissionID) {
-                    $hasPermission = true;
-                } else {
-                    $hasPermission = false;
-                }
-            } else {
-                break;
-            }
-        }
-    }
-}
+$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -80,72 +52,25 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                 <div class="card-buttons">
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=list'; ?>"
                         class="btn btn-secondary">Back to Schools</a>
-                    <?php
-                        $hasUpdatePermission = false;
-
+                    <?php /*confirm user has a role with update school permissions*/
                         //get the update school permission id
                         $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE SCHOOL');
 
-                        //loop through the user's roles, for each role, get the permissions
-                        foreach ($userRoles as $role) {
-                            $rolePermissions = $rolesObject->getRolePermissions(intval($role['id']));
-
-                            //loop through the permissions and check if the user has the relevant permission
-                            foreach ($rolePermissions as $permission) {
-                                foreach ($permission as $key => $value) {
-                                    //if hasPermission is true, break out of the loop
-                                    if (!$hasUpdatePermission) {
-                                        //get the id of the permission
-                                        $permissionID = intval($value['id']);
-
-                                        //if the permission id matches the relevant permission id, set the hasPermission boolean to true
-                                        if ($permissionID == $updatePermissionID) {
-                                            $hasUpdatePermission = true;
-                                        } else {
-                                            $hasUpdatePermission = false;
-                                        }
-                                    } else {
-                                        break;
-                                    }
-                                }
-                            }
-                        }
+                        //boolean to check if the user has the update school permission
+                        $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
 
                         //only show the edit button if the user has the update school permission
                         if ($hasUpdatePermission) { ?>
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=edit&action=edit&id=' . $school_id; ?>"
                         class="btn btn-primary">Edit School</a>
                     <?php } ?>
-                    <?php
-                        $hasDeletePermission = false;
-
+                    <?php /*confirm user has a role with delete school permissions*/
                         //get the delete school permission id
                         $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE SCHOOL');
 
-                        //loop through the user's roles, for each role, get the permissions
-                        foreach ($userRoles as $role) {
-                            $rolePermissions = $rolesObject->getRolePermissions(intval($role['id']));
+                        //boolean to check if the user has the delete school permission
+                        $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
 
-                            //loop through the permissions and check if the user has the relevant permission
-                            foreach ($rolePermissions as $permission) {
-                                foreach ($permission as $key => $value) {
-                                    //if hasPermission is true, break out of the loop
-                                    if (!$hasDeletePermission) {
-                                        //get the id of the permission
-                                        $permissionID = intval($value['id']);
-
-                                        //if the permission id matches the relevant permission id, set the hasPermission boolean to true
-                                        if ($permissionID == $deletePermissionID) {
-                                            $hasDeletePermission = true;
-                                        } else {
-                                            $hasDeletePermission = false;
-                                        }
-                                    } else {
-                                        break;
-                                    }
-                                }
-                            }
-                        }
                         //only show the delete button if the user has the delete school permission
                         if ($hasDeletePermission) { ?>
                     <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
