@@ -60,7 +60,7 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                 </div>
                 <div class="card-buttons">
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
-                        class="btn btn-primary btn-sm">Back to Events</a>
+                        class="btn btn-secondary">Back to Events</a>
                     <?php /*confirm user has a role with update event permissions*/
                         //get the update event permission id
                         $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE EVENT');
@@ -71,7 +71,7 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                         //only show the edit button if the user has the update event permission
                         if ($hasUpdatePermission) { ?>
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event_id; ?>"
-                        class="btn btn-primary btn-sm">Edit Event</a>
+                        class="btn btn-primary">Edit Event</a>
                     <?php } ?>
                     <?php /*confirm user has a role with delete event permissions*/
                         //get the delete event permission id
@@ -82,8 +82,10 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
 
                         //only show the delete button if the user has the delete event permission
                         if ($hasDeletePermission) { ?>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=delete&id=' . $event_id; ?>"
-                        class="btn btn-danger btn-sm">Delete Event</a>
+                    <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#deleteEventModal">
+                        Delete Event
+                    </button>
                     <?php } ?>
                 </div>
             </div>
@@ -221,6 +223,40 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                 </div>
                 <div class="card-footer">
                 </div>
+                <?php if ($hasDeletePermission) { ?>
+                <div id="info" class="">
+                    <!-- Delete Event Modal-->
+                    <!-- Modal -->
+                    <div id="deleteEventModal" class="modal fade delete" tabindex="-1" role="dialog"
+                        aria-labelledby="#eventDeleteModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title" id="eventDeleteModal">Delete Event -
+                                        <?php echo $event->getEventName($event_id); ?></h3>
+                                    <button type="button" class="btn-close close" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete this event?</p>
+                                    <p>This action cannot be undone.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <form
+                                        action="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single&action=delete&id=' . $event_id; ?>"
+                                        method="post">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-danger">Delete Event</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php } ?>
             </div>
         </div>
     </div>
