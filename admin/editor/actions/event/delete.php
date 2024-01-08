@@ -24,7 +24,50 @@ $hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relev
 if (!$hasPermission) {
     die('Error: You do not have permission to perform this request.');
 } else {
-?>
+    //school class
+    $school = new School();
+
+    //student class
+    $student = new Student();
+
+    //event class
+    $event = new Event();
+
+    // Processing form data when form is submitted
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //get the action from the url parameter
+        $action = $_GET['action'];
+
+        //if the action is delete, get the event id from the url parameter
+        if ($action == 'delete') {
+            $event_id = $_GET['id'];
+        }
+
+        //get the intvalue of the event id
+        $event_id = intval($event_id);
+
+        //get the event name
+        $event_name = $event->getEventName($event_id);
+
+        //boolean to track if the event can be deleted
+        $canDelete = true;
+
+        //check if there are any students associated with the event in the student table
+        $studentsAtEvent = $student->getStudentEventAttendace($event_id);
+
+        //if there are more than 0 records in the array, the event cannot be deleted so set the canDelete boolean to false
+        if (count($studentsAtEvent) > 0) {
+            $canDelete = false;
+        }
+
+        //check if the event can be deleted, if so, delete the event
+        if ($canDelete) {
+            //boolean to track if the event was deleted
+            $eventDeleted = $event->deleteEvent($event_id);
+        } else {
+            $eventDeleted = false;
+        }
+    } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
         <div class="row">

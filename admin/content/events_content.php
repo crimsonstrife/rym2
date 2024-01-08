@@ -59,7 +59,18 @@ if (!isset($hasViewDashboardPermission)) {
                             }
                             break;
                         case 'single':
-                            include_once('./view/event_single.php');
+                            if (isset($_GET['action'])) {
+                                switch ($_GET['action']) {
+                                    case 'delete':
+                                        include_once('./editor/actions/event/delete.php');
+                                        break;
+                                    default:
+                                        include_once('./view/event_single.php');
+                                        break;
+                                }
+                            } else {
+                                include_once('./view/event_single.php');
+                            }
                             break;
                         default:
                             include_once('./view/event_list.php');
