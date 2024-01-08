@@ -13,10 +13,10 @@ if (!isset($hasViewDashboardPermission)) {
         die('Error: You do not have permission to access this content, contact the Administrator.');
     } else {
 ?>
-<!-- main content -->
-<div id="layout_content">
-    <main>
-        <?php
+        <!-- main content -->
+        <div id="layout_content">
+            <main>
+                <?php
                 if (isset($_GET['job'])) {
                     switch ($_GET['job']) {
                         case 'list':
@@ -59,7 +59,18 @@ if (!isset($hasViewDashboardPermission)) {
                             }
                             break;
                         case 'single':
-                            include_once('./view/list/job_list.php');  //There won't be a single job view, so just show the list to account for any cases where the URL structure may try to direct the user to a single job view.
+                            if (isset($_GET['action'])) {
+                                switch ($_GET['action']) {
+                                    case 'delete':
+                                        include_once('./editor/actions/job/delete.php');
+                                        break;
+                                    default:
+                                        include_once('./view/list/job_list.php');
+                                        break;
+                                }
+                            } else {
+                                include_once('./view/list/job_list.php');
+                            }
                             break;
                         default:
                             include_once('./view/list/job_list.php');
@@ -69,8 +80,8 @@ if (!isset($hasViewDashboardPermission)) {
                     include_once('./view/list/job_list.php');
                 }
                 ?>
-    </main>
-</div>
+            </main>
+        </div>
 <?php
     }
 } ?>

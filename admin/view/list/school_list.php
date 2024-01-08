@@ -10,9 +10,6 @@ $permissionsObject = new Permission();
 //include the auth class
 $auth = new Authenticator();
 
-//include the user class
-$user = new User();
-
 /* confirm user has a role with read school permissions */
 //get the read school permission id
 $readPermissionID = $permissionsObject->getPermissionIdByName('READ SCHOOL');

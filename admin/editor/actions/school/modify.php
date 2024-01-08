@@ -247,15 +247,15 @@ if (!$hasPermission) {
             $schoolUpdated = $school->updateSchool(intval($school_id), $school_name, $school_address, $school_city, $school_state, $school_zip, $user_id);
         }
     } ?>
-<!-- Completion page content -->
-<div class="container-fluid px-4">
-    <div class="row">
-        <div class="card mb-4">
-            <!-- show completion message -->
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fa-solid fa-check"></i>
-                    <?php
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-check"></i>
+                        <?php
                         if ($action == 'edit') {
                             if ($schoolUpdated) {
                                 echo 'School Updated';
@@ -264,9 +264,9 @@ if (!$hasPermission) {
                             }
                         }
                         ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 <?php } ?>

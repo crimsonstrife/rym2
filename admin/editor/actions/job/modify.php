@@ -4,75 +4,94 @@ if (!defined('ISVALIDUSER')) {
     die('Error: Invalid request');
 }
 
-//job class
-$job = new Job();
+//include the permissions class
+$permissionsObject = new Permission();
 
-//user class
-$user = new User();
+//include the authenticator class
+$auth = new Authenticator();
 
-//get the action from the url parameter
-$action = $_GET['action'];
+/*confirm user has a role with update school permissions*/
+//get the id of the update school permission
+$relevantPermissionID = $permissionsObject->getPermissionIdByName('UPDATE SCHOOL');
 
-//if the action is edit, get the job id from the url parameter
-if ($action == 'edit') {
-    $job_id = $_GET['id'];
-}
+//boolean to track if the user has the update school permission
+$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
 
-// Processing form data when form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    //get the job title from the form
-    if (isset($_POST["job_title"])) {
-        $job_title = trim($_POST["job_title"]);
-        //prepare the job title
-        $job_title = prepareData($job_title);
-    }
-    //get the job description from the form
-    if (isset($_POST["job_description"])) {
-        $job_description = trim($_POST["job_description"]);
-        //prepare the job description
-        $job_description = prepareData($job_description);
-    }
-    //get the job type from the form
-    if (isset($_POST["job_type"])) {
-        $job_type = trim($_POST["job_type"]);
-        //prepare the job type
-        $job_type = prepareData($job_type);
-    }
-    //get the job field from the form
-    if (isset($_POST["job_field"])) {
-        $job_field = trim($_POST["job_field"]);
-        //prepare the job field
-        $job_field = prepareData($job_field);
-    }
+//prevent the user from accessing the page if they do not have the relevant permission
+if (!$hasPermission) {
+    die('Error: You do not have permission to perform this request.');
+} else {
 
-    //if the action is edit, update the job
+    //job class
+    $job = new Job();
+
+    //user class
+    $user = new User();
+
+    //get the action from the url parameter
+    $action = $_GET['action'];
+
+    //if the action is edit, get the job id from the url parameter
     if ($action == 'edit') {
-        //get current user ID
-        $user_id = intval($_SESSION['user_id']);
-
-        //update the job
-        $jobUpdated = $job->updateJob($job_id, $job_title, $job_description, $job_type, intval($job_field), $user_id);
+        $job_id = $_GET['id'];
     }
-} ?>
-<!-- Completion page content -->
-<div class="container-fluid px-4">
-    <div class="row">
-        <div class="card mb-4">
-            <!-- show completion message -->
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fa-solid fa-check"></i>
-                    <?php
-                    if ($action == 'edit') {
-                        if ($jobUpdated) {
-                            echo 'Job Updated';
-                        } else {
-                            echo 'Error: Job Not Updated';
+
+    // Processing form data when form is submitted
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //get the job title from the form
+        if (isset($_POST["job_title"])) {
+            $job_title = trim($_POST["job_title"]);
+            //prepare the job title
+            $job_title = prepareData($job_title);
+        }
+        //get the job description from the form
+        if (isset($_POST["job_description"])) {
+            $job_description = trim($_POST["job_description"]);
+            //prepare the job description
+            $job_description = prepareData($job_description);
+        }
+        //get the job type from the form
+        if (isset($_POST["job_type"])) {
+            $job_type = trim($_POST["job_type"]);
+            //prepare the job type
+            $job_type = prepareData($job_type);
+        }
+        //get the job field from the form
+        if (isset($_POST["job_field"])) {
+            $job_field = trim($_POST["job_field"]);
+            //prepare the job field
+            $job_field = prepareData($job_field);
+        }
+
+        //if the action is edit, update the job
+        if ($action == 'edit') {
+            //get current user ID
+            $user_id = intval($_SESSION['user_id']);
+
+            //update the job
+            $jobUpdated = $job->updateJob($job_id, $job_title, $job_description, $job_type, intval($job_field), $user_id);
+        }
+    } ?>
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-check"></i>
+                        <?php
+                        if ($action == 'edit') {
+                            if ($jobUpdated) {
+                                echo 'Job Updated';
+                            } else {
+                                echo 'Error: Job Not Updated';
+                            }
                         }
-                    }
-                    ?>
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+<?php } ?>

@@ -379,4 +379,50 @@ class Job
         }
         return $jobs;
     }
+
+    /**
+     * Delete a job from the database
+     *
+     * @param int $job_id
+     * @return boolean $result
+     */
+    public function deleteJob(int $job_id): bool
+    {
+        //get the current date and time
+        $date = date("Y-m-d H:i:s");
+
+        //get the name of the job
+        $job_name = $this->getJobTitle($job_id);
+
+        //set the placeholder for the result
+        $result = false;
+
+        //create the sql statement
+        $sql = "DELETE FROM jobs WHERE id = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $job_id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //check the result
+        if ($stmt->affected_rows > 0) {
+            $result = true;
+        } else {
+            $result = false;
+        }
+
+        //log the job activity if the job was deleted
+        if ($result) {
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Job', 'Job ID: ' . $job_id . ' Job Name: ' . $job_name);
+        }
+
+        //return the result
+        return $result;
+    }
 }
