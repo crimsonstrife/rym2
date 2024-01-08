@@ -13,27 +13,27 @@ if (!isset($hasViewDashboardPermission)) {
         die('Error: You do not have permission to access this content, contact the Administrator.');
     } else {
 ?>
-<!-- main content -->
-<div id="layout_content">
-    <main>
-        <?php
+        <!-- main content -->
+        <div id="layout_content">
+            <main>
+                <?php
                 if (isset($_GET['report'])) {
                     switch ($_GET['report']) {
                         case 'list':
-                            include_once('./view/report_list.php');
+                            include_once('./view/list/report_list.php');
                             break;
                         case 'single':
-                            include_once('./view/report_single.php');
+                            include_once('./view/single/report_single.php');
                             break;
                         default:
-                            include_once('./view/report_list.php');
+                            include_once('./view/list/report_list.php');
                             break;
                     }
                 } else {
-                    include_once('./view/report_list.php');
+                    include_once('./view/list/report_list.php');
                 }
                 ?>
-    </main>
-</div>
+            </main>
+        </div>
 <?php }
 } ?>

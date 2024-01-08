@@ -13,14 +13,14 @@ if (!isset($hasViewDashboardPermission)) {
         die('Error: You do not have permission to access this content, contact the Administrator.');
     } else {
 ?>
-<!-- main content -->
-<div id="layout_content">
-    <main>
-        <?php
+        <!-- main content -->
+        <div id="layout_content">
+            <main>
+                <?php
                 if (isset($_GET['major'])) {
                     switch ($_GET['major']) {
                         case 'list':
-                            include_once('./view/major_list.php');
+                            include_once('./view/list/major_list.php');
                             break;
                         case 'add':
                             if (isset($_GET['action'])) {
@@ -33,11 +33,11 @@ if (!isset($hasViewDashboardPermission)) {
                                         }
                                         break;
                                     default:
-                                        include_once('./view/major_list.php');
+                                        include_once('./view/list/major_list.php');
                                         break;
                                 }
                             } else {
-                                include_once('./view/major_list.php');
+                                include_once('./view/list/major_list.php');
                             }
                             break;
                         case 'edit':
@@ -51,26 +51,26 @@ if (!isset($hasViewDashboardPermission)) {
                                         }
                                         break;
                                     default:
-                                        include_once('./view/major_list.php');
+                                        include_once('./view/list/major_list.php');
                                         break;
                                 }
                             } else {
-                                include_once('./view/major_list.php');
+                                include_once('./view/list/major_list.php');
                             }
                             break;
                         case 'single':
-                            include_once('./view/major_list.php');
+                            include_once('./view/list/major_list.php');
                             break;
                         default:
-                            include_once('./view/major_list.php');
+                            include_once('./view/list/major_list.php');
                             break;
                     }
                 } else {
-                    include_once('./view/major_list.php');
+                    include_once('./view/list/major_list.php');
                 }
                 ?>
-    </main>
-</div>
+            </main>
+        </div>
 <?php
     }
 } ?>

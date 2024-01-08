@@ -13,14 +13,14 @@ if (!isset($hasViewDashboardPermission)) {
         die('Error: You do not have permission to access this content, contact the Administrator.');
     } else {
 ?>
-        <!-- main content -->
-        <div id="layout_content">
-            <main>
-                <?php
+<!-- main content -->
+<div id="layout_content">
+    <main>
+        <?php
                 if (isset($_GET['school'])) {
                     switch ($_GET['school']) {
                         case 'list':
-                            include_once('./view/school_list.php');
+                            include_once('./view/list/school_list.php');
                             break;
                         case 'add':
                             if (isset($_GET['action'])) {
@@ -33,11 +33,11 @@ if (!isset($hasViewDashboardPermission)) {
                                         }
                                         break;
                                     default:
-                                        include_once('./view/school_list.php');
+                                        include_once('./view/list/school_list.php');
                                         break;
                                 }
                             } else {
-                                include_once('./view/school_list.php');
+                                include_once('./view/list/school_list.php');
                             }
                             break;
                         case 'edit':
@@ -51,11 +51,11 @@ if (!isset($hasViewDashboardPermission)) {
                                         }
                                         break;
                                     default:
-                                        include_once('./view/school_list.php');
+                                        include_once('./view/list/school_list.php');
                                         break;
                                 }
                             } else {
-                                include_once('./view/school_list.php');
+                                include_once('./view/list/school_list.php');
                             }
                             break;
                         case 'single':
@@ -65,22 +65,22 @@ if (!isset($hasViewDashboardPermission)) {
                                         include_once('./editor/actions/school/delete.php');
                                         break;
                                     default:
-                                        include_once('./view/school_single.php');
+                                        include_once('./view/single/school_single.php');
                                         break;
                                 }
                             } else {
-                                include_once('./view/school_single.php');
+                                include_once('./view/single/school_single.php');
                             }
                             break;
                         default:
-                            include_once('./view/school_list.php');
+                            include_once('./view/list/school_list.php');
                             break;
                     }
                 } else {
-                    include_once('./view/school_list.php');
+                    include_once('./view/list/school_list.php');
                 }
                 ?>
-            </main>
-        </div>
+    </main>
+</div>
 <?php }
 } ?>

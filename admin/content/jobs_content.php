@@ -20,7 +20,7 @@ if (!isset($hasViewDashboardPermission)) {
                 if (isset($_GET['job'])) {
                     switch ($_GET['job']) {
                         case 'list':
-                            include_once('./view/job_list.php');
+                            include_once('./view/list/job_list.php');
                             break;
                         case 'add':
                             if (isset($_GET['action'])) {
@@ -33,11 +33,11 @@ if (!isset($hasViewDashboardPermission)) {
                                         }
                                         break;
                                     default:
-                                        include_once('./view/job_list.php');
+                                        include_once('./view/list/job_list.php');
                                         break;
                                 }
                             } else {
-                                include_once('./view/job_list.php');
+                                include_once('./view/list/job_list.php');
                             }
                             break;
                         case 'edit':
@@ -51,22 +51,22 @@ if (!isset($hasViewDashboardPermission)) {
                                         }
                                         break;
                                     default:
-                                        include_once('./view/job_list.php');
+                                        include_once('./view/list/job_list.php');
                                         break;
                                 }
                             } else {
-                                include_once('./view/job_list.php');
+                                include_once('./view/list/job_list.php');
                             }
                             break;
                         case 'single':
-                            include_once('./view/job_list.php');
+                            include_once('./view/list/job_list.php');  //There won't be a single job view, so just show the list to account for any cases where the URL structure may try to direct the user to a single job view.
                             break;
                         default:
-                            include_once('./view/job_list.php');
+                            include_once('./view/list/job_list.php');
                             break;
                     }
                 } else {
-                    include_once('./view/job_list.php');
+                    include_once('./view/list/job_list.php');
                 }
                 ?>
     </main>

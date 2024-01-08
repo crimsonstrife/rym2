@@ -20,7 +20,7 @@ if (!isset($hasViewDashboardPermission)) {
                 if (isset($_GET['user'])) {
                     switch ($_GET['user']) {
                         case 'list':
-                            include_once('./view/user_list.php');
+                            include_once('./view/list/user_list.php');
                             break;
                         case 'add':
                             if (isset($_GET['action'])) {
@@ -33,11 +33,11 @@ if (!isset($hasViewDashboardPermission)) {
                                         }
                                         break;
                                     default:
-                                        include_once('./view/user_list.php');
+                                        include_once('./view/list/user_list.php');
                                         break;
                                 }
                             } else {
-                                include_once('./view/user_list.php');
+                                include_once('./view/list/user_list.php');
                             }
                             break;
                         case 'edit':
@@ -51,22 +51,22 @@ if (!isset($hasViewDashboardPermission)) {
                                         }
                                         break;
                                     default:
-                                        include_once('./view/user_list.php');
+                                        include_once('./view/list/user_list.php');
                                         break;
                                 }
                             } else {
-                                include_once('./view/user_list.php');
+                                include_once('./view/list/user_list.php');
                             }
                             break;
                         case 'single':
-                            include_once('./view/user_single.php');
+                            include_once('./view/single/user_single.php');
                             break;
                         default:
-                            include_once('./view/user_list.php');
+                            include_once('./view/list/user_list.php');
                             break;
                     }
                 } else {
-                    include_once('./view/user_list.php');
+                    include_once('./view/list/user_list.php');
                 }
                 ?>
     </main>
