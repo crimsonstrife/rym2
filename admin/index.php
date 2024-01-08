@@ -92,6 +92,9 @@ if (isset($_GET['login'])) {
                             $login_error = "Invalid password.";
                             //log the result
                             error_log("" . $login_error);
+
+                            //log the password value for testing only
+                            error_log("Password: " . $password);
                         }
                     } else {
                         // Username doesn't exist, display a generic error message

@@ -57,17 +57,31 @@ class User implements Login
     //verify the password
     private function verifyPassword(string $password, string $hash): bool
     {
-        return password_verify($password, $hash);
+        $isValid = password_verify($password, $hash);
+
+        //log the result for debugging
+        error_log("Password is : " . strval($isValid));
+
+        //return the result
+        if ($isValid) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //validate the user's password
     public function validateUserPassword(int $user_id, string $password): bool
     {
-        //trim the password
-        $password = trim($password);
-
         //get the user's hashed password
         $user_password = $this->getUserPassword($user_id);
+
+        error_log("User password (hashed): " . $user_password);
+
+        //hash the password to compare
+        $attempted_password = $this->hashPassword($password);
+
+        error_log("Attempted password (hashed): " . $attempted_password);
 
         //verify the password
         if ($this->verifyPassword($password, $user_password)) {
@@ -93,8 +107,6 @@ class User implements Login
     {
         //trim the email
         $username = trim($username);
-        //trim the password
-        $password = trim($password);
 
         //try to login
         try {
@@ -845,9 +857,6 @@ class User implements Login
         //trim the username
         $username = trim($username);
 
-        //trim the password
-        $password = trim($password);
-
         //send the email
         $mail = $contact->sendAccountCreationEmail($email, $username, $password);
 
@@ -895,9 +904,6 @@ class User implements Login
         //if the password is null, get the current password
         if ($password == null) {
             $password = $this->getUserPassword($id);
-        } else {
-            //trim the password
-            $password = trim($password);
         }
 
         //update the user
