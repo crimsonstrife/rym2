@@ -133,20 +133,47 @@ class JobField extends Subject
     /**
      * Delete a subject from the database
      *
-     * @param int $aoi_id //id from the areas of interest table
+     * @param int $field_id //id from the areas of interest table
      * @return bool
      */
-    public function deleteSubject(int $aoi_id): bool
+    public function deleteSubject(int $field_id): bool
     {
+        //get the current date and time
+        $date = date("Y-m-d H:i:s");
+
+        //get the name of the subject
+        $subject_name = $this->getSubjectName($field_id);
+
+        //set the placeholder for the result
+        $result = false;
+
+        //create the sql statement
         $sql = "DELETE FROM aoi WHERE id = ?";
+
+        //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param("i", $aoi_id);
+
+        //bind the parameters
+        $stmt->bind_param("i", $field_id);
+
+        //execute the statement
         $stmt->execute();
+
+        //check the result
         if ($stmt->affected_rows > 0) {
-            return true;
+            $result = true;
         } else {
-            return false;
+            $result = false;
         }
+
+        //log the subject activity if the subject was deleted
+        if ($result) {
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Subject', 'Subject ID: ' . $field_id . ' Subject Name: ' . $subject_name);
+        }
+
+        //return the result
+        return $result;
     }
 
     /**

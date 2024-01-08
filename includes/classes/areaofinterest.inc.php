@@ -139,23 +139,49 @@ class AreaOfInterest extends Subject
     }
 
     /**
-     * Delete a subject from the database
+     * Delete a subject/field from the database
      *
-     * @param int $aoi_id //id from the areas of interest table
+     * @param int $subject_id //id from the areas of interest table
      * @return bool
      */
-    public function deleteSubject(int $aoi_id): bool
+    public function deleteSubject(int $subject_id): bool
     {
+        //get the current date and time
+        $date = date("Y-m-d H:i:s");
+
+        //get the name of the subject
+        $subject_name = $this->getSubjectName($subject_id);
+
+        //set the placeholder for the result
+        $result = false;
+
+        //create the sql statement
         $sql = "DELETE FROM aoi WHERE id = ?";
+
+        //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param("i", $aoi_id);
+
+        //bind the parameters
+        $stmt->bind_param("i", $subject_id);
+
+        //execute the statement
         $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result) {
-            return true;
+
+        //check the result
+        if ($stmt->affected_rows > 0) {
+            $result = true;
         } else {
-            return false;
+            $result = false;
         }
+
+        //log the subject activity if the subject was deleted
+        if ($result) {
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Subject', 'Subject ID: ' . $subject_id . ' Subject Name: ' . $subject_name);
+        }
+
+        //return the result
+        return $result;
     }
 
     /**

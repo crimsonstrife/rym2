@@ -13,10 +13,10 @@ if (!isset($hasViewDashboardPermission)) {
         die('Error: You do not have permission to access this content, contact the Administrator.');
     } else {
 ?>
-        <!-- main content -->
-        <div id="layout_content">
-            <main>
-                <?php
+<!-- main content -->
+<div id="layout_content">
+    <main>
+        <?php
                 if (isset($_GET['subject'])) {
                     switch ($_GET['subject']) {
                         case 'list':
@@ -59,7 +59,18 @@ if (!isset($hasViewDashboardPermission)) {
                             }
                             break;
                         case 'single':
-                            include_once('./view/list/subject_list.php');
+                            if (isset($_GET['action'])) {
+                                switch ($_GET['action']) {
+                                    case 'delete':
+                                        include_once('./editor/actions/subject/delete.php');
+                                        break;
+                                    default:
+                                        include_once('./view/list/subject_list.php');
+                                        break;
+                                }
+                            } else {
+                                include_once('./view/list/subject_list.php');
+                            }
                             break;
                         default:
                             include_once('./view/list/subject_list.php');
@@ -69,8 +80,8 @@ if (!isset($hasViewDashboardPermission)) {
                     include_once('./view/list/subject_list.php');
                 }
                 ?>
-            </main>
-        </div>
+    </main>
+</div>
 <?php
     }
 } ?>

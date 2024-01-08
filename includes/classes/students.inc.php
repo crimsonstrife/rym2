@@ -976,4 +976,40 @@ class Student
         //Return the students array
         return $students;
     }
+
+    /**
+     * Get Students by Interest
+     *
+     * @param int $interest_id
+     *
+     * @return array
+     */
+    public function getStudentsByInterest(int $interest_id): array
+    {
+        //SQL statement to get students by interest
+        $sql = "SELECT * FROM student WHERE interest = ?";
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+        //bind the parameters
+        $stmt->bind_param("i", $interest_id);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the students
+        $students = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            //loop through the rows
+            while ($row = $result->fetch_assoc()) {
+                //add the row to the students array
+                $students[] = $row;
+            }
+        }
+
+        //Return the students array
+        return $students;
+    }
 };
