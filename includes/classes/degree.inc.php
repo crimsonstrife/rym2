@@ -312,23 +312,42 @@ class Degree extends Grade implements Major
      */
     public function deleteGrade(int $lvl_id): bool
     {
-        //prepare the query
-        $stmt = $this->mysqli->prepare("DELETE FROM degree_lvl WHERE id = ?");
+        //get the current date and time
+        $date = date("Y-m-d H:i:s");
+
+        //get the name of the degree level
+        $lvl_name = $this->getGradeNameById($lvl_id);
+
+        //set the placeholder for the result
+        $result = false;
+
+        //create the sql statement
+        $sql = "DELETE FROM degree_lvl WHERE id = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
 
         //bind the parameters
-        $stmt->bind_param('i', $lvl_id);
+        $stmt->bind_param("i", $lvl_id);
 
-        //execute the query
+        //execute the statement
         $stmt->execute();
 
-        //check if the query was successful
+        //check the result
         if ($stmt->affected_rows > 0) {
-            //return true if successful
-            return true;
+            $result = true;
         } else {
-            //return false if unsuccessful
-            return false;
+            $result = false;
         }
+
+        //log the degree level activity if the degree level was deleted
+        if ($result) {
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Degree Level', 'Degree Level ID: ' . $lvl_id . ' Degree Level Name: ' . $lvl_name);
+        }
+
+        //return the result
+        return $result;
     }
 
     /**

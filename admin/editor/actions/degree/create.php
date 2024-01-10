@@ -4,6 +4,12 @@ if (!defined('ISVALIDUSER')) {
     die('Error: Invalid request');
 }
 
+//include the permissions class
+$permissionsObject = new Permission();
+
+//include the auth class
+$auth = new Authenticator();
+
 //degree class
 $degree = new Degree();
 
@@ -18,24 +24,36 @@ if ($action == 'edit') {
     $degree_id = $_GET['id'];
 }
 
-// Processing form data when form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    //get the degree name from the form
-    if (isset($_POST["degree_name"])) {
-        $degree_name = trim($_POST["degree_name"]);
-        //prepare the degree name
-        $degree_name = prepareData($degree_name);
-    }
+/*confirm user has a role with create major permissions*/
+//get the id of the create major permission
+$relevantPermissionID = $permissionsObject->getPermissionIdByName('CREATE MAJOR');
 
-    //if the action is create, create the degree
-    if ($action == 'create') {
-        //get current user ID
-        $user_id = intval($_SESSION['user_id']);
+//boolean to track if the user has the create major permission
+$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
 
-        //create the degree
-        $degreeCreated = $degree->addGrade($degree_name, $user_id);
-    }
-} ?>
+//prevent the user from accessing the page if they do not have the relevant permission
+if (!$hasPermission) {
+    die('Error: You do not have permission to perform this request.');
+} else {
+
+    // Processing form data when form is submitted
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //get the degree name from the form
+        if (isset($_POST["degree_name"])) {
+            $degree_name = trim($_POST["degree_name"]);
+            //prepare the degree name
+            $degree_name = prepareData($degree_name);
+        }
+
+        //if the action is create, create the degree
+        if ($action == 'create') {
+            //get current user ID
+            $user_id = intval($_SESSION['user_id']);
+
+            //create the degree
+            $degreeCreated = $degree->addGrade($degree_name, $user_id);
+        }
+    } ?>
 <!-- Completion page content -->
 <div class="container-fluid px-4">
     <div class="row">
@@ -45,16 +63,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="card-title">
                     <i class="fa-solid fa-check"></i>
                     <?php
-                    if ($action == 'create') {
-                        if ($degreeCreated) {
-                            echo 'Degree Created';
-                        } else {
-                            echo 'Error: Degree Not Created';
+                        if ($action == 'create') {
+                            if ($degreeCreated) {
+                                echo 'Degree Created';
+                            } else {
+                                echo 'Error: Degree Not Created';
+                            }
                         }
-                    }
-                    ?>
+                        ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<?php } ?>

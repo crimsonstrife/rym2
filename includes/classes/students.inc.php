@@ -495,6 +495,45 @@ class Student
     }
 
     /**
+     * Get all students by a degree level id
+     *
+     * @param int $degree_id
+     * @return array
+     */
+    public function getStudentsByGrade(int $degree_id): array
+    {
+        //SQL statement to get all students by a degree level id
+        $sql = "SELECT * FROM student WHERE degree = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $degree_id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the students
+        $students = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            //loop through the rows
+            while ($row = $result->fetch_assoc()) {
+                //add the row to the students array
+                $students[] = $row;
+            }
+        }
+
+        //Return the students array
+        return $students;
+    }
+
+    /**
      * Get student graduation year
      *
      * @param int $id

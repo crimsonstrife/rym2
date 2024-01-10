@@ -11,8 +11,7 @@ if (!isset($hasViewDashboardPermission)) {
     //check that the user has the view dashboard permission
     if (!$hasViewDashboardPermission) {
         die('Error: You do not have permission to access this content, contact the Administrator.');
-    } else {
-?>
+    } else { ?>
         <!-- main content -->
         <div id="layout_content">
             <main>
@@ -59,7 +58,18 @@ if (!isset($hasViewDashboardPermission)) {
                             }
                             break;
                         case 'single':
-                            include_once('./view/list/degree_list.php');
+                            if (isset($_GET['action'])) {
+                                switch ($_GET['action']) {
+                                    case 'delete':
+                                        include_once('./editor/actions/degree/delete.php');
+                                        break;
+                                    default:
+                                        include_once('./view/list/degree_list.php');
+                                        break;
+                                }
+                            } else {
+                                include_once('./view/list/degree_list.php');
+                            }
                             break;
                         default:
                             include_once('./view/list/degree_list.php');
