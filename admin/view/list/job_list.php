@@ -73,10 +73,13 @@ if (!$hasReadPermission) {
                             //get all jobs
                             $jobsArray = $jobsData->getAllJobs();
                             //for each job, display it
-                            foreach ($jobsArray as $job) { ?>
+                            foreach ($jobsArray as $job) {
+                                //trim the description to 100 characters, and add an ellipsis
+                                $formattedDescription = strlen($job['description']) > 100 ? substr($job['description'], 0, 100) . "[...]" : $job['description'];
+                            ?>
                                 <tr>
                                     <td><?php echo $job['name']; ?></td>
-                                    <td><?php echo $job['description']; ?></td>
+                                    <td><?php echo $formattedDescription; ?></td>
                                     <td><?php echo $jobsData->getJobType($job['id']); ?></td>
                                     <td><?php echo $fieldData->getSubject($job['field'])[0]['name']; ?></td>
                                     <td><?php echo $job['created_at']; ?></td>
@@ -93,7 +96,7 @@ if (!$hasReadPermission) {
 
                                         //only show the edit button if the user has the update job permission
                                         if ($hasUpdatePermission) { ?>
-                                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=edit&action=edit&id=' . $job['id']; ?>" class="btn btn-primary">Edit</a>
+                                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=edit&action=edit&id=' . $job['id']; ?>" class="btn btn-primary">Edit Job</a>
                                         <?php } ?>
                                         <?php /*confirm user has a role with delete job permissions*/
                                         //get the delete job permission id
