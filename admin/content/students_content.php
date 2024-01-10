@@ -36,6 +36,12 @@ if (!isset($hasViewDashboardPermission)) {
                         case 'edit':
                             if (isset($_GET['action'])) {
                                 switch ($_GET['action']) {
+                                    case 'edit':
+                                        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                                            include_once('./editor/actions/student/modify.php');
+                                        } else {
+                                            include_once('./editor/student_edit.php');
+                                        }
                                     default:
                                         include_once('./view/list/student_list.php');
                                         break;
@@ -45,7 +51,18 @@ if (!isset($hasViewDashboardPermission)) {
                             }
                             break;
                         case 'single':
-                            include_once('./view/single/student_single.php');
+                            if (isset($_GET['action'])) {
+                                switch ($_GET['action']) {
+                                    case 'delete':
+                                        include_once('./editor/actions/student/delete.php');
+                                        break;
+                                    default:
+                                        include_once('./view/single/student_single.php');
+                                        break;
+                                }
+                            } else {
+                                include_once('./view/single/student_single.php');
+                            }
                             break;
                         default:
                             include_once('./view/list/student_list.php');

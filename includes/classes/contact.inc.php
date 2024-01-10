@@ -143,6 +143,37 @@ class Contact
     }
 
     /**
+     * Remove a contact from the contact log
+     *
+     * @param int $contactId - the id of the contact to remove
+     *
+     * @return bool
+     */
+    public function removeContact(int $contactId): bool
+    {
+        //create the SQL query
+        $sql = "DELETE FROM contact_log WHERE id = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //bind the parameters
+        $stmt->bind_param('i', $contactId);
+
+        //execute the statement
+        $stmt->execute();
+
+        //check if the statement was successful
+        if ($stmt->affected_rows > 0) {
+            //return true
+            return true;
+        } else {
+            //return false
+            return false;
+        }
+    }
+
+    /**
      * Get the sending history for a specific user
      *
      * @param int $userId - the id of the user to get the sending history for, if not specified, get the sending history for the automatically sent messages

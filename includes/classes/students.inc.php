@@ -889,6 +889,17 @@ class Student
         $result = $this->mysqli->query($sql);
         //If the query is successful
         if ($result) {
+            //get the student name
+            $student_name = $this->getStudentFullName($student_id);
+
+            //get the event name
+            $event = new Event();
+            $event_name = $event->getEventName($event_id);
+
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Student', 'Student ID: ' . $student_id . ' Student Name: ' . $student_name . ' from Event ID: ' . $event_id . ' Event Name: ' . $event_name);
+
             //Return true
             return true;
         } else {
@@ -921,6 +932,29 @@ class Student
     }
 
     /**
+     * Student attendance
+     * Get a list of events that a student attended
+     *
+     * @param int $student_id
+     * @return array
+     */
+    public function getEventAttendaceByStudent(int $student_id): array
+    {
+        //SQL statement to get a list of events that a student attended
+        $sql = "SELECT * FROM student_at_event WHERE student_id = $student_id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        $events = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $events[] = $row;
+            }
+        }
+        //Return the events array
+        return $events;
+    }
+
+    /**
      * Get Student Contact History
      * Get the contact history for a student
      * @param int $student_id
@@ -936,6 +970,34 @@ class Student
 
         //return the contact history
         return $contactHistory;
+    }
+
+    /**
+     * Delete Student Contact History
+     * Delete the contact history for a student
+     * @param int $student_id
+     * @return bool
+     */
+    public function deleteStudentContactHistory(int $student_id): bool
+    {
+        //include the contact class, so we can delete the contact history
+        $contactObject = new Contact();
+
+        //delete the contact history for the student
+        $result = $contactObject->removeContact($student_id);
+
+        //log the activity if the contact history was deleted
+        if ($result) {
+            //get the student name
+            $student_name = $this->getStudentFullName($student_id);
+
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Student Contact History', 'Student ID: ' . $student_id . ' Student Name: ' . $student_name);
+        }
+
+        //return the result
+        return $result;
     }
 
     /**
@@ -1050,5 +1112,77 @@ class Student
 
         //Return the students array
         return $students;
+    }
+
+    /**
+     * Delete a student from the database
+     *
+     * @param int $student_id
+     *
+     * @return bool
+     */
+    public function deleteStudent(int $student_id): bool
+    {
+        //get the current date and time
+        $date = date("Y-m-d H:i:s");
+
+        //get the name of the student
+        $student_name = $this->getStudentFullName($student_id);
+
+        //set the placeholder for the result
+        $result = false;
+
+        //check if the student has attended any events
+        $eventsAttended = $this->getEventAttendaceByStudent($student_id);
+
+        //if the student has attended any events
+        if (!empty($eventsAttended)) {
+            //loop through the events
+            foreach ($eventsAttended as $event) {
+                //remove the student from the event
+                $this->removeStudentFromEvent($event['event_id'], $student_id);
+            }
+        }
+
+        //check if the student has any contact history
+        $contactHistory = $this->getStudentContactHistory($student_id);
+
+        //if the student has any contact history
+        if (!empty($contactHistory)) {
+            //loop through the contact history
+            foreach ($contactHistory as $contact) {
+                //delete the contact history
+                $contactObject = new Contact();
+                $contactObject->removeContact($contact['id']);
+            }
+        }
+
+        //create the sql statement
+        $sql = "DELETE FROM student WHERE id = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $student_id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //check the result
+        if ($stmt->affected_rows > 0) {
+            $result = true;
+        } else {
+            $result = false;
+        }
+
+        //log the student activity if the student was deleted
+        if ($result) {
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Student', 'Student ID: ' . $student_id . ' Student Name: ' . $student_name);
+        }
+
+        //return the result
+        return $result;
     }
 };

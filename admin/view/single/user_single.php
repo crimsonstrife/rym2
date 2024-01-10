@@ -5,7 +5,7 @@ if (!defined('ISVALIDUSER')) {
 }
 
 //autoload composer dependencies
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 //include the roles class
 $role = new Roles();
@@ -35,12 +35,9 @@ $rolesData = $user->getUserRoles(intval($userId));
                     User Details
                 </div>
                 <div class="card-buttons">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>"
-                        class="btn btn-primary btn-sm">Back to Users</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $userId; ?>"
-                        class="btn btn-primary btn-sm">Edit User</a>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=delete&id=' . $userId; ?>"
-                        class="btn btn-danger btn-sm">Delete User</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>" class="btn btn-primary btn-sm">Back to Users</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $userId; ?>" class="btn btn-primary btn-sm">Edit User</a>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=delete&id=' . $userId; ?>" class="btn btn-danger btn-sm">Delete User</a>
                 </div>
             </div>
             <div class="card-body">
