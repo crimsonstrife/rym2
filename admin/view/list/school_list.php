@@ -22,17 +22,17 @@ if (!$hasReadPermission) {
     die('Error: You do not have permission to perform this request.');
 } else {
 ?>
-<div class="container-fluid px-4">
-    <h1 class="mt-4">Schools</h1>
-    <div class="row">
-        <div class="card mb-4">
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fa-solid fa-table"></i>
-                    School List
-                </div>
-                <div class="card-tools">
-                    <?php
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Schools</h1>
+        <div class="row">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-table"></i>
+                        School List
+                    </div>
+                    <div class="card-tools">
+                        <?php
                         /*confirm user has a role with create school permissions*/
                         //get the id of the create school permission
                         $createSchoolPermissionID = $permissionsObject->getPermissionIdByName('CREATE SCHOOL');
@@ -43,29 +43,28 @@ if (!$hasReadPermission) {
                         //if the user has the create school permission, display the add school button
                         if ($hasCreatePermission) {
                         ?>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=add&action=create' ?>"
-                        class="btn btn-primary">Add School</a>
-                    <?php } ?>
+                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=add&action=create' ?>" class="btn btn-primary">Add School</a>
+                        <?php } ?>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body table-scroll">
-                <table id="dataTable" class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th>School Name</th>
-                            <th>Address</th>
-                            <th>City</th>
-                            <th>State</th>
-                            <th>Zip Code</th>
-                            <th>Events Held</th>
-                            <th>Date Created</th>
-                            <th>Created By</th>
-                            <th>Date Updated</th>
-                            <th>Updated By</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
+                <div class="card-body table-scroll">
+                    <table id="dataTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>School Name</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Zip Code</th>
+                                <th>Events Held</th>
+                                <th>Date Created</th>
+                                <th>Created By</th>
+                                <th>Date Updated</th>
+                                <th>Updated By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
                             /* Setup datatable of Schools */
                             //include the event class
                             $eventsData = new Event();
@@ -78,27 +77,26 @@ if (!$hasReadPermission) {
                             //for each event, display it
                             foreach ($schoolsArray as $school) {
                             ?>
-                        <tr>
-                            <td><?php echo $school['name']; ?></td>
-                            <td><?php echo $school['address']; ?></td>
-                            <td><?php echo $school['city']; ?></td>
-                            <td><?php echo $school['state']; ?></td>
-                            <td><?php echo $school['zipcode']; ?></td>
-                            <td><?php echo $eventsData->getHeldEvents(intval($school['id'])); ?></td>
-                            <td><?php echo $school['created_at']; ?></td>
-                            <td><?php echo $usersData->getUserUsername($school['created_by']); ?>
-                            </td>
-                            <td><?php echo $school['updated_at']; ?></td>
-                            <td><?php echo $usersData->getUserUsername($school['updated_by']); ?>
-                            </td>
-                            <td>
-                                <?php /*confirm user has a role with read school permissions*/
+                                <tr>
+                                    <td><?php echo $school['name']; ?></td>
+                                    <td><?php echo $school['address']; ?></td>
+                                    <td><?php echo $school['city']; ?></td>
+                                    <td><?php echo $school['state']; ?></td>
+                                    <td><?php echo $school['zipcode']; ?></td>
+                                    <td><?php echo $eventsData->getHeldEvents(intval($school['id'])); ?></td>
+                                    <td><?php echo $school['created_at']; ?></td>
+                                    <td><?php echo $usersData->getUserUsername($school['created_by']); ?>
+                                    </td>
+                                    <td><?php echo $school['updated_at']; ?></td>
+                                    <td><?php echo $usersData->getUserUsername($school['updated_by']); ?>
+                                    </td>
+                                    <td>
+                                        <?php /*confirm user has a role with read school permissions*/
                                         //only show the view button if the user has the read school permission
                                         if ($hasReadPermission) { ?>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=single' ?>&id=<?php echo $school['id']; ?>"
-                                    class="btn btn-success">View</a>
-                                <?php } ?>
-                                <?php /*confirm user has a role with update school permissions*/
+                                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=single' ?>&id=<?php echo $school['id']; ?>" class="btn btn-success">View School</a>
+                                        <?php } ?>
+                                        <?php /*confirm user has a role with update school permissions*/
                                         //get the update school permission id
                                         $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE SCHOOL');
 
@@ -107,10 +105,9 @@ if (!$hasReadPermission) {
 
                                         //only show the edit button if the user has the update school permission
                                         if ($hasUpdatePermission) { ?>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=edit&action=edit&id=' . $school['id']; ?>"
-                                    class="btn btn-primary">Edit</a>
-                                <?php } ?>
-                                <?php /*confirm user has a role with delete school permissions*/
+                                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=edit&action=edit&id=' . $school['id']; ?>" class="btn btn-primary">Edit School</a>
+                                        <?php } ?>
+                                        <?php /*confirm user has a role with delete school permissions*/
                                         //get the delete school permission id
                                         $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE SCHOOL');
 
@@ -119,21 +116,19 @@ if (!$hasReadPermission) {
 
                                         //only show the delete button if the user has the delete school permission
                                         if ($hasDeletePermission) { ?>
-                                <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
-                                    data-bs-target="#deleteSchoolModal"
-                                    onclick="setDeleteID(<?php echo $school['id']; ?>)">
-                                    Delete School
-                                </button>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer">
-                <!-- Download CSV -->
-                <?php /*confirm user has a role with export schools permissions*/
+                                            <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSchoolModal" onclick="setDeleteID(<?php echo $school['id']; ?>)">
+                                                Delete School
+                                            </button>
+                                        <?php } ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <!-- Download CSV -->
+                    <?php /*confirm user has a role with export schools permissions*/
                     //get the id of the export schools permission
                     $exportSchoolsPermissionID = $permissionsObject->getPermissionIdByName('EXPORT SCHOOL');
 
@@ -164,74 +159,68 @@ if (!$hasReadPermission) {
                             );
                         }
                     ?>
-                <form target="_blank"
-                    action="<?php echo APP_URL . '/admin/download.php?type=schools&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
-                    method="post" enctype="multipart/form-data">
-                    <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
-                </form>
-                <?php } else { ?>
-                <p class="text-danger">You do not have permission to download the CSV of schools.</p>
-                <button class="btn btn-success" disabled>Export to CSV</button>
-                <?php } ?>
-            </div>
-            <?php if ($hasDeletePermission) { ?>
-            <div id="info" class="">
-                <!-- Delete School Modal-->
-                <!-- Modal -->
-                <div id="deleteSchoolModal" class="modal fade delete" tabindex="-1" role="dialog"
-                    aria-labelledby="#schoolDeleteModal" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 class="modal-title" id="schoolDeleteModal">Delete School - <span
-                                        id="schoolName-Title">School Name</span></h3>
-                                <button type="button" class="btn-close close" data-bs-dismiss="modal"
-                                    aria-label="Close">
-                                    <i class="fa-solid fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Are you sure you want to delete this school?</p>
-                                <p>This action cannot be undone.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <script>
-                                var deleteBaseURL =
-                                    "<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=single&action=delete&id='; ?>";
-                                </script>
-                                <form id="deleteSchoolForm" action="" method="post">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                                        onclick="clearDeleteID()">Cancel</button>
-                                    <button type="submit" class="btn btn-danger">Delete School</button>
-                                </form>
+                        <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=schools&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                            <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
+                        </form>
+                    <?php } else { ?>
+                        <p class="text-danger">You do not have permission to download the CSV of schools.</p>
+                        <button class="btn btn-success" disabled>Export to CSV</button>
+                    <?php } ?>
+                </div>
+                <?php if ($hasDeletePermission) { ?>
+                    <div id="info" class="">
+                        <!-- Delete School Modal-->
+                        <!-- Modal -->
+                        <div id="deleteSchoolModal" class="modal fade delete" tabindex="-1" role="dialog" aria-labelledby="#schoolDeleteModal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="schoolDeleteModal">Delete School - <span id="schoolName-Title">School Name</span></h3>
+                                        <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete this school?</p>
+                                        <p>This action cannot be undone.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <script>
+                                            var deleteBaseURL =
+                                                "<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=single&action=delete&id='; ?>";
+                                        </script>
+                                        <form id="deleteSchoolForm" action="" method="post">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearDeleteID()">Cancel</button>
+                                            <button type="submit" class="btn btn-danger">Delete School</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                <?php } ?>
             </div>
-            <?php } ?>
         </div>
+        <?php if ($hasDeletePermission) { ?>
+            <script>
+                //set the schools array to a javascript variable
+                var schoolsArray = <?php echo json_encode($schoolsArray); ?>;
+
+                //function to set the delete id on the action url of the delete modal based on which school is selected
+                function setDeleteID(id) {
+                    //get the school name
+                    var schoolName = schoolsArray.find(school => school.id == id).name;
+                    //set the school name in the modal title
+                    document.getElementById("schoolName-Title").innerHTML = schoolName;
+                    //set the action url of the delete modal
+                    document.getElementById("deleteSchoolForm").action = deleteBaseURL + id;
+                }
+
+                function clearDeleteID() {
+                    //set the action url of the delete modal
+                    document.getElementById("deleteSchoolForm").action = "";
+                }
+            </script>
+        <?php } ?>
     </div>
-    <?php if ($hasDeletePermission) { ?>
-    <script>
-    //set the schools array to a javascript variable
-    var schoolsArray = <?php echo json_encode($schoolsArray); ?>;
-
-    //function to set the delete id on the action url of the delete modal based on which school is selected
-    function setDeleteID(id) {
-        //get the school name
-        var schoolName = schoolsArray.find(school => school.id == id).name;
-        //set the school name in the modal title
-        document.getElementById("schoolName-Title").innerHTML = schoolName;
-        //set the action url of the delete modal
-        document.getElementById("deleteSchoolForm").action = deleteBaseURL + id;
-    }
-
-    function clearDeleteID() {
-        //set the action url of the delete modal
-        document.getElementById("deleteSchoolForm").action = "";
-    }
-    </script>
-    <?php } ?>
-</div>
 <?php } ?>
