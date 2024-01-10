@@ -40,6 +40,13 @@ if (!$hasPermission) {
             $student_id = $_GET['id'];
         }
 
+        //if the action is delete, check if the override parameter is set
+        if ($action == 'delete') {
+            if (isset($_GET['override'])) {
+                $override = $_GET['override'];
+            }
+        }
+
         //get the intvalue of the student id
         $student_id = intval($student_id);
 
@@ -65,6 +72,11 @@ if (!$hasPermission) {
             $canDelete = false;
         }
 
+        //if the override parameter is set to true, set the canDelete boolean to true
+        if ($override == 'true') {
+            $canDelete = true;
+        }
+
         //if the canDelete boolean is true, delete the student
         if ($canDelete) {
             $studentDeleted = $student->deleteStudent($student_id);
@@ -72,15 +84,15 @@ if (!$hasPermission) {
             $studentDeleted = false;
         }
     } ?>
-<!-- Completion page content -->
-<div class="container-fluid px-4">
-    <div class="row">
-        <div class="card mb-4">
-            <!-- show completion message -->
-            <div class="card-header">
-                <div class="card-title">
-                    <div>
-                        <?php
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <div>
+                            <?php
                             if ($action == 'delete') {
                                 if ($studentDeleted) {
                                     echo '<i class="fa-solid fa-check"></i>';
@@ -91,15 +103,32 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
-                    <div>
-                        <?php
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
                             if ($action == 'delete') {
-                                if ($canDelete && !$studentDeleted) {
-                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo 'The student: ' . $student_name . ', could not be deleted because of an unknown error.';
-                                } else if (!$canDelete && !$studentDeleted) {
-                                    echo 'The student: ' . $student_name . ', could not be deleted because of an error: ';
+                                if ($studentDeleted) {
+                                    echo '<p>The student ' . $student_name . ' has been deleted.</p>';
+                                } else {
+                                    echo '<p>The student ' . $student_name . ' could not be deleted.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'delete') {
+                                if (!$canDelete) {
+                                    echo '<p>The student ' . $student_name . ' cannot be deleted because they have associated records in the system.</p>';
+                                    echo '<p>Please delete the student\'s event attendance records and contact log records before attempting to delete the student.</p>';
                                     echo '<ul>';
                                     if (count($studentHasEventAttendance) > 0) {
                                         echo '<li>There are ' . strval(count($studentHasEventAttendance)) . ' events associated with the student</li>';
@@ -111,10 +140,40 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
+                    </div>
+                    <!-- present option to delete all associated records if necessary -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'delete') {
+                                if (!$canDelete) {
+                                    echo '<p>If you would like to delete all associated records, click the button below.</p>';
+                                    echo '<form action="' . APP_URL . '/admin/dashboard.php?view=students&student=single&action=delete&id=' . strval($student_id) . '&override=true" method="post">';
+                                    echo '<input type="hidden" name="deleteAll" value="true">';
+                                    echo '<button type="submit" class="btn btn-danger">Delete All Associated Records</button>';
+                                    echo '</form>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'delete') {
+                                if ($studentDeleted) {
+                                    echo '<a href="' . APP_URL . '/admin/dashboard.php?view=students&student=list" class="btn btn-primary">Return to Student List</a>';
+                                } else {
+                                    echo '<a href="' . APP_URL . '/admin/dashboard.php?view=students&student=list" class="btn btn-primary">Return to Student List</a>';
+                                }
+                            }
+                            ?>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 <?php } ?>
