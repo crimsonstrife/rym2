@@ -436,6 +436,45 @@ class Student
     }
 
     /**
+     * Get all students by a major id
+     *
+     * @param int $major_id
+     * @return array
+     */
+    public function getStudentsByMajor(int $major_id): array
+    {
+        //SQL statement to get all students by a major id
+        $sql = "SELECT * FROM student WHERE major = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $major_id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the students
+        $students = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            //loop through the rows
+            while ($row = $result->fetch_assoc()) {
+                //add the row to the students array
+                $students[] = $row;
+            }
+        }
+
+        //Return the students array
+        return $students;
+    }
+
+    /**
      * Get a student's degree level by their id
      *
      * @param int $id

@@ -338,23 +338,42 @@ class Degree extends Grade implements Major
      */
     public function deleteMajor(int $major_id): bool
     {
-        //prepare the query
-        $stmt = $this->mysqli->prepare("DELETE FROM major WHERE id = ?");
+        //get the current date and time
+        $date = date("Y-m-d H:i:s");
+
+        //get the name of the major
+        $major_name = $this->getMajorNameById($major_id);
+
+        //set the placeholder for the result
+        $result = false;
+
+        //create the sql statement
+        $sql = "DELETE FROM major WHERE id = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
 
         //bind the parameters
-        $stmt->bind_param('i', $major_id);
+        $stmt->bind_param("i", $major_id);
 
-        //execute the query
+        //execute the statement
         $stmt->execute();
 
-        //check if the query was successful
+        //check the result
         if ($stmt->affected_rows > 0) {
-            //return true if successful
-            return true;
+            $result = true;
         } else {
-            //return false if unsuccessful
-            return false;
+            $result = false;
         }
+
+        //log the major activity if the major was deleted
+        if ($result) {
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Major', 'Major ID: ' . $major_id . ' Major Name: ' . $major_name);
+        }
+
+        //return the result
+        return $result;
     }
 
     /**
