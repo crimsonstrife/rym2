@@ -143,7 +143,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                         if ($hasReadStudentsPermission) {
                                                         ?>
                                         <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single' ?>&id=<?php echo $student['id']; ?>"
-                                            class="btn btn-success btn-sm">View</a>
+                                            class="btn btn-success">View</a>
                                         <?php } ?>
                                         <?php /*check if the user has the delete students permission */
                                                         //get the id of the delete students permission
@@ -155,8 +155,11 @@ if (!isset($hasViewDashboardPermission)) {
                                                         //only display the students table if the user has the delete students permission
                                                         if ($hasDeleteStudentsPermission) {
                                                         ?>
-                                        <a href="/delete/delete_student.php?id=<?php echo $student['id']; ?>"
-                                            class="btn btn-danger btn-sm">Delete</a>
+                                        <button type="button" id="openDeleteModal" class="btn btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteStudentModal"
+                                            onclick="setDeleteID(<?php echo $student['id']; ?>)">
+                                            Delete Student
+                                        </button>
                                         <?php } ?>
                                     </td>
                                 </tr>
@@ -214,8 +217,70 @@ if (!isset($hasViewDashboardPermission)) {
                         <button class="btn btn-success" disabled>Export to CSV</button>
                         <?php } ?>
                     </div>
+                    <?php if ($hasDeleteStudentsPermission) { ?>
+                    <div id="info" class="">
+                        <!-- Delete Student Modal-->
+                        <!-- Modal -->
+                        <div id="deleteStudentModal" class="modal fade delete" tabindex="-1" role="dialog"
+                            aria-labelledby="#studentDeleteModal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="studentDeleteModal">Delete Student - <span
+                                                id="studentName-Title">Student Name</span></h3>
+                                        <button type="button" class="btn-close close" data-bs-dismiss="modal"
+                                            aria-label="Close">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete this student?</p>
+                                        <p>This action cannot be undone.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <script>
+                                        var deleteBaseURL =
+                                            "<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single&action=delete&id='; ?>";
+                                        </script>
+                                        <form id="deleteStudentForm" action="" method="post">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                                onclick="clearDeleteID()">Cancel</button>
+                                            <button type="submit" class="btn btn-danger">Delete Student</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php } ?>
                 </div>
             </div>
+            <?php if ($hasDeleteStudentsPermission) {
+                            //combine the first and last name into a single key value pair for the students array
+                            foreach ($studentsArray as $key => $row) {
+                                $studentsArray[$key]['name'] = $row['first_name'] . ' ' . $row['last_name'];
+                            }
+                        ?>
+            <script>
+            //set the students array to a javascript variable
+            var studentsArray = <?php echo json_encode($studentsArray); ?>;
+
+            //function to set the delete id on the action url of the delete modal based on which student is selected
+            function setDeleteID(id) {
+                //get the student name
+                var studentName = studentsArray.find(student => student.id == id).name;
+                //set the student name in the modal title
+                document.getElementById("studentName-Title").innerHTML = studentName;
+                //set the action url of the delete modal
+                document.getElementById("deleteStudentForm").action = deleteBaseURL + id;
+            }
+
+            function clearDeleteID() {
+                //set the action url of the delete modal
+                document.getElementById("deleteStudentForm").action = "";
+            }
+            </script>
+            <?php } ?>
             <?php } ?>
         </div>
     </main>
