@@ -594,19 +594,44 @@ class User implements Login
     }
 
     //Delete a user
-    public function deleteUser(int $id): void
+    public function deleteUser(int $user_id): bool
     {
-        //SQL statement to delete a user
+        //get the current date and time
+        $date = date("Y-m-d H:i:s");
+
+        //get the name of the user
+        $user_name = $this->getUserUsername($user_id);
+
+        //set the placeholder for the result
+        $result = false;
+
+        //create the sql statement
         $sql = "DELETE FROM users WHERE id = ?";
 
-        //Prepare the SQL statement for execution
+        //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the ID to the statement
-        $stmt->bind_param("i", $id);
+        //bind the parameters
+        $stmt->bind_param("i", $user_id);
 
-        //Execute the statement
+        //execute the statement
         $stmt->execute();
+
+        //check the result
+        if ($stmt->affected_rows > 0) {
+            $result = true;
+        } else {
+            $result = false;
+        }
+
+        //log the user activity if the user was deleted
+        if ($result) {
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted User', 'User ID: ' . $user_id . ' User Name: ' . $user_name);
+        }
+
+        //return the result
+        return $result;
     }
 
     //Update a user
@@ -659,6 +684,9 @@ class User implements Login
         $role = new Roles();
         $roleExists = $role->validateRoleById($role_id);
 
+        //get role name
+        $role_name = $role->getRoleNameById($role_id);
+
         //if the role exists, add it to the user
         if ($roleExists == true) {
             //SQL statement to add a role to a user
@@ -675,7 +703,7 @@ class User implements Login
 
             // log the activity
             $activity = new Activity();
-            $activity->logActivity(null, "Role " . strval($role_id) . " added to user " . strval($user_id), "Role " . strval($role_id) . " added to user " . strval($user_id));
+            $activity->logActivity(null, "User Updated", "Role ID: " . strval($role_id) . " Role Name: " . $role_name . " added to User ID: " . strval($user_id) . " User Name: " . $this->getUserUsername($user_id) . "");
         } else {
             //if the role does not exist, throw an exception
             throw new Exception("Role does not exist.");
@@ -946,7 +974,7 @@ class User implements Login
 
         // log the activity
         $activity = new Activity();
-        $activity->logActivity($updated_by, "User Modified.", 'User ' . $username);
+        $activity->logActivity($updated_by, "User Updated.", 'User: ' . $username . ' updated by User: ' . strval($updated_by));
 
         //if the user was modified, return true
         return true;
