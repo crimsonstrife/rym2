@@ -58,52 +58,54 @@ if (isset($_POST['generate_report'])) {
                     <?php } ?>
                 </div>
             </div>
-            <div class="card-body table-scroll">
-                <!-- display the report list for the report type -->
-                <table id="dataTable" class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Report ID</th>
-                            <th>Report Type</th>
-                            <th>Date Created</th>
-                            <th>Created By</th>
-                            <th>Date Updated</th>
-                            <th>Updated By</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        /* Setup datatable of reports */
-                        //include the users class
-                        $usersData = new User();
-                        //get all reports
-                        $reportsArray = $reportClass->getReports();
-                        //sort the reports by date created
-                        usort($reportsArray, function ($a, $b) {
-                            return strtotime($b['created_at']) - strtotime($a['created_at']);
-                        });
-                        //for each report, display it
-                        foreach ($reportsArray as $report) {
-                        ?>
-                        <tr>
-                            <td><?php echo $report['id']; ?></td>
-                            <td><?php echo $report['report_type']; ?></td>
-                            <td><?php echo $report['created_at']; ?></td>
-                            <td><?php echo $report['created_by']; ?>
-                            </td>
-                            <td><?php echo $report['updated_at']; ?></td>
-                            <td><?php echo $report['updated_by']; ?>
-                            </td>
-                            <td>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=single&type=' . urlencode($reportType) . '&id=' . $report['id']; ?>"
-                                    class="btn btn-success">View</a>
-                                <a href="/delete/delete_report.php?id=<?php echo $report['id']; ?>"
-                                    class="btn btn-danger">Delete</a>
-                            </td>
-                        </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+            <div class="card-body">
+                <div class="table-scroll table-fixedHead table-responsive">
+                    <!-- display the report list for the report type -->
+                    <table id="dataTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Report ID</th>
+                                <th>Report Type</th>
+                                <th>Date Created</th>
+                                <th>Created By</th>
+                                <th>Date Updated</th>
+                                <th>Updated By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            /* Setup datatable of reports */
+                            //include the users class
+                            $usersData = new User();
+                            //get all reports
+                            $reportsArray = $reportClass->getReports();
+                            //sort the reports by date created
+                            usort($reportsArray, function ($a, $b) {
+                                return strtotime($b['created_at']) - strtotime($a['created_at']);
+                            });
+                            //for each report, display it
+                            foreach ($reportsArray as $report) {
+                            ?>
+                            <tr>
+                                <td><?php echo $report['id']; ?></td>
+                                <td><?php echo $report['report_type']; ?></td>
+                                <td><?php echo $report['created_at']; ?></td>
+                                <td><?php echo $report['created_by']; ?>
+                                </td>
+                                <td><?php echo $report['updated_at']; ?></td>
+                                <td><?php echo $report['updated_by']; ?>
+                                </td>
+                                <td>
+                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=single&type=' . urlencode($reportType) . '&id=' . $report['id']; ?>"
+                                        class="btn btn-success">View</a>
+                                    <a href="/delete/delete_report.php?id=<?php echo $report['id']; ?>"
+                                        class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

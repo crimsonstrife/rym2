@@ -10,9 +10,21 @@ table {
 	width: 100%;
 }
 
+.table-fixedHead {
+	overflow: auto;
+	height: 100%;
+	max-height: 500px;
+}
+
 #dataTable > tbody > tr > td {
 	word-wrap: normal;
 	max-width: 250px;
+}
+
+#dataTable > thead > tr > th {
+	position: sticky;
+	top: 0;
+	z-index: 1;
 }
 
 #map {

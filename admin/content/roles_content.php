@@ -59,7 +59,18 @@ if (!isset($hasViewDashboardPermission)) {
                             }
                             break;
                         case 'single':
-                            include_once('./view/single/role_single.php');
+                            if (isset($_GET['action'])) {
+                                switch ($_GET['action']) {
+                                    case 'delete':
+                                        include_once('./editor/actions/role/delete.php');
+                                        break;
+                                    default:
+                                        include_once('./view/single/role_single.php');
+                                        break;
+                                }
+                            } else {
+                                include_once('./view/single/role_single.php');
+                            }
                             break;
                         default:
                             include_once('./view/list/role_list.php');

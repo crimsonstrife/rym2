@@ -46,65 +46,67 @@ if (!$hasReadPermission) {
                         <?php } ?>
                     </div>
                 </div>
-                <div class="card-body table-scroll">
-                    <table id="dataTable" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Degree Name/Title</th>
-                                <th>Date Created</th>
-                                <th>Created By</th>
-                                <th>Date Updated</th>
-                                <th>Updated By</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            /* Setup datatable of Degree Levels */
-                            //include the degree class
-                            $degreesData = new Degree();
-                            //include the users class
-                            $usersData = new User();
-                            //get all degree levels
-                            $degreesArray = $degreesData->getAllGrades();
-                            //for each event, display it
-                            foreach ($degreesArray as $degree) {
-                            ?>
+                <div class="card-body">
+                    <div class="table-scroll table-fixedHead table-responsive">
+                        <table id="dataTable" class="table table-striped table-bordered">
+                            <thead>
                                 <tr>
-                                    <td><?php echo $degree['name']; ?></td>
-                                    <td><?php echo $degree['created_at']; ?></td>
-                                    <td><?php echo $usersData->getUserUsername($degree['created_by']); ?></td>
-                                    <td><?php echo $degree['updated_at']; ?></td>
-                                    <td><?php echo $usersData->getUserUsername($degree['updated_by']); ?></td>
-                                    <td>
-                                        <?php /*confirm user has a role with update degree permissions*/
-                                        //get the update degree permission id
-                                        $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE DEGREE');
-
-                                        //boolean to check if the user has the update degree permission
-                                        $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
-
-                                        //only show the edit button if the user has the update degree permission
-                                        if ($hasUpdatePermission) { ?>
-                                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=edit&action=edit&id=' . $degree['id']; ?>" class="btn btn-primary">Edit</a>
-                                        <?php } ?>
-                                        <?php /*confirm user has a role with delete degree permissions*/
-                                        //get the delete degree permission id
-                                        $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE DEGREE');
-
-                                        //boolean to check if the user has the delete degree permission
-                                        $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
-
-                                        //only show the delete button if the user has the delete degree permission
-                                        if ($hasDeletePermission) { ?>
-                                            <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDegreeModal" onclick="setDeleteID(<?php echo $degree['id']; ?>)">
-                                                Delete Degree
-                                            </button>
-                                        <?php } ?>
-                                    </td>
+                                    <th>Degree Name/Title</th>
+                                    <th>Date Created</th>
+                                    <th>Created By</th>
+                                    <th>Date Updated</th>
+                                    <th>Updated By</th>
                                 </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php
+                                /* Setup datatable of Degree Levels */
+                                //include the degree class
+                                $degreesData = new Degree();
+                                //include the users class
+                                $usersData = new User();
+                                //get all degree levels
+                                $degreesArray = $degreesData->getAllGrades();
+                                //for each event, display it
+                                foreach ($degreesArray as $degree) {
+                                ?>
+                                    <tr>
+                                        <td><?php echo $degree['name']; ?></td>
+                                        <td><?php echo $degree['created_at']; ?></td>
+                                        <td><?php echo $usersData->getUserUsername($degree['created_by']); ?></td>
+                                        <td><?php echo $degree['updated_at']; ?></td>
+                                        <td><?php echo $usersData->getUserUsername($degree['updated_by']); ?></td>
+                                        <td>
+                                            <?php /*confirm user has a role with update degree permissions*/
+                                            //get the update degree permission id
+                                            $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE DEGREE');
+
+                                            //boolean to check if the user has the update degree permission
+                                            $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
+
+                                            //only show the edit button if the user has the update degree permission
+                                            if ($hasUpdatePermission) { ?>
+                                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=edit&action=edit&id=' . $degree['id']; ?>" class="btn btn-primary">Edit Degree</a>
+                                            <?php } ?>
+                                            <?php /*confirm user has a role with delete degree permissions*/
+                                            //get the delete degree permission id
+                                            $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE DEGREE');
+
+                                            //boolean to check if the user has the delete degree permission
+                                            $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
+
+                                            //only show the delete button if the user has the delete degree permission
+                                            if ($hasDeletePermission) { ?>
+                                                <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDegreeModal" onclick="setDeleteID(<?php echo $degree['id']; ?>)">
+                                                    Delete Degree
+                                                </button>
+                                            <?php } ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <!-- Download CSV -->

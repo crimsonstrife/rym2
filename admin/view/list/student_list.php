@@ -32,132 +32,134 @@ if (!$hasReadPermission) {
                     Student List
                 </div>
             </div>
-            <div class="card-body table-scroll">
-                <table id="dataTable" class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Address</th>
-                            <th>City</th>
-                            <th>State</th>
-                            <th>Zipcode</th>
-                            <th>Field</th>
-                            <th>Position Type</th>
-                            <th>Degree</th>
-                            <th>Major</th>
-                            <th>Graduation Date</th>
-                            <th>School</th>
-                            <th>Date Submitted</th>
-                            <!-- <th>Created By</th> -->
-                            <!-- <th>Date Updated</th> -->
-                            <!-- <th>Updated By</th> -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            /* Setup datatable of Students */
-                            //include the student class
-                            $studentData = new Student();
-                            //get all the students
-                            $studentsArray = $studentData->getStudents();
-                            //include the schools class
-                            $schoolsData = new School();
-                            //include the Degrees class
-                            $degreesData = new Degree();
-                            //include the Fields class
-                            $fieldsData = new JobField();
-                            //for each student, display it
-                            foreach ($studentsArray as $student) {
-                            ?>
-                        <tr>
-                            <td>
-                                <?php /*confirm user has a role with read student permissions*/
-                                        //only show the view button if the user has the read student permission
-                                        if ($hasReadPermission) { ?>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single' ?>&id=<?php echo $student['id']; ?>"
-                                    class="btn btn-success">View Student</a>
-                                <?php } ?>
-                            </td>
-                            <td><?php echo $student['first_name']; ?></td>
-                            <td><?php echo $student['last_name']; ?></td>
-                            <td><?php echo formatEmail($student['email']); ?></td>
-                            <td><?php echo formatPhone($student['phone']); ?></td>
-                            <td><?php echo $student['address']; ?></td>
-                            <td><?php echo $student['city']; ?></td>
-                            <td><?php echo $student['state']; ?></td>
-                            <td><?php echo $student['zipcode']; ?></td>
-                            <td><?php echo $fieldsData->getSubjectName($student['interest']); ?></td>
-                            <td><?php echo $student['position']; ?></td>
-                            <td><?php echo $degreesData->getGradeNameById($student['degree']); ?></td>
-                            <td><?php echo $degreesData->getMajorNameById($student['major']); ?></td>
-                            <td><?php echo $student['graduation']; ?></td>
-                            <td><?php echo $schoolsData->getSchoolName($student['school']); ?></td>
-                            <td><?php echo $student['created_at']; ?></td>
-                            <td>
-                                <?php /*confirm user has a role with delete student permissions*/
-                                        //get the delete student permission id
-                                        $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
+            <div class="card-body">
+                <div class="table-scroll table-fixedHead table-responsive">
+                    <table id="dataTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Zipcode</th>
+                                <th>Field</th>
+                                <th>Position Type</th>
+                                <th>Degree</th>
+                                <th>Major</th>
+                                <th>Graduation Date</th>
+                                <th>School</th>
+                                <th>Date Submitted</th>
+                                <!-- <th>Created By</th> -->
+                                <!-- <th>Date Updated</th> -->
+                                <!-- <th>Updated By</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                /* Setup datatable of Students */
+                                //include the student class
+                                $studentData = new Student();
+                                //get all the students
+                                $studentsArray = $studentData->getStudents();
+                                //include the schools class
+                                $schoolsData = new School();
+                                //include the Degrees class
+                                $degreesData = new Degree();
+                                //include the Fields class
+                                $fieldsData = new JobField();
+                                //for each student, display it
+                                foreach ($studentsArray as $student) {
+                                ?>
+                            <tr>
+                                <td>
+                                    <?php /*confirm user has a role with read student permissions*/
+                                            //only show the view button if the user has the read student permission
+                                            if ($hasReadPermission) { ?>
+                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single' ?>&id=<?php echo $student['id']; ?>"
+                                        class="btn btn-success">View Student</a>
+                                    <?php } ?>
+                                </td>
+                                <td><?php echo $student['first_name']; ?></td>
+                                <td><?php echo $student['last_name']; ?></td>
+                                <td><?php echo formatEmail($student['email']); ?></td>
+                                <td><?php echo formatPhone($student['phone']); ?></td>
+                                <td><?php echo $student['address']; ?></td>
+                                <td><?php echo $student['city']; ?></td>
+                                <td><?php echo $student['state']; ?></td>
+                                <td><?php echo $student['zipcode']; ?></td>
+                                <td><?php echo $fieldsData->getSubjectName($student['interest']); ?></td>
+                                <td><?php echo $student['position']; ?></td>
+                                <td><?php echo $degreesData->getGradeNameById($student['degree']); ?></td>
+                                <td><?php echo $degreesData->getMajorNameById($student['major']); ?></td>
+                                <td><?php echo $student['graduation']; ?></td>
+                                <td><?php echo $schoolsData->getSchoolName($student['school']); ?></td>
+                                <td><?php echo $student['created_at']; ?></td>
+                                <td>
+                                    <?php /*confirm user has a role with delete student permissions*/
+                                            //get the delete student permission id
+                                            $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
 
-                                        //boolean to check if the user has the delete student permission
-                                        $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
+                                            //boolean to check if the user has the delete student permission
+                                            $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
 
-                                        //only show the delete button if the user has the delete student permission
-                                        if ($hasDeletePermission) { ?>
-                                <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
-                                    data-bs-target="#deleteStudentModal"
-                                    onclick="setDeleteID(<?php echo $student['id']; ?>)">
-                                    Delete Student
-                                </button>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+                                            //only show the delete button if the user has the delete student permission
+                                            if ($hasDeletePermission) { ?>
+                                    <button type="button" id="openDeleteModal" class="btn btn-danger"
+                                        data-bs-toggle="modal" data-bs-target="#deleteStudentModal"
+                                        onclick="setDeleteID(<?php echo $student['id']; ?>)">
+                                        Delete Student
+                                    </button>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="card-footer">
                 <!-- Download CSV -->
                 <?php /*confirm user has a role with export students permissions*/
-                    //get the id of the export students permission
-                    $exportStudentsPermissionID = $permissionsObject->getPermissionIdByName('EXPORT STUDENT');
+                        //get the id of the export students permission
+                        $exportStudentsPermissionID = $permissionsObject->getPermissionIdByName('EXPORT STUDENT');
 
-                    //boolean to check if the user has the export students permission
-                    $hasExportStudentsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportStudentsPermissionID);
+                        //boolean to check if the user has the export students permission
+                        $hasExportStudentsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportStudentsPermissionID);
 
-                    if ($hasExportStudentsPermission) {
-                        //prepare the user array for download
-                        $csvArray = $studentsArray;
-                        //substitute the school id for the school name, degree id for the degree name, field id for the field name, and the major id for the major name
-                        foreach ($csvArray as $key => $row) {
-                            $csvArray[$key]['school'] = $schoolsData->getSchoolName($row['school']);
-                            $csvArray[$key]['degree'] = $degreesData->getGradeNameById($row['degree']);
-                            $csvArray[$key]['major'] = $degreesData->getMajorNameById($row['major']);
-                            $csvArray[$key]['interest'] = $fieldsData->getSubjectName($row['interest']);
-                        }
-                        //clean up the column headers to be more readable, i.e. remove underscores and capitalize
-                        foreach ($csvArray as $key => $row) {
-                            $csvArray[$key] = array(
-                                'First Name' => $row['first_name'],
-                                'Last Name' => $row['last_name'],
-                                'Email' => $row['email'],
-                                'Phone' => $row['phone'],
-                                'Address' => $row['address'],
-                                'City' => $row['city'],
-                                'State' => $row['state'],
-                                'Zipcode' => $row['zipcode'],
-                                'Field' => $row['interest'],
-                                'Position Type' => $row['position'],
-                                'Degree' => $row['degree'],
-                                'Major' => $row['major'],
-                                'Graduation Date' => $row['graduation'],
-                                'School' => $row['school'],
-                                'Date Submitted' => $row['created_at']
-                            );
-                        } ?>
+                        if ($hasExportStudentsPermission) {
+                            //prepare the user array for download
+                            $csvArray = $studentsArray;
+                            //substitute the school id for the school name, degree id for the degree name, field id for the field name, and the major id for the major name
+                            foreach ($csvArray as $key => $row) {
+                                $csvArray[$key]['school'] = $schoolsData->getSchoolName($row['school']);
+                                $csvArray[$key]['degree'] = $degreesData->getGradeNameById($row['degree']);
+                                $csvArray[$key]['major'] = $degreesData->getMajorNameById($row['major']);
+                                $csvArray[$key]['interest'] = $fieldsData->getSubjectName($row['interest']);
+                            }
+                            //clean up the column headers to be more readable, i.e. remove underscores and capitalize
+                            foreach ($csvArray as $key => $row) {
+                                $csvArray[$key] = array(
+                                    'First Name' => $row['first_name'],
+                                    'Last Name' => $row['last_name'],
+                                    'Email' => $row['email'],
+                                    'Phone' => $row['phone'],
+                                    'Address' => $row['address'],
+                                    'City' => $row['city'],
+                                    'State' => $row['state'],
+                                    'Zipcode' => $row['zipcode'],
+                                    'Field' => $row['interest'],
+                                    'Position Type' => $row['position'],
+                                    'Degree' => $row['degree'],
+                                    'Major' => $row['major'],
+                                    'Graduation Date' => $row['graduation'],
+                                    'School' => $row['school'],
+                                    'Date Submitted' => $row['created_at']
+                                );
+                            } ?>
                 <form target="_blank"
                     action="<?php echo APP_URL . '/admin/download.php?type=students&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
                     method="post" enctype="multipart/form-data">
@@ -207,11 +209,11 @@ if (!$hasReadPermission) {
         </div>
     </div>
     <?php if ($hasDeletePermission) {
-            //combine the first and last name into a single key value pair for the students array
-            foreach ($studentsArray as $key => $row) {
-                $studentsArray[$key]['name'] = $row['first_name'] . ' ' . $row['last_name'];
-            }
-        ?>
+                //combine the first and last name into a single key value pair for the students array
+                foreach ($studentsArray as $key => $row) {
+                    $studentsArray[$key]['name'] = $row['first_name'] . ' ' . $row['last_name'];
+                }
+            ?>
     <script>
     //set the students array to a javascript variable
     var studentsArray = <?php echo json_encode($studentsArray); ?>;

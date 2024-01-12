@@ -47,97 +47,99 @@ if (!$hasReadPermission) {
                     <?php } ?>
                 </div>
             </div>
-            <div class="card-body table-scroll">
-                <table id="dataTable" class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Subject/Field Name</th>
-                            <th>Date Created</th>
-                            <th>Created By</th>
-                            <th>Date Updated</th>
-                            <th>Updated By</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            /* Setup datatable of Subjects */
-                            //include the Area of Interest class
-                            $subjectsData = new AreaOfInterest();
-                            //include the users class
-                            $usersData = new User();
-                            //get all subjects
-                            $subjectsArray = $subjectsData->getAllSubjects();
-                            //for each event, display it
-                            foreach ($subjectsArray as $subject) {
-                            ?>
-                        <tr>
-                            <td><?php echo $subject['name']; ?></td>
-                            <td><?php echo $subject['created_at']; ?></td>
-                            <td><?php echo $usersData->getUserUsername($subject['created_by']); ?></td>
-                            <td><?php echo $subject['updated_at']; ?></td>
-                            <td><?php echo $usersData->getUserUsername($subject['updated_by']); ?></td>
-                            <td>
-                                <?php /*confirm user has a role with update subject permissions*/
-                                        //get the update subject permission id
-                                        $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE SUBJECT');
+            <div class="card-body">
+                <div class="table-scroll table-fixedHead table-responsive">
+                    <table id="dataTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Subject/Field Name</th>
+                                <th>Date Created</th>
+                                <th>Created By</th>
+                                <th>Date Updated</th>
+                                <th>Updated By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                /* Setup datatable of Subjects */
+                                //include the Area of Interest class
+                                $subjectsData = new AreaOfInterest();
+                                //include the users class
+                                $usersData = new User();
+                                //get all subjects
+                                $subjectsArray = $subjectsData->getAllSubjects();
+                                //for each event, display it
+                                foreach ($subjectsArray as $subject) {
+                                ?>
+                            <tr>
+                                <td><?php echo $subject['name']; ?></td>
+                                <td><?php echo $subject['created_at']; ?></td>
+                                <td><?php echo $usersData->getUserUsername($subject['created_by']); ?></td>
+                                <td><?php echo $subject['updated_at']; ?></td>
+                                <td><?php echo $usersData->getUserUsername($subject['updated_by']); ?></td>
+                                <td>
+                                    <?php /*confirm user has a role with update subject permissions*/
+                                            //get the update subject permission id
+                                            $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE SUBJECT');
 
-                                        //boolean to check if the user has the update subject permission
-                                        $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
+                                            //boolean to check if the user has the update subject permission
+                                            $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
 
-                                        //only show the edit button if the user has the update subject permission
-                                        if ($hasUpdatePermission) { ?>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=edit&action=edit&id=' . $subject['id']; ?>"
-                                    class="btn btn-primary">Edit Subject</a>
-                                <?php } ?>
-                                <?php /*confirm user has a role with delete subject permissions*/
-                                        //get the delete subject permission id
-                                        $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE SUBJECT');
+                                            //only show the edit button if the user has the update subject permission
+                                            if ($hasUpdatePermission) { ?>
+                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=edit&action=edit&id=' . $subject['id']; ?>"
+                                        class="btn btn-primary">Edit Subject</a>
+                                    <?php } ?>
+                                    <?php /*confirm user has a role with delete subject permissions*/
+                                            //get the delete subject permission id
+                                            $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE SUBJECT');
 
-                                        //boolean to check if the user has the delete subject permission
-                                        $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
+                                            //boolean to check if the user has the delete subject permission
+                                            $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
 
-                                        //only show the delete button if the user has the delete subject permission
-                                        if ($hasDeletePermission) { ?>
-                                <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
-                                    data-bs-target="#deleteSubjectModal"
-                                    onclick="setDeleteID(<?php echo $subject['id']; ?>)">
-                                    Delete Subject
-                                </button>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+                                            //only show the delete button if the user has the delete subject permission
+                                            if ($hasDeletePermission) { ?>
+                                    <button type="button" id="openDeleteModal" class="btn btn-danger"
+                                        data-bs-toggle="modal" data-bs-target="#deleteSubjectModal"
+                                        onclick="setDeleteID(<?php echo $subject['id']; ?>)">
+                                        Delete Subject
+                                    </button>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="card-footer">
                 <!-- Download CSV -->
                 <?php /*confirm user has a role with export subjects permissions*/
-                    //get the id of the export subjects permission
-                    $exportSubjectsPermissionID = $permissionsObject->getPermissionIdByName('EXPORT SUBJECT');
+                        //get the id of the export subjects permission
+                        $exportSubjectsPermissionID = $permissionsObject->getPermissionIdByName('EXPORT SUBJECT');
 
-                    //boolean to check if the user has the export subjects permission
-                    $hasExportSubjectsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportSubjectsPermissionID);
+                        //boolean to check if the user has the export subjects permission
+                        $hasExportSubjectsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportSubjectsPermissionID);
 
-                    if ($hasExportSubjectsPermission) {
-                        //prepare the degree array for download
-                        $csvArray = $subjectsArray;
-                        //set the created by and updated by to the username
-                        foreach ($csvArray as $key => $row) {
-                            $csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the subject, and swap out the user id
-                            $csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the subject, and swap out the user id
-                        }
-                        //clean up the column headers to be more readable, i.e. remove underscores and capitalize
-                        foreach ($csvArray as $key => $row) {
-                            $csvArray[$key] = array(
-                                'Subject/Field Name' => $row['name'],
-                                'Date Created' => $row['created_at'],
-                                'Created By' => $row['created_by'],
-                                'Date Updated' => $row['updated_at'],
-                                'Updated By' => $row['updated_by']
-                            );
-                        }
-                    ?>
+                        if ($hasExportSubjectsPermission) {
+                            //prepare the degree array for download
+                            $csvArray = $subjectsArray;
+                            //set the created by and updated by to the username
+                            foreach ($csvArray as $key => $row) {
+                                $csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the subject, and swap out the user id
+                                $csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the subject, and swap out the user id
+                            }
+                            //clean up the column headers to be more readable, i.e. remove underscores and capitalize
+                            foreach ($csvArray as $key => $row) {
+                                $csvArray[$key] = array(
+                                    'Subject/Field Name' => $row['name'],
+                                    'Date Created' => $row['created_at'],
+                                    'Created By' => $row['created_by'],
+                                    'Date Updated' => $row['updated_at'],
+                                    'Updated By' => $row['updated_by']
+                                );
+                            }
+                        ?>
                 <form target="_blank"
                     action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
                     method="post" enctype="multipart/form-data">
