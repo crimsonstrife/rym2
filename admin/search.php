@@ -68,7 +68,7 @@ if (isset($_GET['view'])) {
                                             if (isset($searchResults['students']) && !empty($searchResults['students'])) {
                                         ?>
                         <h5>Students</h5>
-                        <div class="table-responsive">
+                        <div class="table-scroll table-fixedHead table-responsive">
                             <table class="table table-striped table-bordered" id="dataTable" width="100%"
                                 cellspacing="0">
                                 <thead>
@@ -113,7 +113,7 @@ if (isset($_GET['view'])) {
                                             //check if the schools key contains any data
                                             if (isset($searchResults['schools']) && !empty($searchResults['schools'])) { ?>
                         <h5>Schools</h5>
-                        <div class="table-responsive">
+                        <div class="table-scroll table-fixedHead table-responsive">
                             <table class="table table-striped table-bordered" id="dataTable" width="100%"
                                 cellspacing="0">
                                 <thead>
@@ -150,7 +150,7 @@ if (isset($_GET['view'])) {
                                             //check if the events key contains any data
                                             if (isset($searchResults['events']) && !empty($searchResults['events'])) { ?>
                         <h5>Events</h5>
-                        <div class="table-responsive">
+                        <div class="table-scroll table-fixedHead table-responsive">
                             <table class="table table-striped table-bordered" id="dataTable" width="100%"
                                 cellspacing="0">
                                 <thead>
@@ -191,7 +191,7 @@ if (isset($_GET['view'])) {
                         <div class="table-responsive">
                             <?php if (isset($searchResults['wildcard']['students']) && !empty($searchResults['wildcard']['students'])) { ?>
                             <h5>Students</h5>
-                            <div class="table-responsive">
+                            <div class="table-scroll table-fixedHead table-responsive">
                                 <table class="table table-striped table-bordered" id="dataTable" width="100%"
                                     cellspacing="0">
                                     <thead>
@@ -236,7 +236,7 @@ if (isset($_GET['view'])) {
                                                 //check if the schools key contains any data
                                                 if (isset($searchResults['wildcard']['schools']) && !empty($searchResults['wildcard']['schools'])) { ?>
                             <h5>Schools</h5>
-                            <div class="table-responsive">
+                            <div class="table-scroll table-fixedHead table-responsive">
                                 <table class="table table-striped table-bordered" id="dataTable" width="100%"
                                     cellspacing="0">
                                     <thead>
@@ -274,7 +274,7 @@ if (isset($_GET['view'])) {
                                                 //check if the events key contains any data
                                                 if (isset($searchResults['wildcard']['events']) && !empty($searchResults['wildcard']['events'])) { ?>
                             <h5>Events</h5>
-                            <div class="table-responsive">
+                            <div class="table-scroll table-fixedHead table-responsive">
                                 <table class="table table-striped table-bordered" id="dataTable" width="100%"
                                     cellspacing="0">
                                     <thead>
