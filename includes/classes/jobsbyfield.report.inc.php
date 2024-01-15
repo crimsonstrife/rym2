@@ -370,9 +370,55 @@ class JobsByFieldReport extends Report
         return true;
     }
 
+    /**
+     * Delete a report by id
+     *
+     * @param int $id - the id of the report to delete
+     *
+     * @return bool
+     */
     public function deleteReport(int $id): bool
     {
-        return false;
+        //get the current date and time
+        $date = date("Y-m-d H:i:s");
+
+        //current user id
+        $user_id = intval($_SESSION['user_id']);
+
+        //boolean to track if the report was deleted
+        $result = false;
+
+        //create the SQL query
+        $sql = "DELETE FROM reports WHERE id = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //bind the parameters
+        $stmt->bind_param('i', $id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //check the result
+        if ($stmt->affected_rows > 0) {
+            $result = true;
+        } else {
+            $result = false;
+        }
+
+        //log the report activity and return the result
+        if ($result) {
+            //log the report activity
+            $activity = new Activity();
+            $activity->logActivity($user_id, 'Deleted Report', 'Report ' . strval($id));
+
+            //return result
+            return $result;
+        } else {
+            //return result
+            return $result;
+        }
     }
 
     /**
