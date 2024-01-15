@@ -280,96 +280,42 @@ if (!$hasPermission) {
 
         //if the action is Edit, update the role
         if ($action == 'edit') {
-            //debugging
-            error_log('canUpdate: ' . strval($canUpdate));
-            error_log('override: ' . strval($override));
-            error_log('editAll: ' . strval($editAll));
-            error_log('role_name: ' . $role_name);
-            error_log('role_permissions: ' . print_r($role_permissions, true));
-            error_log('roleIsSuperAdmin: ' . strval($roleIsSuperAdmin));
-            error_log('roleIsAdmin: ' . strval($roleIsAdmin));
-            error_log('hasIsAdminPermission: ' . strval($hasIsAdminPermission));
-            error_log('hasIsSuperAdminPermission: ' . strval($hasIsSuperAdminPermission));
-            error_log('superAdminCount: ' . strval($superAdminCount));
-            error_log('adminCount: ' . strval($adminCount));
-            error_log('roleNameError: ' . $roleNameError);
-            error_log('permissionsError: ' . $permissionsError);
-            error_log('permissionsWarning: ' . $permissionsWarning);
-
             //check if the canUpdate boolean is true
             if ($canUpdate) {
-                //debug
-                error_log('canUpdate is true');
                 //check for errors
                 if ((!$roleNameError == '' or !$roleNameError == NULL) || (!$permissionsError == '' or !$permissionsError == NULL) || (!$permissionsWarning == '' or !$permissionsWarning == NULL)) {
-                    //debug
-                    error_log('error or warning messages found');
                     if ($canUpdate && $override == 'true') {
-                        //debug
-                        error_log('canUpdate is true and override is true');
                         //update the role
                         $roleUpdated = $role->updateRole($roleId, intval($_SESSION['user_id']), $role_name, $role_permissions);
-                        //debug
-                        error_log('role update attempted: ' . strval($roleUpdated));
                     } elseif ($canUpdate && !$override == 'true') {
-                        //debug
-                        error_log('canUpdate is true and override is false');
                         //update the role
                         $roleUpdated = $role->updateRole($roleId, intval($_SESSION['user_id']), $role_name, $role_permissions);
-                        //debug
-                        error_log('role update attempted: ' . strval($roleUpdated));
                     } elseif ($canUpdate) {
-                        //debug
-                        error_log('canUpdate is true');
                         //update the role
                         $roleUpdated = $role->updateRole($roleId, intval($_SESSION['user_id']), $role_name, $role_permissions);
-                        //debug
-                        error_log('role update attempted: ' . strval($roleUpdated));
                     } else {
                         //set the role updated boolean to false
                         $roleUpdated = false;
-                        //debug
-                        error_log('canUpdate is false');
                     }
                 } elseif (!$permissionsWarning == '' && $override == 'true') {
-                    //debug
-                    error_log('permissionsWarning is true and override is true');
                     //update the role
                     $roleUpdated = $role->updateRole($roleId, intval($_SESSION['user_id']), $role_name, $role_permissions);
-                    //debug
-                    error_log('role update attempted: ' . strval($roleUpdated));
                 } elseif (!$permissionsWarning == '' && !$override == 'true') {
-                    //debug
-                    error_log('permissionsWarning is true and override is false');
                     //set the role updated boolean to false
                     $roleUpdated = false;
-                    //debug
-                    error_log('role update attempted: ' . strval($roleUpdated));
                 } elseif (!$permissionsWarning == '' or !$permissionsError == '' or !$roleNameError == '') {
-                    //debug
-                    error_log('permissionsWarning is empty and permissions error and role name error are empty');
                     //set the role updated boolean to false
                     $roleUpdated = $role->updateRole($roleId, intval($_SESSION['user_id']), $role_name, $role_permissions);
-                    //debug
-                    error_log('role update attempted: ' . strval($roleUpdated));
                 } elseif (($roleNameError == '' || $roleNameError == NULL) && ($permissionsError == '' || $permissionsError == NULL) && ($permissionsWarning == '' || $permissionsWarning == NULL)) {
-                    //debug
-                    error_log('roleNameError, permissionsError, and permissionsWarning are empty');
                     //update the role
                     $roleUpdated = $role->updateRole($roleId, intval($_SESSION['user_id']), $role_name, $role_permissions);
-                    //debug
-                    error_log('role update attempted: ' . strval($roleUpdated));
                 } else {
                     //set the role updated boolean to false
                     $roleUpdated = false;
-                    //debug
-                    error_log('no error or warning messages found - but no update attempted');
                 }
             } else {
                 //set the role updated boolean to false
                 $roleUpdated = false;
-                //debug
-                error_log('canUpdate is false');
             }
         }
     } ?>
