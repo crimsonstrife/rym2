@@ -14,6 +14,12 @@ if (!isset($_SESSION['user_id'])) {
     require_once(__DIR__ . '../../includes/utils/helpers.php');
 }
 
+//include the permissions class
+$permissionsObject = new Permission();
+
+//include the auth class
+$auth = new Authenticator();
+
 //verify the url parameter
 if (isset($_GET['view'])) {
     switch ($_GET['view']) {
@@ -60,12 +66,23 @@ if (isset($_GET['view'])) {
                     </div>
                     <div class="card-body">
                         <?php if (isset($searchResults) && !empty($searchResults)) {
-                                            //debug
-                                            //echo '<pre>';
-                                            //print_r($searchResults);
-                                            //echo '</pre>';
                                             //check if the students key contains any data
                                             if (isset($searchResults['students']) && !empty($searchResults['students'])) {
+                                                // confirm user has a role with read student permissions
+                                                //get the read student permission id
+                                                $readStudentPermissionID = $permissionsObject->getPermissionIdByName('READ STUDENT');
+
+                                                //boolean to check if the user has the read student permission
+                                                $hasReadStudentPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readStudentPermissionID);
+
+                                                //prevent the user from seeing the results of the student search if they do not have the read student permission
+                                                if (!$hasReadStudentPermission) {
+                                                    //students found, but user does not have read student permission
+                                                    echo '<h5>Students</h5>
+                                                <div class="table-responsive">';
+                                                    echo '<p>Student results may have been found, but you lack permission to view results.</p>';
+                                                    echo '</div>';
+                                                } else {
                                         ?>
                         <h5>Students</h5>
                         <div class="table-scroll table-fixedHead table-responsive">
@@ -103,7 +120,8 @@ if (isset($_GET['view'])) {
                                 </tbody>
                             </table>
                         </div>
-                        <?php } else {
+                        <?php }
+                                            } else {
                                                 //no students found
                                                 echo '<h5>Students</h5>
                                                 <div class="table-responsive">';
@@ -111,7 +129,23 @@ if (isset($_GET['view'])) {
                                                 echo '</div>';
                                             }
                                             //check if the schools key contains any data
-                                            if (isset($searchResults['schools']) && !empty($searchResults['schools'])) { ?>
+                                            if (isset($searchResults['schools']) && !empty($searchResults['schools'])) {
+                                                // confirm user has a role with read school permissions
+                                                //get the read school permission id
+                                                $readSchoolPermissionID = $permissionsObject->getPermissionIdByName('READ SCHOOL');
+
+                                                //boolean to check if the user has the read school permission
+                                                $hasReadSchoolPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readSchoolPermissionID);
+
+                                                //prevent the user from seeing the results of the school search if they do not have the read school permission
+                                                if (!$hasReadSchoolPermission) {
+                                                    //schools found, but user does not have read school permission
+                                                    echo '<h5>Schools</h5>
+                                                <div class="table-responsive">';
+                                                    echo '<p>School results may have been found, but you lack permission to view results.</p>';
+                                                    echo '</div>';
+                                                } else {
+                                                ?>
                         <h5>Schools</h5>
                         <div class="table-scroll table-fixedHead table-responsive">
                             <table class="table table-striped table-bordered" id="dataTable" width="100%"
@@ -140,7 +174,8 @@ if (isset($_GET['view'])) {
                                 </tbody>
                             </table>
                         </div>
-                        <?php } else {
+                        <?php }
+                                            } else {
                                                 //no schools found
                                                 echo '<h5>Schools</h5>
                                                 <div class="table-responsive">';
@@ -148,7 +183,23 @@ if (isset($_GET['view'])) {
                                                 echo '</div>';
                                             }
                                             //check if the events key contains any data
-                                            if (isset($searchResults['events']) && !empty($searchResults['events'])) { ?>
+                                            if (isset($searchResults['events']) && !empty($searchResults['events'])) {
+                                                // confirm user has a role with read event permissions
+                                                //get the read event permission id
+                                                $readEventPermissionID = $permissionsObject->getPermissionIdByName('READ EVENT');
+
+                                                //boolean to check if the user has the read event permission
+                                                $hasReadEventPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readEventPermissionID);
+
+                                                //prevent the user from seeing the results of the event search if they do not have the read event permission
+                                                if (!$hasReadEventPermission) {
+                                                    //events found, but user does not have read event permission
+                                                    echo '<h5>Events</h5>
+                                                <div class="table-responsive">';
+                                                    echo '<p>Event results may have been found, but you lack permission to view results.</p>';
+                                                    echo '</div>';
+                                                } else {
+                                                ?>
                         <h5>Events</h5>
                         <div class="table-scroll table-fixedHead table-responsive">
                             <table class="table table-striped table-bordered" id="dataTable" width="100%"
@@ -175,7 +226,8 @@ if (isset($_GET['view'])) {
                                 </tbody>
                             </table>
                         </div>
-                        <?php } else {
+                        <?php }
+                                            } else {
                                                 //no events found
                                                 echo '<h5>Events</h5>
                                                 <div class="table-responsive">';
@@ -190,6 +242,22 @@ if (isset($_GET['view'])) {
                         <h5>Wildcard Search Results</h5>
                         <div class="table-responsive">
                             <?php if (isset($searchResults['wildcard']['students']) && !empty($searchResults['wildcard']['students'])) { ?>
+                            <?php
+                                                    // confirm user has a role with read student permissions
+                                                    //get the read student permission id
+                                                    $readStudentPermissionID = $permissionsObject->getPermissionIdByName('READ STUDENT');
+
+                                                    //boolean to check if the user has the read student permission
+                                                    $hasReadStudentPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readStudentPermissionID);
+
+                                                    //prevent the user from seeing the results of the student search if they do not have the read student permission
+                                                    if (!$hasReadStudentPermission) {
+                                                        //students found, but user does not have read student permission
+                                                        echo '<h5>Students</h5>
+                                                <div class="table-responsive">';
+                                                        echo '<p>Student results may have been found, but you lack permission to view results.</p>';
+                                                        echo '</div>';
+                                                    } else { ?>
                             <h5>Students</h5>
                             <div class="table-scroll table-fixedHead table-responsive">
                                 <table class="table table-striped table-bordered" id="dataTable" width="100%"
@@ -226,6 +294,7 @@ if (isset($_GET['view'])) {
                                     </tbody>
                                 </table>
                             </div>
+                            <?php } ?>
                             <?php } else {
                                                     //no students found
                                                     echo '<h5>Students</h5>
@@ -235,6 +304,22 @@ if (isset($_GET['view'])) {
                                                 }
                                                 //check if the schools key contains any data
                                                 if (isset($searchResults['wildcard']['schools']) && !empty($searchResults['wildcard']['schools'])) { ?>
+                            <?php // confirm user has a role with read school permissions
+                                                //get the read school permission id
+                                                $readSchoolPermissionID = $permissionsObject->getPermissionIdByName('READ SCHOOL');
+
+                                                //boolean to check if the user has the read school permission
+                                                $hasReadSchoolPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readSchoolPermissionID);
+
+                                                //prevent the user from seeing the results of the school search if they do not have the read school permission
+                                                if (!$hasReadSchoolPermission) {
+                                                    //schools found, but user does not have read school permission
+                                                    echo '<h5>Schools</h5>
+                                                <div class="table-responsive">';
+                                                    echo '<p>School results may have been found, but you lack permission to view results.</p>';
+                                                    echo '</div>';
+                                                } else {
+                                                ?>
                             <h5>Schools</h5>
                             <div class="table-scroll table-fixedHead table-responsive">
                                 <table class="table table-striped table-bordered" id="dataTable" width="100%"
@@ -264,6 +349,7 @@ if (isset($_GET['view'])) {
                                     </tbody>
                                 </table>
                             </div>
+                            <?php } ?>
                             <?php } else {
                                                     //no schools found
                                                     echo '<h5>Schools</h5>
@@ -273,6 +359,23 @@ if (isset($_GET['view'])) {
                                                 }
                                                 //check if the events key contains any data
                                                 if (isset($searchResults['wildcard']['events']) && !empty($searchResults['wildcard']['events'])) { ?>
+                            <?php
+                                                // confirm user has a role with read event permissions
+                                                //get the read event permission id
+                                                $readEventPermissionID = $permissionsObject->getPermissionIdByName('READ EVENT');
+
+                                                //boolean to check if the user has the read event permission
+                                                $hasReadEventPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readEventPermissionID);
+
+                                                //prevent the user from seeing the results of the event search if they do not have the read event permission
+                                                if (!$hasReadEventPermission) {
+                                                    //events found, but user does not have read event permission
+                                                    echo '<h5>Events</h5>
+                                                <div class="table-responsive">';
+                                                    echo '<p>Event results may have been found, but you lack permission to view results.</p>';
+                                                    echo '</div>';
+                                                } else {
+                                                ?>
                             <h5>Events</h5>
                             <div class="table-scroll table-fixedHead table-responsive">
                                 <table class="table table-striped table-bordered" id="dataTable" width="100%"
@@ -300,6 +403,7 @@ if (isset($_GET['view'])) {
                                     </tbody>
                                 </table>
                             </div>
+                            <?php } ?>
                             <?php } else {
                                                     //no events found
                                                     echo '<h5>Events</h5>
