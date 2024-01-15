@@ -224,7 +224,15 @@ class Roles
         return true;
     }
 
-    //give a role a permission
+    /**
+     * Add a Permission to a Role
+     *
+     * @param int $roleId The ID of the role to add the permission to
+     * @param int $permissionId The ID of the permission to add to the role
+     * @param int $userId The ID of the user adding the permission to the role
+     *
+     * @return bool True if the permission was added, false if not
+     */
     public function giveRolePermission(int $roleId, int $permissionId, int $userId): bool
     {
         //get the current date and time
@@ -232,6 +240,9 @@ class Roles
 
         //get list of permissions for the role
         $permissions = $this->getPermissionsIdByRoleId($roleId);
+
+        //debug
+        error_log("Permissions: " . print_r($permissions, true));
 
         //check if the permission is already assigned to the role
         if (in_array($permissionId, $permissions)) {
@@ -266,8 +277,12 @@ class Roles
                 //Execute the statement
                 $role_statement->execute();
 
-                //get the result
-                $result = $role_statement->get_result();
+                //check the result
+                if ($role_statement->affected_rows > 0) {
+                    $result = true;
+                } else {
+                    $result = false;
+                }
 
                 //if the statement was successful, return true
                 if ($result) {
@@ -279,6 +294,50 @@ class Roles
                     return false;
                 }
             }
+        }
+    }
+
+    /**
+     * Remove a Permission from a Role
+     *
+     * @param int $roleId The ID of the role to remove the permission from
+     * @param int $permissionId The ID of the permission to remove from the role
+     * @param int $userId The ID of the user removing the permission from the role
+     *
+     * @return bool True if the permission was removed, false if not
+     */
+    public function removeRolePermission(int $roleId, int $permissionId, int $userId): bool
+    {
+        //get the current date and time
+        $date = date('Y-m-d H:i:s');
+
+        //SQL statement to remove a permission from a role
+        $sql = "DELETE FROM role_has_permission WHERE role_id = ? AND permission_id = ?";
+
+        //Prepare the SQL statement for execution
+        $role_statement = $this->mysqli->prepare($sql);
+
+        //Bind the parameters to the SQL statement
+        $role_statement->bind_param("ii", $roleId, $permissionId);
+
+        //Execute the statement
+        $role_statement->execute();
+
+        //check the result
+        if ($role_statement->affected_rows > 0) {
+            $result = true;
+        } else {
+            $result = false;
+        }
+
+        //if the statement was successful, return true
+        if ($result) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userId, "Role " . strval($roleId) . " was removed permission " . strval($permissionId), "Role " . strval($roleId) . " was removed permission " . strval($permissionId));
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -516,15 +575,39 @@ class Roles
             )
         );
 
-        //for each permission, give the role the permission
-        foreach ($permissions as $permission) {
-            $successful = $this->giveRolePermission($roleId, intval($permission), $userId);
+        //get the current permissions for the role
+        $currentPermissions = $this->getPermissionsIdByRoleId($roleId);
 
-            //if the permission was set, add it to the permissionsSet array
-            if ($successful) {
-                $permissionsSet['set']['permissions'][] = $permission;
-            } else {
-                $permissionsSet['not_set']['permissions'][] = $permission;
+        /*loop through the permissions, determine if they are being added or removed*/
+        //for each permission, if the permission is not in the current permissions, add it
+        foreach ($permissions as $permission) {
+            //if the permission is not in the current permissions, add it
+            if (!in_array($permission, $currentPermissions)) {
+                //give the role the permission
+                $successful = $this->giveRolePermission($roleId, intval($permission), $userId);
+
+                //if the permission was set, add it to the permissionsSet array
+                if ($successful) {
+                    $permissionsSet['set']['permissions'][] = $permission;
+                } else {
+                    $permissionsSet['not_set']['permissions'][] = $permission;
+                }
+            }
+        }
+
+        //for each of the current permissions, if the permission is not in the new permissions, remove it
+        foreach ($currentPermissions as $permission) {
+            //if the permission is not in the new permissions, remove it
+            if (!in_array($permission, $permissions)) {
+                //remove the permission from the role
+                $successful = $this->removeRolePermission($roleId, intval($permission), $userId);
+
+                //if the permission was set, add it to the permissionsSet array
+                if ($successful) {
+                    $permissionsSet['set']['permissions'][] = $permission;
+                } else {
+                    $permissionsSet['not_set']['permissions'][] = $permission;
+                }
             }
         }
 
@@ -561,6 +644,9 @@ class Roles
         } else {
             $roleNameSet = true;
         }
+
+        //debug
+        error_log("Role Name Set?: " . strval($roleNameSet));
 
         //set the role permissions if not empty
         if (!empty($permissions)) {
@@ -638,5 +724,160 @@ class Roles
 
         //Return the role ID
         return intval($roleId);
+    }
+
+    /**
+     * Get the date a role was granted a permission
+     *
+     * @param int $roleId The ID of the role to get the date for
+     * @param int $permissionId The ID of the permission to get the date for
+     *
+     * @return string The date the role was granted the permission
+     */
+    public function getPermissionGrantDate(int $roleId, int $permissionId): string
+    {
+        //SQL statement to get the date a role was granted a permission
+        $sql = "SELECT created_at, updated_at FROM role_has_permission WHERE role_id = ? AND permission_id = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = $this->mysqli->prepare($sql);
+
+        //Bind the parameters to the SQL statement
+        $stmt->bind_param("ii", $roleId, $permissionId);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Create a variable to hold the date
+        $date = "";
+
+        //loop through the results, and get the most recent date
+        while ($row = $result->fetch_assoc()) {
+            $creationDate = '';
+            $updateDate = '';
+            //if the created_at date is not empty, set the date
+            if (!empty($row['created_at'])) {
+                $creationDate = $row['created_at'];
+            }
+            //if the updated_at date is not empty, set the date
+            if (!empty($row['updated_at'])) {
+                $updateDate = $row['updated_at'];
+            }
+
+            if ($creationDate != '' && $updateDate != '') {
+
+                //find the most recent date
+                if ($creationDate > $updateDate) {
+                    $date = strval($creationDate);
+                } else {
+                    $date = strval($updateDate);
+                }
+            } else {
+                //if the creation date is not empty, set the date
+                if ($creationDate != '') {
+                    $date = $creationDate;
+                }
+                //if the update date is not empty, set the date
+                if ($updateDate != '') {
+                    $date = $updateDate;
+                }
+            }
+        }
+
+        //Return the date
+        return $date;
+    }
+
+    /**
+     * Delete a Role
+     * Deletes a role by ID, also removes all permissions from the role
+     *
+     * @param int $roleId The ID of the role to delete
+     *
+     * @return bool True if the role was deleted, false if not
+     */
+    public function deleteRole(int $roleId): bool
+    {
+        //get current date and time
+        $date = date('Y-m-d H:i:s');
+
+        //get current user ID
+        $userId = intval($_SESSION['user_id']);
+
+        //check if the role exists
+        $roleExists = $this->validateRoleById($roleId);
+
+        //boolean for the result
+        $result = false;
+
+        //if the role exists, check if it has any permissions
+        if ($roleExists) {
+            //get the permissions for the role
+            $permissions = $this->getPermissionsIdByRoleId($roleId);
+
+            //if the role has permissions, remove them
+            if (!empty($permissions)) {
+                //loop through the permissions and remove them
+                foreach ($permissions as $permission) {
+                    $this->removeRolePermission($roleId, $permission, $userId);
+                }
+
+                //SQL statement to delete a role
+                $sql = "DELETE FROM roles WHERE id = ?";
+
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
+
+                //Bind the parameters to the SQL statement
+                $stmt->bind_param("i", $roleId);
+
+                //Execute the statement
+                $stmt->execute();
+
+                //check the result
+                if ($stmt->affected_rows > 0) {
+                    $result = true;
+                    //log the activity
+                    $activity = new Activity();
+                    $activity->logActivity($userId, "Role Deleted", "Role " . strval($roleId) . " was deleted");
+                } else {
+                    $result = false;
+                }
+
+                //return the result
+                return $result;
+            } else {
+                //if the role has no permissions, delete the role
+                //SQL statement to delete a role
+                $sql = "DELETE FROM roles WHERE id = ?";
+
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
+
+                //Bind the parameters to the SQL statement
+                $stmt->bind_param("i", $roleId);
+
+                //Execute the statement
+                $stmt->execute();
+
+                //check the result
+                if ($stmt->affected_rows > 0) {
+                    $result = true;
+                    //log the activity
+                    $activity = new Activity();
+                    $activity->logActivity($userId, "Role Deleted", "Role " . strval($roleId) . " was deleted");
+                } else {
+                    $result = false;
+                }
+
+                //return the result
+                return $result;
+            }
+        } else {
+            return $result;
+        }
     }
 }

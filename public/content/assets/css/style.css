@@ -279,3 +279,7 @@ span.select2-selection.select2-selection--single {
 .table-scroll {
 	overflow: scroll;
 }
+
+.hidden {
+	display: none;
+}
