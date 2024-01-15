@@ -64,63 +64,64 @@ if (isset($_SESSION['user_id'])) {
         include_once('./header.php');
 ?>
         <div id="layout">
-    <?php
-        //include the sidebar
-        include_once('./sidebar.php');
+            <?php
+            //include the sidebar
+            include_once('./sidebar.php');
 
-        //switch content based on the parameter in the url
-        if (isset($_GET['view'])) {
-            switch ($_GET['view']) {
-                case 'events':
-                    include_once('content/events_content.php');
-                    break;
-                case 'schools':
-                    include_once('content/schools_content.php');
-                    break;
-                case 'majors':
-                    include_once('content/majors_content.php');
-                    break;
-                case 'degrees':
-                    include_once('content/degrees_content.php');
-                    break;
-                case 'users':
-                    include_once('content/users_content.php');
-                    break;
-                case 'roles':
-                    include_once('content/roles_content.php');
-                    break;
-                case 'settings':
-                    include_once('content/settings_content.php');
-                    break;
-                case 'jobs':
-                    include_once('content/jobs_content.php');
-                    break;
-                case 'subjects':
-                    include_once('content/subjects_content.php');
-                    break;
-                case 'reports':
-                    include_once('content/reports_content.php');
-                    break;
-                case 'students':
-                    include_once('content/students_content.php');
-                    break;
-                case 'contact-log':
-                    include_once('content/contactlog_content.php');
-                    break;
-                case 'activity-log':
-                    include_once('content/activitylog_content.php');
-                    break;
-                case 'search':
-                    include_once('search.php');
-                    break;
-                default:
-                    include_once('content/admin_content.php');
-                    break;
-            }
-        } else {
-            include_once('content/admin_content.php');
-        }
-
+            //switch content based on the parameter in the url
+            if (isset($_GET['view'])) {
+                switch ($_GET['view']) {
+                    case 'events':
+                        include_once('content/events_content.php');
+                        break;
+                    case 'schools':
+                        include_once('content/schools_content.php');
+                        break;
+                    case 'majors':
+                        include_once('content/majors_content.php');
+                        break;
+                    case 'degrees':
+                        include_once('content/degrees_content.php');
+                        break;
+                    case 'users':
+                        include_once('content/users_content.php');
+                        break;
+                    case 'roles':
+                        include_once('content/roles_content.php');
+                        break;
+                    case 'settings':
+                        include_once('content/settings_content.php');
+                        break;
+                    case 'jobs':
+                        include_once('content/jobs_content.php');
+                        break;
+                    case 'subjects':
+                        include_once('content/subjects_content.php');
+                        break;
+                    case 'reports':
+                        include_once('content/reports_content.php');
+                        break;
+                    case 'students':
+                        include_once('content/students_content.php');
+                        break;
+                    case 'contact-log':
+                        include_once('content/contactlog_content.php');
+                        break;
+                    case 'activity-log':
+                        include_once('content/activitylog_content.php');
+                        break;
+                    case 'search':
+                        include_once('search.php');
+                        break;
+                    default:
+                        include_once('content/admin_content.php');
+                        break;
+                }
+            } else {
+                include_once('content/admin_content.php');
+            } ?>
+        </div>
+<?php
         //include the footer
         include_once('./footer.php');
     }

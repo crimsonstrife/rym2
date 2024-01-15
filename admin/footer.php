@@ -1,7 +1,7 @@
 <?php ?>
 </div>
 </body>
-<footer class="container-fluid px-4 py-4 bg-light mt-auto navbar-fixed">
+<footer id="layout_footer" class="container-fluid px-4 py-4 bg-light mt-auto navbar-fixed">
     <div class="container-fluid px-4">
         <div class="d-flex align-items-center justify-content-between small">
             <div class="text-muted">Copyright &copy; Patrick Barnhardt 2023</div>

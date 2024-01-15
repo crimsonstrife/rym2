@@ -10,6 +10,13 @@ table {
 	width: 100%;
 }
 
+footer#layout_footer {
+	height: 8vh;
+	position: sticky;
+	z-index: 1038;
+	bottom: 0;
+}
+
 .table-fixedHead {
 	overflow: auto;
 	height: 100%;
@@ -47,7 +54,7 @@ table {
 }
 .nav-fixed #layout #layout_nav {
 	width: 225px;
-	height: 100vh;
+	height: 93vh;
 	z-index: 1038;
 	background-color: var(--bs-body-bg);
 }

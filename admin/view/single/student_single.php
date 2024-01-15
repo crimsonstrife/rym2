@@ -71,7 +71,7 @@ if (!$hasPermission) {
                 </div>
                 <div class="card-buttons">
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>"
-                        class="btn btn-primary">Back to Students</a>
+                        class="btn btn-secondary">Back to Students</a>
                     <?php /*confirm user has a role with delete student permissions*/
                         //get the delete student permission id
                         $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
@@ -204,9 +204,9 @@ if (!$hasPermission) {
                                 //only show the contact log if the user has the read contact permission
                                 if ($hasReadContactPermission) {
                                     //get the contact history for the student
-                                $contactHistoryArray = $student->getStudentContactHistory($student_id);
-                                //if there is contact history, display it in a table
-                                if ($contactHistoryArray) {
+                                    $contactHistoryArray = $student->getStudentContactHistory($student_id);
+                                    //if there is contact history, display it in a table
+                                    if ($contactHistoryArray) {
                                 ?>
                             <div class="table-scroll">
                                 <table id="dataTable" class="table table-striped table-bordered">
@@ -221,42 +221,42 @@ if (!$hasPermission) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                                //for each contact history, display it in a table row
-                                                foreach ($contactHistoryArray as $contactHistory) {
-                                                ?>
+                                                    //for each contact history, display it in a table row
+                                                    foreach ($contactHistoryArray as $contactHistory) {
+                                                    ?>
                                         <tr>
                                             <td><?php echo formatDate($contactHistory['send_date']); ?></td>
                                             <td><?php echo formatTime($contactHistory['send_date']); ?></td>
                                             <td><?php echo $contactHistory['subject']; ?></td>
                                             <?php
-                                                        //if the contact history is automated, display yes, otherwise display no
-                                                        if ($contactHistory['auto'] == 1) {
-                                                            $contactHistory['auto'] = "Yes";
-                                                        } else {
-                                                            $contactHistory['auto'] = "No";
-                                                        }
-                                                        ?>
+                                                            //if the contact history is automated, display yes, otherwise display no
+                                                            if ($contactHistory['auto'] == 1) {
+                                                                $contactHistory['auto'] = "Yes";
+                                                            } else {
+                                                                $contactHistory['auto'] = "No";
+                                                            }
+                                                            ?>
                                             <td><?php echo $contactHistory['auto']; ?></td>
                                             <?php
-                                                        //if the user id is NULL, display "SYSTEM", otherwise display the user's username
-                                                        if ($contactHistory['sender'] == NULL) {
-                                                            $contactHistory['sender'] = "SYSTEM";
-                                                        } else {
-                                                            $contactHistory['sender'] = $user->getUserUsername($contactHistory['sender']);
-                                                        }
-                                                        ?>
+                                                            //if the user id is NULL, display "SYSTEM", otherwise display the user's username
+                                                            if ($contactHistory['sender'] == NULL) {
+                                                                $contactHistory['sender'] = "SYSTEM";
+                                                            } else {
+                                                                $contactHistory['sender'] = $user->getUserUsername($contactHistory['sender']);
+                                                            }
+                                                            ?>
                                             <td><?php echo $contactHistory['sender']; ?></td>
                                         </tr>
                                         <?php
-                                                }
-                                                ?>
+                                                    }
+                                                    ?>
                                     </tbody>
                                 </table>
                                 <?php
-                                } else {
-                                    //otherwise, display a message
-                                    echo "<p>This student has not been contacted.</p>";
-                                }
+                                    } else {
+                                        //otherwise, display a message
+                                        echo "<p>This student has not been contacted.</p>";
+                                    }
                                 } else { ?>
                                 <p>You do not have permission to view contact history.</p>
                                 <?php }
@@ -349,7 +349,7 @@ if (!$hasPermission) {
                 </div>
                 <div class="card-footer">
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>"
-                        class="btn btn-primary">Back to Students</a>
+                        class="btn btn-secondary">Back to Students</a>
                     <?php /*confirm user has a role with delete student permissions*/
                         //get the delete student permission id
                         $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
