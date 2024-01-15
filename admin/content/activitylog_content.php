@@ -4,6 +4,12 @@ if (!defined('ISVALIDUSER')) {
     die('Error: Invalid request');
 } // idea from https://stackoverflow.com/a/409515 (user UnkwnTech)
 
+//include the permissions class
+$permissionsObject = new Permission();
+
+//auth class
+$auth = new Authenticator();
+
 //check that the view dashboard permission is set
 if (!isset($hasViewDashboardPermission)) {
     die('Error: You do not have permission to access this content or there is a configuration error, contact the Administrator.');
@@ -12,7 +18,18 @@ if (!isset($hasViewDashboardPermission)) {
     if (!$hasViewDashboardPermission) {
         die('Error: You do not have permission to access this content, contact the Administrator.');
     } else {
-?>
+        /*confirm user has a role with read contact permissions*/
+        //get the id of the read contact permission
+        $relevantPermissionID = $permissionsObject->getPermissionIdByName('READ CONTACT');
+
+        //boolean to track if the user has the read contact permission
+        $hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+
+        //prevent the user from accessing the page if they do not have the relevant permission
+        if (!$hasPermission) {
+            die('Error: You do not have permission to perform this request.');
+        } else {
+            ?>
 <!-- main content -->
 <div id="layout_content">
     <main>
@@ -84,17 +101,17 @@ if (!isset($hasViewDashboardPermission)) {
                         <div class="card-footer">
                             <!-- Download CSV -->
                             <?php
-                                        //prepare the user array for download
+                                    //prepare the user array for download
+                                    //swap the user id for the username
+                                    foreach ($activityArray as $key => $entry) {
+                                        //get the user id
+                                        $userId = intval($entry['user_id']);
+                                        //get the user name
+                                        $userName = $user->getUserUsername($userId);
                                         //swap the user id for the username
-                                        foreach ($activityArray as $key => $entry) {
-                                            //get the user id
-                                            $userId = intval($entry['user_id']);
-                                            //get the user name
-                                            $userName = $user->getUserUsername($userId);
-                                            //swap the user id for the username
-                                            $activityArray[$key]['user_id'] = $userName;
-                                        }
-                                        $csvArray = $activityArray; ?>
+                                        $activityArray[$key]['user_id'] = $userName;
+                                    }
+                                    $csvArray = $activityArray; ?>
                             <form target="_blank"
                                 action="<?php echo APP_URL . '/admin/download.php?type=activity_log&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
                                 method="post" enctype="multipart/form-data">
@@ -107,6 +124,6 @@ if (!isset($hasViewDashboardPermission)) {
         </div>
     </main>
 </div>
-<?php
+<?php }
     }
 } ?>
