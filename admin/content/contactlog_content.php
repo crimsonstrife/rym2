@@ -4,6 +4,12 @@ if (!defined('ISVALIDUSER')) {
     die('Error: Invalid request');
 } // idea from https://stackoverflow.com/a/409515 (user UnkwnTech)
 
+//include the permissions class
+$permissionsObject = new Permission();
+
+//auth class
+$auth = new Authenticator();
+
 //check that the view dashboard permission is set
 if (!isset($hasViewDashboardPermission)) {
     die('Error: You do not have permission to access this content or there is a configuration error, contact the Administrator.');
@@ -12,7 +18,19 @@ if (!isset($hasViewDashboardPermission)) {
     if (!$hasViewDashboardPermission) {
         die('Error: You do not have permission to access this content, contact the Administrator.');
     } else {
-?>
+
+        /*confirm user has a role with read contact permissions*/
+        //get the id of the read contact permission
+        $relevantPermissionID = $permissionsObject->getPermissionIdByName('READ CONTACT');
+
+        //boolean to track if the user has the read contact permission
+        $hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+
+        //prevent the user from accessing the page if they do not have the relevant permission
+        if (!$hasPermission) {
+            die('Error: You do not have permission to perform this request.');
+        } else {
+            ?>
 <!-- main content -->
 <div id="layout_content">
     <main>
@@ -96,7 +114,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                     } else {
                                                         $automaticEmail = "Manual";
                                                     }
-                                                ?>
+                                                    ?>
                                         <tr>
                                             <td><?php echo $studentName; ?></td>
                                             <td><?php echo $studentEmail; ?></td>
@@ -108,18 +126,18 @@ if (!isset($hasViewDashboardPermission)) {
                                             <td><?php echo $subject; ?></td>
                                         </tr>
                                         <?php
-                                                    //setup a download array
-                                                    $studentContactArray[] = array(
-                                                        'Student Name' => $studentName,
-                                                        'Student Email' => $studentEmail,
-                                                        'School' => $schoolName,
-                                                        'Degree' => $degreeName,
-                                                        'Automatic Email' => $automaticEmail,
-                                                        'Sent Date' => $sendDate,
-                                                        'Sending User' => $sendingUserName,
-                                                        'subject' => $subject,
-                                                        'Message' => $body
-                                                    );
+                                                //setup a download array
+                                                $studentContactArray[] = array(
+                                                    'Student Name' => $studentName,
+                                                    'Student Email' => $studentEmail,
+                                                    'School' => $schoolName,
+                                                    'Degree' => $degreeName,
+                                                    'Automatic Email' => $automaticEmail,
+                                                    'Sent Date' => $sendDate,
+                                                    'Sending User' => $sendingUserName,
+                                                    'subject' => $subject,
+                                                    'Message' => $body
+                                                );
                                                 }
                                                 ?>
                                     </tbody>
@@ -129,8 +147,8 @@ if (!isset($hasViewDashboardPermission)) {
                         <div class="card-footer">
                             <!-- Download CSV -->
                             <?php
-                                        //prepare the user array for download
-                                        $csvArray = $studentContactArray; ?>
+                                    //prepare the user array for download
+                                    $csvArray = $studentContactArray; ?>
                             <form target="_blank"
                                 action="<?php echo APP_URL . '/admin/download.php?type=contact_log&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
                                 method="post" enctype="multipart/form-data">
@@ -143,6 +161,6 @@ if (!isset($hasViewDashboardPermission)) {
         </div>
     </main>
 </div>
-<?php
+<?php }
     }
 } ?>
