@@ -499,6 +499,8 @@ function toSlug(string $string): string
     $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string);
     //convert to lowercase
     $string = strtolower($string);
+    //limit to 25 characters to fit in the varchar(25) field in the database
+    $string = substr($string, 0, 25);
     //return the slug
     return $string;
 }
