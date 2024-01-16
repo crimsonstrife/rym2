@@ -38,6 +38,7 @@ Disclaimer: This project is strictly for educational purposes only.  Any similar
   - [Usage](#usage)
   - [Support](#support)
   - [Acknowledgements](#acknowledgements)
+  - [References](#references)
   - [Appendix](#appendix)
   - [License](#license)
 
@@ -228,9 +229,25 @@ For school-related support, email [pbarnh1@wgu.edu](mailto:pbarnh1@wgu.edu) or [
 - [jQuery](https://jquery.com/)
 - [PHP](https://www.php.net/)
 - [Composer](https://getcomposer.org/)
-- [Node.js](https://nodejs.org/en/)
+- [npm](https://www.npmjs.com/)
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [GitHub](https://www.github.com/)
+- [Git](https://git-scm.com/)
+- [MAMP](https://www.mamp.info/)
+- [phpMyAdmin](https://www.phpmyadmin.net/)
+- [Apache](https://httpd.apache.org/)
+- [MySQL](https://www.mysql.com/)
+- [PHP Markdown](https://github.com/michelf/php-markdown)
+- [PHPMailer](https://github.com/PHPMailer/PHPMailer)
+- [PHP-QRCode](https://github.com/chillerlan/php-qrcode)
+- [Simple DataTables](https://github.com/survos/SurvosSimpleDatatablesBundle)
+- [Popper.js](https://popper.js.org/)
+- [iro.js](https://iro.js.org/)
+- [Select2](https://select2.org/)
+
+## References
+
+- [Method for preventing direct access to specific PHP files, but still allow the files to be included (UnkwnTech 1/3/2009, Amal Murali 8/15/2013)](https://stackoverflow.com/questions/409496/prevent-direct-access-to-a-php-include-file/409515#409515) -
 
 ## Appendix
 
