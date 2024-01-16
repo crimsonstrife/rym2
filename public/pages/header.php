@@ -30,27 +30,27 @@ require_once(__DIR__ . '/../../vendor/autoload.php');
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>
-        <?php
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>
+            <?php
         /* Get the APP_NAME from the constants, if not set use default */
         echo (defined('APP_NAME') ? APP_NAME : 'College Recruitment Application');
         ?> | Student Registration
-    </title>
-    <?php echo includeHeader(); ?>
-</head>
+        </title>
+        <?php echo includeHeader(); ?>
+    </head>
 
-<body class="nav-fixed">
-    <nav class="top-nav navbar navbar-expand navbar-dark bg-dark">
-        <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="<?php echo APP_URL ?>"><?php echo htmlspecialchars(APP_NAME) ?></a>
-    </nav>
-    <?php
+    <body class="nav-fixed">
+        <nav class="top-nav navbar navbar-expand navbar-dark bg-dark schoolBrandedNav">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="<?php echo APP_URL ?>"><?php echo htmlspecialchars(APP_NAME) ?></a>
+        </nav>
+        <?php
     /* End of file header.php */
     /* Location: public/pages/header.php */
     /* See public/pages/landing_content.php for implementation of this file */

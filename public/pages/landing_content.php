@@ -27,12 +27,31 @@ $event = new Event();
 // instance the contact class
 $contact = new Contact();
 
+// instance of the school class
+$school = new School();
+
 //check the event slug
 if (isset($event_slug)) {
     //get the event by the slug
     $this_event = $event->getEventBySlug($event_slug);
 } else {
     $this_event = null;
+}
+
+//if the event is set, get the event styling data
+if (isset($this_event)) {
+    $event_brandingColor = $school->getSchoolColor(intval($this_event['location']));
+} else {
+    $event_brandingColor = null;
+}
+
+//if the event color is set and not null, echo the style tag
+if (isset($event_brandingColor) && !empty($event_brandingColor) && !is_null($event_brandingColor)) {
+    echo '<style>';
+    echo '.schoolBrandedNav {'; //style the nav bar
+    echo 'background-color: ' . $event_brandingColor . ' !important;';
+    echo '}';
+    echo '</style>';
 }
 
 //get the event variables if the event is set
@@ -454,71 +473,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             //initialize the job class
                             $jobObject = new Job();
                         ?>
-                        <div class="table-responsive-md table-wrapper">
-                            <table id="dataTable" class="table">
-                                <thead class="sticky-top">
-                                    <tr>
-                                        <th scope=" col">Job Title</th>
-                                        <th scope="col">Job Description</th>
-                                        <th scope="col">Job Type</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($job_list as $job) {
+                            <div class="table-responsive-md table-wrapper">
+                                <table id="dataTable" class="table">
+                                    <thead class="sticky-top">
+                                        <tr>
+                                            <th scope=" col">Job Title</th>
+                                            <th scope="col">Job Description</th>
+                                            <th scope="col">Job Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($job_list as $job) {
                                             //get the job type
                                             $type = $jobObject->getJobType($job['value']);
                                             //get the job description
                                             $description = $jobObject->getJobDescription($job['value']);
                                         ?>
-                                    <tr>
-                                        <td><a
-                                                href="job.php?id=<?php echo $job['value']; ?>"><?php echo $job['label']; ?></a>
-                                        </td>
-                                        <td><?php echo $description; ?></td>
-                                        <td><?php echo $type; ?></td>
-                                    </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                            <tr>
+                                                <td><a href="job.php?id=<?php echo $job['value']; ?>"><?php echo $job['label']; ?></a>
+                                                </td>
+                                                <td><?php echo $description; ?></td>
+                                                <td><?php echo $type; ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         <?php } else { ?>
-                        <div class="alert alert-info">
-                            There are no jobs available at this time. But you can still register below.
-                        </div>
-                        <div class="table-responsive-md">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Job Title</th>
-                                        <th scope="col">Job Description</th>
-                                        <th scope="col">Job Type</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="alert alert-info">
+                                There are no jobs available at this time. But you can still register below.
+                            </div>
+                            <div class="table-responsive-md">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Job Title</th>
+                                            <th scope="col">Job Description</th>
+                                            <th scope="col">Job Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             <?php } ?>
-                        </div>
+                            </div>
                     </div>
                 </div>
                 <!-- Registration Form -->
@@ -533,15 +551,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
                 <?php if ($entry_error) { ?>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="alert alert-danger">
-                                Please correct the errors below and try again.
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger">
+                                    Please correct the errors below and try again.
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 <?php } ?>
                 <div class="container">
                     <div class="row">
@@ -560,16 +578,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 } ?>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label for="student_firstName">First Name:<span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" name="student_firstName" id="student_firstName"
-                                            class="form-control app-forms" value="<?php echo $student_firstName; ?>">
+                                        <label for="student_firstName">First Name:<span class="text-danger">*</span></label>
+                                        <input type="text" name="student_firstName" id="student_firstName" class="form-control app-forms" value="<?php echo $student_firstName; ?>">
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="student_lastName">Last Name:<span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" name="student_lastName" id="student_lastName"
-                                            class="form-control app-forms" value="<?php echo $student_lastName; ?>">
+                                        <label for="student_lastName">Last Name:<span class="text-danger">*</span></label>
+                                        <input type="text" name="student_lastName" id="student_lastName" class="form-control app-forms" value="<?php echo $student_lastName; ?>">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -584,13 +598,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="student_email">Email:<span class="text-danger">*</span></label>
-                                        <input type="text" name="student_email" id="student_email"
-                                            class="form-control app-forms" value="<?php echo $student_email; ?>">
+                                        <input type="text" name="student_email" id="student_email" class="form-control app-forms" value="<?php echo $student_email; ?>">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="student_phone">Phone:<span class="text-danger">*</span></label>
-                                        <input type="text" name="student_phone" id="student_phone"
-                                            class="form-control app-forms" value="<?php echo $student_phone; ?>">
+                                        <input type="text" name="student_phone" id="student_phone" class="form-control app-forms" value="<?php echo $student_phone; ?>">
                                     </div>
                                 </div>
                                 <!-- errors for email -->
@@ -606,8 +618,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label for="student_address">Address:<span class="text-danger">*</span></label>
-                                        <input type="text" name="student_address" id="student_address"
-                                            class="form-control app-forms" value="<?php echo $student_address; ?>">
+                                        <input type="text" name="student_address" id="student_address" class="form-control app-forms" value="<?php echo $student_address; ?>">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -619,13 +630,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="student_city">City:<span class="text-danger">*</span></label>
-                                        <input type="text" name="student_city" id="student_city"
-                                            class="form-control app-forms" value="<?php echo $student_city; ?>">
+                                        <input type="text" name="student_city" id="student_city" class="form-control app-forms" value="<?php echo $student_city; ?>">
                                     </div>
                                     <div class="col-md-3">
                                         <label for="student_state">State:<span class="text-danger">*</span></label>
-                                        <select name="student_state" id="student_state" class="form-control app-forms"
-                                            style="width: 100%;">
+                                        <select name="student_state" id="student_state" class="form-control app-forms" style="width: 100%;">
                                             <?php
                                             //loop through the states list
                                             foreach ($stateArray as $state) {
@@ -643,8 +652,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </div>
                                     <div class="col-md-3">
                                         <label for="student_zip">Zip:<span class="text-danger">*</span></label>
-                                        <input type="text" name="student_zip" id="student_zip"
-                                            class="form-control app-forms" value="<?php echo $student_zip; ?>">
+                                        <input type="text" name="student_zip" id="student_zip" class="form-control app-forms" value="<?php echo $student_zip; ?>">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -663,9 +671,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <div class="col-md-6">
                                         <label for="student_degree">Degree:<span class="text-danger">*</span></label>
                                         <div id="degreeParent" class="col-md-12 degree-dropdown">
-                                            <select name="student_degree" id="student_degree"
-                                                class="select2 select2-degree form-control app-forms"
-                                                style="width: 100%;">
+                                            <select name="student_degree" id="student_degree" class="select2 select2-degree form-control app-forms" style="width: 100%;">
                                                 <?php
                                                 //loop through the degree levels list
                                                 foreach ($degree_list as $degree => $value) {
@@ -686,13 +692,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="student_major">Please select or enter your major:<span
-                                                class="text-danger">*</span></label>
+                                        <label for="student_major">Please select or enter your major:<span class="text-danger">*</span></label>
                                         <!-- Select2 dropdown, used to allow users to add custom entries alongside what is pulled -->
                                         <div id="majorsParent" class="col-md-12 majors-dropdown">
-                                            <select name="student_major" id="student_major"
-                                                class="select2 select2-major form-control app-forms"
-                                                style="width: 100%;">
+                                            <select name="student_major" id="student_major" class="select2 select2-major form-control app-forms" style="width: 100%;">
                                                 <?php
                                                 //loop through the majors list
                                                 foreach ($majors_list as $major => $value) {
@@ -726,9 +729,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <div class="col-md-6">
                                         <label for="student_school">School:<span class="text-danger">*</span></label>
                                         <div id="schoolParent" class="col-md-12 school-dropdown">
-                                            <select name="student_school" id="student_school"
-                                                class="select2 select2-school form-control app-forms"
-                                                style="width: 100%;">
+                                            <select name="student_school" id="student_school" class="select2 select2-school form-control app-forms" style="width: 100%;">
                                                 <?php
                                                 //loop through the schools list
                                                 foreach ($schools_list as $school => $value) {
@@ -762,11 +763,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="student_graduationDate"> Expected Graduation Date:<span
-                                                class="text-danger">*</span></label>
-                                        <input type="date" name="student_graduationDate" id="student_graduationDate"
-                                            class="form-control app-forms" min="<?php echo date("Y-m-d") ?>"
-                                            value="<?php echo (!empty($student_graduationDate) ? $student_graduationDate : date("Y-m-d")); ?>">
+                                        <label for="student_graduationDate"> Expected Graduation Date:<span class="text-danger">*</span></label>
+                                        <input type="date" name="student_graduationDate" id="student_graduationDate" class="form-control app-forms" min="<?php echo date("Y-m-d") ?>" value="<?php echo (!empty($student_graduationDate) ? $student_graduationDate : date("Y-m-d")); ?>">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -780,10 +778,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label for="student_jobPosition">Preferred Job Type:<span
-                                                class="text-danger">*</span></label>
-                                        <select name="student_jobPosition" id="student_jobPosition"
-                                            class="form-control app-forms" style="width: 100%;">
+                                        <label for="student_jobPosition">Preferred Job Type:<span class="text-danger">*</span></label>
+                                        <select name="student_jobPosition" id="student_jobPosition" class="form-control app-forms" style="width: 100%;">
                                             <?php foreach ($positionType_list as $positionType) {
                                                 //check if the job position matches the student's job position
                                                 if ($student_jobPosition == $positionType['value']) {
@@ -797,11 +793,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="student_areaOfInterest">Field:<span
-                                                class="text-danger">*</span></label>
+                                        <label for="student_areaOfInterest">Field:<span class="text-danger">*</span></label>
                                         <div id="aoiParent" class="col-md-12 aoi-dropdown">
-                                            <select name="student_areaOfInterest" id="student_areaOfInterest"
-                                                class="select2 select2-aoi form-control app-forms" style="width: 100%;">
+                                            <select name="student_areaOfInterest" id="student_areaOfInterest" class="select2 select2-aoi form-control app-forms" style="width: 100%;">
                                                 <?php
                                                 //loop through the areas of interest list
                                                 foreach ($areaOfInterest_list as $areaOfInterest => $value) {
