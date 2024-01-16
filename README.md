@@ -5,12 +5,25 @@ A PHP-based web application for handling student information for college recruit
 
 Disclaimer: This project is strictly for educational purposes only.  Any similarities to real-world applications, products, or services are purely coincidental.  The author is not responsible for any misuse of the information provided in this project. The author is not responsible for any damages or losses caused by this project. Any data included in this project is purely fictional and is not intended to represent any real-world data.
 
+## Status
+
+<div align="center">
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+![PHP Composer - Build](https://github.com/crimsonstrife/rym2/actions/workflows/php.yml/badge.svg)
+
+</div>
+
 ## Table of Contents
 
+<details>
+
+<summary>Table of Contents</summary>
+
 - [C868: RYM2 - Capstone : College Recruitment Application](#c868-rym2---capstone--college-recruitment-application)
+  - [Status](#status)
   - [Table of Contents](#table-of-contents)
   - [Authors](#authors)
-  - [Status](#status)
   - [About This Project](#about-this-project)
   - [Built With](#built-with)
     - [Front-End](#front-end)
@@ -28,18 +41,11 @@ Disclaimer: This project is strictly for educational purposes only.  Any similar
   - [Appendix](#appendix)
   - [License](#license)
 
+</details>
+
 ## Authors
 
 - Patrick Barnhardt - [pbarnh1@wgu.edu](mailto:pbarnh1@wgu.edu) [@crimsonstrife](https://www.github.com/crimsonstrife)
-
-## Status
-
-<div align="center">
-
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
-![PHP Composer - Build](https://github.com/crimsonstrife/rym2/actions/workflows/php.yml/badge.svg)
-
-</div>
 
 ## About This Project
 
@@ -61,9 +67,13 @@ This project aims to provide a web-based application for a business to handle st
 ![CSS3 Badge](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=fff&style=for-the-badge)
 ![JavaScript Badge](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000&style=for-the-badge)
 
+<div align="left">
+
 - <b>Languages: </b> HTML5, CSS3, JavaScript
 - <b>Frameworks: </b> Bootstrap ^5.3.2, jQuery ^3.7, Chart.js ^4.4, Leaflet ^1.9.4/Leaflet Geosearch ^3.10.2, Simple DataTables ^8.0.0, Popper.js ^2.11.8, iro.js ^5.5.2 , Select2 ^4.0
 - <b>Libraries: </b> Font Awesome ^6.4
+
+</div>
 
 ### Back-End
 
@@ -72,9 +82,13 @@ This project aims to provide a web-based application for a business to handle st
 ![npm Badge](https://img.shields.io/badge/npm-CB3837?logo=npm&logoColor=fff&style=for-the-badge)
 ![.ENV Badge](https://img.shields.io/badge/.ENV-ECD53F?logo=dotenv&logoColor=000&style=for-the-badge)
 
+<div align="left">
+
 - <b>Languages: </b> PHP ^8.1.2
 - <b>Frameworks: </b> Composer ^2.6.6, npm ^10.3.0
 - <b>Libraries: </b> .ENV ^5.5, PHPMailer ^6.8, PHP-QRCode ^5.0, PHP Markdown ^2.0
+
+</div>
 
 </div>
 
@@ -89,10 +103,14 @@ This project aims to provide a web-based application for a business to handle st
 ![Composer Badge](https://img.shields.io/badge/Composer-885630?logo=composer&logoColor=fff&style=for-the-badge)
 ![npm Badge](https://img.shields.io/badge/npm-CB3837?logo=npm&logoColor=fff&style=for-the-badge)
 
+<div align="left">
+
 - <b>IDE: </b> Visual Studio Code ^1.85.1
 - <b>Operating Systems: </b> Windows 11 x64, macOS Sonoma 14.2.1 (M1 2020)
 - <b>Frameworks: </b> Composer ^2.6.6, npm ^10.3.0
 - <b>Tools: </b> Git ^2.43.0
+
+</div>
 
 </div>
 
@@ -121,12 +139,16 @@ This project aims to provide a web-based application for a business to handle st
 ![MySQL Badge](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=fff&style=for-the-badge)
 ![phpMyAdmin Badge](https://img.shields.io/badge/phpMyAdmin-6C78AF?logo=phpmyadmin&logoColor=fff&style=for-the-badge)
 
+<div align="left">
+
 - <b>Operating Systems: </b> macOS Sonoma 14.2.1 (M1 2020)
 - <b>Hypervisor: </b> MAMP PRO ^6.8.1
 - <b>Web Server: </b> Apache ^2.4.54
 - <b>Database: </b> MySQL ^5.7.39
 - <b>Database Management: </b> phpMyAdmin ^5.2.0
 - <b>Languages: </b> PHP ^8.1.2
+
+</div>
 
 </div>
 
