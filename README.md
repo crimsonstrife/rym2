@@ -20,7 +20,7 @@ A PHP-based web application for handling student information for college recruit
 
 <div align="center">
 
-# Front-End
+### Front-End
 
 ![Bootstrap Badge](https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=fff&style=for-the-badge)
 ![Font Awesome Badge](https://img.shields.io/badge/Font%20Awesome-528DD7?logo=fontawesome&logoColor=fff&style=for-the-badge)
@@ -32,7 +32,7 @@ A PHP-based web application for handling student information for college recruit
 ![CSS3 Badge](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=fff&style=for-the-badge)
 ![JavaScript Badge](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000&style=for-the-badge)
 
-# Back-End
+### Back-End
 
 ![PHP Badge](https://img.shields.io/badge/PHP-777BB4?logo=php&logoColor=fff&style=for-the-badge)
 ![Composer Badge](https://img.shields.io/badge/Composer-885630?logo=composer&logoColor=fff&style=for-the-badge)
@@ -43,7 +43,7 @@ A PHP-based web application for handling student information for college recruit
 
 <div align="center">
 
-# Development Tools
+### Development Tools
 
 ![Visual Studio Code Badge](https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?logo=visualstudiocode&logoColor=fff&style=for-the-badge)
 ![Windows Badge](https://img.shields.io/badge/Windows-0078D4?logo=windows&logoColor=fff&style=for-the-badge)
@@ -56,7 +56,7 @@ A PHP-based web application for handling student information for college recruit
 
 <div align="center">
 
-# Live Environment
+### Live Environment
 
 ![PHP Badge](https://img.shields.io/badge/PHP-777BB4?logo=php&logoColor=fff&style=for-the-badge)
 ![phpMyAdmin Badge](https://img.shields.io/badge/phpMyAdmin-6C78AF?logo=phpmyadmin&logoColor=fff&style=for-the-badge)
@@ -68,7 +68,7 @@ A PHP-based web application for handling student information for college recruit
 
 <div align="center">
 
-# Development Environment
+### Development Environment
 
 ![MAMP Badge](https://img.shields.io/badge/MAMP-02749C?logo=mamp&logoColor=fff&style=for-the-badge)
 ![Apache Badge](https://img.shields.io/badge/Apache-D22128?logo=apache&logoColor=fff&style=for-the-badge)
