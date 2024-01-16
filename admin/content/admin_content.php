@@ -1,16 +1,28 @@
 <?php
 //Prevent direct access to this file by checking if the constant ISVALIDUSER is defined.
 if (!defined('ISVALIDUSER')) {
-    die('Error: Invalid request');
+    //set the error type
+    $thisError = 'INVALID_USER_REQUEST';
+
+    //include the error message file
+    include_once('./includes/errors/errorMessage.inc.php');
 } // idea from https://stackoverflow.com/a/409515 (user UnkwnTech)
 
 //check that the view dashboard permission is set
 if (!isset($hasViewDashboardPermission)) {
-    die('Error: You do not have permission to access this content or there is a configuration error, contact the Administrator.');
+    //set the error type
+    $thisError = 'CONFIGURATION_ERROR';
+
+    //include the error message file
+    include_once('./includes/errors/errorMessage.inc.php');
 } else {
     //check that the user has the view dashboard permission
     if (!$hasViewDashboardPermission) {
-        die('Error: You do not have permission to access this content, contact the Administrator.');
+        //set the error type
+        $thisError = 'DASHBOARD_PERMISSION_ERROR';
+
+        //include the error message file
+        include_once('./includes/errors/errorMessage.inc.php');
     } else {
 
         //include the permissions class
@@ -173,42 +185,42 @@ if (!isset($hasViewDashboardPermission)) {
                         <!-- Download CSV -->
                         <?php //check if the user has permission to download the csv of students
 
-                                        //get the id of the export student permission
-                                        $exportStudentsPermissionId = $permissionsObject->getPermissionIdByName('EXPORT STUDENT');
+                                    //get the id of the export student permission
+                                    $exportStudentsPermissionId = $permissionsObject->getPermissionIdByName('EXPORT STUDENT');
 
-                                        //boolean to check if the user has the export student permission
-                                        $hasExportStudentsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportStudentsPermissionId);
+                                    //boolean to check if the user has the export student permission
+                                    $hasExportStudentsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportStudentsPermissionId);
 
-                                        if ($hasExportStudentsPermission) {
-                                            //prepare the user array for download
-                                            $csvArray = $studentsArray;
-                                            //substitute the school id for the school name, degree id for the degree name, field id for the field name, and the major id for the major name
-                                            foreach ($csvArray as $key => $row) {
-                                                $csvArray[$key]['school'] = $schoolsData->getSchoolName($row['school']);
-                                                $csvArray[$key]['degree'] = $degreesData->getGradeNameById($row['degree']);
-                                                $csvArray[$key]['major'] = $degreesData->getMajorNameById($row['major']);
-                                                $csvArray[$key]['interest'] = $fieldsData->getSubjectName($row['interest']);
-                                            }
-                                            //clean up the column headers to be more readable, i.e. remove underscores and capitalize
-                                            foreach ($csvArray as $key => $row) {
-                                                $csvArray[$key] = array(
-                                                    'First Name' => $row['first_name'],
-                                                    'Last Name' => $row['last_name'],
-                                                    'Email' => $row['email'],
-                                                    'Phone' => $row['phone'],
-                                                    'Address' => $row['address'],
-                                                    'City' => $row['city'],
-                                                    'State' => $row['state'],
-                                                    'Zipcode' => $row['zipcode'],
-                                                    'Field' => $row['interest'],
-                                                    'Position Type' => $row['position'],
-                                                    'Degree' => $row['degree'],
-                                                    'Major' => $row['major'],
-                                                    'Graduation Date' => $row['graduation'],
-                                                    'School' => $row['school'],
-                                                    'Date Submitted' => $row['created_at']
-                                                );
-                                            } ?>
+                                    if ($hasExportStudentsPermission) {
+                                        //prepare the user array for download
+                                        $csvArray = $studentsArray;
+                                        //substitute the school id for the school name, degree id for the degree name, field id for the field name, and the major id for the major name
+                                        foreach ($csvArray as $key => $row) {
+                                            $csvArray[$key]['school'] = $schoolsData->getSchoolName($row['school']);
+                                            $csvArray[$key]['degree'] = $degreesData->getGradeNameById($row['degree']);
+                                            $csvArray[$key]['major'] = $degreesData->getMajorNameById($row['major']);
+                                            $csvArray[$key]['interest'] = $fieldsData->getSubjectName($row['interest']);
+                                        }
+                                        //clean up the column headers to be more readable, i.e. remove underscores and capitalize
+                                        foreach ($csvArray as $key => $row) {
+                                            $csvArray[$key] = array(
+                                                'First Name' => $row['first_name'],
+                                                'Last Name' => $row['last_name'],
+                                                'Email' => $row['email'],
+                                                'Phone' => $row['phone'],
+                                                'Address' => $row['address'],
+                                                'City' => $row['city'],
+                                                'State' => $row['state'],
+                                                'Zipcode' => $row['zipcode'],
+                                                'Field' => $row['interest'],
+                                                'Position Type' => $row['position'],
+                                                'Degree' => $row['degree'],
+                                                'Major' => $row['major'],
+                                                'Graduation Date' => $row['graduation'],
+                                                'School' => $row['school'],
+                                                'Date Submitted' => $row['created_at']
+                                            );
+                                        } ?>
                         <form target="_blank"
                             action="<?php echo APP_URL . '/admin/download.php?type=students&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
                             method="post" enctype="multipart/form-data">
@@ -258,11 +270,11 @@ if (!isset($hasViewDashboardPermission)) {
                 </div>
             </div>
             <?php if ($hasDeleteStudentsPermission) {
-                                //combine the first and last name into a single key value pair for the students array
-                                foreach ($studentsArray as $key => $row) {
-                                    $studentsArray[$key]['name'] = $row['first_name'] . ' ' . $row['last_name'];
-                                }
-                            ?>
+                            //combine the first and last name into a single key value pair for the students array
+                            foreach ($studentsArray as $key => $row) {
+                                $studentsArray[$key]['name'] = $row['first_name'] . ' ' . $row['last_name'];
+                            }
+                        ?>
             <script>
             //set the students array to a javascript variable
             var studentsArray = <?php echo json_encode($studentsArray); ?>;

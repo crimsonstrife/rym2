@@ -303,3 +303,80 @@ define('TERMS_CONDITIONS', '# Terms and Conditions
 Welcome to [["website" or "app"]]! These terms and conditions outline the rules and regulations for the use of [["website" or "app"]]’s Website, located at [["website" or "app URL"]].
 
 By accessing this website we assume you accept these terms and conditions. Do not continue to use [["website" or "app"]] if you do not agree to take all of the terms and conditions stated on this page.');
+
+/**
+ * Error Message Constants
+ *
+ */
+define('PERMISSION_ERROR_ACCESS', array(
+    "code" => "LYNX",
+    "message" => "You do not have permission to access this content, contact the Administrator."
+));
+define('CONFIGURATION_ERROR', array(
+    "code" => "CHAMELEON",
+    "message" => "There is a configuration error, contact the Administrator."
+));
+define('INVALID_REQUEST_ERROR', array(
+    "code" => "CIPHER",
+    "message" => "Invalid request, contact the Administrator."
+));
+define('ROUTING_ERROR', array(
+    "code" => "LIGHTHOUSE",
+    "message" => "Navigation or routing error, contact the Administrator."
+));
+define('DATABASE_ERROR', array(
+    "code" => "VAULT",
+    "message" => "Database error, contact the Administrator."
+));
+define('AUTHENTICATION_ERROR', array(
+    "code" => "SENTINEL",
+    "message" => "Authentication error, contact the Administrator."
+));
+define('AUTHORIZATION_ERROR', array(
+    "code" => "GUARDIAN",
+    "message" => "Authorization error, contact the Administrator."
+));
+define('VALIDATION_ERROR', array(
+    "code" => "ZEPHYR",
+    "message" => "Validation error, contact the Administrator."
+));
+define('DEFAULT_ERROR', array(
+    "code" => "MYSTIC",
+    "message" => "An error has occurred, contact the Administrator."
+));
+define('SUDDEN_ERROR', array(
+    "code" => "COBRA",
+    "message" => "An error has occurred, contact the Administrator."
+));
+define('TIMEOUT', array(
+    "code" => "TURTLE",
+    "message" => "The request has timed out, contact the Administrator."
+));
+define('RESTART', array(
+    "code" => "PHOENIX",
+    "message" => "There may have been a server restart or recovery, contact the Administrator."
+));
+define('NOT_FOUND', array(
+    "code" => "SASQUATCH",
+    "message" => "The requested content was not found, contact the Administrator."
+));
+define('NOT_IMPLEMENTED', array(
+    "code" => "YETI",
+    "message" => "The requested content is not yet implemented, contact the Administrator."
+));
+define('SERVICE_UNAVAILABLE', array(
+    "code" => "COMPASS",
+    "message" => "The requested content is not available, contact the Administrator."
+));
+define('CRITICAL', array(
+    "code" => "MONOLITH",
+    "message" => "A critical error has occurred, contact the Administrator."
+));
+define('DASHBOARD_PERMISSION_ERROR', array(
+    "code" => "TELESCOPE",
+    "message" => "You do not have permission to access the dashboard, contact the Administrator."
+));
+define('INVALID_USER_REQUEST', array(
+    "code" => "SPECTER",
+    "message" => "Invalid request, contact the Administrator."
+));

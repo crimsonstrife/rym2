@@ -57,14 +57,27 @@ if (isset($_SESSION['user_id'])) {
 
     //if the user does not have the view dashboard permission, prevent access to the dashboard
     if (!$hasViewDashboardPermission) {
-        //die with an error message
-        die('Error: You do not have permission to access the dashboard, contact the Administrator.');
-    } else {
         //include the header
         include_once('./header.php');
-?>
-        <div id="layout">
-            <?php
+        //set the error type
+        $thisError = 'DASHBOARD_PERMISSION_ERROR'; ?>
+<div id="layout">
+    <?php
+            //include the sidebar
+            include_once('./sidebar.php');
+
+            //include the error message file
+            include_once('../../includes/errors/errorMessage.inc.php');
+
+            //include the footer
+            include_once('./footer.php'); ?>
+</div>
+<?php } else {
+        //include the header
+        include_once('./header.php');
+    ?>
+<div id="layout">
+    <?php
             //include the sidebar
             include_once('./sidebar.php');
 
@@ -120,7 +133,7 @@ if (isset($_SESSION['user_id'])) {
             } else {
                 include_once('content/admin_content.php');
             } ?>
-        </div>
+</div>
 <?php
         //include the footer
         include_once('./footer.php');
