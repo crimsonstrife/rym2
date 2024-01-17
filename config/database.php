@@ -56,9 +56,12 @@ try {
     $mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
     /* If the connection fails, log the error */
     error_log("Failed to connect to the database: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error);
-    //we'll do more with this later
 }
 /* If the connection fails, log the error */
 if (!$testConnection) {
-    //we'll do more with this later
+    //set the error type
+    $thisError = 'DATABASE_ERROR';
+
+    //include the error message file
+    include_once(__DIR__ . '/../includes/errors/errorMessage.inc.php');
 }
