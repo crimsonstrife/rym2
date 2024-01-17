@@ -223,7 +223,7 @@ if (isset($_GET['view'])) {
                                         <tr>
                                             <td><?php echo htmlspecialchars($event['name']); ?></td>
                                             <td><?php echo htmlspecialchars($event['location']); ?></td>
-                                            <td><?php echo formatDate(htmlspecialchars($event['date'])); ?></td>
+                                            <td><?php echo formatDate(htmlspecialchars($event['event_date'])); ?></td>
                                             <td>
                                                 <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single&id=' . $event['id']; ?>"
                                                     class="btn btn-primary btn-sm"><i
@@ -403,7 +403,8 @@ if (isset($_GET['view'])) {
                                             <tr>
                                                 <td><?php echo htmlspecialchars($event['name']); ?></td>
                                                 <td><?php echo htmlspecialchars($event['location']); ?></td>
-                                                <td><?php echo formatDate(htmlspecialchars($event['date'])); ?></td>
+                                                <td><?php echo formatDate(htmlspecialchars($event['event_date'])); ?>
+                                                </td>
                                                 <td>
                                                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single&id=' . $event['id']; ?>"
                                                         class="btn btn-primary btn-sm"><i
