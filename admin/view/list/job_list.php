@@ -1,7 +1,11 @@
 <?php
 //Prevent direct access to this file by checking if the constant ISVALIDUSER is defined.
 if (!defined('ISVALIDUSER')) {
-    die('Error: Invalid request');
+    //set the error type
+    $thisError = 'INVALID_USER_REQUEST';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 }
 
 //include the permissions class
@@ -19,7 +23,11 @@ $hasReadPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $r
 
 //if the user does not have the read job permission, display an error message and do not display the page
 if (!$hasReadPermission) {
-    die('Error: You do not have permission to perform this request.');
+    //set the error type
+    $thisError = 'PERMISSION_ERROR_ACCESS';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 } else {
 ?>
 <div class="container-fluid px-4">
@@ -126,38 +134,38 @@ if (!$hasReadPermission) {
             <div class="card-footer">
                 <!-- Download CSV -->
                 <?php /*confirm user has a role with export jobs permissions*/
-                        //get the id of the export jobs permission
-                        $exportJobsPermissionID = $permissionsObject->getPermissionIdByName('EXPORT JOB');
+                    //get the id of the export jobs permission
+                    $exportJobsPermissionID = $permissionsObject->getPermissionIdByName('EXPORT JOB');
 
-                        //boolean to check if the user has the export jobs permission
-                        $hasExportJobsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportJobsPermissionID);
+                    //boolean to check if the user has the export jobs permission
+                    $hasExportJobsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportJobsPermissionID);
 
-                        if ($hasExportJobsPermission) {
-                            //prepare the Major array for download
-                            $csvArray = $jobsArray;
-                            //set the created by and updated by to the username
-                            foreach ($csvArray as $key => $row) {
-                                $csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the degree, and swap out the user id
-                                $csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the degree, and swap out the user id
-                            }
-                            //set the field to the name of the area of interest
-                            foreach ($csvArray as $key => $row) {
-                                $csvArray[$key]['field'] = $fieldData->getSubject(intval($row['field']))[0]['name']; //get the name of the area of interest, and swap out the id
-                            }
-                            //clean up the column headers to be more readable, i.e. remove underscores and capitalize
-                            foreach ($csvArray as $key => $row) {
-                                $csvArray[$key] = array(
-                                    'Job Title' => $row['name'],
-                                    'Description' => $row['description'],
-                                    'Position Type' => $row['type'],
-                                    'Field' => $row['field'],
-                                    'Date Created' => $row['created_at'],
-                                    'Created By' => $row['created_by'],
-                                    'Date Updated' => $row['updated_at'],
-                                    'Updated By' => $row['updated_by']
-                                );
-                            }
-                        ?>
+                    if ($hasExportJobsPermission) {
+                        //prepare the Major array for download
+                        $csvArray = $jobsArray;
+                        //set the created by and updated by to the username
+                        foreach ($csvArray as $key => $row) {
+                            $csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the degree, and swap out the user id
+                            $csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the degree, and swap out the user id
+                        }
+                        //set the field to the name of the area of interest
+                        foreach ($csvArray as $key => $row) {
+                            $csvArray[$key]['field'] = $fieldData->getSubject(intval($row['field']))[0]['name']; //get the name of the area of interest, and swap out the id
+                        }
+                        //clean up the column headers to be more readable, i.e. remove underscores and capitalize
+                        foreach ($csvArray as $key => $row) {
+                            $csvArray[$key] = array(
+                                'Job Title' => $row['name'],
+                                'Description' => $row['description'],
+                                'Position Type' => $row['type'],
+                                'Field' => $row['field'],
+                                'Date Created' => $row['created_at'],
+                                'Created By' => $row['created_by'],
+                                'Date Updated' => $row['updated_at'],
+                                'Updated By' => $row['updated_by']
+                            );
+                        }
+                    ?>
                 <form target="_blank"
                     action="<?php echo APP_URL . '/admin/download.php?type=jobs&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
                     method="post" enctype="multipart/form-data">

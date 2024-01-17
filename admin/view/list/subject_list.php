@@ -1,7 +1,11 @@
 <?php
 //Prevent direct access to this file by checking if the constant ISVALIDUSER is defined.
 if (!defined('ISVALIDUSER')) {
-    die('Error: Invalid request');
+    //set the error type
+    $thisError = 'INVALID_USER_REQUEST';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 }
 
 //include the permissions class
@@ -19,7 +23,11 @@ $hasReadPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $r
 
 //if the user does not have the read subject permission, display an error message and do not display the page
 if (!$hasReadPermission) {
-    die('Error: You do not have permission to perform this request.');
+    //set the error type
+    $thisError = 'PERMISSION_ERROR_ACCESS';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 } else { ?>
 <div class="container-fluid px-4">
     <h1 class="mt-4">Subjects/Fields</h1>
@@ -115,31 +123,31 @@ if (!$hasReadPermission) {
             <div class="card-footer">
                 <!-- Download CSV -->
                 <?php /*confirm user has a role with export subjects permissions*/
-                        //get the id of the export subjects permission
-                        $exportSubjectsPermissionID = $permissionsObject->getPermissionIdByName('EXPORT SUBJECT');
+                    //get the id of the export subjects permission
+                    $exportSubjectsPermissionID = $permissionsObject->getPermissionIdByName('EXPORT SUBJECT');
 
-                        //boolean to check if the user has the export subjects permission
-                        $hasExportSubjectsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportSubjectsPermissionID);
+                    //boolean to check if the user has the export subjects permission
+                    $hasExportSubjectsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportSubjectsPermissionID);
 
-                        if ($hasExportSubjectsPermission) {
-                            //prepare the degree array for download
-                            $csvArray = $subjectsArray;
-                            //set the created by and updated by to the username
-                            foreach ($csvArray as $key => $row) {
-                                $csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the subject, and swap out the user id
-                                $csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the subject, and swap out the user id
-                            }
-                            //clean up the column headers to be more readable, i.e. remove underscores and capitalize
-                            foreach ($csvArray as $key => $row) {
-                                $csvArray[$key] = array(
-                                    'Subject/Field Name' => $row['name'],
-                                    'Date Created' => $row['created_at'],
-                                    'Created By' => $row['created_by'],
-                                    'Date Updated' => $row['updated_at'],
-                                    'Updated By' => $row['updated_by']
-                                );
-                            }
-                        ?>
+                    if ($hasExportSubjectsPermission) {
+                        //prepare the degree array for download
+                        $csvArray = $subjectsArray;
+                        //set the created by and updated by to the username
+                        foreach ($csvArray as $key => $row) {
+                            $csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the subject, and swap out the user id
+                            $csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the subject, and swap out the user id
+                        }
+                        //clean up the column headers to be more readable, i.e. remove underscores and capitalize
+                        foreach ($csvArray as $key => $row) {
+                            $csvArray[$key] = array(
+                                'Subject/Field Name' => $row['name'],
+                                'Date Created' => $row['created_at'],
+                                'Created By' => $row['created_by'],
+                                'Date Updated' => $row['updated_at'],
+                                'Updated By' => $row['updated_by']
+                            );
+                        }
+                    ?>
                 <form target="_blank"
                     action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
                     method="post" enctype="multipart/form-data">

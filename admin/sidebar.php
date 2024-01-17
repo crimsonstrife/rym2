@@ -199,8 +199,31 @@ isset($_GET['view']) ? $view = $_GET['view'] : $view = 'dashboard';
                                 if (isset($_SESSION['username'])) {
                                     echo htmlspecialchars($_SESSION["username"]);
                                 } else {
-                                    //if the session variable does not exist, use alternative means to ID the user
+                                    //check if there is a user id set in the session
+                                    if (isset($_SESSION['user_id'])) {
+                                        //if there is a user id set, get the username from the database
+                                        $username = $user->getUserUsername(intval($_SESSION['user_id']));
+                                        echo htmlspecialchars($username);
+                                    } else {
+                                        //if there is no user id set, display anonymous, followed by an error message
+                                        echo 'anonymous';
+                                        echo '<br>';
+                                        $thisError = constant('USER_NOT_FOUND');
 
+                                        //get the error message and code from the error array
+                                        $errorMessage = $thisError['message'];
+                                        $errorCode = $thisError['code'];
+
+                                        //format the error message for the activity log
+                                        $errorString = 'CODE: [' . $errorCode . ']- AT: ' . $currentURL . '';
+
+                                        //log the error
+                                        $activityLog->logActivity(null, 'ERROR', $errorString);
+
+                                        //display the error message and code
+                                        echo $errorCode . ': ' . $errorMessage;
+                                        echo '<br>';
+                                    }
                                 }
                                 ?>
                     </div>

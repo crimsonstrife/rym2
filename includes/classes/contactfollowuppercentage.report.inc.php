@@ -344,9 +344,23 @@ class ContactFollowUpPercentageReport extends Report
 
     public function logReportActivity(int $report_id, string $action, int $user_id = null): bool
     {
+        //string to hold the report "title"
+        $reportTitle = '';
+
+        //string to hold the report date
+        $reportDate = '';
+
+        //get the report data
+        $report = $this->getReportById($report_id);
+
+        $reportDate = formatDate($report['created_at']);
+
+        //setup the report title
+        $reportTitle = $report['report_type'];
+
         //log the report activity
         $activity = new Activity();
-        $activity->logActivity($user_id, $action, 'Report ' . strval($report_id));
+        $activity->logActivity($user_id, $action, 'Report:  ' . $reportTitle . ' - ID: ' . strval($report_id) . ' Date: ' . $reportDate);
 
         //return true
         return true;

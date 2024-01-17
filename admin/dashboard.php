@@ -67,7 +67,7 @@ if (isset($_SESSION['user_id'])) {
             include_once('./sidebar.php');
 
             //include the error message file
-            include_once('../../includes/errors/errorMessage.inc.php');
+            include_once(__DIR__ . '../../includes/errors/errorMessage.inc.php');
 
             //include the footer
             include_once('./footer.php'); ?>

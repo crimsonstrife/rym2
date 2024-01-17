@@ -1,7 +1,11 @@
 <?php
 //Prevent direct access to this file by checking if the constant ISVALIDUSER is defined.
 if (!defined('ISVALIDUSER')) {
-    die('Error: Invalid request');
+    //set the error type
+    $thisError = 'INVALID_USER_REQUEST';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 }
 
 //autoload composer dependencies
@@ -22,33 +26,80 @@ $user = new User();
 //include the activity class
 $activity = new Activity();
 
-//get the user id from the url
-$userId = $_GET['id'];
-
+//boolean to track if the user is viewing their own profile, or if they have permission to view the profile
 $isOwnProfile = false;
+$hasPermission = false;
 
-//check if the current user is the same as the user being viewed, always let the user view their own profile
-if (intval($_SESSION['user_id']) == intval($userId)) {
-    $isOwnProfile = true;
+if (isset($_GET['id'])) {
+    //get the user id from the url parameter
+    $userId = $_GET['id'];
+} else {
+    //set the user id to null
+    $userId = null;
+}
+
+if (isset($_SESSION['user_id'])) {
+    //get the user id from the session
+    $currentUserId = $_SESSION['user_id'];
+} else {
+    //set the user id to null
+    $currentUserId = null;
+}
+
+//confirm the ids exists
+if (empty($userId) || $userId == null) {
+    //set the error type
+    $thisError = 'INVALID_REQUEST_ERROR';
+
+    $userData = null;
+} else {
+    //try to get the user data by id
+    $userData = $user->getUserById(intval($userId));
+}
+if (empty($currentUserData) || $currentUserData == null) {
+    //set the error type
+    $thisError = 'INVALID_USER_REQUEST';
+
+    $currentUserData = null;
+} else {
+    //try to get the user data by id
+    $currentUserData = $user->getUserById(intval($currentUserId));
 }
 
 /*confirm user has a role with read user permissions*/
 //get the id of the read user permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('READ USER');
 
-//boolean to track if the user has the read user permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+//check if the current user is the same as the user being viewed, always let the user view their own profile
+if ((intval($currentUserId) == intval($userId)) && (intval($userId) !== null) && (intval($currentUserId) !== null)) {
+    $isOwnProfile = true;
+    $hasPermission = $auth->checkUserPermission(intval($currentUserId), $relevantPermissionID);
+}
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if ((!$hasPermission && !$isOwnProfile)) {
-    die('Error: You do not have permission to perform this request.');
+    //set the error type
+    $thisError = 'PERMISSION_ERROR_ACCESS';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
+} elseif (!$hasPermission) {
+    //set the error type
+    $thisError = 'PERMISSION_ERROR_ACCESS';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 } else {
+    //check if the userdata is empty
+    if (empty($userData) || $userData == null) {
+        //set the error type
+        $thisError = 'NOT_FOUND';
 
-    //get the user data by id
-    $userData = $user->getUserById(intval($userId));
-
-    //get the roles data by user id
-    $rolesData = $user->getUserRoles(intval($userId));
+        //include the error message file
+        include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
+    } else {
+        //get the roles data by user id
+        $rolesData = $user->getUserRoles(intval($userId));
 ?>
 <div class="container-fluid px-4">
     <h1 class="mt-4"><?php echo $user->getUserUsername($userId); ?></h1>
@@ -63,26 +114,26 @@ if ((!$hasPermission && !$isOwnProfile)) {
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=list'; ?>"
                         class="btn btn-secondary">Back to Users</a>
                     <?php /*confirm user has a role with update user permissions*/
-                        //get the update user permission id
-                        $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE USER');
+                            //get the update user permission id
+                            $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE USER');
 
-                        //boolean to check if the user has the update user permission
-                        $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
+                            //boolean to check if the user has the update user permission
+                            $hasUpdatePermission = $auth->checkUserPermission(intval($currentUserId), $updatePermissionID);
 
-                        //only show the edit button if the user has the update user permission
-                        if ($hasUpdatePermission || $isOwnProfile) { ?>
+                            //only show the edit button if the user has the update user permission
+                            if ($hasUpdatePermission || $isOwnProfile) { ?>
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $userId; ?>"
                         class="btn btn-primary">Edit User</a>
                     <?php } ?>
                     <?php /*confirm user has a role with delete user permissions*/
-                        //get the delete user permission id
-                        $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE USER');
+                            //get the delete user permission id
+                            $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE USER');
 
-                        //boolean to check if the user has the delete user permission
-                        $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
+                            //boolean to check if the user has the delete user permission
+                            $hasDeletePermission = $auth->checkUserPermission(intval($currentUserId), $deletePermissionID);
 
-                        //only show the delete button if the user has the delete user permission, do not let the user delete their own account
-                        if ($hasDeletePermission && !$isOwnProfile) { ?>
+                            //only show the delete button if the user has the delete user permission, do not let the user delete their own account
+                            if ($hasDeletePermission && !$isOwnProfile) { ?>
                     <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
                         data-bs-target="#deleteUserModal">
                         Delete User
@@ -128,20 +179,20 @@ if ((!$hasPermission && !$isOwnProfile)) {
                                 <div class="col-md-6">
                                     <p>
                                         <?php
-                                            //create a string to hold the roles
-                                            $rolesString = "";
-                                            //loop through the roles and add them to the string
-                                            foreach ($rolesData as $role) {
-                                                //if the string is empty, add the role name
-                                                if ($rolesString == "") {
-                                                    $rolesString = $role['name'];
-                                                } else {
-                                                    //if the string is not empty, add a comma and the role name
-                                                    $rolesString = $rolesString . ", " . $role['name'];
+                                                //create a string to hold the roles
+                                                $rolesString = "";
+                                                //loop through the roles and add them to the string
+                                                foreach ($rolesData as $role) {
+                                                    //if the string is empty, add the role name
+                                                    if ($rolesString == "") {
+                                                        $rolesString = $role['name'];
+                                                    } else {
+                                                        //if the string is not empty, add a comma and the role name
+                                                        $rolesString = $rolesString . ", " . $role['name'];
+                                                    }
                                                 }
-                                            }
-                                            echo $rolesString;
-                                            ?>
+                                                echo $rolesString;
+                                                ?>
                                     </p>
                                 </div>
                             </div>
@@ -158,14 +209,14 @@ if ((!$hasPermission && !$isOwnProfile)) {
                                     <div class="table-scroll">
                                         <table id="dataTable" class="table table-striped table-bordered">
                                             <?php /*confirm user has a role with read activity permissions*/
-                                                //get the id of the read activity permission
-                                                $readActivityPermissionID = $permissionsObject->getPermissionIdByName('READ ACTIVITY');
+                                                    //get the id of the read activity permission
+                                                    $readActivityPermissionID = $permissionsObject->getPermissionIdByName('READ ACTIVITY');
 
-                                                //boolean to track if the user has the read activity permission
-                                                $hasReadActivityPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readActivityPermissionID);
+                                                    //boolean to track if the user has the read activity permission
+                                                    $hasReadActivityPermission = $auth->checkUserPermission(intval($currentUserId), $readActivityPermissionID);
 
-                                                //only show the activity log if the user has the read activity permission
-                                                if ($hasReadActivityPermission || $isOwnProfile) { ?>
+                                                    //only show the activity log if the user has the read activity permission
+                                                    if ($hasReadActivityPermission || $isOwnProfile) { ?>
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Date</th>
@@ -175,17 +226,17 @@ if ((!$hasPermission && !$isOwnProfile)) {
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                        //get the activity data by user id
-                                                        $activityData = $activity->getAllActivityByUser(intval($userId));
-                                                        //loop through the activity data and display it
-                                                        foreach ($activityData as $activity) {
-                                                            echo "<tr>";
-                                                            echo "<td>" . $activity['action_date'] . "</td>";
-                                                            echo "<td>" . $activity['action'] . "</td>";
-                                                            echo "<td>" . $activity['performed_on'] . "</td>";
-                                                            echo "</tr>";
-                                                        }
-                                                        ?>
+                                                            //get the activity data by user id
+                                                            $activityData = $activity->getAllActivityByUser(intval($userId));
+                                                            //loop through the activity data and display it
+                                                            foreach ($activityData as $activity) {
+                                                                echo "<tr>";
+                                                                echo "<td>" . $activity['action_date'] . "</td>";
+                                                                echo "<td>" . $activity['action'] . "</td>";
+                                                                echo "<td>" . $activity['performed_on'] . "</td>";
+                                                                echo "</tr>";
+                                                            }
+                                                            ?>
                                             </tbody>
                                             <?php } else { ?>
                                             <thead>
@@ -248,4 +299,5 @@ if ((!$hasPermission && !$isOwnProfile)) {
         </div>
     </div>
 </div>
-<?php } ?>
+<?php }
+} ?>

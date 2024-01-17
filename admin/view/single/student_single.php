@@ -1,7 +1,11 @@
 <?php
 //Prevent direct access to this file by checking if the constant ISVALIDUSER is defined.
 if (!defined('ISVALIDUSER')) {
-    die('Error: Invalid request');
+    //set the error type
+    $thisError = 'INVALID_USER_REQUEST';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 }
 
 //autoload composer dependencies
@@ -22,7 +26,11 @@ $hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relev
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
-    die('Error: You do not have permission to perform this request.');
+    //set the error type
+    $thisError = 'PERMISSION_ERROR_ACCESS';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 } else {
 
     //student class
@@ -43,22 +51,60 @@ if (!$hasPermission) {
     //user class
     $user = new User();
 
-    //get the student id from the url parameter
-    $student_id = $_GET['id'];
-
-    //if the contact form has been submitted, send the email
-    if (isset($_POST['submitContact'])) {
-        //get the form data
-        $student_id = $_POST['studentId'];
-        $student_name = $_POST['studentName'];
-        $student_email = $_POST['studentEmail'];
-        $sender_id = $_POST['senderId'];
-        $subject = $_POST['subject'];
-        $message = $_POST['message'];
-
-        //send the email
-        $contact->sendEmail($student_id, $student_email, $student_name, $subject, $message, $sender_id);
+    if (isset($_GET['id'])) {
+        //get the student id from the url parameter
+        $student_id = $_GET['id'];
+    } else {
+        //set the student id to null
+        $student_id = null;
     }
+
+    //confirm the id exists
+    if (empty($student_id) || $student_id == null) {
+        //set the error type
+        $thisError = 'INVALID_REQUEST_ERROR';
+
+        //include the error message file
+        include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
+    } else {
+        //try to get the student information
+        $object = $student->getStudentById(intval($student_id));
+
+        //check if the student is empty
+        if (empty($object)) {
+            //set the error type
+            $thisError = 'NOT_FOUND';
+
+            //include the error message file
+            include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
+        }
+    }
+
+    //if not empty, display the student information
+    if (!empty($object)) {
+
+        //variable for the mail result
+        $mailResult = null;
+        $mailSend = false;
+
+        //if the contact form has been submitted, send the email
+        if (isset($_POST['submitContact'])) {
+            //get the form data
+            $student_id = $_POST['studentId'];
+            $student_name = $_POST['studentName'];
+            $student_email = $_POST['studentEmail'];
+            $sender_id = $_POST['senderId'];
+            $subject = $_POST['subject'];
+            $message = $_POST['message'];
+
+            //send the email
+            $mailResult = $contact->sendEmail($student_id, $student_email, $student_name, $subject, $message, $sender_id);
+
+            //as long as an attempt was completed, set the mailSend variable to true
+            if (!$mailResult || $mailResult) {
+                $mailSend = true;
+            }
+        }
 ?>
 <div class="container-fluid px-4">
     <h1 class="mt-4"><?php echo $student->getStudentFullName($student_id); ?></h1>
@@ -73,14 +119,14 @@ if (!$hasPermission) {
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>"
                         class="btn btn-secondary">Back to Students</a>
                     <?php /*confirm user has a role with delete student permissions*/
-                        //get the delete student permission id
-                        $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
+                            //get the delete student permission id
+                            $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
 
-                        //boolean to check if the user has the delete student permission
-                        $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
+                            //boolean to check if the user has the delete student permission
+                            $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
 
-                        //only show the delete button if the user has the delete student permission
-                        if ($hasDeletePermission) { ?>
+                            //only show the delete button if the user has the delete student permission
+                            if ($hasDeletePermission) { ?>
                     <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
                         data-bs-target="#deleteStudentModal">
                         Delete Student
@@ -112,10 +158,10 @@ if (!$hasPermission) {
                             <p>
                                 <strong>Address:</strong>
                                 <?php
-                                    //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
-                                    $address = $student->getStudentFormattedAddress($student_id);
-                                    $address = urlencode($address);
-                                    ?>
+                                        //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
+                                        $address = $student->getStudentFormattedAddress($student_id);
+                                        $address = urlencode($address);
+                                        ?>
                                 <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
                                     target="_blank"><?php echo $student->getStudentFormattedAddress($student_id); ?></a>
                             </p>
@@ -145,22 +191,22 @@ if (!$hasPermission) {
                     <div class="col-md-6" style="height: 100%;">
                         <h3>Event Attendance</h3>
                         <?php /*confirm user has a role with read events permissions*/
-                            //get the read event permission id
-                            $readEventPermissionID = $permissionsObject->getPermissionIdByName('READ EVENT');
+                                //get the read event permission id
+                                $readEventPermissionID = $permissionsObject->getPermissionIdByName('READ EVENT');
 
-                            //boolean to check if the user has the read event permission
-                            $hasReadEventPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readEventPermissionID);
+                                //boolean to check if the user has the read event permission
+                                $hasReadEventPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readEventPermissionID);
 
-                            //only show the event attendance info if the user has the read event permission
-                            if ($hasReadEventPermission) { ?>
+                                //only show the event attendance info if the user has the read event permission
+                                if ($hasReadEventPermission) { ?>
                         <div id="info" class="">
                             <?php
-                                    //get the events the student has attended
-                                    $events = $student->getStudentEventAttendace($student_id);
-                                    //if there are events, display them
-                                    if ($events) {
-                                        foreach ($events as $event) {
-                                    ?>
+                                        //get the events the student has attended
+                                        $events = $student->getStudentEventAttendace($student_id);
+                                        //if there are events, display them
+                                        if ($events) {
+                                            foreach ($events as $event) {
+                                        ?>
                             <p>
                                 <i class="fa-solid fa-calendar-day"></i>
                                 <strong><?php echo $eventsData->getEventName($event['event_id']) ?></strong>
@@ -170,12 +216,12 @@ if (!$hasPermission) {
                                 <?php echo formatDate($eventsData->getEventDate($event['event_id'])); ?>
                             </p>
                             <?php
+                                            }
+                                        } else {
+                                            //otherwise, display a message
+                                            echo "<p>This student has not attended any specific events.</p>";
                                         }
-                                    } else {
-                                        //otherwise, display a message
-                                        echo "<p>This student has not attended any specific events.</p>";
-                                    }
-                                    ?>
+                                        ?>
                         </div>
                         <?php } else { ?>
                         <div id="info" class="">
@@ -185,8 +231,8 @@ if (!$hasPermission) {
                     </div>
                     <!-- Student Notes -->
                     <?php
-                        //TODO: Add notes functionality
-                        ?>
+                            //TODO: Add notes functionality
+                            ?>
                 </div>
                 <!-- Student Contact Log -->
                 <div class="row">
@@ -194,20 +240,20 @@ if (!$hasPermission) {
                         <h3>Contact Log</h3>
                         <div id="info" class="">
                             <?php
-                                /*confirm user has a role with read contact permissions*/
-                                //get the read contact permission id
-                                $readContactPermissionID = $permissionsObject->getPermissionIdByName('READ CONTACT');
+                                    /*confirm user has a role with read contact permissions*/
+                                    //get the read contact permission id
+                                    $readContactPermissionID = $permissionsObject->getPermissionIdByName('READ CONTACT');
 
-                                //boolean to check if the user has the read contact permission
-                                $hasReadContactPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readContactPermissionID);
+                                    //boolean to check if the user has the read contact permission
+                                    $hasReadContactPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readContactPermissionID);
 
-                                //only show the contact log if the user has the read contact permission
-                                if ($hasReadContactPermission) {
-                                    //get the contact history for the student
-                                    $contactHistoryArray = $student->getStudentContactHistory($student_id);
-                                    //if there is contact history, display it in a table
-                                    if ($contactHistoryArray) {
-                                ?>
+                                    //only show the contact log if the user has the read contact permission
+                                    if ($hasReadContactPermission) {
+                                        //get the contact history for the student
+                                        $contactHistoryArray = $student->getStudentContactHistory($student_id);
+                                        //if there is contact history, display it in a table
+                                        if ($contactHistoryArray) {
+                                    ?>
                             <div class="table-scroll">
                                 <table id="dataTable" class="table table-striped table-bordered">
                                     <thead>
@@ -221,66 +267,66 @@ if (!$hasPermission) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                                    //for each contact history, display it in a table row
-                                                    foreach ($contactHistoryArray as $contactHistory) {
-                                                    ?>
+                                                        //for each contact history, display it in a table row
+                                                        foreach ($contactHistoryArray as $contactHistory) {
+                                                        ?>
                                         <tr>
                                             <td><?php echo formatDate($contactHistory['send_date']); ?></td>
                                             <td><?php echo formatTime($contactHistory['send_date']); ?></td>
                                             <td><?php echo $contactHistory['subject']; ?></td>
                                             <?php
-                                                            //if the contact history is automated, display yes, otherwise display no
-                                                            if ($contactHistory['auto'] == 1) {
-                                                                $contactHistory['auto'] = "Yes";
-                                                            } else {
-                                                                $contactHistory['auto'] = "No";
-                                                            }
-                                                            ?>
+                                                                //if the contact history is automated, display yes, otherwise display no
+                                                                if ($contactHistory['auto'] == 1) {
+                                                                    $contactHistory['auto'] = "Yes";
+                                                                } else {
+                                                                    $contactHistory['auto'] = "No";
+                                                                }
+                                                                ?>
                                             <td><?php echo $contactHistory['auto']; ?></td>
                                             <?php
-                                                            //if the user id is NULL, display "SYSTEM", otherwise display the user's username
-                                                            if ($contactHistory['sender'] == NULL) {
-                                                                $contactHistory['sender'] = "SYSTEM";
-                                                            } else {
-                                                                $contactHistory['sender'] = $user->getUserUsername($contactHistory['sender']);
-                                                            }
-                                                            ?>
+                                                                //if the user id is NULL, display "SYSTEM", otherwise display the user's username
+                                                                if ($contactHistory['sender'] == NULL) {
+                                                                    $contactHistory['sender'] = "SYSTEM";
+                                                                } else {
+                                                                    $contactHistory['sender'] = $user->getUserUsername($contactHistory['sender']);
+                                                                }
+                                                                ?>
                                             <td><?php echo $contactHistory['sender']; ?></td>
                                         </tr>
                                         <?php
-                                                    }
-                                                    ?>
+                                                        }
+                                                        ?>
                                     </tbody>
                                 </table>
                                 <?php
-                                    } else {
-                                        //otherwise, display a message
-                                        echo "<p>This student has not been contacted.</p>";
-                                    }
-                                } else { ?>
+                                        } else {
+                                            //otherwise, display a message
+                                            echo "<p>This student has not been contacted.</p>";
+                                        }
+                                    } else { ?>
                                 <p>You do not have permission to view contact history.</p>
                                 <?php }
-                                    ?>
+                                        ?>
                             </div>
                         </div>
                     </div>
                     <!-- Contact Menu -->
                     <?php
-                        //set student name and email variables
-                        $student_name = $student->getStudentFullName($student_id);
-                        $student_email = $student->getStudentEmail($student_id);
-                        ?>
+                            //set student name and email variables
+                            $student_name = $student->getStudentFullName($student_id);
+                            $student_email = $student->getStudentEmail($student_id);
+                            ?>
                     <div class="col-md-6">
                         <h5>Contact Student</h5>
                         <?php /*confirm user has a role with contact student permissions*/
-                            //get the contact student permission id
-                            $contactPermissionID = $permissionsObject->getPermissionIdByName('CONTACT STUDENT');
+                                //get the contact student permission id
+                                $contactPermissionID = $permissionsObject->getPermissionIdByName('CONTACT STUDENT');
 
-                            //boolean to check if the user has the contact student permission
-                            $hasContactPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $contactPermissionID);
+                                //boolean to check if the user has the contact student permission
+                                $hasContactPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $contactPermissionID);
 
-                            //only show the contact form if the user has the contact student permission
-                            if ($hasContactPermission) { ?>
+                                //only show the contact form if the user has the contact student permission
+                                if ($hasContactPermission) { ?>
                         <div id="info" class="">
                             <!-- Contact Student Form Modal-->
                             <button type="button" id="openContactModal" class="btn btn-primary" data-bs-toggle="modal"
@@ -340,6 +386,46 @@ if (!$hasPermission) {
                                 </div>
                             </div>
                         </div>
+                        <div id="info" class="">
+                            <!-- Contact Result Modal-->
+                            <div id="contactResultModal" class="modal fade contact" tabindex="-1" role="dialog"
+                                aria-labelledby="#studentContactResult" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title" id="studentContactResult">Contact Student -
+                                                <?php echo $student_name; ?> : Result</h3>
+                                            <button type="button" class="btn-close close" data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                                <i class="fa-solid fa-times"></i>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <?php
+                                                        //check that mailResult is set
+                                                        if (isset($mailResult)) {
+                                                            //if the mailResult is false, display an error message
+                                                            if ((!$mailResult && $mailResult !== null) || $mailResult == false) {
+                                                                echo "<p>There was an error sending the email.</p>";
+                                                                //set the error type
+                                                                $thisError = 'SEND_MAIL_ERROR';
+
+                                                                //include the error message file
+                                                                include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
+                                                            } else {
+                                                                echo "<p>The email was sent successfully.</p>";
+                                                            }
+                                                        }
+                                                        ?>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Dismiss</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <?php } else { ?>
                         <div id="info" class="">
                             <p>You do not have permission to contact students.</p>
@@ -351,14 +437,14 @@ if (!$hasPermission) {
                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>"
                         class="btn btn-secondary">Back to Students</a>
                     <?php /*confirm user has a role with delete student permissions*/
-                        //get the delete student permission id
-                        $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
+                            //get the delete student permission id
+                            $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
 
-                        //boolean to check if the user has the delete student permission
-                        $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
+                            //boolean to check if the user has the delete student permission
+                            $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
 
-                        //only show the delete button if the user has the delete student permission
-                        if ($hasDeletePermission) { ?>
+                            //only show the delete button if the user has the delete student permission
+                            if ($hasDeletePermission) { ?>
                     <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
                         data-bs-target="#deleteStudentModal">
                         Delete Student
@@ -402,5 +488,15 @@ if (!$hasPermission) {
             </div>
         </div>
     </div>
+    <?php
+            //if mailSend is true, display the contact result modal
+            if ($mailSend) { ?>
+    <script>
+    $(document).ready(function() {
+        $('#contactResultModal').modal('show');
+    });
+    </script>
+    <?php } ?>
 </div>
-<?php } ?>
+<?php }
+} ?>

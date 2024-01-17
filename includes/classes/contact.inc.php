@@ -96,7 +96,14 @@ class Contact
             //log the activity
             $activity = new Activity();
             $studentClass = new Student();
-            $activity->logActivity($senderId, 'Contacted Student', $studentClass->getStudentFullName($studentId));
+            $userClass = new User();
+            //get the user name of the user that sent the email, or set it to SYSTEM if it was automatic
+            if ($senderId != NULL) {
+                $senderName = $userClass->getUserUsername($senderId);
+            } else {
+                $senderName = 'SYSTEM';
+            }
+            $activity->logActivity($senderId, 'Email Sent', 'Sent ' . $studentClass->getStudentFullName($studentId) . ' @ ' . $studentClass->getStudentEmail($studentId) . ' - Subject: ' . $subject . ' by ' . $senderName);
             //return true
             return true;
         } else {
@@ -398,9 +405,14 @@ class Contact
         //Set the body
         $mail->Body = $message;
 
+        //send the message
+        $result = $mail->send();
+
         //send the message, check for errors
-        if (!$mail->send()) {
-            //if there is an error, return false
+        if (!$result) {
+            //if there is an error, log it to the activity log and return false
+            $activity = new Activity();
+            $activity->logActivity($senderId, 'Error Sending Email', $mail->ErrorInfo . ' - ' . $email);
             return false;
         } else {
             //if there is no error, log the email and return true

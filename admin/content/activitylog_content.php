@@ -5,7 +5,7 @@ if (!defined('ISVALIDUSER')) {
     $thisError = 'INVALID_USER_REQUEST';
 
     //include the error message file
-    include_once('./includes/errors/errorMessage.inc.php');
+    include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
 } // idea from https://stackoverflow.com/a/409515 (user UnkwnTech)
 
 //include the permissions class
@@ -20,7 +20,7 @@ if (!isset($hasViewDashboardPermission)) {
     $thisError = 'CONFIGURATION_ERROR';
 
     //include the error message file
-    include_once('./includes/errors/errorMessage.inc.php');
+    include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
 } else {
     //check that the user has the view dashboard permission
     if (!$hasViewDashboardPermission) {
@@ -28,7 +28,7 @@ if (!isset($hasViewDashboardPermission)) {
         $thisError = 'DASHBOARD_PERMISSION_ERROR';
 
         //include the error message file
-        include_once('./includes/errors/errorMessage.inc.php');
+        include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
     } else {
         /*confirm user has a role with read contact permissions*/
         //get the id of the read contact permission
@@ -43,35 +43,35 @@ if (!isset($hasViewDashboardPermission)) {
             $thisError = 'PERMISSION_ERROR_ACCESS';
 
             //include the error message file
-            include_once('./includes/errors/errorMessage.inc.php');
+            include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
         } else {
 ?>
-            <!-- main content -->
-            <div id="layout_content">
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Activity Log</h1>
-                        <div class="row">
-                            <!-- Site Activity Log -->
-                            <div class="row">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fa-solid fa-table"></i>
-                                        Activity Log
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-scroll table-fixedHead table-responsive">
-                                            <table id="dataTable" class="table table-striped table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>User</th>
-                                                        <th>Action</th>
-                                                        <th>Details</th>
-                                                        <th>Action Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
+<!-- main content -->
+<div id="layout_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Activity Log</h1>
+            <div class="row">
+                <!-- Site Activity Log -->
+                <div class="row">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fa-solid fa-table"></i>
+                            Activity Log
+                        </div>
+                        <div class="card-body">
+                            <div class="table-scroll table-fixedHead table-responsive">
+                                <table id="dataTable" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Action</th>
+                                            <th>Details</th>
+                                            <th>Action Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
                                                     /* Setup datatable of activity */
                                                     //include the activity class
                                                     $activity = new Activity();
@@ -110,13 +110,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                         echo '</tr>';
                                                     }
                                                     ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <!-- Download CSV -->
-                                        <?php
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <!-- Download CSV -->
+                            <?php
                                         //prepare the user array for download
                                         //swap the user id for the username
                                         foreach ($activityArray as $key => $entry) {
@@ -128,16 +128,18 @@ if (!isset($hasViewDashboardPermission)) {
                                             $activityArray[$key]['user_id'] = $userName;
                                         }
                                         $csvArray = $activityArray; ?>
-                                        <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=activity_log&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
-                                            <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                            <form target="_blank"
+                                action="<?php echo APP_URL . '/admin/download.php?type=activity_log&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
+                                method="post" enctype="multipart/form-data">
+                                <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
+                            </form>
                         </div>
                     </div>
-                </main>
+                </div>
             </div>
+        </div>
+    </main>
+</div>
 <?php }
     }
 } ?>

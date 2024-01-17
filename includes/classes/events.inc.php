@@ -85,8 +85,17 @@ class Event
         $result = $this->mysqli->query($sql);
         //If the query returns a result
         if ($result) {
-            //Return the event
-            return $result->fetch_assoc();
+            //Loop through the result and add each row to the events array
+            while ($row = $result->fetch_assoc()) {
+                $event[] = $row;
+            }
+            //if the event array is not empty, return the event
+            if (!empty($event)) {
+                return $event;
+            } else {
+                //if the event array is empty, return an empty array
+                return array();
+            }
         } else {
             //If the query fails, return an empty array
             return array();

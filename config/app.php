@@ -134,7 +134,7 @@ if (file_exists(BASEPATH . '/.env')) {
         define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME']);
     } // Define the MAIL_FROM_NAME constant, this is the name to send the email from.
     define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
-} else {
+} elseif (file_exists(BASEPATH . '/.env.example')) {
     /*load the .env.example file if the .env file does not exist */
     $dotenv = Dotenv\Dotenv::createImmutable(BASEPATH, '.env.example');
     $dotenv->safeLoad();
@@ -230,6 +230,12 @@ if (file_exists(BASEPATH . '/.env')) {
         define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME']);
     } // Define the MAIL_FROM_NAME constant, this is the name to send the email from.
     define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
+} else {
+    //set the error message
+    $thisError = 'CONFIGURATION_ERROR';
+
+    //include the error message file
+    include_once(__DIR__ . '/../includes/errors/errorMessage.inc.php');
 }
 
 /**
@@ -440,9 +446,11 @@ function includeHeader(): string
     }
 
     /* JS that needs to be loaded in the header */
+    $jQuery = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery/jquery.min.js"></script>';
+    $jqueryMigrate = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery-migrate/jquery-migrate.min.js"></script>';
 
     /* Assemble the header for the application */
-    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $fontawesomeCSS . $CSS;
+    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $fontawesomeCSS . $CSS . $jQuery . $jqueryMigrate;
 
     /* Return the header for the application */
     return $header;
@@ -459,8 +467,8 @@ function includeFooter(): string
     /* JS for the application */
     $boostrapJS = '<script type="text/javascript" src="' . getLibraryPath() . 'bootstrap/js/bootstrap.bundle.min.js"></script>';
     $fontawesomeJS = '<script type="text/javascript" src="' . getLibraryPath() . 'fontawesome/js/all.min.js"></script>';
-    $jQuery = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery/jquery.min.js"></script>';
-    $jqueryMigrate = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery-migrate/jquery-migrate.min.js"></script>';
+    //$jQuery = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery/jquery.min.js"></script>';
+    //$jqueryMigrate = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery-migrate/jquery-migrate.min.js"></script>';
     $datatablesJS = '<script type="text/javascript" src="' . getLibraryPath() . 'simple-datatables/umd/simple-datatables.js"></script>';
     $chartJS = '<script type="text/javascript" src="' . getLibraryPath() . 'chart.js/chart.umd.js"></script>';
     $tether = '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>';
@@ -477,7 +485,7 @@ function includeFooter(): string
     $jqueryNoConflict = '<script>var $j = jQuery.noConflict();</script>';
 
     /* Assemble the footer for the application */
-    $footer = $jQuery . $jqueryMigrate . $datatablesJS . $tether . $select2JS . $chartJS . $dataTableJS . $dataTableJqueryJS . $boostrapJS . $fontawesomeJS . $JS;
+    $footer = $datatablesJS . $tether . $select2JS . $chartJS . $dataTableJS . $dataTableJqueryJS . $boostrapJS . $fontawesomeJS . $JS;
 
     /* Return the footer for the application */
     return $footer;

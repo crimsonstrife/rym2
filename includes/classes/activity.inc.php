@@ -111,6 +111,8 @@ class Activity
         //simplify the action to an enum, if a string is found in the action
         if (stripos($action, 'created') !== false) {
             $action = 'CREATE';
+        } elseif (stripos($action, 'generated') !== false) {
+            $action = 'CREATE';
         } elseif (stripos($action, 'permission') !== false) {
             $action = 'MODIFY';
         } elseif (stripos($action, 'updated') !== false) {
@@ -127,6 +129,26 @@ class Activity
             $action = 'MODIFY';
         } elseif (stripos($action, 'modified') !== false) {
             $action = 'MODIFY';
+        } elseif (stripos($action, 'removed from') !== false) {
+            $action = 'MODIFY';
+        } elseif (stripos($action, 'assigned') !== false) {
+            $action = 'MODIFY';
+        } elseif (stripos($action, 'unassigned') !== false) {
+            $action = 'MODIFY';
+        } elseif (stripos($action, 'changed') !== false) {
+            $action = 'MODIFY';
+        } elseif (stripos($action, 'reset') !== false) {
+            $action = 'RESET';
+        } elseif (stripos($action, 'uploaded') !== false) {
+            $action = 'UPLOAD';
+        } elseif (stripos($action, 'downloaded') !== false) {
+            $action = 'DOWNLOAD';
+        } elseif (stripos($action, 'exported') !== false) {
+            $action = 'DOWNLOAD';
+        } elseif (stripos($action, 'error') !== false) {
+            $action = 'ERROR';
+        } elseif (stripos($action, 'email') !== false) {
+            $action = 'EMAIL';
         } else {
             $action = 'OTHER';
         }

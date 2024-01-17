@@ -4,7 +4,11 @@ declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do n
 
 //Prevent direct access to this file by checking if the constant CAN_INCLUDE is defined.
 if (!defined('CAN_INCLUDE')) {
-    die('Error: Invalid request');
+    //set the error type
+    $thisError = 'CONFIGURATION_ERROR';
+
+    //include the error message file
+    include_once(__DIR__ . '/errors/errorMessage.inc.php');
 } // idea from https://stackoverflow.com/a/409515 (user UnkwnTech)
 
 /* Include the base application config file */

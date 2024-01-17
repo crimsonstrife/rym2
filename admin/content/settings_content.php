@@ -5,7 +5,7 @@ if (!defined('ISVALIDUSER')) {
     $thisError = 'INVALID_USER_REQUEST';
 
     //include the error message file
-    include_once('./includes/errors/errorMessage.inc.php');
+    include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
 } // idea from https://stackoverflow.com/a/409515 (user UnkwnTech)
 
 //check that the view dashboard permission is set
@@ -14,7 +14,7 @@ if (!isset($hasViewDashboardPermission)) {
     $thisError = 'CONFIGURATION_ERROR';
 
     //include the error message file
-    include_once('./includes/errors/errorMessage.inc.php');
+    include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
 } else {
     //check that the user has the view dashboard permission
     if (!$hasViewDashboardPermission) {
@@ -22,7 +22,7 @@ if (!isset($hasViewDashboardPermission)) {
         $thisError = 'DASHBOARD_PERMISSION_ERROR';
 
         //include the error message file
-        include_once('./includes/errors/errorMessage.inc.php');
+        include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
     } else {
 
         //TODO: check if the user is an admin or has permission to view this page

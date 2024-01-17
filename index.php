@@ -25,12 +25,21 @@ if (isset($_GET['event'])) {
     $event_slug = $_GET['event'];
 }
 
-/* Check if the setup.php file exists */
+/* Check if the ready.php file exists */
 if (!file_exists(BASEPATH . '/ready.php')) {
-    /* If the setup.php file exists, launch the installation process */
-    require_once(BASEPATH . '/setup.php');
-    die();
+    /* If the ready.php file exists, launch the installation process */
+    //check that setup.php exists
+    if (file_exists(BASEPATH . '/setup.php')) {
+        //include the setup file
+        require_once(BASEPATH . '/setup.php');
+    } else {
+        //set the error type
+        $thisError = 'CRITICAL';
+
+        //include the error message file
+        include_once(BASEPATH . '/includes/errors/errorMessage.inc.php');
+    }
 } else {
-    /* If the setup.php file does not exist, launch the application */
+    /* If the ready.php file does not exist, launch the application */
     require_once(BASEPATH . '/public/index.php');
 }

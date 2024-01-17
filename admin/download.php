@@ -1,8 +1,21 @@
 <?php
-//prevent direct access to this file
+//prevent direct access to this file, if there is no user id set in the session - i.e. the user is not logged in
 if (isset($_SESSION['user_id'])) {
-    die('Error: Invalid request');
-} else {
+    //set the error type
+    $thisError = 'AUTHENTICATION_ERROR';
+?>
+<div id="layout">
+    <?php
+        //include the sidebar
+        include_once('./sidebar.php');
+
+        //include the error message file
+        include_once(__DIR__ . '../../includes/errors/errorMessage.inc.php');
+
+        //include the footer
+        include_once('./footer.php'); ?>
+</div>
+<?php } else {
     // Define a constant to control the access of the include files
     define('ISVALIDUSER', true); // idea from https://stackoverflow.com/a/409515 (user UnkwnTech)
 
@@ -31,7 +44,7 @@ if (isset($_SESSION['user_id'])) {
         $type = 'file';
     }
 
-    //if the payload is not null, download the file, otherwise close the tab
+    //if the payload is not null, download the file and close the tab, otherwise just close the tab
     if (!empty($payload)) {
         //json decode the payload
         $payload = json_decode($payload, true);
@@ -42,9 +55,20 @@ if (isset($_SESSION['user_id'])) {
         }
         exit;
     } else {
-        echo "payload is empty.";
-        //close the tab
-        echo "<script>window.close();</script>";
+        //set the error type
+        $thisError = 'PAYLOAD_ERROR';
+
+        //include the sidebar
+        include_once('./sidebar.php');
+
+        //include the error message file
+        include_once(__DIR__ . '../../includes/errors/errorMessage.inc.php');
+
+        //include the footer
+        include_once('./footer.php');
+
+        //close the tab after 5 seconds
+        echo "<script>setTimeout(function(){window.close();}, 5000);</script>";
     }
     //close the tab
     echo "<script>window.close();</script>";

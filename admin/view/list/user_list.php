@@ -1,7 +1,11 @@
 <?php
 //Prevent direct access to this file by checking if the constant ISVALIDUSER is defined.
 if (!defined('ISVALIDUSER')) {
-    die('Error: Invalid request');
+    //set the error type
+    $thisError = 'INVALID_USER_REQUEST';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 }
 //include the permissions class
 $permissionsObject = new Permission();
@@ -42,7 +46,11 @@ $hasIsSuperAdminPermission = $auth->checkUserPermission(intval($_SESSION['user_i
 
 //if the user does not have the read user permission, display an error message and do not display the page
 if (!$hasReadPermission) {
-    die('Error: You do not have permission to perform this request.');
+    //set the error type
+    $thisError = 'PERMISSION_ERROR_ACCESS';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 } else {
 ?>
 <div class="container-fluid px-4">
@@ -300,32 +308,32 @@ if (!$hasReadPermission) {
             <div class="card-footer">
                 <!-- Download CSV -->
                 <?php
-                        /*confirm user has a role with export users permissions*/
-                        //get the id of the export users permission
-                        $exportUsersPermissionID = $permissionsObject->getPermissionIdByName('EXPORT USER');
+                    /*confirm user has a role with export users permissions*/
+                    //get the id of the export users permission
+                    $exportUsersPermissionID = $permissionsObject->getPermissionIdByName('EXPORT USER');
 
-                        //boolean to check if the user has the export users permission
-                        $hasExportUsersPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportUsersPermissionID);
+                    //boolean to check if the user has the export users permission
+                    $hasExportUsersPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportUsersPermissionID);
 
-                        if ($hasExportUsersPermission) {
-                            //prepare the user array for download
-                            $csvArray = $usersArray;
-                            //set the created by and updated by to the username
-                            foreach ($csvArray as $key => $row) {
-                                //$csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the user, and swap out the user id
-                                //$csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the user, and swap out the user id
-                            }
-                            //clean up the column headers to be more readable, i.e. remove underscores and capitalize
-                            foreach ($csvArray as $key => $row) {
-                                $csvArray[$key] = array(
-                                    'Username' => $row['username'],
-                                    'Email' => $row['email'],
-                                    'Date Created' => $row['created_at'],
-                                    'Created By' => $row['created_by'],
-                                    'Date Updated' => $row['updated_at'],
-                                    'Updated By' => $row['updated_by']
-                                );
-                            } ?>
+                    if ($hasExportUsersPermission) {
+                        //prepare the user array for download
+                        $csvArray = $usersArray;
+                        //set the created by and updated by to the username
+                        foreach ($csvArray as $key => $row) {
+                            //$csvArray[$key]['created_by'] = $usersData->getUserUsername(intval($row['created_by'])); //get the username of the user who created the user, and swap out the user id
+                            //$csvArray[$key]['updated_by'] = $usersData->getUserUsername(intval($row['updated_by'])); //get the username of the user who updated the user, and swap out the user id
+                        }
+                        //clean up the column headers to be more readable, i.e. remove underscores and capitalize
+                        foreach ($csvArray as $key => $row) {
+                            $csvArray[$key] = array(
+                                'Username' => $row['username'],
+                                'Email' => $row['email'],
+                                'Date Created' => $row['created_at'],
+                                'Created By' => $row['created_by'],
+                                'Date Updated' => $row['updated_at'],
+                                'Updated By' => $row['updated_by']
+                            );
+                        } ?>
                 <form target="_blank"
                     action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
                     method="post" enctype="multipart/form-data">
