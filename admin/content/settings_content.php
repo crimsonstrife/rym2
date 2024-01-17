@@ -45,7 +45,11 @@ if (!isset($hasViewDashboardPermission)) {
 
         //only show the settings if the user has the read settings permission
         if (!$hasReadSettingsPermission) {
-            die('Error: You do not have permission to access this content, contact the Administrator.');
+            //set the error type
+            $thisError = 'PERMISSION_ERROR_ACCESS';
+
+            //include the error message file
+            include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
         } else {
             /*check if the user has the update settings permission */
             //get the permission id
@@ -58,7 +62,11 @@ if (!isset($hasViewDashboardPermission)) {
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 //check if the user has the update settings permission
                 if (!$hasUpdateSettingsPermission) {
-                    die('Error: You do not have permission to access this content, contact the Administrator.');
+                    //set the error type
+                    $thisError = 'AUTHORIZATION_ERROR';
+
+                    //include the error message file
+                    include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
                 }
                 //check if the submit button was clicked
                 if (isset($_POST['submit'])) {
