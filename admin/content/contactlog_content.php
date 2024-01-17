@@ -92,7 +92,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                     $contactLogArray = $contactsData->getContactLog();
                                                     //sort the contact log by date
                                                     usort($contactLogArray, function ($a, $b) {
-                                                        return $a['send_date'] <=> $b['send_date'];
+                                                        return $b['send_date'] <=> $a['send_date'];
                                                     });
                                                     foreach ($contactLogArray as $entry) {
                                                         //get the student id
