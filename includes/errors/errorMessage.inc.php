@@ -5,6 +5,9 @@ $permissionsObject = new Permission();
 //auth class
 $auth = new Authenticator();
 
+//activity log class
+$activityLog = new Activity();
+
 //check for the type of error message to display
 if (isset($thisError)) {
     $errorType = $thisError;
@@ -20,105 +23,90 @@ $errorString = '';
 $errorCode = '';
 
 //switch statement to determine the error message and code to display.
-switch ($errorType) {
-    case 'PERMISSION_ERROR_ACCESS':
-        $errorArray = PERMISSION_ERROR_ACCESS;
-        break;
-    case 'CONFIGURATION_ERROR':
-        $errorArray = CONFIGURATION_ERROR;
-        break;
-    case 'INVALID_REQUEST_ERROR':
-        $errorArray = INVALID_REQUEST_ERROR;
-        break;
-    case 'ROUTING_ERROR':
-        $errorArray = ROUTING_ERROR;
-        break;
-    case 'DATABASE_ERROR':
-        $errorArray = DATABASE_ERROR;
-        break;
-    case 'AUTHENTICATION_ERROR':
-        $errorArray = AUTHENTICATION_ERROR;
-        break;
-    case 'AUTHORIZATION_ERROR':
-        $errorArray = AUTHORIZATION_ERROR;
-        break;
-    case 'VALIDATION_ERROR':
-        $errorArray = VALIDATION_ERROR;
-        break;
-    case 'SUDDEN_ERROR':
-        $errorArray = SUDDEN_ERROR;
-        break;
-    case 'DEFAULT_ERROR':
-        $errorArray = DEFAULT_ERROR;
-        break;
-    case 'TIMEOUT':
-        $errorArray = TIMEOUT;
-        break;
-    case 'RESTART':
-        $errorArray = RESTART;
-        break;
-    case 'NOT_FOUND':
-        $errorArray = NOT_FOUND;
-        break;
-    case 'NOT_IMPLEMENTED':
-        $errorArray = NOT_IMPLEMENTED;
-        break;
-    case 'SERVICE_UNAVAILABLE':
-        $errorArray = SERVICE_UNAVAILABLE;
-        break;
-    case 'CRITICAL':
-        $errorArray = CRITICAL;
-        break;
-    case 'INVALID_USER_REQUEST':
-        $errorArray = INVALID_USER_REQUEST;
-        break;
-    default:
-        $errorArray = DEFAULT_ERROR;
-        break;
-}
+$errorArray = constant($errorType);
 
 //set the error code and message
 $errorCode = $errorArray['code'];
 $errorString = $errorArray['message'];
 
 //if the error string is not empty, display the error content
-if ($errorString !== '' && $errorCode !== '') { ?>
-    <!-- main content -->
-    <div id="layout_content">
-        <main>
-            <div class="container-fluid px-4">
-                <h1 class="mt-4">Error</h1>
+if ($errorString !== '' && $errorCode !== '') {
+
+    //get the user id if it is set in the session
+    if (isset($_SESSION['user_id'])) {
+        $user_id = intval($_SESSION['user_id']);
+    } else {
+        $user_id = null;
+    }
+
+    //get the current URL if it is set
+    if (isset($_SERVER['REQUEST_URI'])) {
+        $currentURL = $_SERVER['REQUEST_URI'];
+    } else {
+        $currentURL = 'NULL';
+    }
+
+    //format the error message
+    $errorMessage = 'CODE: [' . $errorCode . ']- AT: ' . $currentURL . '';
+
+    //log the error
+    $activityLog->logActivity($user_id, 'ERROR', $errorMessage);
+
+    //ensure the error also displays in the PHP error log, in case the panel is not visible
+    error_log($errorMessage);
+?>
+<!-- main content -->
+<div id="layout_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Error</h1>
+            <div class="row">
+                <!-- Error Message -->
                 <div class="row">
-                    <!-- Error Message -->
-                    <div class="row">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fa-solid fa-table"></i>
-                                Error Message
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            Look's like something went wrong...
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                <!-- Error Icon -->
+                                <div class="flex-shrink-0">
+                                    <i class="fa-solid fa-exclamation"></i>
+                                </div>
+                                <!-- Error Code -->
+                                <div class="ms-3">
+                                    <div class="fw-bold"><?php echo $errorCode; ?> ERROR</div>
+                                </div>
+                                <!-- Error Message -->
+                                <div class="ms-3">
+                                    <?php echo $errorString; ?>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="dataTable" class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Error Code</th>
-                                                <th>Error Message</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><?php echo $errorCode; ?></td>
-                                                <td><?php echo $errorString; ?></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                            <br>
+                            <!-- Error Guidance -->
+                            <div class="alert d-flex align-items-center" role="info">
+                                <!-- Error Icon -->
+                                <div class="flex-shrink-0">
+                                    <i class="fa-solid fa-info"></i>
+                                </div>
+                                <!-- Error Guidance -->
+                                <div class="ms-3">
+                                    <div class="fw-bold">What should I do?</div>
+                                    <ul>
+                                        <li>Try refreshing the page</li>
+                                        <li>Try again later</li>
+                                        <li>Report the error to the site administrator, providing the error code above
+                                            will help them identify the problem.</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- End Error Message -->
                 </div>
+                <!-- End Error Message -->
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
+</div>
 <?php } ?>

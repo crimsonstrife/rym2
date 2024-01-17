@@ -374,9 +374,21 @@ define('CRITICAL', array(
 ));
 define('DASHBOARD_PERMISSION_ERROR', array(
     "code" => "TELESCOPE",
-    "message" => "You do not have permission to access the dashboard, contact the Administrator."
+    "message" => "You do not have permission to access this content, contact the Administrator."
 ));
 define('INVALID_USER_REQUEST', array(
     "code" => "SPECTER",
     "message" => "Invalid request, contact the Administrator."
+));
+define('PAYLOAD_ERROR', array(
+    "code" => "VULTURE",
+    "message" => "Data could not be exported, contact the Administrator. This tab should close automatically."
+));
+define('USER_NOT_FOUND', array(
+    "code" => "HARMONICA",
+    "message" => "User can't be verified, contact the Administrator."
+));
+define('SEND_MAIL_ERROR', array(
+    "code" => "PELICAN",
+    "message" => "Mail could not be sent, contact the Administrator."
 ));
