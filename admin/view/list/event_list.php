@@ -57,7 +57,7 @@ if (!$hasReadPermission) {
                 </div>
             </div>
             <div class="card-body">
-                <div class="table-scroll table-fixedHead table-responsive">
+                <div>
                     <table id="dataTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
@@ -96,45 +96,47 @@ if (!$hasReadPermission) {
                                 <td><?php echo $usersData->getUserUsername($event['updated_by']); ?>
                                 </td>
                                 <td>
-                                    <?php /*confirm user has a role with read event permissions*/
-                                            //get the read event permission id
-                                            $updatePermissionID = $permissionsObject->getPermissionIdByName('READ EVENT');
+                                    <span class="td-actions">
+                                        <?php /*confirm user has a role with read event permissions*/
+                                                //get the read event permission id
+                                                $updatePermissionID = $permissionsObject->getPermissionIdByName('READ EVENT');
 
-                                            //boolean to check if the user has the read event permission
-                                            $hasReadPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
+                                                //boolean to check if the user has the read event permission
+                                                $hasReadPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
 
-                                            //only show the edit button if the user has the read event permission
-                                            if ($hasReadPermission) { ?>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single' ?>&id=<?php echo $event['id']; ?>"
-                                        class="btn btn-success">View Event</a>
-                                    <?php } ?>
-                                    <?php /*confirm user has a role with update event permissions*/
-                                            //get the update event permission id
-                                            $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE EVENT');
+                                                //only show the edit button if the user has the read event permission
+                                                if ($hasReadPermission) { ?>
+                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single' ?>&id=<?php echo $event['id']; ?>"
+                                            class="btn btn-success">View Event</a>
+                                        <?php } ?>
+                                        <?php /*confirm user has a role with update event permissions*/
+                                                //get the update event permission id
+                                                $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE EVENT');
 
-                                            //boolean to check if the user has the update event permission
-                                            $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
+                                                //boolean to check if the user has the update event permission
+                                                $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
 
-                                            //only show the edit button if the user has the update event permission
-                                            if ($hasUpdatePermission) { ?>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event['id']; ?>"
-                                        class="btn btn-primary">Edit Event</a>
-                                    <?php } ?>
-                                    <?php /*confirm user has a role with delete event permissions*/
-                                            //get the delete event permission id
-                                            $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE EVENT');
+                                                //only show the edit button if the user has the update event permission
+                                                if ($hasUpdatePermission) { ?>
+                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event['id']; ?>"
+                                            class="btn btn-primary">Edit Event</a>
+                                        <?php } ?>
+                                        <?php /*confirm user has a role with delete event permissions*/
+                                                //get the delete event permission id
+                                                $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE EVENT');
 
-                                            //boolean to check if the user has the delete event permission
-                                            $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
+                                                //boolean to check if the user has the delete event permission
+                                                $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
 
-                                            //only show the delete button if the user has the delete event permission
-                                            if ($hasDeletePermission) { ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger"
-                                        data-bs-toggle="modal" data-bs-target="#deleteEventModal"
-                                        onclick="setDeleteID(<?php echo $event['id']; ?>)">
-                                        Delete Event
-                                    </button>
-                                    <?php } ?>
+                                                //only show the delete button if the user has the delete event permission
+                                                if ($hasDeletePermission) { ?>
+                                        <button type="button" id="openDeleteModal" class="btn btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteEventModal"
+                                            onclick="setDeleteID(<?php echo $event['id']; ?>)">
+                                            Delete Event
+                                        </button>
+                                        <?php } ?>
+                                    </span>
                                 </td>
                             </tr>
                             <?php } ?>
@@ -274,6 +276,8 @@ const dt = new DataTable("table", {
         },
         {
             select: 3,
+            type: "date",
+            format: "YYYY-MM-DD HH:mm:ss",
             sortSequence: ["desc", "asc"]
         },
         {

@@ -29,6 +29,16 @@ footer#layout_footer {
 	width: max-content;
 }
 
+td > .td-actions {
+	display: flex;
+	flex-flow: column;
+}
+
+td > .td-actions > a,
+td > .td-actions > button {
+	margin: 0.5rem;
+}
+
 #dataTable > thead > tr > th {
 	position: sticky;
 	top: 0;
