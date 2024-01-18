@@ -392,3 +392,7 @@ define('SEND_MAIL_ERROR', array(
     "code" => "PELICAN",
     "message" => "Mail could not be sent, contact the Administrator."
 ));
+define('DATA_MISSING', array(
+    "code" => "WEASEL",
+    "message" => "Required data is missing, contact the Administrator."
+));
