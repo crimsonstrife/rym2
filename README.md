@@ -71,7 +71,7 @@ This project aims to provide a web-based application for a business to handle st
 <div align="left">
 
 - <b>Languages: </b> HTML5, CSS3, JavaScript
-- <b>Frameworks: </b> Bootstrap ^5.3.2, jQuery ^3.7, Chart.js ^4.4, Leaflet ^1.9.4/Leaflet Geosearch ^3.10.2, Simple DataTables ^8.0.0, Popper.js ^2.11.8, iro.js ^5.5.2 , Select2 ^4.0
+- <b>Frameworks: </b> Bootstrap ^5.3.2, jQuery ^3.7, Chart.js ^4.4, Leaflet ^1.9.4/Leaflet Geosearch ^3.10.2, Simple-DataTables ^9.0.0, Popper.js ^2.11.8, iro.js ^5.5.2 , Select2 ^4.0
 - <b>Libraries: </b> Font Awesome ^6.4
 
 </div>
@@ -244,7 +244,7 @@ For school-related support, email [pbarnh1@wgu.edu](mailto:pbarnh1@wgu.edu) or [
 - [PHP Markdown](https://github.com/michelf/php-markdown)
 - [PHPMailer](https://github.com/PHPMailer/PHPMailer)
 - [PHP-QRCode](https://github.com/chillerlan/php-qrcode)
-- [Simple DataTables](https://github.com/survos/SurvosSimpleDatatablesBundle)
+- [Simple-DataTables](https://github.com/fiduswriter/simple-datatables)
 - [Popper.js](https://popper.js.org/)
 - [iro.js](https://iro.js.org/)
 - [Select2](https://select2.org/)
@@ -258,6 +258,8 @@ For school-related support, email [pbarnh1@wgu.edu](mailto:pbarnh1@wgu.edu) or [
 - PHPMailer Documentation [(Marcus Bointon 2021)](https://phpmailer.github.io/PHPMailer/)
 - PHP-QRCode Manual [(@chillerlan 2024)](https://php-qrcode.readthedocs.io/en/main/)
 - Leaflet Documentation [(Volodymyr Agafonkin 2010-2023)](https://leafletjs.com/reference.html)
+- Simple-DataTables Documentation [(Fidus Writer 2023)](https://fiduswriter.github.io/simple-datatables/documentation/)
+- Simple-DataTables Demos [(Fidus Writer 2023)](https://fiduswriter.github.io/simple-datatables/demos/)
 
 ## Appendix
 
