@@ -11,7 +11,7 @@ Disclaimer: This project is strictly for educational purposes only.  Any similar
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 ![PHP Composer - Build](https://github.com/crimsonstrife/rym2/actions/workflows/php.yml/badge.svg)
-![Node.js - Build](https://github.com/crimsonstrife/rym2/actions/workflows/node.js.yml)
+![Node.js - Build](https://github.com/crimsonstrife/rym2/actions/workflows/node.js.yml/badge.svg)
 
 </div>
 
