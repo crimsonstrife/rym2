@@ -60,6 +60,12 @@ td > .td-actions > button {
 .datatable-sorter,
 .datatable-filter {
 	width: max-content;
+	display: contents;
+}
+
+.datatable-sorter::before,
+.datatable-sorter::after {
+	margin-right: 5%;
 }
 
 #map {

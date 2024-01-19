@@ -29,17 +29,17 @@ if (!$hasReadPermission) {
     //include the error message file
     include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 } else { ?>
-<div class="container-fluid px-4">
-    <h1 class="mt-4">Subjects/Fields</h1>
-    <div class="row">
-        <div class="card mb-4">
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fa-solid fa-table"></i>
-                    Subjects List
-                </div>
-                <div class="card-tools">
-                    <?php
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Subjects/Fields</h1>
+        <div class="row">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-table"></i>
+                        Subjects List
+                    </div>
+                    <div class="card-tools">
+                        <?php
                         /*confirm user has a role with create subject permissions*/
                         //get the id of the create subject permission
                         $createSubjectPermissionID = $permissionsObject->getPermissionIdByName('CREATE SUBJECT');
@@ -50,25 +50,25 @@ if (!$hasReadPermission) {
                         //if the user has the create subject permission, display the add subject button
                         if ($hasCreatePermission) {
                         ?>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=add&action=create' ?>"
-                        class="btn btn-primary">Add Subject</a>
-                    <?php } ?>
+                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=add&action=create' ?>" class="btn btn-primary">Add Subject</a>
+                        <?php } ?>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="table-scroll table-fixedHead table-responsive">
-                    <table id="dataTable" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Subject/Field Name</th>
-                                <th>Date Created</th>
-                                <th>Created By</th>
-                                <th>Date Updated</th>
-                                <th>Updated By</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
+                <div class="card-body">
+                    <div>
+                        <table id="dataTable" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Subject/Field Name</th>
+                                    <th>Date Created</th>
+                                    <th>Created By</th>
+                                    <th>Date Updated</th>
+                                    <th>Updated By</th>
+                                    <th data-sortable="false">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
                                 /* Setup datatable of Subjects */
                                 //include the Area of Interest class
                                 $subjectsData = new AreaOfInterest();
@@ -79,50 +79,49 @@ if (!$hasReadPermission) {
                                 //for each event, display it
                                 foreach ($subjectsArray as $subject) {
                                 ?>
-                            <tr>
-                                <td><?php echo $subject['name']; ?></td>
-                                <td><?php echo $subject['created_at']; ?></td>
-                                <td><?php echo $usersData->getUserUsername($subject['created_by']); ?></td>
-                                <td><?php echo $subject['updated_at']; ?></td>
-                                <td><?php echo $usersData->getUserUsername($subject['updated_by']); ?></td>
-                                <td>
-                                    <?php /*confirm user has a role with update subject permissions*/
-                                            //get the update subject permission id
-                                            $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE SUBJECT');
+                                    <tr>
+                                        <td><?php echo $subject['name']; ?></td>
+                                        <td><?php echo $subject['created_at']; ?></td>
+                                        <td><?php echo $usersData->getUserUsername($subject['created_by']); ?></td>
+                                        <td><?php echo $subject['updated_at']; ?></td>
+                                        <td><?php echo $usersData->getUserUsername($subject['updated_by']); ?></td>
+                                        <td>
+                                            <span class="td-actions">
+                                                <?php /*confirm user has a role with update subject permissions*/
+                                                //get the update subject permission id
+                                                $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE SUBJECT');
 
-                                            //boolean to check if the user has the update subject permission
-                                            $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
+                                                //boolean to check if the user has the update subject permission
+                                                $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
 
-                                            //only show the edit button if the user has the update subject permission
-                                            if ($hasUpdatePermission) { ?>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=edit&action=edit&id=' . $subject['id']; ?>"
-                                        class="btn btn-primary">Edit Subject</a>
-                                    <?php } ?>
-                                    <?php /*confirm user has a role with delete subject permissions*/
-                                            //get the delete subject permission id
-                                            $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE SUBJECT');
+                                                //only show the edit button if the user has the update subject permission
+                                                if ($hasUpdatePermission) { ?>
+                                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=edit&action=edit&id=' . $subject['id']; ?>" class="btn btn-primary">Edit Subject</a>
+                                                <?php } ?>
+                                                <?php /*confirm user has a role with delete subject permissions*/
+                                                //get the delete subject permission id
+                                                $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE SUBJECT');
 
-                                            //boolean to check if the user has the delete subject permission
-                                            $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
+                                                //boolean to check if the user has the delete subject permission
+                                                $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
 
-                                            //only show the delete button if the user has the delete subject permission
-                                            if ($hasDeletePermission) { ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger"
-                                        data-bs-toggle="modal" data-bs-target="#deleteSubjectModal"
-                                        onclick="setDeleteID(<?php echo $subject['id']; ?>)">
-                                        Delete Subject
-                                    </button>
-                                    <?php } ?>
-                                </td>
-                            </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
+                                                //only show the delete button if the user has the delete subject permission
+                                                if ($hasDeletePermission) { ?>
+                                                    <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSubjectModal" onclick="setDeleteID(<?php echo $subject['id']; ?>)">
+                                                        Delete Subject
+                                                    </button>
+                                                <?php } ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <div class="card-footer">
-                <!-- Download CSV -->
-                <?php /*confirm user has a role with export subjects permissions*/
+                <div class="card-footer">
+                    <!-- Download CSV -->
+                    <?php /*confirm user has a role with export subjects permissions*/
                     //get the id of the export subjects permission
                     $exportSubjectsPermissionID = $permissionsObject->getPermissionIdByName('EXPORT SUBJECT');
 
@@ -148,75 +147,189 @@ if (!$hasReadPermission) {
                             );
                         }
                     ?>
-                <form target="_blank"
-                    action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
-                    method="post" enctype="multipart/form-data">
-                    <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
-                </form>
-                <?php } else { ?>
-                <p class="text-danger">You do not have permission to download the CSV of subjects.</p>
-                <button class="btn btn-success" disabled>Export to CSV</button>
-                <?php } ?>
-            </div>
-            <?php if ($hasDeletePermission) { ?>
-            <div id="info" class="">
-                <!-- Delete Subject Modal-->
-                <!-- Modal -->
-                <div id="deleteSubjectModal" class="modal fade delete" tabindex="-1" role="dialog"
-                    aria-labelledby="#subjectDeleteModal" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 class="modal-title" id="subjectDeleteModal">Delete Subject - <span
-                                        id="subjectName-Title">Subject Name</span></h3>
-                                <button type="button" class="btn-close close" data-bs-dismiss="modal"
-                                    aria-label="Close">
-                                    <i class="fa-solid fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Are you sure you want to delete this subject?</p>
-                                <p>This action cannot be undone.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <script>
-                                var deleteBaseURL =
-                                    "<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=single&action=delete&id='; ?>";
-                                </script>
-                                <form id="deleteSubjectForm" action="" method="post">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                                        onclick="clearDeleteID()">Cancel</button>
-                                    <button type="submit" class="btn btn-danger">Delete Subject</button>
-                                </form>
+                        <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=subjects&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                            <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
+                        </form>
+                    <?php } else { ?>
+                        <p class="text-danger">You do not have permission to download the CSV of subjects.</p>
+                        <button class="btn btn-success" disabled>Export to CSV</button>
+                    <?php } ?>
+                </div>
+                <?php if ($hasDeletePermission) { ?>
+                    <div id="info" class="">
+                        <!-- Delete Subject Modal-->
+                        <!-- Modal -->
+                        <div id="deleteSubjectModal" class="modal fade delete" tabindex="-1" role="dialog" aria-labelledby="#subjectDeleteModal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="subjectDeleteModal">Delete Subject - <span id="subjectName-Title">Subject Name</span></h3>
+                                        <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete this subject?</p>
+                                        <p>This action cannot be undone.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <script>
+                                            var deleteBaseURL =
+                                                "<?php echo APP_URL . '/admin/dashboard.php?view=subjects&subject=single&action=delete&id='; ?>";
+                                        </script>
+                                        <form id="deleteSubjectForm" action="" method="post">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearDeleteID()">Cancel</button>
+                                            <button type="submit" class="btn btn-danger">Delete Subject</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                <?php } ?>
             </div>
-            <?php } ?>
         </div>
-    </div>
-    <?php if ($hasDeletePermission) { ?>
-    <script>
-    //set the subjects array to a javascript variable
-    var subjectsArray = <?php echo json_encode($subjectsArray); ?>;
+        <?php if ($hasDeletePermission) { ?>
+            <script>
+                //set the subjects array to a javascript variable
+                var subjectsArray = <?php echo json_encode($subjectsArray); ?>;
 
-    //function to set the delete id on the action url of the delete modal based on which subject is selected
-    function setDeleteID(id) {
-        //get the subject name
-        var subjectName = subjectsArray.find(subject => subject.id == id).name;
-        //set the subject name in the modal title
-        document.getElementById("subjectName-Title").innerHTML = subjectName;
-        //set the action url of the delete modal
-        document.getElementById("deleteSubjectForm").action = deleteBaseURL + id;
-    }
+                //function to set the delete id on the action url of the delete modal based on which subject is selected
+                function setDeleteID(id) {
+                    //get the subject name
+                    var subjectName = subjectsArray.find(subject => subject.id == id).name;
+                    //set the subject name in the modal title
+                    document.getElementById("subjectName-Title").innerHTML = subjectName;
+                    //set the action url of the delete modal
+                    document.getElementById("deleteSubjectForm").action = deleteBaseURL + id;
+                }
 
-    function clearDeleteID() {
-        //set the action url of the delete modal
-        document.getElementById("deleteSubjectForm").action = "";
-    }
-    </script>
-    <?php } ?>
+                function clearDeleteID() {
+                    //set the action url of the delete modal
+                    document.getElementById("deleteSubjectForm").action = "";
+                }
+            </script>
+        <?php } ?>
+        <script type="module">
+            import {
+                DataTable
+            } from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
+            const dt = new DataTable("table", {
+                scrollY: "100vh",
+                rowNavigation: true,
+                perPageSelect: [5, 10, 15, 20, 25, 50, ["All", -1]],
+                classes: {
+                    active: "active",
+                    disabled: "disabled",
+                    selector: "form-select",
+                    paginationList: "pagination",
+                    paginationListItem: "page-item",
+                    paginationListItemLink: "page-link"
+                },
+                columns: [{
+                        select: 0,
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 1,
+                        type: "date",
+                        format: "YYYY-MM-DD HH:mm:ss",
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 2,
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 3,
+                        type: "date",
+                        format: "YYYY-MM-DD HH:mm:ss",
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 4,
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 5,
+                        sortable: false,
+                        searchable: false
+                    }
+                ],
+                template: options => `<div class='${options.classes.top} fixed-table-toolbar'>
+    ${
+    options.paging && options.perPageSelect ?
+        `<div class='${options.classes.dropdown} bs-bars float-left'>
+            <label>
+                <select class='${options.classes.selector}'></select>
+            </label>
+        </div>` :
+        ""
+}
+    ${
+    options.searchable ?
+        `<div class='${options.classes.search} float-right search btn-group'>
+            <input class='${options.classes.input} form-control search-input' placeholder='Search' type='search' title='Search within table'>
+        </div>` :
+        ""
+}
 </div>
-<?php ?>
+<div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
+<div class='${options.classes.bottom} fixed-table-toolbar'>
+    ${
+    options.paging ?
+        `<div class='${options.classes.info}'></div>` :
+        ""
+}
+    <nav class='${options.classes.pagination}'></nav>
+</div>`,
+                tableRender: (_data, table, _type) => {
+                    const thead = table.childNodes[0]
+                    thead.childNodes[0].childNodes.forEach(th => {
+                        //if the th is not sortable, don't add the sortable class
+                        if (th.options?.sortable === false) {
+                            return
+                        } else {
+                            if (!th.attributes) {
+                                th.attributes = {}
+                            }
+                            th.attributes.scope = "col"
+                            const innerHeader = th.childNodes[0]
+                            if (!innerHeader.attributes) {
+                                innerHeader.attributes = {}
+                            }
+                            let innerHeaderClass = innerHeader.attributes.class ?
+                                `${innerHeader.attributes.class} th-inner` : "th-inner"
+
+                            if (innerHeader.nodeName === "a") {
+                                innerHeaderClass += " sortable sortable-center both"
+                                if (th.attributes.class?.includes("desc")) {
+                                    innerHeaderClass += " desc"
+                                } else if (th.attributes.class?.includes("asc")) {
+                                    innerHeaderClass += " asc"
+                                }
+                            }
+                            innerHeader.attributes.class = innerHeaderClass
+                        }
+                    })
+
+                    return table
+                }
+            })
+            dt.columns.add({
+                data: dt.data.data.map((_row, index) => index),
+                heading: "#",
+                render: (_data, td, _index, _cIndex) => {
+                    if (!td.attributes) {
+                        td.attributes = {}
+                    }
+                    td.attributes.scope = "row"
+                    td.nodeName = "TH"
+                    return td
+                }
+            })
+            dt.columns.order([0, 1, 2, 3, 4, 5])
+            window.dt = dt
+        </script>
+    </div>
 <?php } ?>

@@ -80,7 +80,7 @@ if (!$hasReadPermission) {
                 </div>
             </div>
             <div class="card-body">
-                <div class="table-scroll table-fixedHead table-responsive">
+                <div>
                     <table id="dataTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
@@ -91,6 +91,7 @@ if (!$hasReadPermission) {
                                 <th>Created By</th>
                                 <th>Date Updated</th>
                                 <th>Updated By</th>
+                                <th data-sortable="false">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -198,106 +199,108 @@ if (!$hasReadPermission) {
                                 <td><?php echo $usersData->getUserUsername(intval($user['created_by'])); ?></td>
                                 <td><?php echo $user['updated_at']; ?></td>
                                 <td><?php echo $usersData->getUserUsername(intval($user['updated_by'])); ?></td>
-                                <?php
-                                        //if the user does not have the edit user, delete user, or read user permission, do not display the controls
-                                        if ($hasEditPermission || $hasDeletePermission || $hasReadPermission) { ?>
                                 <td>
-                                    <!-- View User -->
-                                    <?php if ($hasReadPermission) { ?>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $user['id']; ?>"
-                                        class="btn btn-success">View User</a>
-                                    <?php } ?>
-                                    <!-- Edit User -->
-                                    <?php if ($hasEditPermission) {
-                                                    /*if the selected user is a super admin, do not allow editing unless the current user is a super admin or matches the selected user id*/
-                                                    //if the selected user is a super admin and the current user is not a super admin and the current and selected users do not match, do not allow editing
-                                                    if (!$currentAndSelectedUsersMatch && (!$currentUserIsSuperAdmin && $selectedUserIsSuperAdmin)) {
-                                                        //disable the edit button
-                                                        echo '<a href="#" class="btn btn-primary disabled">Edit User</a>';
-                                                    } else if (!$currentAndSelectedUsersMatch && ($currentUserIsSuperAdmin && $selectedUserIsSuperAdmin)) {
-                                                        //if the selected user is a super admin and the current user is a super admin and the current and selected users do not match, allow editing
-                                                        echo '<a href="' . APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $user['id'] . '" class="btn btn-primary">Edit User</a>';
-                                                    } else if (!$currentAndSelectedUsersMatch && ($currentUserIsAdmin && !$selectedUserIsSuperAdmin)) {
-                                                        //if the selected user is not a super admin and the current user is a regular admin and the current and selected users do not match, allow editing
-                                                        echo '<a href="' . APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $user['id'] . '" class="btn btn-primary">Edit User</a>';
-                                                    } else if (!$currentAndSelectedUsersMatch && (!$currentUserIsSuperAdmin && !$selectedUserIsSuperAdmin) && (!$currentUserIsAdmin && $selectedUserIsAdmin)) {
-                                                        //if the users do not match, neither is a super admin, the current user is not an admin and the selected user is an admin, prohibit editing
-                                                        echo '<a href="#" class="btn btn-primary disabled">Edit User</a>';
-                                                    } else if (!$currentAndSelectedUsersMatch && (!$currentUserIsSuperAdmin && !$selectedUserIsSuperAdmin) && (!$currentUserIsAdmin && !$selectedUserIsAdmin)) {
-                                                        //if the users do not match, neither is a super admin, and neither is an admin, allow editing
-                                                        echo '<a href="' . APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $user['id'] . '" class="btn btn-primary">Edit User</a>';
-                                                    } else {
-                                                        //always allow the current user to edit their own account
-                                                        if ($currentAndSelectedUsersMatch) {
+                                    <span class="td-actions">
+                                        <?php
+                                                //if the user does not have the edit user, delete user, or read user permission, do not display the controls
+                                                if ($hasEditPermission || $hasDeletePermission || $hasReadPermission) { ?>
+                                        <!-- View User -->
+                                        <?php if ($hasReadPermission) { ?>
+                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $user['id']; ?>"
+                                            class="btn btn-success">View User</a>
+                                        <?php } ?>
+                                        <!-- Edit User -->
+                                        <?php if ($hasEditPermission) {
+                                                        /*if the selected user is a super admin, do not allow editing unless the current user is a super admin or matches the selected user id*/
+                                                        //if the selected user is a super admin and the current user is not a super admin and the current and selected users do not match, do not allow editing
+                                                        if (!$currentAndSelectedUsersMatch && (!$currentUserIsSuperAdmin && $selectedUserIsSuperAdmin)) {
+                                                            //disable the edit button
+                                                            echo '<a href="#" class="btn btn-primary disabled">Edit User</a>';
+                                                        } else if (!$currentAndSelectedUsersMatch && ($currentUserIsSuperAdmin && $selectedUserIsSuperAdmin)) {
+                                                            //if the selected user is a super admin and the current user is a super admin and the current and selected users do not match, allow editing
                                                             echo '<a href="' . APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $user['id'] . '" class="btn btn-primary">Edit User</a>';
-                                                        } ?>
-                                    <?php }
-                                                } ?>
-                                    <!-- Delete User -->
-                                    <?php if ($hasDeletePermission) {
-                                                    /*only allow super admins to delete other super admins, if the current user is neither a super admin nor an admin, they can only delete other non-admin users*/
-                                                    if ($currentAndSelectedUsersMatch == true) { //do not allow the current user to delete their own account
-                                                ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger" disabled>
-                                        Delete User
-                                    </button>
-                                    <?php } else if ($currentAndSelectedUsersMatch == false && (!$currentUserIsSuperAdmin && $selectedUserIsSuperAdmin)) {
-                                                        //if the selected user is a super admin and the current user is not a super admin, do not allow deleting
+                                                        } else if (!$currentAndSelectedUsersMatch && ($currentUserIsAdmin && !$selectedUserIsSuperAdmin)) {
+                                                            //if the selected user is not a super admin and the current user is a regular admin and the current and selected users do not match, allow editing
+                                                            echo '<a href="' . APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $user['id'] . '" class="btn btn-primary">Edit User</a>';
+                                                        } else if (!$currentAndSelectedUsersMatch && (!$currentUserIsSuperAdmin && !$selectedUserIsSuperAdmin) && (!$currentUserIsAdmin && $selectedUserIsAdmin)) {
+                                                            //if the users do not match, neither is a super admin, the current user is not an admin and the selected user is an admin, prohibit editing
+                                                            echo '<a href="#" class="btn btn-primary disabled">Edit User</a>';
+                                                        } else if (!$currentAndSelectedUsersMatch && (!$currentUserIsSuperAdmin && !$selectedUserIsSuperAdmin) && (!$currentUserIsAdmin && !$selectedUserIsAdmin)) {
+                                                            //if the users do not match, neither is a super admin, and neither is an admin, allow editing
+                                                            echo '<a href="' . APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $user['id'] . '" class="btn btn-primary">Edit User</a>';
+                                                        } else {
+                                                            //always allow the current user to edit their own account
+                                                            if ($currentAndSelectedUsersMatch) {
+                                                                echo '<a href="' . APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $user['id'] . '" class="btn btn-primary">Edit User</a>';
+                                                            } ?>
+                                        <?php }
+                                                    } ?>
+                                        <!-- Delete User -->
+                                        <?php if ($hasDeletePermission) {
+                                                        /*only allow super admins to delete other super admins, if the current user is neither a super admin nor an admin, they can only delete other non-admin users*/
+                                                        if ($currentAndSelectedUsersMatch == true) { //do not allow the current user to delete their own account
                                                     ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger" disabled>
-                                        Delete User
-                                    </button>
-                                    <?php } else if ($currentAndSelectedUsersMatch == false && ($currentUserIsSuperAdmin && $selectedUserIsSuperAdmin) && ($userCount > 1 && $superAdminCount > 1)) {
-                                                        //if the selected user is a super admin and the current user is a super admin, the current and selected users do not match, and they are not the last user or the last super admin allow deleting
-                                                    ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger"
-                                        data-bs-toggle="modal" data-bs-target="#deleteUserModal"
-                                        onclick="setDeleteID(<?php echo $user['id']; ?>)">
-                                        Delete User
-                                    </button>
-                                    <?php } else if ($currentAndSelectedUsersMatch == false && ($currentUserIsSuperAdmin && !$selectedUserIsSuperAdmin) && ($userCount > 1 && $superAdminCount > 1)) {
-                                                        //if the selected user is not a super admin and the current user is a regular admin, the current and selected users do not match, and they are not the last user, allow deleting
-                                                    ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger"
-                                        data-bs-toggle="modal" data-bs-target="#deleteUserModal"
-                                        onclick="setDeleteID(<?php echo $user['id']; ?>)">
-                                        Delete User
-                                    </button>
-                                    <?php } else if ($currentAndSelectedUsersMatch == false && (!$currentUserIsSuperAdmin && !$selectedUserIsSuperAdmin && $currentUserIsAdmin) && ($userCount > 1)) {
-                                                        //if the users do not match, neither is a super admin, the current user is not an admin and the selected user is an admin, prohibit deleting
-                                                    ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger" disabled>
-                                        Delete User
-                                    </button>
-                                    <?php } else if ($currentAndSelectedUsersMatch == false && (!$currentUserIsSuperAdmin && !$selectedUserIsSuperAdmin && !$currentUserIsAdmin && !$selectedUserIsAdmin)) { //if the users do not match, neither is a super admin, and neither is an admin, and they are not the last user, allow deleting
-                                                    ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger"
-                                        data-bs-toggle="modal" data-bs-target="#deleteUserModal"
-                                        onclick="setDeleteID(<?php echo $user['id']; ?>)">
-                                        Delete User
-                                    </button>
-                                    <?php } else if ($currentAndSelectedUsersMatch = false && (!$currentUserIsAdmin && !$currentUserIsSuperAdmin && !$selectedUserIsAdmin && !$selectedUserIsSuperAdmin) && ($userCount > 1)) { ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger"
-                                        data-bs-toggle="modal" data-bs-target="#deleteUserModal"
-                                        onclick="setDeleteID(<?php echo $user['id']; ?>)">
-                                        Delete User
-                                    </button>
-                                    <?php } else if ($currentAndSelectedUsersMatch == false && (!$selectedUserIsSuperAdmin && !$selectedUserIsAdmin) && ($currentUserIsAdmin && $currentUserIsSuperAdmin) && ($userCount > 1)) { ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger"
-                                        data-bs-toggle="modal" data-bs-target="#deleteUserModal"
-                                        onclick="setDeleteID(<?php echo $user['id']; ?>)">
-                                        Delete User
-                                    </button>
-                                    <?php } else if ($currentAndSelectedUsersMatch == true) { ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger" disabled>
-                                        Delete User
-                                    </button>
-                                    <?php } ?>
+                                        <button type="button" id="openDeleteModal" class="btn btn-danger" disabled>
+                                            Delete User
+                                        </button>
+                                        <?php } else if ($currentAndSelectedUsersMatch == false && (!$currentUserIsSuperAdmin && $selectedUserIsSuperAdmin)) {
+                                                            //if the selected user is a super admin and the current user is not a super admin, do not allow deleting
+                                                        ?>
+                                        <button type="button" id="openDeleteModal" class="btn btn-danger" disabled>
+                                            Delete User
+                                        </button>
+                                        <?php } else if ($currentAndSelectedUsersMatch == false && ($currentUserIsSuperAdmin && $selectedUserIsSuperAdmin) && ($userCount > 1 && $superAdminCount > 1)) {
+                                                            //if the selected user is a super admin and the current user is a super admin, the current and selected users do not match, and they are not the last user or the last super admin allow deleting
+                                                        ?>
+                                        <button type="button" id="openDeleteModal" class="btn btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteUserModal"
+                                            onclick="setDeleteID(<?php echo $user['id']; ?>)">
+                                            Delete User
+                                        </button>
+                                        <?php } else if ($currentAndSelectedUsersMatch == false && ($currentUserIsSuperAdmin && !$selectedUserIsSuperAdmin) && ($userCount > 1 && $superAdminCount > 1)) {
+                                                            //if the selected user is not a super admin and the current user is a regular admin, the current and selected users do not match, and they are not the last user, allow deleting
+                                                        ?>
+                                        <button type="button" id="openDeleteModal" class="btn btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteUserModal"
+                                            onclick="setDeleteID(<?php echo $user['id']; ?>)">
+                                            Delete User
+                                        </button>
+                                        <?php } else if ($currentAndSelectedUsersMatch == false && (!$currentUserIsSuperAdmin && !$selectedUserIsSuperAdmin && $currentUserIsAdmin) && ($userCount > 1)) {
+                                                            //if the users do not match, neither is a super admin, the current user is not an admin and the selected user is an admin, prohibit deleting
+                                                        ?>
+                                        <button type="button" id="openDeleteModal" class="btn btn-danger" disabled>
+                                            Delete User
+                                        </button>
+                                        <?php } else if ($currentAndSelectedUsersMatch == false && (!$currentUserIsSuperAdmin && !$selectedUserIsSuperAdmin && !$currentUserIsAdmin && !$selectedUserIsAdmin)) { //if the users do not match, neither is a super admin, and neither is an admin, and they are not the last user, allow deleting
+                                                        ?>
+                                        <button type="button" id="openDeleteModal" class="btn btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteUserModal"
+                                            onclick="setDeleteID(<?php echo $user['id']; ?>)">
+                                            Delete User
+                                        </button>
+                                        <?php } else if ($currentAndSelectedUsersMatch = false && (!$currentUserIsAdmin && !$currentUserIsSuperAdmin && !$selectedUserIsAdmin && !$selectedUserIsSuperAdmin) && ($userCount > 1)) { ?>
+                                        <button type="button" id="openDeleteModal" class="btn btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteUserModal"
+                                            onclick="setDeleteID(<?php echo $user['id']; ?>)">
+                                            Delete User
+                                        </button>
+                                        <?php } else if ($currentAndSelectedUsersMatch == false && (!$selectedUserIsSuperAdmin && !$selectedUserIsAdmin) && ($currentUserIsAdmin && $currentUserIsSuperAdmin) && ($userCount > 1)) { ?>
+                                        <button type="button" id="openDeleteModal" class="btn btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteUserModal"
+                                            onclick="setDeleteID(<?php echo $user['id']; ?>)">
+                                            Delete User
+                                        </button>
+                                        <?php } else if ($currentAndSelectedUsersMatch == true) { ?>
+                                        <button type="button" id="openDeleteModal" class="btn btn-danger" disabled>
+                                            Delete User
+                                        </button>
+                                        <?php } ?>
+                                        <?php } ?>
+                                    </span>
                                 </td>
-                                <?php } ?>
                             </tr>
                             <?php
-                                        }
+                                                }
                                 ?>
                             <?php
                                 } ?>
@@ -403,5 +406,134 @@ if (!$hasReadPermission) {
     }
     </script>
     <?php } ?>
+    <script type="module">
+    import {
+        DataTable
+    } from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
+    const dt = new DataTable("table", {
+        scrollY: "100vh",
+        rowNavigation: true,
+        perPageSelect: [5, 10, 15, 20, 25, 50, ["All", -1]],
+        classes: {
+            active: "active",
+            disabled: "disabled",
+            selector: "form-select",
+            paginationList: "pagination",
+            paginationListItem: "page-item",
+            paginationListItemLink: "page-link"
+        },
+        columns: [{
+                select: 0,
+                sortSequence: ["desc", "asc"]
+            },
+            {
+                select: 1,
+                sortSequence: ["desc", "asc"]
+            },
+            {
+                select: 2,
+                sortSequence: ["desc", "asc"]
+            },
+            {
+                select: 3,
+                type: "date",
+                format: "YYYY-MM-DD HH:mm:ss",
+                sortSequence: ["desc", "asc"]
+            },
+            {
+                select: 4,
+                sortSequence: ["desc", "asc"]
+            },
+            {
+                select: 5,
+                type: "date",
+                format: "YYYY-MM-DD HH:mm:ss",
+                sortSequence: ["desc", "asc"]
+            },
+            {
+                select: 6,
+                sortSequence: ["desc", "asc"]
+            },
+            {
+                select: 7,
+                sortable: false,
+                searchable: false
+            }
+        ],
+        template: options => `<div class='${options.classes.top} fixed-table-toolbar'>
+    ${
+    options.paging && options.perPageSelect ?
+        `<div class='${options.classes.dropdown} bs-bars float-left'>
+            <label>
+                <select class='${options.classes.selector}'></select>
+            </label>
+        </div>` :
+        ""
+}
+    ${
+    options.searchable ?
+        `<div class='${options.classes.search} float-right search btn-group'>
+            <input class='${options.classes.input} form-control search-input' placeholder='Search' type='search' title='Search within table'>
+        </div>` :
+        ""
+}
+</div>
+<div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
+<div class='${options.classes.bottom} fixed-table-toolbar'>
+    ${
+    options.paging ?
+        `<div class='${options.classes.info}'></div>` :
+        ""
+}
+    <nav class='${options.classes.pagination}'></nav>
+</div>`,
+        tableRender: (_data, table, _type) => {
+            const thead = table.childNodes[0]
+            thead.childNodes[0].childNodes.forEach(th => {
+                //if the th is not sortable, don't add the sortable class
+                if (th.options?.sortable === false) {
+                    return
+                } else {
+                    if (!th.attributes) {
+                        th.attributes = {}
+                    }
+                    th.attributes.scope = "col"
+                    const innerHeader = th.childNodes[0]
+                    if (!innerHeader.attributes) {
+                        innerHeader.attributes = {}
+                    }
+                    let innerHeaderClass = innerHeader.attributes.class ?
+                        `${innerHeader.attributes.class} th-inner` : "th-inner"
+
+                    if (innerHeader.nodeName === "a") {
+                        innerHeaderClass += " sortable sortable-center both"
+                        if (th.attributes.class?.includes("desc")) {
+                            innerHeaderClass += " desc"
+                        } else if (th.attributes.class?.includes("asc")) {
+                            innerHeaderClass += " asc"
+                        }
+                    }
+                    innerHeader.attributes.class = innerHeaderClass
+                }
+            })
+
+            return table
+        }
+    })
+    dt.columns.add({
+        data: dt.data.data.map((_row, index) => index),
+        heading: "#",
+        render: (_data, td, _index, _cIndex) => {
+            if (!td.attributes) {
+                td.attributes = {}
+            }
+            td.attributes.scope = "row"
+            td.nodeName = "TH"
+            return td
+        }
+    })
+    dt.columns.order([0, 1, 2, 3, 4, 5, 6, 7])
+    window.dt = dt
+    </script>
 </div>
 <?php } ?>

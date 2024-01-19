@@ -95,7 +95,7 @@ if (!$hasPermission) {
                 </div>
             </div>
             <div class="card-body">
-                <div class="table-scroll table-fixedHead table-responsive">
+                <div>
                     <!-- display the report list for the report type -->
                     <table id="dataTable" class="table table-striped table-bordered">
                         <thead>
@@ -106,6 +106,7 @@ if (!$hasPermission) {
                                 <th>Created By</th>
                                 <th>Date Updated</th>
                                 <th>Updated By</th>
+                                <th data-sortable="false">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -132,33 +133,35 @@ if (!$hasPermission) {
                                 <td><?php echo $report['updated_by']; ?>
                                 </td>
                                 <td>
-                                    <?php /*confirm user has a role with read report permissions*/
-                                            //get the read report permission id
-                                            $updatePermissionID = $permissionsObject->getPermissionIdByName('READ REPORT');
+                                    <span class="td-actions">
+                                        <?php /*confirm user has a role with read report permissions*/
+                                                //get the read report permission id
+                                                $updatePermissionID = $permissionsObject->getPermissionIdByName('READ REPORT');
 
-                                            //boolean to check if the user has the read report permission
-                                            $hasReadPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
+                                                //boolean to check if the user has the read report permission
+                                                $hasReadPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
 
-                                            //only show the edit button if the user has the read report permission
-                                            if ($hasReadPermission) { ?>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=single&type=' . urlencode($reportType) . '&id=' . $report['id']; ?>"
-                                        class="btn btn-success">View</a>
-                                    <?php } ?>
-                                    <?php /*confirm user has a role with delete report permissions*/
-                                            //get the delete report permission id
-                                            $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE REPORT');
+                                                //only show the edit button if the user has the read report permission
+                                                if ($hasReadPermission) { ?>
+                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=single&type=' . urlencode($reportType) . '&id=' . $report['id']; ?>"
+                                            class="btn btn-success">View</a>
+                                        <?php } ?>
+                                        <?php /*confirm user has a role with delete report permissions*/
+                                                //get the delete report permission id
+                                                $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE REPORT');
 
-                                            //boolean to check if the user has the delete report permission
-                                            $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
+                                                //boolean to check if the user has the delete report permission
+                                                $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
 
-                                            //only show the delete button if the user has the delete report permission
-                                            if ($hasDeletePermission) { ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger"
-                                        data-bs-toggle="modal" data-bs-target="#deleteReportModal"
-                                        onclick="setDeleteID(<?php echo $report['id']; ?>)">
-                                        Delete Report
-                                    </button>
-                                    <?php } ?>
+                                                //only show the delete button if the user has the delete report permission
+                                                if ($hasDeletePermission) { ?>
+                                        <button type="button" id="openDeleteModal" class="btn btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteReportModal"
+                                            onclick="setDeleteID(<?php echo $report['id']; ?>)">
+                                            Delete Report
+                                        </button>
+                                        <?php } ?>
+                                    </span>
                                 </td>
                             </tr>
                             <?php } ?>
@@ -233,4 +236,130 @@ if (!$hasPermission) {
     </script>
     <?php } ?>
 </div>
+<script type="module">
+import {
+    DataTable
+} from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
+const dt = new DataTable("table", {
+    scrollY: "100vh",
+    rowNavigation: true,
+    perPageSelect: [5, 10, 15, 20, 25, 50, ["All", -1]],
+    classes: {
+        active: "active",
+        disabled: "disabled",
+        selector: "form-select",
+        paginationList: "pagination",
+        paginationListItem: "page-item",
+        paginationListItemLink: "page-link"
+    },
+    columns: [{
+            select: 0,
+            type: "numeric",
+            sortSequence: ["desc", "asc"]
+        },
+        {
+            select: 1,
+            sortSequence: ["desc", "asc"]
+        },
+        {
+            select: 2,
+            type: "date",
+            format: "YYYY-MM-DD HH:mm:ss",
+            sortSequence: ["desc", "asc"]
+        },
+        {
+            select: 3,
+            sortSequence: ["desc", "asc"]
+        },
+        {
+            select: 4,
+            type: "date",
+            format: "YYYY-MM-DD HH:mm:ss",
+            sortSequence: ["desc", "asc"]
+        },
+        {
+            select: 5,
+            sortSequence: ["desc", "asc"]
+        },
+        {
+            select: 6,
+            sortable: false,
+            searchable: false
+        }
+    ],
+    template: options => `<div class='${options.classes.top} fixed-table-toolbar'>
+    ${
+    options.paging && options.perPageSelect ?
+        `<div class='${options.classes.dropdown} bs-bars float-left'>
+            <label>
+                <select class='${options.classes.selector}'></select>
+            </label>
+        </div>` :
+        ""
+}
+    ${
+    options.searchable ?
+        `<div class='${options.classes.search} float-right search btn-group'>
+            <input class='${options.classes.input} form-control search-input' placeholder='Search' type='search' title='Search within table'>
+        </div>` :
+        ""
+}
+</div>
+<div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
+<div class='${options.classes.bottom} fixed-table-toolbar'>
+    ${
+    options.paging ?
+        `<div class='${options.classes.info}'></div>` :
+        ""
+}
+    <nav class='${options.classes.pagination}'></nav>
+</div>`,
+    tableRender: (_data, table, _type) => {
+        const thead = table.childNodes[0]
+        thead.childNodes[0].childNodes.forEach(th => {
+            //if the th is not sortable, don't add the sortable class
+            if (th.options?.sortable === false) {
+                return
+            } else {
+                if (!th.attributes) {
+                    th.attributes = {}
+                }
+                th.attributes.scope = "col"
+                const innerHeader = th.childNodes[0]
+                if (!innerHeader.attributes) {
+                    innerHeader.attributes = {}
+                }
+                let innerHeaderClass = innerHeader.attributes.class ?
+                    `${innerHeader.attributes.class} th-inner` : "th-inner"
+
+                if (innerHeader.nodeName === "a") {
+                    innerHeaderClass += " sortable sortable-center both"
+                    if (th.attributes.class?.includes("desc")) {
+                        innerHeaderClass += " desc"
+                    } else if (th.attributes.class?.includes("asc")) {
+                        innerHeaderClass += " asc"
+                    }
+                }
+                innerHeader.attributes.class = innerHeaderClass
+            }
+        })
+
+        return table
+    }
+})
+dt.columns.add({
+    data: dt.data.data.map((_row, index) => index),
+    heading: "#",
+    render: (_data, td, _index, _cIndex) => {
+        if (!td.attributes) {
+            td.attributes = {}
+        }
+        td.attributes.scope = "row"
+        td.nodeName = "TH"
+        return td
+    }
+})
+dt.columns.order([0, 1, 2, 3, 4, 5, 6])
+window.dt = dt
+</script>
 <?php } ?>

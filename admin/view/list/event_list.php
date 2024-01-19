@@ -30,17 +30,17 @@ if (!$hasReadPermission) {
     include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 } else {
 ?>
-<div class="container-fluid px-4">
-    <h1 class="mt-4">Events</h1>
-    <div class="row">
-        <div class="card mb-4">
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fa-solid fa-table"></i>
-                    Event List
-                </div>
-                <div class="card-tools">
-                    <?php
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Events</h1>
+        <div class="row">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-table"></i>
+                        Event List
+                    </div>
+                    <div class="card-tools">
+                        <?php
                         /*confirm user has a role with create event permissions*/
                         //get the id of the create event permission
                         $createEventPermissionID = $permissionsObject->getPermissionIdByName('CREATE EVENT');
@@ -51,28 +51,27 @@ if (!$hasReadPermission) {
                         //if the user has the create event permission, display the add event button
                         if ($hasCreatePermission) {
                         ?>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=add&action=create' ?>"
-                        class="btn btn-primary">Add Event</a>
-                    <?php } ?>
+                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=add&action=create' ?>" class="btn btn-primary">Add Event</a>
+                        <?php } ?>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div>
-                    <table id="dataTable" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Event Title</th>
-                                <th>Event Date</th>
-                                <th>School</th>
-                                <th>Date Created</th>
-                                <th>Created By</th>
-                                <th>Date Updated</th>
-                                <th>Updated By</th>
-                                <th data-sortable="false">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
+                <div class="card-body">
+                    <div>
+                        <table id="dataTable" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Event Title</th>
+                                    <th>Event Date</th>
+                                    <th>School</th>
+                                    <th>Date Created</th>
+                                    <th>Created By</th>
+                                    <th>Date Updated</th>
+                                    <th>Updated By</th>
+                                    <th data-sortable="false">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
                                 /* Setup datatable of events */
                                 //include the event class
                                 $eventsData = new Event();
@@ -85,19 +84,19 @@ if (!$hasReadPermission) {
                                 //for each event, display it
                                 foreach ($eventsArray as $event) {
                                 ?>
-                            <tr>
-                                <td><?php echo $event['name']; ?></td>
-                                <td><?php echo $event['event_date']; ?></td>
-                                <td><?php echo $schoolsData->getSchoolById($event['location'])['name']; ?></td>
-                                <td><?php echo $event['created_at']; ?></td>
-                                <td><?php echo $usersData->getUserUsername($event['created_by']); ?>
-                                </td>
-                                <td><?php echo $event['updated_at']; ?></td>
-                                <td><?php echo $usersData->getUserUsername($event['updated_by']); ?>
-                                </td>
-                                <td>
-                                    <span class="td-actions">
-                                        <?php /*confirm user has a role with read event permissions*/
+                                    <tr>
+                                        <td><?php echo $event['name']; ?></td>
+                                        <td><?php echo $event['event_date']; ?></td>
+                                        <td><?php echo $schoolsData->getSchoolById($event['location'])['name']; ?></td>
+                                        <td><?php echo $event['created_at']; ?></td>
+                                        <td><?php echo $usersData->getUserUsername($event['created_by']); ?>
+                                        </td>
+                                        <td><?php echo $event['updated_at']; ?></td>
+                                        <td><?php echo $usersData->getUserUsername($event['updated_by']); ?>
+                                        </td>
+                                        <td>
+                                            <span class="td-actions">
+                                                <?php /*confirm user has a role with read event permissions*/
                                                 //get the read event permission id
                                                 $updatePermissionID = $permissionsObject->getPermissionIdByName('READ EVENT');
 
@@ -106,10 +105,9 @@ if (!$hasReadPermission) {
 
                                                 //only show the edit button if the user has the read event permission
                                                 if ($hasReadPermission) { ?>
-                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single' ?>&id=<?php echo $event['id']; ?>"
-                                            class="btn btn-success">View Event</a>
-                                        <?php } ?>
-                                        <?php /*confirm user has a role with update event permissions*/
+                                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single' ?>&id=<?php echo $event['id']; ?>" class="btn btn-success">View Event</a>
+                                                <?php } ?>
+                                                <?php /*confirm user has a role with update event permissions*/
                                                 //get the update event permission id
                                                 $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE EVENT');
 
@@ -118,10 +116,9 @@ if (!$hasReadPermission) {
 
                                                 //only show the edit button if the user has the update event permission
                                                 if ($hasUpdatePermission) { ?>
-                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event['id']; ?>"
-                                            class="btn btn-primary">Edit Event</a>
-                                        <?php } ?>
-                                        <?php /*confirm user has a role with delete event permissions*/
+                                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event['id']; ?>" class="btn btn-primary">Edit Event</a>
+                                                <?php } ?>
+                                                <?php /*confirm user has a role with delete event permissions*/
                                                 //get the delete event permission id
                                                 $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE EVENT');
 
@@ -130,23 +127,21 @@ if (!$hasReadPermission) {
 
                                                 //only show the delete button if the user has the delete event permission
                                                 if ($hasDeletePermission) { ?>
-                                        <button type="button" id="openDeleteModal" class="btn btn-danger"
-                                            data-bs-toggle="modal" data-bs-target="#deleteEventModal"
-                                            onclick="setDeleteID(<?php echo $event['id']; ?>)">
-                                            Delete Event
-                                        </button>
-                                        <?php } ?>
-                                    </span>
-                                </td>
-                            </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
+                                                    <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEventModal" onclick="setDeleteID(<?php echo $event['id']; ?>)">
+                                                        Delete Event
+                                                    </button>
+                                                <?php } ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <div class="card-footer">
-                <!-- Download CSV -->
-                <?php
+                <div class="card-footer">
+                    <!-- Download CSV -->
+                    <?php
                     /*confirm user has a role with export events permissions*/
                     //get the id of the export events permission
                     $exportEventsPermissionID = $permissionsObject->getPermissionIdByName('EXPORT EVENT');
@@ -178,129 +173,127 @@ if (!$hasReadPermission) {
                             );
                         }
                     ?>
-                <form target="_blank"
-                    action="<?php echo APP_URL . '/admin/download.php?type=events&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
-                    method="post" enctype="multipart/form-data">
-                    <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
-                </form>
-                <?php } else { ?>
-                <p class="text-danger">You do not have permission to download the CSV of events.</p>
-                <button class="btn btn-success" disabled>Export to CSV</button>
-                <?php } ?>
-            </div>
-            <?php if ($hasDeletePermission) { ?>
-            <div id="info" class="">
-                <!-- Delete Event Modal-->
-                <!-- Modal -->
-                <div id="deleteEventModal" class="modal fade delete" tabindex="-1" role="dialog"
-                    aria-labelledby="#eventDeleteModal" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 class="modal-title" id="eventDeleteModal">Delete Event - <span
-                                        id="eventName-Title">Event Name</span></h3>
-                                <button type="button" class="btn-close close" data-bs-dismiss="modal"
-                                    aria-label="Close">
-                                    <i class="fa-solid fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Are you sure you want to delete this event?</p>
-                                <p>This action cannot be undone.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <script>
-                                var deleteBaseURL =
-                                    "<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single&action=delete&id='; ?>";
-                                </script>
-                                <form id="deleteEventForm" action="" method="post">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                                        onclick="clearDeleteID()">Cancel</button>
-                                    <button type="submit" class="btn btn-danger">Delete Event</button>
-                                </form>
+                        <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=events&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                            <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
+                        </form>
+                    <?php } else { ?>
+                        <p class="text-danger">You do not have permission to download the CSV of events.</p>
+                        <button class="btn btn-success" disabled>Export to CSV</button>
+                    <?php } ?>
+                </div>
+                <?php if ($hasDeletePermission) { ?>
+                    <div id="info" class="">
+                        <!-- Delete Event Modal-->
+                        <!-- Modal -->
+                        <div id="deleteEventModal" class="modal fade delete" tabindex="-1" role="dialog" aria-labelledby="#eventDeleteModal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="eventDeleteModal">Delete Event - <span id="eventName-Title">Event Name</span></h3>
+                                        <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete this event?</p>
+                                        <p>This action cannot be undone.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <script>
+                                            var deleteBaseURL =
+                                                "<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single&action=delete&id='; ?>";
+                                        </script>
+                                        <form id="deleteEventForm" action="" method="post">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearDeleteID()">Cancel</button>
+                                            <button type="submit" class="btn btn-danger">Delete Event</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                <?php } ?>
             </div>
-            <?php } ?>
         </div>
+        <?php if ($hasDeletePermission) { ?>
+            <script>
+                //set the events array to a javascript variable
+                var eventsArray = <?php echo json_encode($eventsArray); ?>;
+
+                //function to set the delete id on the action url of the delete modal based on which event is selected
+                function setDeleteID(id) {
+                    //get the event name
+                    var eventName = eventsArray.find(event => event.id == id).name;
+                    //set the event name in the modal title
+                    document.getElementById("eventName-Title").innerHTML = eventName;
+                    //set the action url of the delete modal
+                    document.getElementById("deleteEventForm").action = deleteBaseURL + id;
+                }
+
+                function clearDeleteID() {
+                    //set the action url of the delete modal
+                    document.getElementById("deleteEventForm").action = "";
+                }
+            </script>
+        <?php } ?>
     </div>
-    <?php if ($hasDeletePermission) { ?>
-    <script>
-    //set the events array to a javascript variable
-    var eventsArray = <?php echo json_encode($eventsArray); ?>;
-
-    //function to set the delete id on the action url of the delete modal based on which event is selected
-    function setDeleteID(id) {
-        //get the event name
-        var eventName = eventsArray.find(event => event.id == id).name;
-        //set the event name in the modal title
-        document.getElementById("eventName-Title").innerHTML = eventName;
-        //set the action url of the delete modal
-        document.getElementById("deleteEventForm").action = deleteBaseURL + id;
-    }
-
-    function clearDeleteID() {
-        //set the action url of the delete modal
-        document.getElementById("deleteEventForm").action = "";
-    }
-    </script>
-    <?php } ?>
-</div>
-<script type="module">
-import {
-    DataTable
-} from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
-const dt = new DataTable("table", {
-    scrollY: "100vh",
-    rowNavigation: true,
-    perPageSelect: [5, 10, 15, 20, 25, 50, ["All", -1]],
-    classes: {
-        active: "active",
-        disabled: "disabled",
-        selector: "form-select",
-        paginationList: "pagination",
-        paginationListItem: "page-item",
-        paginationListItemLink: "page-link"
-    },
-    columns: [{
-            select: 0,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 1,
-            type: "date",
-            format: "YYYY-MM-DD",
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 3,
-            type: "date",
-            format: "YYYY-MM-DD HH:mm:ss",
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 4,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 5,
-            type: "date",
-            format: "YYYY-MM-DD HH:mm:ss",
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 6,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 7,
-            sortable: false,
-            searchable: false
-        }
-    ],
-    template: options => `<div class='${options.classes.top} fixed-table-toolbar'>
+    <script type="module">
+        import {
+            DataTable
+        } from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
+        const dt = new DataTable("table", {
+            scrollY: "100vh",
+            rowNavigation: true,
+            perPageSelect: [5, 10, 15, 20, 25, 50, ["All", -1]],
+            classes: {
+                active: "active",
+                disabled: "disabled",
+                selector: "form-select",
+                paginationList: "pagination",
+                paginationListItem: "page-item",
+                paginationListItemLink: "page-link"
+            },
+            columns: [{
+                    select: 0,
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 1,
+                    type: "date",
+                    format: "YYYY-MM-DD",
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 2,
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 3,
+                    type: "date",
+                    format: "YYYY-MM-DD HH:mm:ss",
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 4,
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 5,
+                    type: "date",
+                    format: "YYYY-MM-DD HH:mm:ss",
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 6,
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 7,
+                    sortable: false,
+                    searchable: false
+                }
+            ],
+            template: options => `<div class='${options.classes.top} fixed-table-toolbar'>
     ${
     options.paging && options.perPageSelect ?
         `<div class='${options.classes.dropdown} bs-bars float-left'>
@@ -327,52 +320,52 @@ const dt = new DataTable("table", {
 }
     <nav class='${options.classes.pagination}'></nav>
 </div>`,
-    tableRender: (_data, table, _type) => {
-        const thead = table.childNodes[0]
-        thead.childNodes[0].childNodes.forEach(th => {
-            //if the th is not sortable, don't add the sortable class
-            if (th.options?.sortable === false) {
-                return
-            } else {
-                if (!th.attributes) {
-                    th.attributes = {}
-                }
-                th.attributes.scope = "col"
-                const innerHeader = th.childNodes[0]
-                if (!innerHeader.attributes) {
-                    innerHeader.attributes = {}
-                }
-                let innerHeaderClass = innerHeader.attributes.class ?
-                    `${innerHeader.attributes.class} th-inner` : "th-inner"
+            tableRender: (_data, table, _type) => {
+                const thead = table.childNodes[0]
+                thead.childNodes[0].childNodes.forEach(th => {
+                    //if the th is not sortable, don't add the sortable class
+                    if (th.options?.sortable === false) {
+                        return
+                    } else {
+                        if (!th.attributes) {
+                            th.attributes = {}
+                        }
+                        th.attributes.scope = "col"
+                        const innerHeader = th.childNodes[0]
+                        if (!innerHeader.attributes) {
+                            innerHeader.attributes = {}
+                        }
+                        let innerHeaderClass = innerHeader.attributes.class ?
+                            `${innerHeader.attributes.class} th-inner` : "th-inner"
 
-                if (innerHeader.nodeName === "a") {
-                    innerHeaderClass += " sortable sortable-center both"
-                    if (th.attributes.class?.includes("desc")) {
-                        innerHeaderClass += " desc"
-                    } else if (th.attributes.class?.includes("asc")) {
-                        innerHeaderClass += " asc"
+                        if (innerHeader.nodeName === "a") {
+                            innerHeaderClass += " sortable sortable-center both"
+                            if (th.attributes.class?.includes("desc")) {
+                                innerHeaderClass += " desc"
+                            } else if (th.attributes.class?.includes("asc")) {
+                                innerHeaderClass += " asc"
+                            }
+                        }
+                        innerHeader.attributes.class = innerHeaderClass
                     }
-                }
-                innerHeader.attributes.class = innerHeaderClass
+                })
+
+                return table
             }
         })
-
-        return table
-    }
-})
-dt.columns.add({
-    data: dt.data.data.map((_row, index) => index),
-    heading: "#",
-    render: (_data, td, _index, _cIndex) => {
-        if (!td.attributes) {
-            td.attributes = {}
-        }
-        td.attributes.scope = "row"
-        td.nodeName = "TH"
-        return td
-    }
-})
-dt.columns.order([0, 1, 2, 3, 4, 5, 6, 7])
-window.dt = dt
-</script>
+        dt.columns.add({
+            data: dt.data.data.map((_row, index) => index),
+            heading: "#",
+            render: (_data, td, _index, _cIndex) => {
+                if (!td.attributes) {
+                    td.attributes = {}
+                }
+                td.attributes.scope = "row"
+                td.nodeName = "TH"
+                return td
+            }
+        })
+        dt.columns.order([0, 1, 2, 3, 4, 5, 6, 7])
+        window.dt = dt
+    </script>
 <?php } ?>

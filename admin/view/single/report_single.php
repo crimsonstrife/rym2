@@ -161,13 +161,16 @@ if (!$hasPermission) {
                         <!-- display the report datatable -->
                         <?php $reportData = $report['data'] ?>
                         <div class="card-body">
-                            <div class="table-scroll table-fixedHead table-responsive">
+                            <div>
                                 <table id="dataTable" class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
                                             <?php
                                                         //get the report data headers
                                                         $reportDataHeaders = array_keys($reportData[0]);
+
+                                                        //count of the number of headers
+                                                        $headerCount = count($reportDataHeaders);
 
                                                         //clean up the report data headers to be more readable, i.e. remove underscores and capitalize
                                                         foreach ($reportDataHeaders as $key => $header) {
@@ -315,6 +318,114 @@ if (!$hasPermission) {
         </div>
     </div>
 </div>
+<script type="module">
+import {
+    DataTable
+} from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
+const dt = new DataTable("table", {
+    scrollY: "50vh",
+    rowNavigation: true,
+    perPageSelect: [5, 10, 15, 20, 25, ["All", -1]],
+    classes: {
+        active: "active",
+        disabled: "disabled",
+        selector: "form-select",
+        paginationList: "pagination",
+        paginationListItem: "page-item",
+        paginationListItemLink: "page-link"
+    },
+    columns: [<?php
+                                //for the number of headers, add a column for each header
+                                for ($i = 0; $i < $headerCount; $i++) {
+                                    echo '{select: ' . $i . ', sortSequence: ["desc", "asc"]}';
+                                    if ($i < $headerCount - 1) {
+                                        echo ',';
+                                    }
+                                }
+                                ?>],
+    template: options => `<div class='${options.classes.top} fixed-table-toolbar'>
+    ${
+    options.paging && options.perPageSelect ?
+        `<div class='${options.classes.dropdown} bs-bars float-left'>
+            <label>
+                <select class='${options.classes.selector}'></select>
+            </label>
+        </div>` :
+        ""
+}
+    ${
+    options.searchable ?
+        `<div class='${options.classes.search} float-right search btn-group'>
+            <input class='${options.classes.input} form-control search-input' placeholder='Search' type='search' title='Search within table'>
+        </div>` :
+        ""
+}
+</div>
+<div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
+<div class='${options.classes.bottom} fixed-table-toolbar'>
+    ${
+    options.paging ?
+        `<div class='${options.classes.info}'></div>` :
+        ""
+}
+    <nav class='${options.classes.pagination}'></nav>
+</div>`,
+    tableRender: (_data, table, _type) => {
+        const thead = table.childNodes[0]
+        thead.childNodes[0].childNodes.forEach(th => {
+            //if the th is not sortable, don't add the sortable class
+            if (th.options?.sortable === false) {
+                return
+            } else {
+                if (!th.attributes) {
+                    th.attributes = {}
+                }
+                th.attributes.scope = "col"
+                const innerHeader = th.childNodes[0]
+                if (!innerHeader.attributes) {
+                    innerHeader.attributes = {}
+                }
+                let innerHeaderClass = innerHeader.attributes.class ?
+                    `${innerHeader.attributes.class} th-inner` : "th-inner"
+
+                if (innerHeader.nodeName === "a") {
+                    innerHeaderClass += " sortable sortable-center both"
+                    if (th.attributes.class?.includes("desc")) {
+                        innerHeaderClass += " desc"
+                    } else if (th.attributes.class?.includes("asc")) {
+                        innerHeaderClass += " asc"
+                    }
+                }
+                innerHeader.attributes.class = innerHeaderClass
+            }
+        })
+
+        return table
+    }
+})
+dt.columns.add({
+    data: dt.data.data.map((_row, index) => index),
+    heading: "#",
+    render: (_data, td, _index, _cIndex) => {
+        if (!td.attributes) {
+            td.attributes = {}
+        }
+        td.attributes.scope = "row"
+        td.nodeName = "TH"
+        return td
+    }
+})
+dt.columns.order([<?php
+                                    //for the number of headers, add a column for each header
+                                    for ($i = 0; $i < $headerCount; $i++) {
+                                        echo $i;
+                                        if ($i < $headerCount - 1) {
+                                            echo ',';
+                                        }
+                                    }
+                                    ?>])
+window.dt = dt
+</script>
 <?php }
     }
 } ?>
