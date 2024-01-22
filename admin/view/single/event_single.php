@@ -32,6 +32,9 @@ $user = new User();
 //student class
 $student = new Student();
 
+//media class
+$media = new Media();
+
 /*confirm user has a role with read event permissions*/
 //get the id of the read event permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('READ EVENT');
@@ -176,13 +179,13 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                         <div id="eventBranding">
                             <h3>Event Branding</h3>
                             <p><strong>Event Logo:</strong></p>
-                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $event->getEventLogo($event_id); ?>"
+                            <img src="<?php echo getUploadPath() . $media->getMediaFileName($event->getEventLogo($event_id)); ?>"
                                 alt="Event Logo" style="max-width: 200px; max-height: auto;">
                             <p><strong>Event Banner:</strong></p>
-                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $event->getEventBanner($event_id); ?>"
+                            <img src="<?php echo getUploadPath() . $media->getMediaFileName($event->getEventBanner($event_id)); ?>"
                                 alt="Event Banner" style="max-width: 200px; max-height: auto;">
                             <p><strong>School Logo:</strong></p>
-                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $school->getSchoolLogo(intval($event->getEventLocationId($event_id))); ?>"
+                            <img src="<?php echo getUploadPath() . $media->getMediaFileName($school->getSchoolLogo(intval($event->getEventLocationId($event_id)))); ?>"
                                 alt="School Logo" style="max-width: 200px; max-height: auto;">
                             <p><strong>School Primary Color:</strong></p>
                             <div
@@ -312,6 +315,9 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
 <?php }
     } ?>
 <script type="module">
+/** import the simple-datatables module, implementation based on the demos/documentation from @fiduswriter/simple-datatables
+ * from https://fiduswriter.github.io/simple-datatables/documentation/
+ **/
 import {
     DataTable
 } from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"

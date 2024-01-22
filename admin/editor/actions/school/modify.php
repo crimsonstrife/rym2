@@ -1,7 +1,11 @@
 <?php
 //Prevent direct access to this file by checking if the constant ISVALIDUSER is defined.
 if (!defined('ISVALIDUSER')) {
-    die('Error: Invalid request');
+    //set the error type
+    $thisError = 'INVALID_USER_REQUEST';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 }
 
 //include the permissions class
@@ -13,6 +17,9 @@ $auth = new Authenticator();
 //include the user class
 $user = new User();
 
+//include the media class
+$media = new Media();
+
 /*confirm user has a role with update school permissions*/
 //get the id of the update school permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('UPDATE SCHOOL');
@@ -22,7 +29,11 @@ $hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relev
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
-    die('Error: You do not have permission to perform this request.');
+    //set the error type
+    $thisError = 'PERMISSION_ERROR_ACCESS';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 } else {
 
     //school class
@@ -38,6 +49,7 @@ if (!$hasPermission) {
             "label" => (string)$value['name']
         );
     }
+
     //sort the schools list alphabetically
     array_multisort(array_column($schools_list, 'label'), SORT_ASC, $schools_list);
 
@@ -50,6 +62,7 @@ if (!$hasPermission) {
     //other variables
     $target_file_logo = null;
     $imageFileType_logo = null;
+    $media_id = null;
 
     //if the action is edit, get the school id from the url parameter
     if ($action == 'edit') {
@@ -111,141 +124,80 @@ if (!$hasPermission) {
 
         //if there are files to upload, upload them
         if (!empty($school_logo)) {
-            //Php upload script based loosely on https://www.w3schools.com/php/php_file_upload.asp
-            $target_dir = dirname(__FILE__) . '/../../../../public/content/uploads/';
-            //get the file names if they are not empty or null
-            if (!empty($school_logo)) {
-                $school_logo_file = basename($_FILES["school_logo"]["name"]);
-                //log the file name
-                //error_log('File name: ' . $school_logo_file);
-            }
-            //set the target file paths
-            if (!empty($school_logo_file)) {
-                $target_file_logo = $target_dir . $school_logo_file;
-                //log the target file path
-                //error_log('Target file: ' . $target_file_logo);
-            }
-            //upload status booleans
-            $uploadOk_logo = 1;
-            //if the logo target file is not empty, setup the type and size checks
-            if (!empty($target_file_logo)) {
-                $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
-                $check_logo = getimagesize($_FILES["school_logo"]["tmp_name"]);
-                if ($check_logo === false) {
-                    $school_logo = null;
-                    $uploadOk_logo = 0;
+            //upload the school logo
+            $media_id = $media->uploadMedia($school_logo, intval($_SESSION['user_id']));
+        }
+
+        //check if the school had an existing logo, if so, update the record
+        if ($action == 'edit') {
+            //if the logo is not empty, update the school logo
+            if (!empty($school_logo) || $school_logo != null || isset($school_logo) || $school_logo != '') {
+                $existing_logo = $school->getSchoolLogo($school_id);
+                //if the existing logo is not empty, see if the id matches
+                if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null) {
+                    //if the files match, do nothing
+                    if ($existing_logo == $media_id) {
+                        //do nothing
+                    } else {
+                        //if the file names do not match, set the logo
+                        $school->setSchoolLogo($school_id, $media_id);
+                    }
                 } else {
-                    $uploadOk_logo = 1;
+                    //if the existing logo is empty, set the logo
+                    $school->setSchoolLogo($school_id, $media_id);
+                }
+            } else if (empty($school_logo) || $school_logo == null || $school_logo == '') {
+                $existing_logo = $school->getSchoolLogo($school_id);
+                if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null) {
+                    //if the files match, do nothing
+                    if ($existing_logo == $media_id) {
+                        //do nothing
+                    } else {
+                        //if the file names do not match, set the logo
+                        $school->setSchoolLogo($school_id, $media_id);
+                    }
+                } else {
+                    $school->setSchoolLogo($school_id, $media_id);
                 }
             }
+        }
+    }
 
-            // Check if file already exists
-            if (file_exists($target_file_logo)) {
-                $school_logo = null;
-                $uploadOk_logo = 0;
-            }
-
-            // Check file size
-            if ($_FILES["school_logo"]["size"] > 500000) { //500kb
-                $school_logo = null;
-                $uploadOk_logo = 0;
-            }
-
-            // Allow certain file formats
-            if (
-                $imageFileType_logo != "jpg" && $imageFileType_logo != "png" && $imageFileType_logo != "jpeg"
-            ) {
-                $school_logo = null;
-                $uploadOk_logo = 0;
-            }
-
-            // Check if $uploadOk is set to 0 by an error
-            if ($uploadOk_logo == 0) {
-                $school_logo = null;
-                // if everything is ok, try to upload file
+    //check if the school had an existing branding color, if so, update the record
+    if ($action == 'edit') {
+        //if the color is empty, update the school color
+        if (!empty($school_color)) {
+            $existing_color = $school->getSchoolColor($school_id);
+            //if the existing color is not empty, see if the id matches
+            if (!empty($existing_color) || $existing_color != '' || $existing_color != null) {
+                //if the colors match, update the color incase the color has changed
+                if ($existing_color == $school_color) {
+                    //should not be needed, but just in case
+                    $school->setSchoolColor($school_id, $school_color);
+                } else {
+                    //if the colors do not match, set the color
+                    $school->setSchoolColor($school_id, $school_color);
+                }
             } else {
-                if (!empty($target_file_logo)) {
-                    if (move_uploaded_file($_FILES["school_logo"]["tmp_name"], $target_file_logo)) {
-                        $school_logo = $school_logo_file;
-                    } else {
-                        $school_logo = null;
-                    }
-                }
+                //if the existing color is empty, set the color
+                $school->setSchoolColor($school_id, $school_color);
             }
-
-            //check if the school had an existing logo, if so, update the record
-            if ($action == 'edit') {
-                //if the logo is not empty, update the school logo
-                if (!empty($school_logo) || $school_logo != null || isset($school_logo) || $school_logo != '') {
-                    $existing_logo = $school->getSchoolLogo($school_id);
-                    //if the existing logo is not empty, see if the id matches
-                    if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null) {
-                        //if the file names match, update the logo incase the file has changed
-                        if ($existing_logo == $school_logo) {
-                            //should not be needed, but just in case
-                            $school->setSchoolLogo($school_id, $school_logo);
-                        } else {
-                            //if the file names do not match, set the logo
-                            $school->setSchoolLogo($school_id, $school_logo);
-                        }
-                    } else {
-                        //if the existing logo is empty, set the logo
-                        $school->setSchoolLogo($school_id, $school_logo);
-                    }
-                } else if (empty($school_logo) || $school_logo == null || $school_logo == '') {
-                    $existing_logo = $school->getSchoolLogo($school_id);
-                    if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null) {
-                        //if the file names match, update the logo incase the file has changed
-                        if ($existing_logo == $school_logo) {
-                            //should not be needed, but just in case
-                            $school->setSchoolLogo($school_id, $existing_logo);
-                        } else {
-                            //if the file names do not match, set the logo
-                            $school->setSchoolLogo($school_id, $existing_logo);
-                        }
-                    } else {
-                        $school->setSchoolLogo($school_id, $existing_logo);
-                    }
-                }
+        } else if (!empty($school_color)) {
+            $existing_color = $school->getSchoolColor($school_id);
+            if (!empty($existing_color) || $existing_color != '' || $existing_color != null) {
+                $school->setSchoolColor($school_id, $school_color);
+            } else {
+                $school->setSchoolColor($school_id, $school_color);
             }
         }
+    }
 
-        //check if the school had an existing branding color, if so, update the record
-        if ($action == 'edit') {
-            //if the color is empty, update the school color
-            if (!empty($school_color)) {
-                $existing_color = $school->getSchoolColor($school_id);
-                //if the existing color is not empty, see if the id matches
-                if (!empty($existing_color) || $existing_color != '' || $existing_color != null) {
-                    //if the colors match, update the color incase the color has changed
-                    if ($existing_color == $school_color) {
-                        //should not be needed, but just in case
-                        $school->setSchoolColor($school_id, $school_color);
-                    } else {
-                        //if the colors do not match, set the color
-                        $school->setSchoolColor($school_id, $school_color);
-                    }
-                } else {
-                    //if the existing color is empty, set the color
-                    $school->setSchoolColor($school_id, $school_color);
-                }
-            } else if (!empty($school_color)) {
-                $existing_color = $school->getSchoolColor($school_id);
-                if (!empty($existing_color) || $existing_color != '' || $existing_color != null) {
-                    $school->setSchoolColor($school_id, $school_color);
-                } else {
-                    $school->setSchoolColor($school_id, $school_color);
-                }
-            }
-        }
-
-        //if the action is edit, update the event
-        if ($action == 'edit') {
-            //get current user ID
-            $user_id = intval($_SESSION['user_id']);
-            //update the event
-            $schoolUpdated = $school->updateSchool(intval($school_id), $school_name, $school_address, $school_city, $school_state, $school_zip, $user_id);
-        }
+    //if the action is edit, update the event
+    if ($action == 'edit') {
+        //get current user ID
+        $user_id = intval($_SESSION['user_id']);
+        //update the event
+        $schoolUpdated = $school->updateSchool(intval($school_id), $school_name, $school_address, $school_city, $school_state, $school_zip, $user_id);
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
@@ -254,12 +206,13 @@ if (!$hasPermission) {
                 <!-- show completion message -->
                 <div class="card-header">
                     <div class="card-title">
-                        <i class="fa-solid fa-check"></i>
                         <?php
                         if ($action == 'edit') {
                             if ($schoolUpdated) {
+                                echo '<i class="fa-solid fa-check"></i>';
                                 echo 'School Updated';
                             } else {
+                                echo '<i class="fa-solid fa-x"></i>';
                                 echo 'Error: School Not Updated';
                             }
                         }

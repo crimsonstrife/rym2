@@ -26,6 +26,9 @@ $user = new User();
 //student class
 $student = new Student();
 
+//media class
+$media = new Media();
+
 //check that action is set in the URL parameters
 if (isset($_GET['action'])) {
     //get the action from the URL parameters
@@ -171,9 +174,9 @@ if (isset($_GET['action'])) {
                                                     <?php
                                                     if (!empty($event->getEventLogo($event_id))) {
                                                         //render the file as an image
-                                                        echo '<div><img src="' . APP_URL . '/public/content/uploads/' . $event->getEventLogo($event_id) . '" alt="Event Logo" style="max-width: 200px; max-height: auto;"></div>';
+                                                        echo '<div><img src="' . getUploadPath() . $media->getMediaFileName($event->getEventLogo($event_id)) . '" alt="Event Logo" style="max-width: 200px; max-height: auto;"></div>';
                                                         //show the file name
-                                                        echo '<div> ' . $event->getEventLogo($event_id) . '</div>';
+                                                        echo '<div> ' . $media->getMediaFileName($event->getEventLogo($event_id)) . '</div>';
                                                     }
                                                     ?>
                                                 </p>
@@ -184,9 +187,9 @@ if (isset($_GET['action'])) {
                                                     <?php
                                                     if (!empty($event->getEventBanner($event_id))) {
                                                         //render the file as an image
-                                                        echo '<div><img src="' . APP_URL . '/public/content/uploads/' . $event->getEventBanner($event_id) . '" alt="Event Banner" style="max-width: 200px; max-height: auto;"></div>';
+                                                        echo '<div><img src="' . getUploadPath() . $media->getMediaFileName($event->getEventBanner($event_id)) . '" alt="Event Banner" style="max-width: 200px; max-height: auto;"></div>';
                                                         //show the file name
-                                                        echo '<div> ' . $event->getEventBanner($event_id) . '</div>';
+                                                        echo '<div> ' . $media->getMediaFileName($event->getEventBanner($event_id)) . '</div>';
                                                     }
                                                     ?>
                                                 </p>

@@ -396,3 +396,21 @@ define('DATA_MISSING', array(
     "code" => "WEASEL",
     "message" => "Required data is missing, contact the Administrator."
 ));
+
+/**
+ * Define the max file size for uploads
+ */
+define('MAX_FILE_SIZE', 10485760);
+
+/**
+ * Define the allowed file types for uploads
+ */
+define('ALLOWED_FILE_TYPES', array(
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/gif",
+    "image/bmp",
+    "image/webp",
+    "image/svg+xml"
+));

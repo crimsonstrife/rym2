@@ -1,7 +1,11 @@
 <?php
 //Prevent direct access to this file by checking if the constant ISVALIDUSER is defined.
 if (!defined('ISVALIDUSER')) {
-    die('Error: Invalid request');
+    //set the error type
+    $thisError = 'INVALID_USER_REQUEST';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 }
 
 //include the permissions class
@@ -19,7 +23,11 @@ $hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relev
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
-    die('Error: You do not have permission to perform this request.');
+    //set the error type
+    $thisError = 'PERMISSION_ERROR_ACCESS';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 } else {
 
     //event class
@@ -27,6 +35,9 @@ if (!$hasPermission) {
 
     //school class
     $school = new School();
+
+    //media class
+    $media = new Media();
 
     //get the schools list
     $schools_list = $school->getSchools();
@@ -99,6 +110,7 @@ if (!$hasPermission) {
         $target_file_logo = null;
         $imageFileType_logo = null;
         $imageFileType_banner = null;
+        $media_id = null;
 
         //if the event logo is empty, set the event logo to null
         if (empty($event_logo)) {
@@ -257,15 +269,15 @@ if (!$hasPermission) {
             //echo "<script>window.location.href = '" . APP_URL . "/admin/dashboard.php?view=events&event=list';</script>";
         }
     } ?>
-<!-- Completion page content -->
-<div class="container-fluid px-4">
-    <div class="row">
-        <div class="card mb-4">
-            <!-- show completion message -->
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fa-solid fa-check"></i>
-                    <?php
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-check"></i>
+                        <?php
                         if ($action == 'create') {
                             if ($eventCreated) {
                                 echo 'Event Created';
@@ -274,9 +286,9 @@ if (!$hasPermission) {
                             }
                         }
                         ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 <?php } ?>

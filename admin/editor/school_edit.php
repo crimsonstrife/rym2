@@ -20,6 +20,9 @@ $user = new User();
 //school class
 $school = new School();
 
+//include the media class
+$media = new Media();
+
 //create an array of states
 $stateArray = STATES;
 
@@ -134,9 +137,9 @@ if (isset($_GET['action'])) {
                                                 <?php
                                                 if (!empty($school->getSchoolLogo(intval($school_id)))) {
                                                     //render the file as an image
-                                                    echo '<div><img src="' . APP_URL . '/public/content/uploads/' . $school->getSchoolLogo(intval($school_id)) . '" alt="School Logo" style="max-width: 200px; max-height: auto;"></div>';
+                                                    echo '<div><img src="' . getUploadPath() . $media->getMediaFileName($school->getSchoolLogo(intval($school_id))) . '" alt="School Logo" style="max-width: 200px; max-height: auto;"></div>';
                                                     //show the file name
-                                                    echo '<div> ' . $school->getSchoolLogo(intval($school_id)) . '</div>';
+                                                    echo '<div> ' . $media->getMediaFileName($school->getSchoolLogo(intval($school_id))) . '</div>';
                                                 }
                                                 ?>
                                             </p>

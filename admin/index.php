@@ -27,20 +27,14 @@ if (isset($_GET['login'])) {
             error_log("Login: " . "true");
             // Processing form data when form is submitted
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                //log the result
-                error_log('POST request received.');
                 //set the authentication flag to false
                 $auth_flag = false;
 
                 // Check if username is empty
                 if (empty(trim($_POST["username"]))) {
                     $username_error = "Please enter username.";
-                    //log the result
-                    error_log("Username is empty.");
                 } else {
                     $username = trim($_POST["username"]);
-                    //log the result
-                    error_log("Username: " . $username . " trimmed.");
                 }
 
                 // Check if password is empty
@@ -50,8 +44,6 @@ if (isset($_GET['login'])) {
                     error_log("Password is empty.");
                 } else {
                     $password = trim($_POST["password"]);
-                    //log the result
-                    error_log("Password: " . "RETRACTED" . " trimmed.");
                 }
 
                 // Validate credentials
@@ -61,8 +53,6 @@ if (isset($_GET['login'])) {
 
                     //check if the user exists by username, if so get the user ID
                     $user_id = $user->getUserIdByUsername($username);
-                    //log the result
-                    error_log("User ID: " . $user_id);
 
                     //if the user exists, check the password
                     if ($user_id) {
@@ -72,11 +62,8 @@ if (isset($_GET['login'])) {
                             try {
                                 $user->login($username, $password);
                             } catch (Exception $e) {
-                                // Log the error
-                                error_log("Failed to log the user in: " . $e->getMessage());
                                 // Display a generic error message
                                 $login_error = "Invalid username or password.";
-                                error_log("" . $login_error);
                             } finally {
                                 //check for an error message
                                 if (!empty($login_error)) {
@@ -90,31 +77,20 @@ if (isset($_GET['login'])) {
                         } else {
                             // Password is not valid, display a generic error message
                             $login_error = "Invalid password.";
-                            //log the result
-                            error_log("" . $login_error);
-
-                            //log the password value for testing only
-                            error_log("Password: " . $password);
                         }
                     } else {
                         // Username doesn't exist, display a generic error message
                         $login_error = "Invalid username.";
-                        //log the result
-                        error_log("" . $login_error);
                     }
                 } else {
                     // either username or password is not valid, display a generic error message
                     $login_error = "Either username or password is not valid.";
-                    //log the result
-                    error_log("" . $login_error);
                 }
 
                 //if there are any errors, set the authentication flag to false
                 if (!empty($username_error) || !empty($password_error) || !empty($login_error)) {
                     $auth_flag = false;
                     $errorArray = array(['username_error' => $username_error, 'password_error' => $password_error, 'login_error' => $login_error], ['username' => $username]);
-                    //log the result
-                    error_log("Error array: " . json_encode($errorArray));
                     //redirect to the login page with the error payload
                     performRedirect('/login.php?error=' . base64_encode(urlencode(json_encode($errorArray))));
                 }
@@ -153,14 +129,10 @@ if (isset($_GET['login'])) {
                     }
                     $_SESSION["user_id"] = $user_id;
                     $_SESSION["logged_in"] = true;
-                    //log the result
-                    error_log("Login: " . "Success!");
                     performRedirect('/admin/dashboard.php?login=success&u=' . base64_encode($user_id));
                 } else {
                     //set the login error
                     $login_error = "Auth Flag is false.";
-                    //log the result
-                    error_log("" . $login_error);
                 }
             } else if ($_SESSION['logged_in'] === true) {
                 //check if the user is already logged in, if so redirect to the admin dashboard

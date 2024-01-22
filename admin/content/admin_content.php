@@ -313,6 +313,9 @@ a.page-link {
         </div>
     </main>
     <script type="module">
+    /** import the simple-datatables module, implementation based on the demos/documentation from @fiduswriter/simple-datatables
+     * from https://fiduswriter.github.io/simple-datatables/documentation/
+     **/
     import {
         DataTable
     } from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"

@@ -20,6 +20,9 @@ $auth = new Authenticator();
 //user class
 $user = new User();
 
+//include the media class
+$media = new Media();
+
 /*confirm user has a role with read school permissions*/
 //get the id of the read school permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('READ SCHOOL');
@@ -142,7 +145,7 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                         <div id="eventBranding">
                             <h3>School Branding</h3>
                             <p><strong>School Logo:</strong></p>
-                            <img src="<?php echo APP_URL . "/public/content/uploads/" . $school->getSchoolLogo(intval($school_id)); ?>"
+                            <img src="<?php echo getUploadPath() . $media->getMediaFileName($school->getSchoolLogo(intval($school_id))); ?>"
                                 alt="School Logo" style="max-width: 200px; max-height: auto;">
                             <p><strong>School Primary Color:</strong></p>
                             <div
@@ -194,10 +197,7 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
 <script type="text/javascript" src="<?php echo getLibraryPath() . 'leaflet/leaflet.js'; ?>"></script>
 <script type="text/javascript" src="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.umd.js'; ?>">
 </script>
-<script type="text/javascript" src="<?php echo getLibraryPath() . 'irojs/iro-core.umd.js'; ?>">
-</script>
 <script type="module" src="<?php echo getAssetPath() . 'js/event-map.js'; ?>">
 </script>
-<script type="text/javascript" src="<?php echo getAssetPath() . 'js/color-picker.js'; ?>"></script>
 <?php }
 } ?>

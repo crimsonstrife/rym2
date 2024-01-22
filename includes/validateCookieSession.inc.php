@@ -54,12 +54,12 @@ if (!empty($_SESSION["user_id"])) {
     }
 
     //password cookie verification
-    if (password_verify($_COOKIE["user_password"], strval($auth_token[0]["password_hash"]))) {
+    if (password_verify($_COOKIE["user_password"], strval($auth_token[0]["password_hash"]) ?? '')) {
         $user_password_verified = true;
     }
 
     //password selector cookie verification
-    if (hash_equals($_COOKIE["user_password_selector"], strval($auth_token[0]["password_hash"]))) {
+    if (hash_equals($_COOKIE["user_password_selector"], strval($auth_token[0]["password_hash"]) ?? '')) {
         $user_password_selector_verified = true;
     }
 

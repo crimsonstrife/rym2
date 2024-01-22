@@ -269,6 +269,21 @@ function getLibraryPath(): string
 }
 
 /**
+ * Get the upload path for the application
+ * Returns the media upload path for the application with trailing slash
+ *
+ * @return string media upload path for the application
+ */
+function getUploadPath(): string
+{
+    /* Define the media upload path for the application */
+    $uploadPath = APP_URL . '/public/content/uploads/';
+
+    /* Return the media upload path for the application */
+    return $uploadPath;
+}
+
+/**
  * Get vendor path for the application
  * Returns the vendor path for the application with trailing slash
  *

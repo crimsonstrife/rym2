@@ -103,18 +103,6 @@ class Event
     }
 
     /**
-     * Find Events in the database by search string
-     *
-     * @param string $search The string to search for
-     * @return array
-     */
-    public function findEvent(string $search): array
-    {
-        //TODO: Implement findEvent() method.
-        return array();
-    }
-
-    /**
      * Get event name
      *
      * @param int $id event id
@@ -765,70 +753,89 @@ class Event
      * Get event logo
      *
      * @param int $id event id
-     * @return string
+     * @return int media id
      */
-    public function getEventLogo(int $id): string
+    public function getEventLogo(int $id): int
     {
+        //placeholder for the media id
+        $media_id = 0;
+
         //SQL statement to get the event logo
         $sql = "SELECT * FROM event_branding WHERE event_id = ?";
+
         //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
+
         //bind the parameters
         $stmt->bind_param("i", $id);
+
         //execute the statement
         $stmt->execute();
+
         //get the result
         $result = $stmt->get_result();
-        //if the result has rows, return the logo
+        //if the result has rows, set the media id to the event logo
         if ($result->num_rows > 0) {
-            return $result->fetch_assoc()['event_logo'];
-        } else {
-            //if no results, return an empty string
-            return "";
+            $media_id = intval($result->fetch_assoc()['event_logo']);
         }
+
+        //return the media id
+        return $media_id;
     }
 
     /**
      * Get event banner image
      *
      * @param int $id event id
-     * @return string
+     * @return int media id
      */
-    public function getEventBanner(int $id): string
+    public function getEventBanner(int $id): int
     {
+        //placeholder for the media id
+        $media_id = 0;
+
         //SQL statement to get the event banner
         $sql = "SELECT * FROM event_branding WHERE event_id = ?";
+
         //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
+
         //bind the parameters
         $stmt->bind_param("i", $id);
+
         //execute the statement
         $stmt->execute();
+
         //get the result
         $result = $stmt->get_result();
-        //if the result has rows, return the banner
+
+        //if the result has rows, set the media id to the event banner
         if ($result->num_rows > 0) {
-            return $result->fetch_assoc()['event_banner'];
-        } else {
-            //if no results, return an empty string
-            return "";
+            $media_id = intval($result->fetch_assoc()['event_banner']);
         }
+
+        //return the media id
+        return $media_id;
     }
 
     /**
      * Set event logo
      *
      * @param int $id event id
-     * @param string $logo event logo path
+     * @param int $logo media id
+     *
      */
-    public function setEventLogo(int $id, string $logo)
+    public function setEventLogo(int $id, int $logo)
     {
         //SQL statement to set the event logo
         $sql = "INSERT INTO event_branding (event_id, event_logo) VALUES (?, ?)";
+
         //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
+
         //bind the parameters
-        $stmt->bind_param("is", $id, $logo);
+        $stmt->bind_param("ii", $id, $logo);
+
         //execute the statement
         $stmt->execute();
 
@@ -844,16 +851,19 @@ class Event
      * Set event banner
      *
      * @param int $id event id
-     * @param string $banner event banner path
+     * @param int $banner media id
      */
-    public function setEventBanner(int $id, string $banner)
+    public function setEventBanner(int $id, int $banner)
     {
         //SQL statement to set the event banner
         $sql = "INSERT INTO event_branding (event_id, event_banner) VALUES (?, ?)";
+
         //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
+
         //bind the parameters
-        $stmt->bind_param("is", $id, $banner);
+        $stmt->bind_param("ii", $id, $banner);
+
         //execute the statement
         $stmt->execute();
 
@@ -871,17 +881,20 @@ class Event
      * does both, helps with delays in the sql execution which appeared to keep them from adding when run back to back
      *
      * @param int $id event id
-     * @param string $logo event logo path
-     * @param string $banner event banner path
+     * @param int $logo event logo path
+     * @param int $banner event banner path
      */
-    public function setEventLogoAndBanner(int $id, string $logo, string $banner)
+    public function setEventLogoAndBanner(int $id, int $logo, int $banner)
     {
         //SQL statement to set the event logo
         $sql = "INSERT INTO event_branding (event_id, event_logo, event_banner) VALUES (?, ?, ?)";
+
         //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
+
         //bind the parameters
-        $stmt->bind_param("iss", $id, $logo, $banner);
+        $stmt->bind_param("iii", $id, $logo, $banner);
+
         //execute the statement
         $stmt->execute();
     }
@@ -890,16 +903,19 @@ class Event
      * Update event logo
      *
      * @param int $id event id
-     * @param string $logo event logo path
+     * @param int $logo media id
      */
-    public function updateEventLogo(int $id, string $logo)
+    public function updateEventLogo(int $id, int $logo)
     {
         //SQL statement to update the event logo
         $sql = "UPDATE event_branding SET event_logo = ? WHERE event_id = ?";
+
         //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
+
         //bind the parameters
-        $stmt->bind_param("si", $logo, $id);
+        $stmt->bind_param("ii", $logo, $id);
+
         //execute the statement
         $stmt->execute();
     }
@@ -908,16 +924,19 @@ class Event
      * Update event banner
      *
      * @param int $id event id
-     * @param string $banner event banner path
+     * @param int $banner media id
      */
-    public function updateEventBanner(int $id, string $banner)
+    public function updateEventBanner(int $id, int $banner)
     {
         //SQL statement to update the event banner
         $sql = "UPDATE event_branding SET event_banner = ? WHERE event_id = ?";
+
         //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
+
         //bind the parameters
-        $stmt->bind_param("si", $banner, $id);
+        $stmt->bind_param("ii", $banner, $id);
+
         //execute the statement
         $stmt->execute();
     }
@@ -927,17 +946,20 @@ class Event
      * does both, helps with delays in the sql execution which appeared to keep them from adding when run back to back
      *
      * @param int $id event id
-     * @param string $logo event logo path
-     * @param string $banner event banner path
+     * @param int $logo event logo path
+     * @param int $banner event banner path
      */
-    public function updateEventLogoAndBanner(int $id, string $logo, string $banner)
+    public function updateEventLogoAndBanner(int $id, int $logo, int $banner)
     {
         //SQL statement to update the event logo
         $sql = "UPDATE event_branding SET event_logo = ?, event_banner = ? WHERE event_id = ?";
+
         //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
+
         //bind the parameters
-        $stmt->bind_param("ssi", $logo, $banner, $id);
+        $stmt->bind_param("iii", $logo, $banner, $id);
+
         //execute the statement
         $stmt->execute();
     }

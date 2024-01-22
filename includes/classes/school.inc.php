@@ -292,9 +292,9 @@ class School
      * Get the school logo
      *
      * @param int $school_id
-     * @return string $school_logo
+     * @return int $school_logo ID
      */
-    public function getSchoolLogo(int $school_id): string
+    public function getSchoolLogo(int $school_id): int
     {
         $school_logo = "";
         $sql = "SELECT school_logo FROM school_branding WHERE school_id = ?";
@@ -305,17 +305,18 @@ class School
         if ($result->num_rows > 0) {
             $school_logo = $result->fetch_assoc()['school_logo'];
         }
-        return $school_logo;
+
+        return intval($school_logo);
     }
 
     /**
      * Set the school logo
      *
      * @param int $school_id
-     * @param string $logo
+     * @param int $logo logo media_id
      * @return boolean $result
      */
-    public function setSchoolLogo(int $school_id, string $logo): bool
+    public function setSchoolLogo(int $school_id, int $logo): bool
     {
         $result = false;
         $defaultColor = "#000000";
@@ -335,7 +336,7 @@ class School
             // Create the school branding
             $sql = "INSERT INTO school_branding (school_id, school_logo, school_color) VALUES (?, ?, ?)";
             $stmt = $this->mysqli->prepare($sql);
-            $stmt->bind_param("iss", $school_id, $logo, $defaultColor);
+            $stmt->bind_param("iis", $school_id, $logo, $defaultColor);
             $stmt->execute();
             $result = true;
         }
@@ -372,7 +373,7 @@ class School
     public function setSchoolColor(int $school_id, string $color): bool
     {
         $result = false;
-        $defaultLogo = "";
+        $defaultLogo = NULL;
         // Check if the school branding exists
         $sql = "SELECT * FROM school_branding WHERE school_id = ?";
         $stmt = $this->mysqli->prepare($sql);
@@ -389,7 +390,7 @@ class School
             // Create the school branding
             $sql = "INSERT INTO school_branding (school_id, school_logo, school_color) VALUES (?, ?, ?)";
             $stmt = $this->mysqli->prepare($sql);
-            $stmt->bind_param("iss", $school_id, $defaultLogo, $color);
+            $stmt->bind_param("iis", $school_id, $defaultLogo, $color);
             $stmt->execute();
             $result = true;
         }

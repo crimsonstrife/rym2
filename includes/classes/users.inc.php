@@ -59,9 +59,6 @@ class User implements Login
     {
         $isValid = password_verify($password, $hash);
 
-        //log the result for debugging
-        error_log("Password is : " . strval($isValid));
-
         //return the result
         if ($isValid) {
             return true;
@@ -76,12 +73,8 @@ class User implements Login
         //get the user's hashed password
         $user_password = $this->getUserPassword($user_id);
 
-        error_log("User password (hashed): " . $user_password);
-
         //hash the password to compare
         $attempted_password = $this->hashPassword($password);
-
-        error_log("Attempted password (hashed): " . $attempted_password);
 
         //verify the password
         if ($this->verifyPassword($password, $user_password)) {
@@ -126,7 +119,7 @@ class User implements Login
 
                 // log the activity
                 $activity = new Activity();
-                $activity->logActivity(null, "User logged in.", 'User ' . strval($user_id));
+                $activity->logActivity(null, "User logged in.", 'User ' . $this->getUserUsername($user_id));
             } else {
                 // Password is not valid, display a generic error message
                 throw new Exception("Invalid username or password.");
@@ -136,7 +129,7 @@ class User implements Login
             error_log("Failed to log the user in: " . $e->getMessage());
             // log the activity
             $activity = new Activity();
-            $activity->logActivity(null, "Failed to log the user in: " . $e->getMessage(), 'User ' . strval($user_id));
+            $activity->logActivity(null, "Login Error " . $e->getMessage(), 'User ID: ' . strval($user_id) . ' Username: ' . $this->getUserUsername($user_id) . ' failed to log in with error message: ' . $e->getMessage());
             // Display a generic error message
             throw new Exception("Invalid username or password.");
         }
@@ -586,11 +579,23 @@ class User implements Login
         //Execute the statement
         $stmt->execute();
 
-        //get the user ID
-        $user_id = $stmt->insert_id;
+        //count the number of rows affected
+        $rows = $stmt->affected_rows;
 
-        //return the user ID as an integer
-        return intval($user_id);
+        //if the number of rows affected is greater than 0, return the user ID
+        if ($rows > 0) {
+            //get the user ID
+            $user_id = $stmt->insert_id;
+
+            //log the user activity
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Added User', 'User Name: ' . $username . ' with User ID: ' . strval($user_id));
+
+            //return the user ID as an integer
+            return intval($user_id);
+        } else {
+            return 0;
+        }
     }
 
     //Delete a user
@@ -669,6 +674,18 @@ class User implements Login
 
         //Execute the statement
         $stmt->execute();
+
+        //get the number of rows affected, if the number of rows affected is greater than 0, the user was updated
+        if ($stmt->affected_rows > 0) {
+            // log the activity
+            $activity = new Activity();
+            $activity->logActivity($updated_by, "User Updated.", 'User: ' . $username . ' updated by User: ' . strval($updated_by));
+        } else {
+            //if the number of rows affected is 0, the user was not updated
+            // log the activity
+            $activity = new Activity();
+            $activity->logActivity($updated_by, "User Update Failed.", 'User: ' . $username . ' failed to update by User: ' . strval($updated_by));
+        }
     }
 
     //Add a role to a user
