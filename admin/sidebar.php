@@ -148,6 +148,13 @@ isset($_GET['view']) ? $view = $_GET['view'] : $view = 'dashboard';
                             <div class="sb-nav-link-icon"><i class="fa-solid fa-book"></i></div>
                             Subjects/Fields
                         </a>
+                        <a class="nav-link <?php if ($view == 'media') {
+                                                        echo 'active';
+                                                    } ?>"
+                            href="<?php echo APP_URL . '/admin/dashboard.php?view=media&media=list' ?>">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-photo-film"></i></div>
+                            Media
+                        </a>
                         <?php if ($view == 'users' || $view == 'roles') { ?>
                         <a class="nav-link active" href="#" data-bs-toggle="collapse"
                             data-bs-target="#collapseLayoutUsers" aria-expanded="true"

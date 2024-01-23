@@ -49,6 +49,32 @@ class Media
     }
 
     /**
+     * Get All Media
+     * Returns all media objects
+     *
+     * @return array The media objects
+     */
+    public function getMedia(): array
+    {
+        //SQL statement to get all media
+        $sql = "SELECT * FROM media";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query returns a result
+        if ($result) {
+            //Loop through the result and add each row to the media array
+            while ($row = $result->fetch_assoc()) {
+                $media[] = $row;
+            }
+            //Return the media array
+            return $media;
+        } else {
+            //If the query fails, return an empty array
+            return array();
+        }
+    }
+
+    /**
      * Get Media By ID
      * Returns the media object for the given media id
      *
@@ -357,7 +383,10 @@ class Media
         if ($filesize === NULL) {
             $filename = $this->getMediaFileName($media_id);
             $filesize = filesize(getUploadPath() . $filename);
-            $updatedResult = $this->updateMediaFileSize($media_id, $filesize);
+
+            if ($filesize > 0) {
+                $updatedResult = $this->updateMediaFileSize($media_id, $filesize);
+            }
         }
 
         //if the file size was updated, return the updated file size

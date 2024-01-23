@@ -61,8 +61,8 @@ if (isset($_SESSION['user_id'])) {
         include_once('./header.php');
         //set the error type
         $thisError = 'DASHBOARD_PERMISSION_ERROR'; ?>
-<div id="layout">
-    <?php
+        <div id="layout">
+            <?php
             //include the sidebar
             include_once('./sidebar.php');
 
@@ -71,13 +71,13 @@ if (isset($_SESSION['user_id'])) {
 
             //include the footer
             include_once('./footer.php'); ?>
-</div>
-<?php } else {
+        </div>
+    <?php } else {
         //include the header
         include_once('./header.php');
     ?>
-<div id="layout">
-    <?php
+        <div id="layout">
+            <?php
             //include the sidebar
             include_once('./sidebar.php');
 
@@ -126,6 +126,9 @@ if (isset($_SESSION['user_id'])) {
                     case 'search':
                         include_once('search.php');
                         break;
+                    case 'media':
+                        include_once('content/media_content.php');
+                        break;
                     default:
                         include_once('content/admin_content.php');
                         break;
@@ -133,7 +136,7 @@ if (isset($_SESSION['user_id'])) {
             } else {
                 include_once('content/admin_content.php');
             } ?>
-</div>
+        </div>
 <?php
         //include the footer
         include_once('./footer.php');

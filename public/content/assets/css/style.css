@@ -23,6 +23,71 @@ footer#layout_footer {
 	/*max-height: 800px;*/
 }
 
+.thumbnail-container {
+	height: 100%;
+	width: 100%;
+	max-width: 200px;
+	max-height: 200px;
+	margin: auto;
+	margin-top: 5%;
+	margin-bottom: 5%;
+	overflow: hidden;
+	padding: 0.25rem;
+	background-color: var(--bs-body-bg);
+	border: var(--bs-border-width) solid var(--bs-border-color);
+	border-radius: var(--bs-border-radius);
+}
+
+#thumbnail {
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	display: block;
+	background-color: transparent !important;
+	border: none !important;
+	-webkit-border-radius: none !important;
+	-moz-border-radius: none !important;
+	-ms-border-radius: none !important;
+	-o-border-radius: none !important;
+	border-radius: none !important;
+}
+
+.thumbnail {
+	width: 100%;
+	height: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5%;
+	margin-top: 5%;
+	display: inline-flex;
+	flex-direction: column;
+}
+
+.row.gallery-row {
+	margin-top: 2%;
+	margin-bottom: 2%;
+}
+
+.caption {
+	display: inline-flex;
+	width: 100%;
+}
+
+.caption > .td-actions {
+	display: flex;
+	flex-flow: row;
+	flex-wrap: wrap;
+	width: 100%;
+}
+
+.caption > .td-actions > a,
+.caption > .td-actions > button {
+	margin: 0.5rem;
+	margin-left: auto;
+	margin-right: auto;
+	width: 70%;
+}
+
 #dataTable > tbody > tr > td {
 	word-wrap: break-word;
 	max-width: 250px;

@@ -189,3 +189,45 @@ function getRandomHexColor(): string
     //return the hex color
     return $color;
 }
+
+/**
+ * Format filesize
+ * convert bytes to KB, MB, GB, etc.
+ *
+ * @param int $bytes - the size in bytes
+ * @param int $decimals - the number of decimal places to round to
+ *
+ * @return string
+ */
+function formatFilesize(int $bytes, int $decimals = 2): string
+{
+    //placeholder for the formatted size
+    $formattedSize = 0;
+
+    //array of size units
+    $size = array('B', 'KB', 'MB', 'GB', 'TB'); //realistically, shouldn't need anything larger than MB for web images, but just in case set up to TB
+
+    //determine the size unit
+    $factor = floor((strlen($bytes) - 1) / 3);
+
+    //format the size
+    $formattedSize = sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . ' ' . @$size[$factor];
+
+    //return the formatted size
+    return $formattedSize;
+}
+
+/**
+ * Get image dimensions
+ * @param string $imagePath - the path to the image
+ *
+ * @return array
+ */
+function getImageDimensions(string $imagePath): array
+{
+    //get the image dimensions
+    $imageDimensions = getimagesize($imagePath);
+
+    //return the image dimensions
+    return $imageDimensions;
+}
