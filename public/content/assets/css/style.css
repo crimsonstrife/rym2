@@ -133,6 +133,10 @@ td > .td-actions > button {
 	margin-right: 5%;
 }
 
+.modal-dialog {
+	min-width: 50%;
+}
+
 #map {
 	height: 100%;
 	min-height: 250px;

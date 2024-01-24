@@ -174,59 +174,61 @@ if (!$hasReadPermission) {
             <!-- End Media List View -->
             <!-- Media Gallery View -->
             <div id="gallery-view" class="card-body hidden">
-                <div class="container">
-                    <?php
-                        // calculate the number of columns and rows to display, based on the number of media in the array
-                        $numMedia = count($mediaArray); //get the number of media
-                        $numColumns = 4; //set the number of columns (4 columns per row)
-                        $numRows = ceil($numMedia / $numColumns); //calculate the number of rows needed
-
-                        //for each row, display the media
-                        for ($i = 0; $i < $numRows; $i++) {
-                        ?>
-                    <div class="row gallery-row">
+                <div class="overflow-auto">
+                    <div class="container">
                         <?php
-                                //for each column, display the media
-                                for ($n = 0; $n < $numColumns; $n++) {
-                                    $mediaIndex = ($i * $numColumns) + $n; //calculate the index of the media in the array
-                                    if ($mediaIndex < $numMedia) { //if the index is less than the number of media, display the media
-                                ?>
-                        <div class="col-md-3">
-                            <div class="thumbnail">
-                                <?php
-                                                //get the media filename
-                                                $mediaFilename = $mediaArray[$mediaIndex]['filename']; ?>
-                                <div class="thumbnail-container"
-                                    style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
-                                    <img id="thumbnail" class="img-thumbnail"
-                                        src="<?php echo getUploadPath() . $mediaFilename; ?>"
-                                        alt="<?php echo $mediaFilename; ?>">
-                                </div>
-                                <div class="caption">
-                                    <span class="td-actions">
-                                        <?php /*confirm user has a role with read media permissions*/
-                                                        //get the read media permission id
-                                                        $updatePermissionID = $permissionsObject->getPermissionIdByName('READ MEDIA');
+                            // calculate the number of columns and rows to display, based on the number of media in the array
+                            $numMedia = count($mediaArray); //get the number of media
+                            $numColumns = 4; //set the number of columns (4 columns per row)
+                            $numRows = ceil($numMedia / $numColumns); //calculate the number of rows needed
 
-                                                        //boolean to check if the user has the read media permission
-                                                        $hasReadPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
+                            //for each row, display the media
+                            for ($i = 0; $i < $numRows; $i++) {
+                            ?>
+                        <div class="row gallery-row">
+                            <?php
+                                    //for each column, display the media
+                                    for ($n = 0; $n < $numColumns; $n++) {
+                                        $mediaIndex = ($i * $numColumns) + $n; //calculate the index of the media in the array
+                                        if ($mediaIndex < $numMedia) { //if the index is less than the number of media, display the media
+                                    ?>
+                            <div class="col-md-3">
+                                <div class="thumbnail">
+                                    <?php
+                                                    //get the media filename
+                                                    $mediaFilename = $mediaArray[$mediaIndex]['filename']; ?>
+                                    <div class="thumbnail-container"
+                                        style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
+                                        <img id="thumbnail" class="img-thumbnail"
+                                            src="<?php echo getUploadPath() . $mediaFilename; ?>"
+                                            alt="<?php echo $mediaFilename; ?>">
+                                    </div>
+                                    <div class="caption">
+                                        <span class="td-actions">
+                                            <?php /*confirm user has a role with read media permissions*/
+                                                            //get the read media permission id
+                                                            $updatePermissionID = $permissionsObject->getPermissionIdByName('READ MEDIA');
 
-                                                        //only show the edit button if the user has the read media permission
-                                                        if ($hasReadPermission) { ?>
-                                        <button type="button" id="openReadModal" class="btn btn-primary"
-                                            data-bs-toggle="modal" data-bs-target="#readMediaModal"
-                                            onclick="setReadID(<?php echo $mediaArray[$mediaIndex]['id']; ?>)">
-                                            View Media
-                                        </button>
-                                        <?php } ?>
-                                    </span>
+                                                            //boolean to check if the user has the read media permission
+                                                            $hasReadPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
+
+                                                            //only show the edit button if the user has the read media permission
+                                                            if ($hasReadPermission) { ?>
+                                            <button type="button" id="openReadModal" class="btn btn-primary"
+                                                data-bs-toggle="modal" data-bs-target="#readMediaModal"
+                                                onclick="setReadID(<?php echo $mediaArray[$mediaIndex]['id']; ?>)">
+                                                View Media
+                                            </button>
+                                            <?php } ?>
+                                        </span>
+                                    </div>
                                 </div>
+                                <?php } ?>
                             </div>
                             <?php } ?>
                         </div>
                         <?php } ?>
                     </div>
-                    <?php } ?>
                 </div>
             </div>
             <!-- End Media Gallery View -->
@@ -242,7 +244,7 @@ if (!$hasReadPermission) {
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h3 class="modal-title" id="mediaDeleteModal">Delete Media - <span
-                                        id="mediaName-Delete">Media Name</span></h3>
+                                        id="mediaName-Title">Media Name</span></h3>
                                 <button type="button" class="btn-close close" data-bs-dismiss="modal"
                                     aria-label="Close">
                                     <i class="fa-solid fa-times"></i>
