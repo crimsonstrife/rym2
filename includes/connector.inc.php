@@ -45,26 +45,28 @@ if (!function_exists('closeDatabaseConnection')) {
 }
 
 /* This function just tests the connection to the MySQL database, but only returns a boolean */
-function testDatabaseConnection(string $host, string $username, string $password, string $database, string $port): bool
-{
-    // convert port to int
-    $port = (int) $port;
+if (!function_exists('testDatabaseConnection')) {
+    function testDatabaseConnection(string $host, string $username, string $password, string $database, string $port): bool
+    {
+        // convert port to int
+        $port = (int) $port;
 
-    /* Try to connect to the database */
-    try {
-        $mysqli = new mysqli($host, $username, $password, $database, $port);
-        //catch any errors and return false
-    } catch (Exception $e) {
-        // Log the error
-        error_log("Failed to connect to the database: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error);
-        // if the database is unknown, return false
-        if ($mysqli->connect_errno == 1049) {
+        /* Try to connect to the database */
+        try {
+            $mysqli = new mysqli($host, $username, $password, $database, $port);
+            //catch any errors and return false
+        } catch (Exception $e) {
+            // Log the error
+            error_log("Failed to connect to the database: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error);
+            // if the database is unknown, return false
+            if ($mysqli->connect_errno == 1049) {
+                return false;
+            }
             return false;
         }
-        return false;
-    }
 
-    /* Close the connection to the database */
-    $mysqli->close();
-    return true;
+        /* Close the connection to the database */
+        $mysqli->close();
+        return true;
+    }
 }
