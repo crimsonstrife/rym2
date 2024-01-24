@@ -1179,7 +1179,7 @@ class Student
             //loop through the events
             foreach ($eventsAttended as $event) {
                 //remove the student from the event
-                $this->removeStudentFromEvent($event['event_id'], $student_id);
+                $this->removeStudentFromEvent(intval($event['event_id']), $student_id);
             }
         }
 
@@ -1192,7 +1192,7 @@ class Student
             foreach ($contactHistory as $contact) {
                 //delete the contact history
                 $contactObject = new Contact();
-                $contactObject->removeContact($contact['id']);
+                $contactObject->removeContact(intval($contact['id']));
             }
         }
 

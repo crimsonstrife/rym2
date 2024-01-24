@@ -1,5 +1,8 @@
 <?php
 //Prevent direct access to this file by checking if the constant ISVALIDUSER is defined.
+
+use function PHPSTORM_META\override;
+
 if (!defined('ISVALIDUSER')) {
     die('Error: Invalid request');
 }
@@ -29,6 +32,11 @@ if (!$hasPermission) {
 
     //event class
     $event = new Event();
+
+    //variables
+    $action = null;
+    $student_id = null;
+    $override = null;
 
     // Processing form data when form is submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
