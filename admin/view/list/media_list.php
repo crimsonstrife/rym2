@@ -105,7 +105,10 @@ if (!$hasReadPermission) {
                                                 echo "N/A";
                                             } ?>
                                 </td>
-                                <?php $imageDimensions = getImageDimensions(__DIR__ . '/../../../public/content/uploads/' . $media['filename']); ?>
+                                <?php
+                                        $imagePath = __DIR__ . '/../../../public/content/uploads/' . $media['filename'];
+                                        $imageDimensions = file_exists($imagePath) ? getImageDimensions($imagePath) : null;
+                                        ?>
                                 <td>
                                     <?php if ($imageDimensions != NULL) {
                                                 echo strval($imageDimensions[0]) . "x" . strval($imageDimensions[1]);
