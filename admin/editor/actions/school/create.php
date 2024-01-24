@@ -102,8 +102,29 @@ if (!$hasPermission) {
         }
 
         //get the school logo from the form
-        if (isset($_FILES["school_logo"])) {
-            $school_logo = $_FILES["school_logo"];
+        if (isset($_POST["school_logoSelect"])) {
+            $school_logoSelection = $_POST["school_logoSelect"];
+
+            //if the logo selection is empty, blank, or zero
+            if (empty($school_logoSelection) || $school_logoSelection == '' || $school_logoSelection == 0) {
+                //try to get the file from the file input
+                if (isset($_FILES["school_logoUpload"])) {
+                    $uploaded_file = $_FILES["school_logoUpload"];
+
+                    //if the file is empty, set the uploaded file to null
+                    if (empty($uploaded_file) || $uploaded_file == '' || $uploaded_file == null) {
+                        $uploaded_file = null;
+                    } else {
+                        //set the school logo to the uploaded file
+                        $school_logo = $uploaded_file;
+                    }
+                }
+            } else {
+                //set the uploaded file to null
+                $uploaded_file = null;
+                //set the school logo to the selection
+                $school_logo = intval($school_logoSelection);
+            }
         }
 
         //get the school branding color from the form
@@ -127,9 +148,33 @@ if (!$hasPermission) {
         $school_id = $school->getSchoolIdByName($school_name);
 
         //if there are files to upload, upload them
-        if (!empty($school_logo)) {
+        if (!empty($school_logo) && $uploaded_file != null) {
             //upload the school logo
             $media_id = $media->uploadMedia($school_logo, intval($_SESSION['user_id']));
+        }
+
+        //if there are files to upload, upload them
+        if (!empty($school_logo) && $uploaded_file != null) {
+            //check if the school logo is an array
+            if (is_array($school_logo)) {
+                //upload the school logo, and get the media id
+                $media_id = $media->uploadMedia($school_logo, intval($_SESSION['user_id']));
+
+                //get the file name
+                $target_file_logo = $media->getMediaFileName($media_id);
+
+                //get the file type
+                $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
+            } else if (!empty($school_logo) && $uploaded_file = null) {
+                //assume the school logo is an integer
+                $media_id = $school_logo;
+
+                //get the file name
+                $target_file_logo = $media->getMediaFileName($media_id);
+
+                //get the file type
+                $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
+            }
         }
 
         if (!empty($school_logo) || $school_logo != null || isset($school_logo)) {

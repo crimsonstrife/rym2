@@ -77,34 +77,61 @@ if (!$hasPermission) {
             //prepare the school name
             $school_name = prepareData($school_name);
         }
+
         //get the school address from the form
         if (isset($_POST["school_address"])) {
             $school_address = trim($_POST["school_address"]);
             //prepare the school address
             $school_address = prepareData($school_address);
         }
+
         //get the school city from the form
         if (isset($_POST["school_city"])) {
             $school_city = trim($_POST["school_city"]);
             //prepare the school city
             $school_city = prepareData($school_city);
         }
+
         //get the school state from the form
         if (isset($_POST["school_state"])) {
             $school_state = trim($_POST["school_state"]);
             //prepare the school state
             $school_state = prepareData($school_state);
         }
+
         //get the school zip from the form
         if (isset($_POST["school_zip"])) {
             $school_zip = trim($_POST["school_zip"]);
             //prepare the school zip
             $school_zip = prepareData($school_zip);
         }
+
         //get the school logo from the form
-        if (isset($_FILES["school_logo"])) {
-            $school_logo = $_FILES["school_logo"];
+        if (isset($_POST["school_logoSelect"])) {
+            $school_logoSelection = $_POST["school_logoSelect"];
+
+            //if the logo selection is empty, blank, or zero
+            if (empty($school_logoSelection) || $school_logoSelection == '' || $school_logoSelection == 0) {
+                //try to get the file from the file input
+                if (isset($_FILES["school_logoUpload"])) {
+                    $uploaded_file = $_FILES["school_logoUpload"];
+
+                    //if the file is empty, set the uploaded file to null
+                    if (empty($uploaded_file) || $uploaded_file == '' || $uploaded_file == null) {
+                        $uploaded_file = null;
+                    } else {
+                        //set the school logo to the uploaded file
+                        $school_logo = $uploaded_file;
+                    }
+                }
+            } else {
+                //set the uploaded file to null
+                $uploaded_file = null;
+                //set the school logo to the selection
+                $school_logo = intval($school_logoSelection);
+            }
         }
+
         //get the school branding color from the form
         if (isset($_POST["school_color"])) {
             $school_color = trim($_POST["school_color"]);
@@ -124,17 +151,33 @@ if (!$hasPermission) {
 
         //if there are files to upload, upload them
         if (!empty($school_logo)) {
-            //upload the school logo
-            $media_id = $media->uploadMedia($school_logo, intval($_SESSION['user_id']));
+            //check if the school logo is an array
+            if (is_array($school_logo)) {
+                //get the file name
+                $target_file_logo = basename($school_logo["name"]);
+                //get the file type
+                $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
+                //get the media id
+                $media_id = $media->uploadMedia($school_logo, $imageFileType_logo);
+            } else {
+                //assume the school logo is an integer
+                $media_id = $school_logo;
+
+                //get the file name
+                $target_file_logo = $media->getMediaFileName($media_id);
+
+                //get the file type
+                $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
+            }
         }
 
         //check if the school had an existing logo, if so, update the record
         if ($action == 'edit') {
             //if the logo is not empty, update the school logo
-            if (!empty($school_logo) || $school_logo != null || isset($school_logo) || $school_logo != '') {
+            if (!empty($school_logo) && $school_logo != null && isset($school_logo) && $school_logo != '') {
                 $existing_logo = $school->getSchoolLogo($school_id);
                 //if the existing logo is not empty, see if the id matches
-                if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null) {
+                if (!empty($existing_logo) && $existing_logo != '' && $existing_logo != null) {
                     //if the files match, do nothing
                     if ($existing_logo == $media_id) {
                         //do nothing
@@ -148,7 +191,7 @@ if (!$hasPermission) {
                 }
             } else if (empty($school_logo) || $school_logo == null || $school_logo == '') {
                 $existing_logo = $school->getSchoolLogo($school_id);
-                if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null) {
+                if (!empty($existing_logo) && $existing_logo != '' && $existing_logo != null) {
                     //if the files match, do nothing
                     if ($existing_logo == $media_id) {
                         //do nothing

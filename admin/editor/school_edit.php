@@ -23,6 +23,9 @@ $school = new School();
 //include the media class
 $media = new Media();
 
+//create an array of available media
+$mediaArray = $media->getMedia();
+
 //create an array of states
 $stateArray = STATES;
 
@@ -143,7 +146,35 @@ if (isset($_GET['action'])) {
                                                 }
                                                 ?>
                                             </p>
-                                            <p><input type="file" id="schoolLogo" name="school_logo" class="form-control"></p>
+                                            <?php //allow the user to either select a file from the mediaArray or upload a new file if they have upload permissions
+                                            if (!empty($mediaArray)) { ?>
+                                                <p><strong><label for="schoolLogo">Select a New Logo:</label></strong></p>
+                                                <p>
+                                                    <select id="schoolLogoSelect" name="school_logoSelect" class="form-control">
+                                                        <option value="">Select a Logo</option>
+                                                        <?php /* check if the user has permission to upload media */
+                                                        if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                            <option value="0">Upload a New Logo</option>
+                                                        <?php } ?>
+                                                        <?php foreach ($mediaArray as $key => $value) { ?>
+                                                            <option value="<?php echo $value['id'] ?>"><?php echo $value['filename']; ?>
+                                                            </option>
+                                                        <?php } ?>
+                                                    </select>
+                                                    <br />
+                                                    <!-- if the user selects to upload a new file, show the file upload input -->
+                                                    <input type="file" id="schoolLogoUpload" name="school_logoUpload" class="form-control" disabled hidden>
+                                                </p>
+                                                <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
+                                                if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                    <p><strong><label for="schoolLogo">Upload a New Logo:</label></strong></p>
+                                                    <p><input type="file" id="schoolLogoUpload" name="school_logoUpload" class="form-control" required></p>
+                                                <?php } else { ?>
+                                                    <p><strong><label for="schoolLogo">No Media Available</label></strong></p>
+                                                    <p>You lack permissions to upload new media files and none currently exist, contact the
+                                                        administrator.</p>
+                                            <?php }
+                                            } ?>
                                             <p>
                                                 <?php $currentColor = $school->getSchoolColor(intval($school_id)) ?? '#000000'; ?>
                                                 <strong><label for="schoolColor">School Primary Color:</label></strong>
@@ -239,8 +270,35 @@ if (isset($_GET['action'])) {
                                     <div class="col-md-6">
                                         <!-- School Branding (optional) -->
                                         <h4>School Branding</h4>
-                                        <p><strong><label for="schoolLogo">School Logo:</label></strong></p>
-                                        <p><input type="file" id="schoolLogo" name="school_logo" class="form-control"></p>
+                                        <?php //allow the user to either select a file from the mediaArray or upload a new file if they have upload permissions
+                                        if (!empty($mediaArray)) { ?>
+                                            <p><strong><label for="schoolLogo">Select a New Logo:</label></strong></p>
+                                            <p>
+                                                <select id="schoolLogoSelect" name="school_logoSelect" class="form-control">
+                                                    <option value="">Select a Logo</option>
+                                                    <?php /* check if the user has permission to upload media */
+                                                    if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                        <option value="0">Upload a New Logo</option>
+                                                    <?php } ?>
+                                                    <?php foreach ($mediaArray as $key => $value) { ?>
+                                                        <option value="<?php echo $value['id'] ?>"><?php echo $value['filename']; ?>
+                                                        </option>
+                                                    <?php } ?>
+                                                </select>
+                                                <br />
+                                                <!-- if the user selects to upload a new file, show the file upload input -->
+                                                <input type="file" id="schoolLogoUpload" name="school_logoUpload" class="form-control" disabled hidden>
+                                            </p>
+                                            <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
+                                            if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                <p><strong><label for="schoolLogo">Upload a New Logo:</label></strong></p>
+                                                <p><input type="file" id="schoolLogoUpload" name="school_logoUpload" class="form-control" required></p>
+                                            <?php } else { ?>
+                                                <p><strong><label for="schoolLogo">No Media Available</label></strong></p>
+                                                <p>You lack permissions to upload new media files and none currently exist, contact the
+                                                    administrator.</p>
+                                        <?php }
+                                        } ?>
                                         <p>
                                             <?php $currentColor = '#000000'; ?>
                                             <strong><label for="schoolColor">School Primary Color:</label></strong>
@@ -273,6 +331,20 @@ if (isset($_GET['action'])) {
         }
     } ?>
     <script type="text/javascript" src="<?php echo getLibraryPath() . 'irojs/iro.min.js'; ?>">
+    </script>
+    <script>
+        //hide or show the file upload input based on the user selection
+        $(document).ready(function() {
+            $('#schoolLogoSelect').change(function() {
+                if ($(this).val() == '0') {
+                    $('#schoolLogoUpload').prop('disabled', false).show();
+                    $('#schoolLogoUpload').prop('hidden', false).show();
+                } else {
+                    $('#schoolLogoUpload').prop('disabled', true).hide();
+                    $('#schoolLogoUpload').prop('hidden', true).hide();
+                }
+            });
+        });
     </script>
 <?php
     //if color-picker.min.js exists, use it, otherwise use color-picker.js
