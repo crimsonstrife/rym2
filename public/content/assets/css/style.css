@@ -23,6 +23,23 @@ footer#layout_footer {
 	/*max-height: 800px;*/
 }
 
+.img-container {
+	height: 100%;
+	width: 100%;
+	margin: auto;
+	margin-top: 5%;
+	margin-bottom: 5%;
+	padding: 1.25rem;
+	overflow: hidden;
+	background-color: var(--bs-body-bg);
+}
+
+.img-container > img {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
 .thumbnail-container {
 	height: 100%;
 	width: 100%;

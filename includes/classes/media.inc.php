@@ -356,6 +356,9 @@ class Media
         //placeholder for the file size
         $filesize = 0;
 
+        //local path to the upload directory
+        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+
         //placeholder for the result if the size needs to be updated
         $updatedResult = false;
 
@@ -382,7 +385,7 @@ class Media
         //if the file size is null, get the file size from the server and update the database
         if ($filesize === NULL) {
             $filename = $this->getMediaFileName($media_id);
-            $filesize = filesize(getUploadPath() . $filename);
+            $filesize = filesize($upload_path . $filename);
 
             if ($filesize > 0) {
                 $updatedResult = $this->updateMediaFileSize($media_id, $filesize);
@@ -641,6 +644,10 @@ class Media
         if ($error === true) {
             $activity = new Activity();
             $activity->logActivity($user_id, "Upload Error", "Error Uploading Media: " . $upload_error . " - " . $filename);
+        } else {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($user_id, "Upload Success", "Media Uploaded: " . $filename);
         }
 
         //return the media id
@@ -707,5 +714,258 @@ class Media
 
         //return the media usage array
         return $mediaUsage;
+    }
+
+    /**
+     * Rename Media File
+     * Renames the media file on the server and updates the media object in the database
+     *
+     * @param int $media_id The media id
+     * @param string $new_filename The new file name
+     * @param int $user_id The user id for the user updating the media
+     *
+     * @return bool True if the media file was renamed, false if it was not
+     */
+    public function renameMedia(int $media_id, string $new_filename, int $user_id = NULL): bool
+    {
+        //placeholder for the result
+        $result = false;
+
+        //local path to the upload directory
+        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+
+        //placeholder boolean for if there is an error
+        $error = false;
+
+        //placeholder for the upload error
+        $upload_error = '';
+
+        //get the current file name
+        $current_filename = $this->getMediaFileName($media_id);
+
+        //if the file name is different, rename the file
+        if ($new_filename !== $current_filename) {
+            //if the file exists, rename the file
+            if (file_exists($upload_path . $current_filename)) {
+                //create a backup of the current file
+                if (copy($upload_path . $current_filename, $upload_path . 'backup_' . $current_filename)) {
+                    //rename the new file
+                    if (rename($upload_path . $current_filename, $upload_path . $new_filename)) {
+                        //update the file name in the database
+                        $this->updateMediaFileName($media_id, $new_filename);
+                    } else {
+                        //set the upload error
+                        $upload_error = 'Error renaming file';
+                        //set the error boolean to true
+                        $error = true;
+                    }
+                } else {
+                    //set the upload error
+                    $upload_error = 'Error creating backup file';
+                    //set the error boolean to true
+                    $error = true;
+                }
+            } else {
+                //set the upload error
+                $upload_error = 'File does not exist';
+                //set the error boolean to true
+                $error = true;
+            }
+
+            //if there is an error, log the activity
+            if ($error === true) {
+                $activity = new Activity();
+                $activity->logActivity($user_id, "Upload Error", "Error Renaming Media File: " . $upload_error . " - " . $current_filename . " to " . $new_filename);
+
+                //set the result to false
+                $result = false;
+            } else {
+                //delete the backup file
+                unlink($upload_path . 'backup_' . $current_filename);
+
+                //set the result to true
+                $result = true;
+            }
+        } else {
+            //do nothing, the file name is the same
+            //set the result to true to prevent errors
+            $result = true;
+        }
+
+        //return the result
+        return $result;
+    }
+
+    /**
+     * Update Media File
+     * Replaces the media file on the server (if the name of the new file is different, renames it) and updates the media object in the database
+     *
+     * @param int $media_id The media id
+     * @param array $file The file array from the $_FILES superglobal
+     * @param int $user_id The user id for the user updating the media
+     *
+     * @return bool True if the media file was updated, false if it was not
+     */
+    public function updateMediaFile(int $media_id, array $file, int $user_id = NULL): bool
+    {
+        //placeholder for the result
+        $result = false;
+
+        //local path to the upload directory
+        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+
+        //placeholder boolean for if there is an error
+        $error = false;
+
+        //placeholder for the upload error
+        $upload_error = '';
+
+        //if the file array is empty, return false
+        if (empty($file)) {
+            return $result;
+        }
+
+        //get the file name
+        $filename = $file['name'];
+
+        //get the file size
+        $filesize = $file['size'];
+
+        //get the current file name
+        $current_filename = $this->getMediaFileName($media_id);
+
+        //if the file name is different, rename the file
+        if ($filename !== $current_filename) {
+            //if the file exists, rename the file
+            if (file_exists($upload_path . $filename)) {
+                //create a backup of the current file
+                if (copy($upload_path . $current_filename, $upload_path . 'backup_' . $current_filename)) {
+                    //rename the new file
+                    if (rename($upload_path . $filename, $upload_path . $current_filename)) {
+                        //update the file name in the database
+                        $this->updateMediaFileName($media_id, $current_filename);
+                        //update the file size in the database
+                        $this->updateMediaFileSize($media_id, $filesize);
+                    } else {
+                        //set the upload error
+                        $upload_error = 'Error renaming file';
+                        //set the error boolean to true
+                        $error = true;
+                    }
+                } else {
+                    //set the upload error
+                    $upload_error = 'Error creating backup file';
+                    //set the error boolean to true
+                    $error = true;
+                }
+            } else {
+                //set the upload error
+                $upload_error = 'File does not exist';
+                //set the error boolean to true
+                $error = true;
+            }
+
+            //if there is an error, log the activity
+            if ($error === true) {
+                $activity = new Activity();
+                $activity->logActivity($user_id, "Upload Error", "Error Updating Media File: " . $upload_error . " - " . $current_filename . " from " . $filename);
+
+                //set the result to false
+                $result = false;
+            } else {
+                //delete the backup file
+                unlink($upload_path . 'backup_' . $current_filename);
+
+                //set the result to true
+                $result = true;
+            }
+        }
+
+        //return the result
+        return $result;
+    }
+
+    /**
+     * Delete Media
+     * Deletes the media file from the server and removes the media object from the database
+     *
+     * @param int $media_id The media id
+     * @param int $user_id The user id for the user deleting the media
+     *
+     * @return bool True if the media was deleted, false if it was not
+     */
+    public function deleteMedia(int $media_id, int $user_id = NULL): bool
+    {
+        //placeholder for the result
+        $result = false;
+
+        //local path to the upload directory
+        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+
+        //placeholder boolean for if there is an error
+        $error = false;
+
+        //placeholder for the delete status
+        $deleted = false;
+
+        //placeholder for the error message
+        $error_message = '';
+
+        //get the file name
+        $filename = $this->getMediaFileName($media_id);
+
+        //if the file exists, delete the file
+        if (file_exists($upload_path . $filename)) {
+            //delete the file
+            if (unlink($upload_path . $filename)) {
+                $deleted = true;
+            } else {
+                //set the error boolean to true
+                $error = true;
+                //set the error message
+                $error_message = 'Error deleting file';
+            }
+        } else {
+            //set the error boolean to true
+            $error = true;
+            //set the error message
+            $error_message = 'File does not exist';
+        }
+
+        //if the file was deleted, delete the media object from the database
+        if ($deleted === true) {
+            //query to delete the media from the database
+            $query = "DELETE FROM media WHERE id = ?";
+
+            //prepare the query
+            $stmt = $this->mysqli->prepare($query);
+
+            //bind the media id to the query
+            $stmt->bind_param('i', $media_id);
+
+            //execute the query
+            $stmt->execute();
+
+            //if the query was successful, set the result to true
+            if ($stmt->affected_rows > 0) {
+                $result = true;
+            } else {
+                //set the error boolean to true
+                $error = true;
+                //set the error message
+                $error_message = 'Error deleting media from database';
+                //set the result to false
+                $result = false;
+            }
+        }
+
+        //if there is an error, log the activity
+        if ($error === true) {
+            $activity = new Activity();
+            $activity->logActivity($user_id, "Delete Error", "Error Deleting Media: " . $error_message . " - " . $filename);
+        }
+
+        //return the result
+        return $result;
     }
 }

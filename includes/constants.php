@@ -396,6 +396,18 @@ define('DATA_MISSING', array(
     "code" => "WEASEL",
     "message" => "Required data is missing, contact the Administrator."
 ));
+define('FILE_UPLOAD_ERROR', array(
+    "code" => "CYMBAL",
+    "message" => "File could not be uploaded, contact the Administrator."
+));
+define('FILE_DELETE_ERROR', array(
+    "code" => "COWBELL",
+    "message" => "File could not be deleted, contact the Administrator."
+));
+define('FILE_EXISTS_ERROR', array(
+    "code" => "HARMONY",
+    "message" => "File already exists, contact the Administrator."
+));
 
 /**
  * Define the max file size for uploads
