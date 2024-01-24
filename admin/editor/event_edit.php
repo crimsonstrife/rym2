@@ -26,8 +26,11 @@ $user = new User();
 //student class
 $student = new Student();
 
-//media class
+//include the media class
 $media = new Media();
+
+//create an array of available media
+$mediaArray = $media->getMedia();
 
 //check that action is set in the URL parameters
 if (isset($_GET['action'])) {
@@ -108,32 +111,40 @@ if (isset($_GET['action'])) {
                 } else {
                     $event_location = $school->getSchoolName($event->getEventLocationId($event_id));
 ?>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4"><?php echo $event->getEventName($event_id); ?></h1>
-                        <div class="row">
-                            <div class="card mb-4">
-                                <!-- Edit Form -->
-                                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&event=' . $_GET['event'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>" method="post" enctype="multipart/form-data">
-                                    <div class="card-header">
-                                        <div class="card-title">
-                                            <i class="fa-solid fa-calendar-day"></i>
-                                            Edit Event
-                                        </div>
-                                        <div class="card-buttons">
-                                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>" class="btn btn-secondary">Back to Events</a>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <p><strong><label for="eventName">Event Name:</label></strong></p>
-                                                <p><input type="text" id="eventName" name="event_name" class="form-control" value="<?php echo $event->getEventName($event_id); ?>" placeholder="<?php echo $event->getEventName($event_id); ?>" required></p>
-                                                <p><strong><label for="eventDate">Event Date:</label></strong></p>
-                                                <p><input type="date" id="eventDate" name="event_date" class="form-control" value="<?php echo $event->getEventDate($event_id); ?>" placeholder="<?php echo $event->getEventDate($event_id); ?>"></p>
-                                                <p><strong><label for="eventLocation">Event Location:</label></strong></p>
-                                                <div id="schoolParent" class="col-md-12 school-dropdown">
-                                                    <select name="event_school" id="eventLocation" class="select2 select2-school form-control app-forms" style="width: 100%;">
-                                                        <?php
+<div class="container-fluid px-4">
+    <h1 class="mt-4"><?php echo $event->getEventName($event_id); ?></h1>
+    <div class="row">
+        <div class="card mb-4">
+            <!-- Edit Form -->
+            <form
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&event=' . $_GET['event'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>"
+                method="post" enctype="multipart/form-data">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        Edit Event
+                    </div>
+                    <div class="card-buttons">
+                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
+                            class="btn btn-secondary">Back to Events</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong><label for="eventName">Event Name:</label></strong></p>
+                            <p><input type="text" id="eventName" name="event_name" class="form-control"
+                                    value="<?php echo $event->getEventName($event_id); ?>"
+                                    placeholder="<?php echo $event->getEventName($event_id); ?>" required></p>
+                            <p><strong><label for="eventDate">Event Date:</label></strong></p>
+                            <p><input type="date" id="eventDate" name="event_date" class="form-control"
+                                    value="<?php echo $event->getEventDate($event_id); ?>"
+                                    placeholder="<?php echo $event->getEventDate($event_id); ?>"></p>
+                            <p><strong><label for="eventLocation">Event Location:</label></strong></p>
+                            <div id="schoolParent" class="col-md-12 school-dropdown">
+                                <select name="event_school" id="eventLocation"
+                                    class="select2 select2-school form-control app-forms" style="width: 100%;">
+                                    <?php
                                                         //loop through the schools list
                                                         foreach ($schools_list as $school => $value) {
                                                             //get the key and value from the array and set the variables
@@ -162,16 +173,16 @@ if (isset($_GET['action'])) {
                                                             }
                                                         }
                                                         ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <!-- Event Branding (optional) -->
-                                                <h4>Event Branding</h4>
-                                                <p>
-                                                    <strong><label for="eventLogo">Event Logo:</label></strong>
-                                                    <!-- if there is an existing logo, show the file -->
-                                                    <?php
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Event Branding (optional) -->
+                            <h4>Event Branding</h4>
+                            <p>
+                                <strong><label for="eventLogo">Event Logo:</label></strong>
+                                <!-- if there is an existing logo, show the file -->
+                                <?php
                                                     if (!empty($event->getEventLogo($event_id))) {
                                                         //render the file as an image
                                                         echo '<div><img src="' . getUploadPath() . $media->getMediaFileName($event->getEventLogo($event_id)) . '" alt="Event Logo" style="max-width: 200px; max-height: auto;"></div>';
@@ -179,12 +190,42 @@ if (isset($_GET['action'])) {
                                                         echo '<div> ' . $media->getMediaFileName($event->getEventLogo($event_id)) . '</div>';
                                                     }
                                                     ?>
-                                                </p>
-                                                <p><input type="file" id="eventLogo" name="event_logo" class="form-control"></p>
-                                                <p>
-                                                    <strong><label for="eventBanner">Event Banner:</label></strong>
-                                                    <!-- if there is an existing banner, show the file -->
-                                                    <?php
+                            </p>
+                            <?php //allow the user to either select a file from the mediaArray or upload a new file if they have upload permissions
+                                                if (!empty($mediaArray)) { ?>
+                            <p><strong><label for="eventLogo">Select a New Logo:</label></strong></p>
+                            <p>
+                                <select id="eventLogoSelect" name="event_logoSelect" class="form-control">
+                                    <option value="">Select a Logo</option>
+                                    <?php /* check if the user has permission to upload media */
+                                                            if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                    <option value="0">Upload a New Logo</option>
+                                    <?php } ?>
+                                    <?php foreach ($mediaArray as $key => $value) { ?>
+                                    <option value="<?php echo $value['id'] ?>"><?php echo $value['filename']; ?>
+                                    </option>
+                                    <?php } ?>
+                                </select>
+                                <br />
+                                <!-- if the user selects to upload a new file, show the file upload input -->
+                                <input type="file" id="eventLogoUpload" name="event_logoUpload" class="form-control"
+                                    disabled hidden>
+                            </p>
+                            <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
+                                                    if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                            <p><strong><label for="eventLogo">Upload a New Logo:</label></strong></p>
+                            <p><input type="file" id="eventLogoUpload" name="event_logoUpload" class="form-control"
+                                    required></p>
+                            <?php } else { ?>
+                            <p><strong><label for="eventLogo">No Media Available</label></strong></p>
+                            <p>You lack permissions to upload new media files and none currently exist, contact the
+                                administrator.</p>
+                            <?php }
+                                                } ?>
+                            <p>
+                                <strong><label for="eventBanner">Event Banner:</label></strong>
+                                <!-- if there is an existing banner, show the file -->
+                                <?php
                                                     if (!empty($event->getEventBanner($event_id))) {
                                                         //render the file as an image
                                                         echo '<div><img src="' . getUploadPath() . $media->getMediaFileName($event->getEventBanner($event_id)) . '" alt="Event Banner" style="max-width: 200px; max-height: auto;"></div>';
@@ -192,20 +233,51 @@ if (isset($_GET['action'])) {
                                                         echo '<div> ' . $media->getMediaFileName($event->getEventBanner($event_id)) . '</div>';
                                                     }
                                                     ?>
-                                                </p>
-                                                <p><input type="file" id="eventBanner" name="event_banner" class="form-control"></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class=" card-footer">
-                                        <button name="create_Button" type="submit" class="btn btn-primary">Save Changes</button>
-                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>" class="btn btn-secondary">Cancel</a>
-                                    </div>
-                                </form>
-                            </div>
+                            </p>
+                            <?php //allow the user to either select a file from the mediaArray or upload a new file if they have upload permissions
+                                                if (!empty($mediaArray)) { ?>
+                            <p><strong><label for="eventBanner">Select a New Banner:</label></strong></p>
+                            <p>
+                                <select id="eventBannerSelect" name="event_bannerSelect" class="form-control">
+                                    <option value="">Select a Banner</option>
+                                    <?php /* check if the user has permission to upload media */
+                                                            if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                    <option value="0">Upload a New Banner</option>
+                                    <?php } ?>
+                                    <?php foreach ($mediaArray as $key => $value) { ?>
+                                    <option value="<?php echo $value['id'] ?>"><?php echo $value['filename']; ?>
+                                    </option>
+                                    <?php } ?>
+                                </select>
+                                <br />
+                                <!-- if the user selects to upload a new file, show the file upload input -->
+                                <input type="file" id="eventBannerUpload" name="event_bannerUpload" class="form-control"
+                                    disabled hidden>
+                            </p>
+                            <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
+                                                    if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                            <p><strong><label for="eventBanner">Upload a New Banner:</label></strong></p>
+                            <p><input type="file" id="eventBannerUpload" name="event_bannerUpload" class="form-control"
+                                    required></p>
+                            <?php } else { ?>
+                            <p><strong><label for="eventBanner">No Media Available</label></strong></p>
+                            <p>You lack permissions to upload new media files and none currently exist, contact the
+                                administrator.</p>
+                            <?php }
+                                                } ?>
                         </div>
                     </div>
-                <?php }
+                </div>
+                <div class=" card-footer">
+                    <button name="create_Button" type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
+                        class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php }
             }
         }
     } else if ($action == 'create') { //else if the action is create, show the event creation form
@@ -234,33 +306,39 @@ if (isset($_GET['action'])) {
                 include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
             } else {
                 ?>
-                <div class="container-fluid px-4">
-                    <h1 class="mt-4">New Event</h1>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">New Event</h1>
+    <div class="row">
+        <div class="card mb-4">
+            <!-- Event Create Form -->
+            <form
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&event=' . $_GET['event'] . '&action=' . $_GET['action'] ?>"
+                method="post" enctype="multipart/form-data">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        Create Event
+                    </div>
+                    <div class="card-buttons">
+                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
+                            class="btn btn-secondary">Back to Events</a>
+                    </div>
+                </div>
+                <div class="card-body">
                     <div class="row">
-                        <div class="card mb-4">
-                            <!-- Event Create Form -->
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&event=' . $_GET['event'] . '&action=' . $_GET['action'] ?>" method="post" enctype="multipart/form-data">
-                                <div class="card-header">
-                                    <div class="card-title">
-                                        <i class="fa-solid fa-calendar-day"></i>
-                                        Create Event
-                                    </div>
-                                    <div class="card-buttons">
-                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>" class="btn btn-secondary">Back to Events</a>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <!-- Event Details -->
-                                        <div class="col-md-6">
-                                            <p><strong><label for="eventName">Event Name:</label></strong></p>
-                                            <p><input type="text" id="eventName" name="event_name" class="form-control" placeholder="Event Name" required></p>
-                                            <p><strong><label for="eventDate">Event Date:</label></strong></p>
-                                            <p><input type="date" id="eventDate" name="event_date" class="form-control" placeholder="Event Date"></p>
-                                            <p><strong><label for="eventLocation">Event Location:</label></strong></p>
-                                            <div id="schoolParent" class="col-md-12 school-dropdown">
-                                                <select name="event_school" id="eventLocation" class="select2 select2-school form-control app-forms" style="width: 100%;">
-                                                    <?php
+                        <!-- Event Details -->
+                        <div class="col-md-6">
+                            <p><strong><label for="eventName">Event Name:</label></strong></p>
+                            <p><input type="text" id="eventName" name="event_name" class="form-control"
+                                    placeholder="Event Name" required></p>
+                            <p><strong><label for="eventDate">Event Date:</label></strong></p>
+                            <p><input type="date" id="eventDate" name="event_date" class="form-control"
+                                    placeholder="Event Date"></p>
+                            <p><strong><label for="eventLocation">Event Location:</label></strong></p>
+                            <div id="schoolParent" class="col-md-12 school-dropdown">
+                                <select name="event_school" id="eventLocation"
+                                    class="select2 select2-school form-control app-forms" style="width: 100%;">
+                                    <?php
                                                     //loop through the schools list
                                                     foreach ($schools_list as $school => $value) {
                                                         //get the key and value from the array and set the variables
@@ -270,35 +348,124 @@ if (isset($_GET['action'])) {
                                                         echo '<option value="' . $school_id . '">' . $school_label . '</option>';
                                                     }
                                                     ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <!-- Event Branding (optional) -->
-                                            <h4>Event Branding</h4>
-                                            <p>
-                                                <strong><label for="eventLogo">Event Logo:</label></strong>
-                                            </p>
-                                            <p><input type="file" id="eventLogo" name="event_logo" class="form-control"></p>
-                                            <p>
-                                                <strong><label for="eventBanner">Event Banner:</label></strong>
-                                            </p>
-                                            <p><input type="file" id="eventBanner" name="event_banner" class="form-control"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class=" card-footer">
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>" class="btn btn-secondary">Cancel</a>
-                                </div>
-                            </form>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Event Branding (optional) -->
+                            <h4>Event Branding</h4>
+                            <p>
+                                <strong><label for="eventLogo">Event Logo:</label></strong>
+                            </p>
+                            <?php //allow the user to either select a file from the mediaArray or upload a new file if they have upload permissions
+                                            if (!empty($mediaArray)) { ?>
+                            <p><strong><label for="eventLogo">Select a New Logo:</label></strong></p>
+                            <p>
+                                <select id="eventLogoSelect" name="event_logoSelect" class="form-control">
+                                    <option value="">Select a Logo</option>
+                                    <?php /* check if the user has permission to upload media */
+                                                        if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                    <option value="0">Upload a New Logo</option>
+                                    <?php } ?>
+                                    <?php foreach ($mediaArray as $key => $value) { ?>
+                                    <option value="<?php echo $value['id'] ?>"><?php echo $value['filename']; ?>
+                                    </option>
+                                    <?php } ?>
+                                </select>
+                                <br />
+                                <!-- if the user selects to upload a new file, show the file upload input -->
+                                <input type="file" id="eventLogoUpload" name="event_logoUpload" class="form-control"
+                                    disabled hidden>
+                            </p>
+                            <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
+                                                if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                            <p><strong><label for="eventLogo">Upload a New Logo:</label></strong></p>
+                            <p><input type="file" id="eventLogoUpload" name="event_logoUpload" class="form-control"
+                                    required></p>
+                            <?php } else { ?>
+                            <p><strong><label for="eventLogo">No Media Available</label></strong></p>
+                            <p>You lack permissions to upload new media files and none currently exist, contact the
+                                administrator.</p>
+                            <?php }
+                                            } ?>
+                            <p>
+                                <strong><label for="eventBanner">Event Banner:</label></strong>
+                            </p>
+                            <?php //allow the user to either select a file from the mediaArray or upload a new file if they have upload permissions
+                                            if (!empty($mediaArray)) { ?>
+                            <p><strong><label for="eventBanner">Select a New Banner:</label></strong></p>
+                            <p>
+                                <select id="eventBannerSelect" name="event_bannerSelect" class="form-control">
+                                    <option value="">Select a Banner</option>
+                                    <?php /* check if the user has permission to upload media */
+                                                        if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                    <option value="0">Upload a New Banner</option>
+                                    <?php } ?>
+                                    <?php foreach ($mediaArray as $key => $value) { ?>
+                                    <option value="<?php echo $value['id'] ?>"><?php echo $value['filename']; ?>
+                                    </option>
+                                    <?php } ?>
+                                </select>
+                                <br />
+                                <!-- if the user selects to upload a new file, show the file upload input -->
+                                <input type="file" id="eventBannerUpload" name="event_bannerUpload" class="form-control"
+                                    disabled hidden>
+                            </p>
+                            <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
+                                                if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                            <p><strong><label for="eventBanner">Upload a New Banner:</label></strong></p>
+                            <p><input type="file" id="eventBannerUpload" name="event_bannerUpload" class="form-control"
+                                    required></p>
+                            <?php } else { ?>
+                            <p><strong><label for="eventBanner">No Media Available</label></strong></p>
+                            <p>You lack permissions to upload new media files and none currently exist, contact the
+                                administrator.</p>
+                            <?php }
+                                            } ?>
                         </div>
                     </div>
                 </div>
+                <div class=" card-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=list'; ?>"
+                        class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <?php }
         }
-    }
-} else {
+    } ?>
+<script>
+//hide or show the file upload input based on the user selection
+$(document).ready(function() {
+    $('#eventLogoSelect').change(function() {
+        if ($(this).val() == '0') {
+            $('#eventLogoUpload').prop('disabled', false).show();
+            $('#eventLogoUpload').prop('hidden', false).show();
+        } else {
+            $('#eventLogoUpload').prop('disabled', true).hide();
+            $('#eventLogoUpload').prop('hidden', true).hide();
+        }
+    });
+});
+</script>
+<script>
+//hide or show the file upload input based on the user selection
+$(document).ready(function() {
+    $('#eventBannerSelect').change(function() {
+        if ($(this).val() == '0') {
+            $('#eventBannerUpload').prop('disabled', false).show();
+            $('#eventBannerUpload').prop('hidden', false).show();
+        } else {
+            $('#eventBannerUpload').prop('disabled', true).hide();
+            $('#eventBannerUpload').prop('hidden', true).hide();
+        }
+    });
+});
+</script>
+<?php } else {
     //set the action to null
     $action = null;
 

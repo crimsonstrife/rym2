@@ -14,6 +14,9 @@ $permissionsObject = new Permission();
 //include the auth class
 $auth = new Authenticator();
 
+//include the media class
+$media = new Media();
+
 /*confirm user has a role with create event permissions*/
 //get the id of the create event permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('CREATE EVENT');
@@ -88,6 +91,7 @@ if (!$hasPermission) {
             //prepare the event date
             $event_date = prepareData($event_date);
         }
+
         //get the event location from the form
         if (isset($_POST["event_school"])) {
             $event_location = trim($_POST["event_school"]);
@@ -95,13 +99,57 @@ if (!$hasPermission) {
             $event_location = prepareData($event_location);
             $event_location = (int) $event_location;
         }
+
         //get the event logo from the form
-        if (isset($_FILES["event_logo"])) {
-            $event_logo = $_FILES["event_logo"];
+        if (isset($_POST["event_logoSelect"])) {
+            $event_logoSelection = $_POST["event_logoSelect"];
+
+            //if the logo selection is empty, blank, or zero
+            if (empty($event_logoSelection) || $event_logoSelection == '' || $event_logoSelection == 0) {
+                //try to get the file from the file input
+                if (isset($_FILES["event_logoUpload"])) {
+                    $uploaded_file = $_FILES["event_logoUpload"];
+
+                    //if the file is empty, set the uploaded file to null
+                    if (empty($uploaded_file) || $uploaded_file == '' || $uploaded_file == null) {
+                        $uploaded_file = null;
+                    } else {
+                        //set the event logo to the uploaded file
+                        $event_logo = $uploaded_file;
+                    }
+                }
+            } else {
+                //set the uploaded file to null
+                $uploaded_file = null;
+                //set the event logo to the selection
+                $event_logo = intval($event_logoSelection);
+            }
         }
+
         //get the event banner from the form
-        if (isset($_FILES["event_banner"])) {
-            $event_banner = $_FILES["event_banner"];
+        if (isset($_POST["event_bannerSelect"])) {
+            $event_bannerSelection = $_POST["event_bannerSelect"];
+
+            //if the banner selection is empty, blank, or zero
+            if (empty($event_bannerSelection) || $event_bannerSelection == '' || $event_bannerSelection == 0) {
+                //try to get the file from the file input
+                if (isset($_FILES["event_bannerUpload"])) {
+                    $uploaded_file = $_FILES["event_bannerUpload"];
+
+                    //if the file is empty, set the uploaded file to null
+                    if (empty($uploaded_file) || $uploaded_file == '' || $uploaded_file == null) {
+                        $uploaded_file = null;
+                    } else {
+                        //set the event banner to the uploaded file
+                        $event_banner = $uploaded_file;
+                    }
+                }
+            } else {
+                //set the uploaded file to null
+                $uploaded_file = null;
+                //set the event banner to the selection
+                $event_banner = intval($event_bannerSelection);
+            }
         }
 
         //other variables

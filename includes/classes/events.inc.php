@@ -881,8 +881,8 @@ class Event
      * does both, helps with delays in the sql execution which appeared to keep them from adding when run back to back
      *
      * @param int $id event id
-     * @param int $logo event logo path
-     * @param int $banner event banner path
+     * @param int $logo event logo
+     * @param int $banner event banner
      */
     public function setEventLogoAndBanner(int $id, int $logo, int $banner)
     {
