@@ -5,7 +5,7 @@ if (!defined('ISVALIDUSER')) {
     $thisError = 'INVALID_USER_REQUEST';
 
     //include the error message file
-    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
+    include_once(__DIR__ . '/../../../../includes/errors/errorMessage.inc.php');
 }
 
 //include the permissions class
@@ -30,7 +30,7 @@ if (!$hasPermission) {
     $thisError = 'PERMISSION_ERROR_ACCESS';
 
     //include the error message file
-    include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
+    include_once(__DIR__ . '/../../../../includes/errors/errorMessage.inc.php');
 } else {
     //school class
     $school = new School();
