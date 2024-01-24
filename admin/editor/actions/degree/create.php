@@ -1,7 +1,11 @@
 <?php
 //Prevent direct access to this file by checking if the constant ISVALIDUSER is defined.
 if (!defined('ISVALIDUSER')) {
-    die('Error: Invalid request');
+    //set the error type
+    $thisError = 'INVALID_USER_REQUEST';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../../includes/errors/errorMessage.inc.php');
 }
 
 //include the permissions class
@@ -33,7 +37,11 @@ $hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relev
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
-    die('Error: You do not have permission to perform this request.');
+    //set the error type
+    $thisError = 'PERMISSION_ERROR_ACCESS';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../../includes/errors/errorMessage.inc.php');
 } else {
 
     // Processing form data when form is submitted
@@ -54,15 +62,15 @@ if (!$hasPermission) {
             $degreeCreated = $degree->addGrade($degree_name, $user_id);
         }
     } ?>
-<!-- Completion page content -->
-<div class="container-fluid px-4">
-    <div class="row">
-        <div class="card mb-4">
-            <!-- show completion message -->
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fa-solid fa-check"></i>
-                    <?php
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-check"></i>
+                        <?php
                         if ($action == 'create') {
                             if ($degreeCreated) {
                                 echo 'Degree Created';
@@ -71,9 +79,9 @@ if (!$hasPermission) {
                             }
                         }
                         ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 <?php } ?>

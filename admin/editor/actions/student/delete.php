@@ -4,7 +4,11 @@
 use function PHPSTORM_META\override;
 
 if (!defined('ISVALIDUSER')) {
-    die('Error: Invalid request');
+    //set the error type
+    $thisError = 'INVALID_USER_REQUEST';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../../includes/errors/errorMessage.inc.php');
 }
 
 //include the permissions class
@@ -25,7 +29,11 @@ $hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relev
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
-    die('Error: You do not have permission to perform this request.');
+    //set the error type
+    $thisError = 'PERMISSION_ERROR_ACCESS';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../../../includes/errors/errorMessage.inc.php');
 } else {
     //student class
     $student = new Student();
@@ -92,15 +100,15 @@ if (!$hasPermission) {
             $studentDeleted = false;
         }
     } ?>
-<!-- Completion page content -->
-<div class="container-fluid px-4">
-    <div class="row">
-        <div class="card mb-4">
-            <!-- show completion message -->
-            <div class="card-header">
-                <div class="card-title">
-                    <div>
-                        <?php
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <div>
+                            <?php
                             if ($action == 'delete') {
                                 if ($studentDeleted) {
                                     echo '<i class="fa-solid fa-check"></i>';
@@ -111,14 +119,14 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <!-- show completion message -->
-                    <div class="col-md-12">
-                        <?php
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
                             if ($action == 'delete') {
                                 if ($studentDeleted) {
                                     echo '<p>The student ' . $student_name . ' has been deleted.</p>';
@@ -127,12 +135,12 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
-                </div>
-                <!-- show error messages -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <?php
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
                             if ($action == 'delete') {
                                 if (!$canDelete) {
                                     echo '<p>The student ' . $student_name . ' cannot be deleted because they have associated records in the system.</p>';
@@ -148,12 +156,12 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
-                </div>
-                <!-- present option to delete all associated records if necessary -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <?php
+                    <!-- present option to delete all associated records if necessary -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
                             if ($action == 'delete') {
                                 if (!$canDelete) {
                                     echo '<p>If you would like to delete all associated records, click the button below.</p>';
@@ -164,12 +172,12 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <!-- show back buttons -->
-                    <div class="col-md-12">
-                        <?php
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <?php
                             if ($action == 'delete') {
                                 if ($studentDeleted) {
                                     echo '<a href="' . APP_URL . '/admin/dashboard.php?view=students&student=list" class="btn btn-primary">Return to Student List</a>';
@@ -178,10 +186,10 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 <?php } ?>
