@@ -661,4 +661,51 @@ class Media
         //return the valid file types
         return $valid_file_types;
     }
+
+    /**
+     * Get media usage by media id
+     * Returns the ids of the school or event that is using the media
+     *
+     * @param int $media_id The media id
+     *
+     * @return array The ids of the school or event that is using the media
+     */
+    public function getMediaUsage(int $media_id): array
+    {
+        //placeholder array for the media usage
+        $mediaUsage = array(
+            "schools" => array(),
+            "events" => array()
+        );
+
+        //include the school class
+        $school = new School();
+
+        //include the event class
+        $event = new Event();
+
+        //get the ids of the schools that are using the media
+        $schoolsArray = $school->getSchoolsByMediaID($media_id);
+
+        //get the ids of the events that are using the media
+        $eventsArray = $event->getEventsByMediaID($media_id);
+
+        //if there are schools using the media, add the school ids to the media usage array
+        if (count($schoolsArray) > 0) {
+            foreach ($schoolsArray as $schoolObject) {
+                //add the school id to the media usage array
+                $mediaUsage["schools"][] = $schoolObject;
+            }
+        }
+
+        //if there are events using the media, add the event ids to the media usage array
+        if (count($eventsArray) > 0) {
+            foreach ($eventsArray as $event) {
+                $mediaUsage["events"][] = $event;
+            }
+        }
+
+        //return the media usage array
+        return $mediaUsage;
+    }
 }

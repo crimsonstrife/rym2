@@ -1213,4 +1213,42 @@ class Event
         //return the result
         return $result;
     }
+
+    /**
+     * Get all the event ids using a banner or logo that matches a media id
+     *
+     * @param int $media_id media id
+     *
+     * @return array event ids
+     */
+    public function getEventsByMediaId(int $media_id): array
+    {
+        //SQL statement to get all the event ids using a banner or logo that matches a media id
+        $sql = "SELECT event_id FROM event_branding WHERE event_logo = ? OR event_banner = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //bind the parameters
+        $stmt->bind_param("ii", $media_id, $media_id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //array to hold the event ids
+        $event_ids = array();
+
+        //if the result has rows, loop through the rows and add them to the event ids array
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $event_ids[] = $row['event_id'];
+            }
+        }
+
+        //return the event ids array
+        return $event_ids;
+    }
 }

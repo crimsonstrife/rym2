@@ -556,4 +556,42 @@ class School
         //return the result
         return $result;
     }
+
+    /**
+     * Get the school ids of all schools using a specific logo, by the logo/media id
+     *
+     * @param int $media_id logo/media id
+     *
+     * @return array $school_ids
+     */
+    public function getSchoolsByMediaId(int $media_id): array
+    {
+        //SQL statement to get all the school ids using a logo that matches a media id
+        $sql = "SELECT school_id FROM school_branding WHERE school_logo = ?";
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $media_id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //array to hold the school ids
+        $school_ids = array();
+
+        //if the result has rows, loop through the rows and add them to the school ids array
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $school_ids[] = $row['school_id'];
+            }
+        }
+
+        //return the school ids array
+        return $school_ids;
+    }
 };
