@@ -60,6 +60,14 @@ if (!$hasPermission) {
         //boolean to track if the user can be deleted
         $canDelete = true;
 
+        //check if the user is the last user
+        $userCount = count($user->getAllUsers());
+
+        //if there is only one user, the user cannot be deleted so set the canDelete boolean to false
+        if ($userCount <= 1) {
+            $canDelete = false;
+        }
+
         //if the canDelete boolean is true, delete the user
         if ($canDelete) {
             $userDeleted = $user->deleteUser($user_id);
