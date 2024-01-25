@@ -184,8 +184,8 @@ class Application
                 return false;
             }
         } else {
-            //SQL statement to insert the application name, but also set the isSet column to SET
-            $sql = "INSERT INTO settings (app_name, isSet) VALUES (?, 'SET')";
+            //SQL statement to update the application name, where isSet is SET
+            $sql = "UPDATE settings SET app_name = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
@@ -286,8 +286,8 @@ class Application
                 return false;
             }
         } else {
-            //SQL statement to insert the application URL, but also set the isSet column to SET
-            $sql = "INSERT INTO settings (app_url, isSet) VALUES (?, 'SET')";
+            //SQL statement to update the application URL, where isSet is SET
+            $sql = "UPDATE settings SET app_url = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
@@ -390,8 +390,8 @@ class Application
                 return false;
             }
         } else {
-            //SQL statement to insert the mailer type, but also set the isSet column to SET
-            $sql = "INSERT INTO settings (mail_mailer, isSet) VALUES (?, 'SET')";
+            //SQL statement to update the mailer type, where isSet is SET
+            $sql = "UPDATE settings SET mail_mailer = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
@@ -492,8 +492,8 @@ class Application
                 return false;
             }
         } else {
-            //SQL statement to insert the mailer host, but also set the isSet column to SET
-            $sql = "INSERT INTO settings (mail_host, isSet) VALUES (?, 'SET')";
+            //SQL statement to update the mailer host, where isSet is SET
+            $sql = "UPDATE settings SET mail_host = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
@@ -594,8 +594,8 @@ class Application
                 return false;
             }
         } else {
-            //SQL statement to insert the mailer port, but also set the isSet column to SET
-            $sql = "INSERT INTO settings (mail_port, isSet) VALUES (?, 'SET')";
+            //SQL statement to update the mailer port, where isSet is SET
+            $sql = "UPDATE settings SET mail_port = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
@@ -696,8 +696,8 @@ class Application
                 return false;
             }
         } else {
-            //SQL statement to insert the mailer username, but also set the isSet column to SET
-            $sql = "INSERT INTO settings (mail_username, isSet) VALUES (?, 'SET')";
+            //SQL statement to update the mailer username, where isSet is SET
+            $sql = "UPDATE settings SET mail_username = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
@@ -830,8 +830,8 @@ class Application
             //set the password
             $password = $encrypted_password;
 
-            //SQL statement to insert the mailer password, but also set the isSet column to SET
-            $sql = "INSERT INTO settings (mail_password, isSet) VALUES (?, 'SET')";
+            //SQL statement to update the mailer password, where isSet is SET
+            $sql = "UPDATE settings SET mail_password = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
@@ -932,8 +932,8 @@ class Application
                 return false;
             }
         } else {
-            //SQL statement to insert the mailer encryption, but also set the isSet column to SET
-            $sql = "INSERT INTO settings (mail_encryption, isSet) VALUES (?, 'SET')";
+            //SQL statement to update the mailer encryption, where isSet is SET
+            $sql = "UPDATE settings SET mail_encryption = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
@@ -1034,8 +1034,8 @@ class Application
                 return false;
             }
         } else {
-            //SQL statement to insert the mailer from address, but also set the isSet column to SET
-            $sql = "INSERT INTO settings (mail_from_address, isSet) VALUES (?, 'SET')";
+            //SQL statement to update the mailer from address, where isSet is SET
+            $sql = "UPDATE settings SET mail_from_address = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
@@ -1136,8 +1136,8 @@ class Application
                 return false;
             }
         } else {
-            //SQL statement to insert the mailer from name, but also set the isSet column to SET
-            $sql = "INSERT INTO settings (mail_from_name, isSet) VALUES (?, 'SET')";
+            //SQL statement to update the mailer from name, where isSet is SET
+            $sql = "UPDATE settings SET mail_from_name = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
@@ -1256,8 +1256,8 @@ class Application
                 return false;
             }
         } else {
-            //SQL statement to insert the mailer authentication required status, but also set the isSet column to SET
-            $sql = "INSERT INTO settings (mail_auth_req, isSet) VALUES (?, 'SET')";
+            //SQL statement to update the mailer authentication required status, where isSet is SET
+            $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $role_statement = $this->mysqli->prepare($sql);
@@ -1400,9 +1400,6 @@ class Application
      */
     public function getPrivacyPolicy()
     {
-        //include the php-markdown library
-        require_once 'vendor/autoload.php';
-
         //SQL statement to get the privacy policy content
         $sql = "SELECT privacy_policy FROM settings WHERE isSet = 'SET'";
 
@@ -1422,17 +1419,14 @@ class Application
         if ($row) {
             //check if the privacy_policy is set or not
             if (isset($row['privacy_policy'])) {
-                //convert the privacy policy content from Markdown to HTML
-                $privacy_policy = Markdown::defaultTransform($row['privacy_policy']);
+                //set the privacy policy
+                $privacy_policy = $row['privacy_policy'];
 
                 //Return the privacy_policy
                 return $privacy_policy;
             } else {
                 //get the default privacy policy
                 $privacy_policy = strval(PRIVACY_POLICY);
-
-                //convert the privacy policy content from Markdown to HTML
-                $privacy_policy = Markdown::defaultTransform($privacy_policy);
 
                 //Return the privacy_policy
                 return $privacy_policy;
@@ -1486,9 +1480,6 @@ class Application
      */
     public function getTerms()
     {
-        //include the php-markdown library
-        require_once 'vendor/autoload.php';
-
         //SQL statement to get the terms and conditions content
         $sql = "SELECT terms_conditions FROM settings WHERE isSet = 'SET'";
 
@@ -1508,17 +1499,14 @@ class Application
         if ($row) {
             //check if the terms_conditions is set or not
             if (isset($row['terms_conditions'])) {
-                //convert the terms_conditions content from Markdown to HTML
-                $terms = Markdown::defaultTransform($row['terms_conditions']);
+                //set the terms
+                $terms = $row['terms_conditions'];
 
                 //Return the terms
                 return $terms;
             } else {
                 //get the default terms and conditions
                 $terms = strval(TERMS_CONDITIONS);
-
-                //convert the terms_conditions content from Markdown to HTML
-                $terms = Markdown::defaultTransform($terms);
 
                 //Return the terms
                 return $terms;

@@ -88,7 +88,7 @@ This project aims to provide a web-based application for a business to handle st
 
 - <b>Languages: </b> PHP ^8.1.2
 - <b>Frameworks: </b> Composer ^2.6.6, npm ^10.3.0
-- <b>Libraries: </b> .ENV ^5.5, PHPMailer ^6.8, PHP-QRCode ^5.0, PHP Markdown ^2.0
+- <b>Libraries: </b> .ENV ^5.5, PHPMailer ^6.8, PHP-QRCode ^5.0
 
 </div>
 
@@ -242,7 +242,6 @@ For school-related support, email [pbarnh1@wgu.edu](mailto:pbarnh1@wgu.edu) or [
 - [phpMyAdmin](https://www.phpmyadmin.net/)
 - [Apache](https://httpd.apache.org/)
 - [MySQL](https://www.mysql.com/)
-- [PHP Markdown](https://github.com/michelf/php-markdown)
 - [PHPMailer](https://github.com/PHPMailer/PHPMailer)
 - [PHP-QRCode](https://github.com/chillerlan/php-qrcode)
 - [Simple-DataTables](https://github.com/fiduswriter/simple-datatables)
@@ -255,7 +254,6 @@ For school-related support, email [pbarnh1@wgu.edu](mailto:pbarnh1@wgu.edu) or [
 ## References
 
 - Method for preventing direct access to specific PHP files, but still allow the files to be included [(UnkwnTech 2009, Amal Murali 2013)](https://stackoverflow.com/questions/409496/prevent-direct-access-to-a-php-include-file/409515#409515)
-- PHP Markdown Documentation [(Michel Fortin 2019)](https://michelf.ca/projects/php-markdown/)
 - PHPMailer Documentation [(Marcus Bointon 2021)](https://phpmailer.github.io/PHPMailer/)
 - PHP-QRCode Manual [(@chillerlan 2024)](https://php-qrcode.readthedocs.io/en/main/)
 - Leaflet Documentation [(Volodymyr Agafonkin 2010-2023)](https://leafletjs.com/reference.html)

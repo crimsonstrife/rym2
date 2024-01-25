@@ -25,8 +25,7 @@
         "components/jquery-migrate": "^3.0",
         "phpmailer/phpmailer": "^6.8",
         "chillerlan/php-qrcode": "^5.0",
-        "nnnick/chartjs": "^4.4",
-        "michelf/php-markdown": "^2.0"
+        "nnnick/chartjs": "^4.4"
     },
     "autoload": {
         "psr-4": {
@@ -114,7 +113,13 @@
             "php -r \"copy('node_modules/leaflet-geosearch/dist/geosearch.umd.js.map', 'public/content/libs/leaflet-geosearch/geosearch.umd.js.map');\"",
             "php -r \"copy('node_modules/leaflet-geosearch/dist/providers/openStreetMapProvider.d.ts', 'public/content/libs/leaflet-geosearch/providers/openStreetMapProvider.d.ts');\"",
             "php -r \"if (!is_dir('public/content/libs/irojs')) { mkdir('public/content/libs/irojs', 0777, true); }\"",
-            "php -r \"copy('node_modules/@jaames/iro/dist/iro.min.js', 'public/content/libs/irojs/iro.min.js');\""
+            "php -r \"copy('node_modules/@jaames/iro/dist/iro.min.js', 'public/content/libs/irojs/iro.min.js');\"",
+            "php -r \"if (!is_dir('public/content/libs/ckeditor')) { mkdir('public/content/libs/ckeditor', 0777, true); }\"",
+            "php -r \"copy('node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js', 'public/content/libs/ckeditor/ckeditor.js');\"",
+            "php -r \"copy('node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js.map', 'public/content/libs/ckeditor/ckeditor.js.map');\""
+        ],
+        "post-install-cmd": [
+            "@post-update-cmd"
         ]
     }
 }
