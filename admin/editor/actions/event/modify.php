@@ -62,12 +62,12 @@ if (!$hasPermission) {
     $action = $_GET['action'];
 
     //other variables
-    $target_file_banner = null;
-    $target_file_logo = null;
-    $imageFileType_logo = null;
-    $imageFileType_banner = null;
-    $logo_media_id = null;
-    $banner_media_id = null;
+    $mediaChanged = false;
+    $logoMedia_id = null;
+    $bannerMedia_id = null;
+    $event_logo = null;
+    $event_banner = null;
+    $eventUpdated = false;
 
     //if the action is edit, get the event id from the url parameter
     if ($action == 'edit') {
@@ -122,88 +122,142 @@ if (!$hasPermission) {
             $event_banner = null;
         }
 
+        //get the event logo from the form
+        if (isset($_POST["event_logoSelect"])) {
+            $event_logoSelection = $_POST["event_logoSelect"];
+
+            //if the logo selection is empty, blank, or zero
+            if (empty($event_logoSelection) || $event_logoSelection == '' || $event_logoSelection == 0) {
+                //try to get the file from the file input
+                if (isset($_FILES["event_logoUpload"])) {
+                    $uploaded_file = $_FILES["event_logoUpload"];
+
+                    //if the file is empty, set the uploaded file to null
+                    if (empty($uploaded_file) || $uploaded_file == '' || $uploaded_file == null) {
+                        $uploaded_file = null;
+                    } else {
+                        //set the event logo to the uploaded file
+                        $event_logo = $uploaded_file;
+                    }
+                }
+            } else {
+                //set the uploaded file to null
+                $uploaded_file = null;
+                //set the event logo to the selection
+                $event_logo = intval($event_logoSelection);
+            }
+        }
+
+        //if the event logo is empty, set the event logo to null
+        if (empty($event_logo)) {
+            $event_logo = null;
+        }
+
+        //get the event banner from the form
+        if (isset($_POST["event_bannerSelect"])) {
+            $event_bannerSelection = $_POST["event_bannerSelect"];
+
+            //if the banner selection is empty, blank, or zero
+            if (empty($event_bannerSelection) || $event_bannerSelection == '' || $event_bannerSelection == 0) {
+                //try to get the file from the file input
+                if (isset($_FILES["event_bannerUpload"])) {
+                    $uploaded_file = $_FILES["event_bannerUpload"];
+
+                    //if the file is empty, set the uploaded file to null
+                    if (empty($uploaded_file) || $uploaded_file == '' || $uploaded_file == null) {
+                        $uploaded_file = null;
+                    } else {
+                        //set the event banner to the uploaded file
+                        $event_banner = $uploaded_file;
+                    }
+                }
+            } else {
+                //set the uploaded file to null
+                $uploaded_file = null;
+                //set the event banner to the selection
+                $event_banner = intval($event_bannerSelection);
+            }
+        }
+
+        //if the event banner is empty, set the event banner to null
+        if (empty($event_banner)) {
+            $event_banner = null;
+        }
+
         //if there are files to upload, upload them
-        if ((!empty($event_logo) || !empty($event_banner)) && ($event_logo != '' || $event_banner != '') && ($event_logo != null || $event_banner != null)) {
-            if ((!empty($event_logo)) && $event_logo != '' && $event_logo != null) {
-                //upload the event logo
-                $logo_media_id = $media->uploadMedia($event_logo, intval($_SESSION['user_id']));
-            }
-            if ((!empty($event_banner)) && $event_banner != '' && $event_banner != null) {
-                //upload the event banner
-                $banner_media_id = $media->uploadMedia($event_banner, intval($_SESSION['user_id']));
+        if (!empty($event_logo) || !empty($event_banner)) {
+            //if the event logo is not empty or null, try to upload it
+            if (!empty($event_logo) && $event_logo != null) {
+                //if the event logo is an array, upload the file
+                if (is_array($event_logo)) {
+                    $logoMedia_id = $media->uploadMedia($event_logo, intval($_SESSION['user_id']));
+                } else {
+                    //if the event logo is not an array, set the media id to the event logo int
+                    $logoMedia_id = $event_logo;
+                }
             }
 
-            //debugging
-            error_log('Event Banner Media ID: ' . strval($banner_media_id));
-            error_log('Event Logo Media ID: ' . strval($logo_media_id));
+            //if the event banner is not empty or null, try to upload it
+            if (!empty($event_banner) && $event_banner != null) {
+                //if the event banner is an array, upload the file
+                if (is_array($event_banner)) {
+                    $bannerMedia_id = $media->uploadMedia($event_banner, intval($_SESSION['user_id']));
+                } else {
+                    //if the event banner is not an array, set the media id to the event banner int
+                    $bannerMedia_id = $event_banner;
+                }
+            }
 
-            //check if the event had an existing logo or banner, if so, update the record
+            //if the action is edit, update the event
             if ($action == 'edit') {
-                //if neither the logo or banner are empty, update the event logo and banner
-                if (!empty($event_logo) && !empty($event_banner)) {
-                    $existing_logo = $event->getEventLogo($event_id);
-                    $existing_banner = $event->getEventBanner($event_id);
+                //get current user ID
+                $user_id = intval($_SESSION['user_id']);
+                //update the event
+                $eventUpdated = $event->updateEvent($event_id, $event_name, $event_date, $event_location, $user_id);
 
-                    //debug
-                    error_log('existing logo ID: ' . strval($existing_logo));
-                    error_log('existing banner ID: ' . strval($existing_banner));
+                //if the logo media id is not null, see if it is different from the current logo media id
+                if ($logoMedia_id != null) {
+                    //get the current logo media id
+                    $currentLogoMedia_id = $event->getEventLogo($event_id);
+                    //if the new logo media id is different from the current logo media id, update the event logo
+                    if ($logoMedia_id != $currentLogoMedia_id) {
+                        $event->updateEventLogo($event_id, $logoMedia_id);
+                    }
+                }
 
-                    //if the existing logo and banner are not empty, see if they match the media ids for the uploaded files
-                    if ((!empty($existing_logo) || $existing_logo != '' || $existing_logo != null || $existing_logo != 0) && (!empty($existing_banner) || $existing_banner != '' || $existing_banner != null || $existing_banner != 0)) {
-                        //if the ids match, update the logo and banner
-                        if (($existing_logo == $logo_media_id) && ($existing_banner == $banner_media_id)) {
-                            $event->updateEventLogoAndBanner($event_id, $logo_media_id, $banner_media_id);
-                        } else {
-                            //if the ids don't match, run them individually
-                            $event->updateEventLogo($event_id, $logo_media_id);
-                            $event->updateEventBanner($event_id, $banner_media_id);
-                        }
-                    } else {
-                        //if the existing logo and banner are empty or 0, set the logo and banner
-                        $event->setEventLogoAndBanner($event_id, $logo_media_id, $banner_media_id);
-                    }
-                } else if (!empty($event_logo) && empty($event_banner)) {
-                    $existing_logo = $event->getEventLogo($event_id);
-                    if (!empty($existing_logo) || $existing_logo != '' || $existing_logo != null || $existing_logo != 0) {
-                        $event->updateEventLogo($event_id, $banner_media_id);
-                    } else {
-                        $event->setEventLogo($event_id, $banner_media_id);
-                    }
-                } else if (!empty($event_banner) && empty($event_logo)) {
-                    $existing_banner = $event->getEventBanner($event_id);
-                    if (!empty($existing_banner) || $existing_banner != '' || $existing_banner != null || $existing_banner != 0) {
-                        $event->updateEventBanner($event_id, $banner_media_id);
-                    } else {
-                        $event->setEventBanner($event_id, $banner_media_id);
+                //if the banner media id is not null, see if it is different from the current banner media id
+                if ($bannerMedia_id != null) {
+                    //get the current banner media id
+                    $currentBannerMedia_id = $event->getEventBanner($event_id);
+                    //if the new banner media id is different from the current banner media id, update the event banner
+                    if ($bannerMedia_id != $currentBannerMedia_id) {
+                        $event->updateEventBanner($event_id, $bannerMedia_id);
                     }
                 }
             }
         }
-
-        //if the action is edit, update the event
-        if ($action == 'edit') {
-            //get current user ID
-            $user_id = intval($_SESSION['user_id']);
-            //update the event
-            $event->updateEvent($event_id, $event_name, $event_date, $event_location, $user_id);
-        }
     } ?>
-    <!-- Completion page content -->
-    <div class="container-fluid px-4">
-        <div class="row">
-            <div class="card mb-4">
-                <!-- show completion message -->
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fa-solid fa-check"></i>
-                        <?php
+<!-- Completion page content -->
+<div class="container-fluid px-4">
+    <div class="row">
+        <div class="card mb-4">
+            <!-- show completion message -->
+            <div class="card-header">
+                <div class="card-title">
+                    <?php
                         if ($action == 'edit') {
-                            echo 'Event Updated';
+                            if ($eventUpdated) {
+                                echo '<i class="fa-solid fa-check"></i>';
+                                echo 'Event Updated';
+                            } else {
+                                echo '<i class="fa-solid fa-x"></i>';
+                                echo 'Error: Event Not Updated';
+                            }
                         }
                         ?>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 <?php } ?>
