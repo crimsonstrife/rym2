@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jan 23, 2024 at 05:38 PM
+-- Generation Time: Jan 25, 2024 at 04:03 PM
 -- Server version: 5.7.39
 -- PHP Version: 7.4.33
 
@@ -296,7 +296,55 @@ INSERT INTO `activity_log` (`id`, `user_id`, `action`, `performed_on`, `action_d
 (254, 1, 'MODIFY', 'Role 3 was given permission 60', '2024-01-23 19:05:31'),
 (255, 1, 'MODIFY', 'Role 3 was given permission 61', '2024-01-23 19:05:31'),
 (256, 1, 'MODIFY', 'Role 3 was given permission 62', '2024-01-23 19:05:31'),
-(257, NULL, 'LOGIN', 'User admin', '2024-01-24 01:42:04');
+(257, NULL, 'LOGIN', 'User admin', '2024-01-24 01:42:04'),
+(258, 1, 'ERROR', 'CODE: [CIPHER]- AT: /admin/dashboard.php?view=media&media=add&action=create', '2024-01-24 23:16:36'),
+(259, 1, 'ERROR', 'CODE: [CIPHER]- AT: /admin/dashboard.php?view=media&media=add&action=create', '2024-01-24 23:18:15'),
+(260, 1, 'OTHER', 'Media Uploaded: placeholderbanner.png', '2024-01-24 23:20:09'),
+(261, 1, 'ERROR', 'Error Uploading Media: Invalid file type - ', '2024-01-24 23:49:59'),
+(262, 1, 'ERROR', 'Error Uploading Media: Invalid file type - ', '2024-01-24 23:50:58'),
+(263, 1, 'OTHER', 'Media Uploaded: placeholderlogopng.png', '2024-01-25 01:31:24'),
+(264, 1, 'ERROR', 'Error Uploading Media: Invalid file type - ', '2024-01-25 01:31:41'),
+(265, 1, 'MODIFY', 'School Western Governor&#039;s University - WGU', '2024-01-25 01:32:11'),
+(266, 1, 'MODIFY', 'School University of North Carolina at Charlotte - UNCC', '2024-01-25 01:32:38'),
+(267, 1, 'MODIFY', 'School Stanly Community College - SCC', '2024-01-25 01:32:50'),
+(268, 1, 'MODIFY', 'School University of North Carolina at Greensboro - UNCG', '2024-01-25 01:33:30'),
+(269, 1, 'MODIFY', 'School Harvard University', '2024-01-25 01:33:44'),
+(270, 1, 'MODIFY', 'School Stanford University', '2024-01-25 01:33:58'),
+(271, 1, 'MODIFY', 'School Massachusetts Institute of Technology - MIT', '2024-01-25 01:34:12'),
+(272, 1, 'MODIFY', 'School University of California, Berkeley', '2024-01-25 01:34:29'),
+(273, 1, 'MODIFY', 'School Yale University', '2024-01-25 01:34:46'),
+(274, 1, 'MODIFY', 'School University of Chicago', '2024-01-25 01:35:03'),
+(275, 1, 'MODIFY', 'School Columbia University', '2024-01-25 01:35:18'),
+(276, 1, 'MODIFY', 'School Duke University', '2024-01-25 01:35:32'),
+(277, 1, 'MODIFY', 'School University of North Carolina at Chapel Hill - UNC Chapel Hill', '2024-01-25 01:35:55'),
+(278, 1, 'MODIFY', 'School North Carolina State University', '2024-01-25 01:36:10'),
+(279, 1, 'MODIFY', 'School Wake Forest University', '2024-01-25 01:36:27'),
+(280, 1, 'MODIFY', 'School Rowan-Cabarrus Community College - RCCC', '2024-01-25 01:38:01'),
+(281, 1, 'DELETE', 'Student ID: 2 Student Name: Kelsey Berkman from Event ID: 1 Event Name: WGU Job Faire', '2024-01-25 19:02:28'),
+(282, 1, 'DELETE', 'Student ID: 2 Student Name: Kelsey Berkman', '2024-01-25 19:02:28'),
+(283, 1, 'DELETE', 'Student ID: 1 Student Name: Patrick Barnhardt from Event ID: 1 Event Name: WGU Job Faire', '2024-01-25 19:02:34'),
+(284, 1, 'DELETE', 'Student ID: 1 Student Name: Patrick Barnhardt', '2024-01-25 19:02:34'),
+(285, 1, 'DELETE', 'Student ID: 11 Student Name: Patrick Barnhardt from Event ID: 1 Event Name: WGU Job Faire', '2024-01-25 19:02:43'),
+(286, 1, 'DELETE', 'Student ID: 11 Student Name: Patrick Barnhardt', '2024-01-25 19:02:43'),
+(287, 1, 'OTHER', 'Media Uploaded: 312920701_622333729345028_2932566406123148558_n.jpg', '2024-01-25 19:44:01'),
+(288, 1, 'OTHER', 'Media Uploaded: 2023.09.07_FinancialServices-CareerFair_600x400.png', '2024-01-25 19:44:01'),
+(289, 1, 'OTHER', 'Event Slug for Event:UNCC Charlotte already exists, incrementing slug', '2024-01-25 19:44:01'),
+(290, 1, 'MODIFY', 'Event ID: 2 Event Name: UNCC Charlotte was sluggified with Slug: uncc-charlotte', '2024-01-25 19:44:01'),
+(291, 1, 'MODIFY', 'Event ID: 2 Event Name: UNCC Charlotte', '2024-01-25 19:44:01'),
+(292, 1, 'OTHER', 'Event Slug for Event:UNCC Charlotte already exists, incrementing slug', '2024-01-25 19:44:17'),
+(293, 1, 'MODIFY', 'Event ID: 2 Event Name: UNCC Charlotte was sluggified with Slug: uncc-charlotte', '2024-01-25 19:44:17'),
+(294, 1, 'MODIFY', 'Event ID: 2 Event Name: UNCC Charlotte', '2024-01-25 19:44:17'),
+(295, 1, 'OTHER', 'Event Slug for Event:UNCC Charlotte already exists, incrementing slug', '2024-01-25 19:44:30'),
+(296, 1, 'MODIFY', 'Event ID: 2 Event Name: UNCC Charlotte was sluggified with Slug: uncc-charlotte', '2024-01-25 19:44:30'),
+(297, 1, 'MODIFY', 'Event ID: 2 Event Name: UNCC Charlotte', '2024-01-25 19:44:30'),
+(298, 1, 'DELETE', 'Job ID: 1 Job Name: Packaging Operator', '2024-01-25 19:51:48'),
+(299, 1, 'DELETE', 'Job ID: 2 Job Name: Business Analyst', '2024-01-25 19:51:54'),
+(300, 1, 'DELETE', 'Job ID: 5 Job Name: Job', '2024-01-25 19:51:58'),
+(301, 1, 'DELETE', 'Job ID: 7 Job Name: Helpdesk', '2024-01-25 19:52:02'),
+(302, 1, 'MODIFY', 'The privacy policy was changed.', '2024-01-26 01:41:47'),
+(303, 1, 'MODIFY', 'The terms and conditions were changed.', '2024-01-26 01:41:47'),
+(304, 1, 'MODIFY', 'The privacy policy was changed.', '2024-01-26 01:44:09'),
+(305, 1, 'MODIFY', 'The terms and conditions were changed.', '2024-01-26 01:44:09');
 
 -- --------------------------------------------------------
 
@@ -347,15 +395,12 @@ CREATE TABLE `contact_log` (
 --
 
 INSERT INTO `contact_log` (`id`, `student`, `auto`, `sender`, `send_date`, `subject`, `message`) VALUES
-(1, 1, 0, 1, '2023-12-15 19:05:40', 'Test Subject', 'This is a test message'),
 (2, 5, 1, NULL, '2023-12-16 01:02:37', 'Thank you Sam, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
-(4, 2, 0, 1, '2023-12-21 21:58:00', 'test', 'test'),
 (5, 6, 1, NULL, '2024-01-16 20:34:21', 'Thank you Emily, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
 (6, 7, 1, NULL, '2024-01-16 20:39:12', 'Thank you Alex, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
 (7, 8, 1, NULL, '2024-01-16 20:42:21', 'Thank you Olivia, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
 (8, 9, 1, NULL, '2024-01-16 20:47:01', 'Thank you Sophia, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
 (9, 10, 1, NULL, '2024-01-16 20:48:33', 'Thank you Michael, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
-(10, 11, 1, NULL, '2024-01-16 20:51:49', 'Thank you Patrick, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
 (11, 5, 0, 1, '2024-01-17 21:28:43', 'test', 'this is a test'),
 (12, 10, 0, 1, '2024-01-17 21:30:15', 'test', 'test message'),
 (13, 5, 0, 1, '2024-01-17 21:35:09', 'test1', 'tgeaeta'),
@@ -366,7 +411,6 @@ INSERT INTO `contact_log` (`id`, `student`, `auto`, `sender`, `send_date`, `subj
 (18, 5, 0, 1, '2024-01-17 21:52:02', 'test', 'test'),
 (19, 5, 0, 1, '2024-01-17 21:52:50', 'test', 'fawdadwa'),
 (20, 10, 0, 1, '2024-01-17 21:53:35', 'any of the R710 left?', 'test'),
-(21, 11, 0, 1, '2024-01-17 23:13:26', 'test', 'test'),
 (22, 10, 0, 1, '2024-01-17 23:17:55', 'any of the R710 left?', 'test');
 
 -- --------------------------------------------------------
@@ -451,9 +495,9 @@ CREATE TABLE `event_branding` (
 --
 
 INSERT INTO `event_branding` (`id`, `event_id`, `event_logo`, `event_banner`) VALUES
-(2, 1, 1, 2),
-(3, 2, 3, 4),
-(4, 5, 17, 18);
+(2, 1, 20, 19),
+(3, 2, 20, 19),
+(4, 5, 20, 19);
 
 -- --------------------------------------------------------
 
@@ -492,24 +536,15 @@ INSERT INTO `event_slugs` (`id`, `event_id`, `slug`) VALUES
 CREATE TABLE `jobs` (
   `id` bigint(20) NOT NULL,
   `name` varchar(150) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `description` varchar(500) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `description` json DEFAULT NULL,
   `type` enum('FULL','PART','INTERN') COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'INTERN',
   `field` bigint(20) NOT NULL,
+  `skills` json DEFAULT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_by` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
---
--- Dumping data for table `jobs`
---
-
-INSERT INTO `jobs` (`id`, `name`, `description`, `type`, `field`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
-(1, 'Packaging Operator', 'Identify and separate poor quality parts\r\nPack molded parts into boxes\r\nLift and carry full boxes of parts from molding machine to pallet (approx. 2 feet)\r\nLabel boxes\r\nAssemble molded parts\r\nBarcode parts correctly\r\nAdjust case erectors and case sealers as needed', 'FULL', 6, '2023-10-20 13:20:04', '2023-10-20 13:20:04', 1, 1),
-(2, 'Business Analyst', 'this is a description.', 'INTERN', 3, '2023-10-20 13:21:03', '2023-10-20 13:21:03', 1, 1),
-(5, 'Job', 'I\'m just trying to take up space for testing', 'PART', 4, '2023-10-20 18:15:48', '2023-10-20 18:15:48', 1, 1),
-(7, 'Helpdesk', 'this is an IT helpdesk role', 'FULL', 1, '2023-12-12 21:41:11', '2023-12-12 22:16:42', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -562,19 +597,8 @@ CREATE TABLE `media` (
 --
 
 INSERT INTO `media` (`id`, `filename`, `filetype`, `filesize`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 'ezgif-1-590ff7284b.jpg', 'jpg', NULL, '2024-01-22 16:15:01', 1, '2024-01-22 16:15:01', 1),
-(2, 'ezgif-1-eb6482dde7.jpg', 'jpg', NULL, '2024-01-22 16:15:29', 1, '2024-01-22 16:15:29', 1),
-(3, '312920701_622333729345028_2932566406123148558_n.jpg', 'jpg', NULL, '2024-01-22 16:16:04', 1, '2024-01-22 16:16:04', 1),
-(4, '2023.09.07_FinancialServices-CareerFair_600x400.png', 'jpg', NULL, '2024-01-22 16:16:23', 1, '2024-01-22 16:16:23', 1),
-(5, 'WGU-Marketing-logo.png', 'png', NULL, '2024-01-22 16:20:45', 1, '2024-01-22 16:20:45', 1),
-(6, 'scc-logo.png', 'png', NULL, '2024-01-22 16:21:08', 1, '2024-01-22 16:21:08', 1),
-(7, '8716-01-Charlotte-Master-File-v7_1.png', 'png', NULL, '2024-01-22 16:21:36', 1, '2024-01-22 16:21:36', 1),
-(8, 'rccc_550_logo-1.png', 'png', NULL, '2024-01-22 16:22:16', 1, '2024-01-22 16:22:16', 1),
-(9, 'uncg.png', 'png', NULL, '2024-01-22 16:22:43', 1, '2024-01-22 16:22:43', 1),
-(10, 'Harvard_University_shield.png', 'png', NULL, '2024-01-22 16:23:17', 1, '2024-01-22 16:23:17', 1),
-(11, '98cf7d6d899badc5d9752a12d6e97209.png', 'png', 37744, '2024-01-23 00:21:20', 1, '2024-01-23 00:21:20', 1),
-(17, 'image-placeholder-500x500.jpg', 'jpg', 9482, '2024-01-23 01:17:09', 1, '2024-01-23 01:17:09', 1),
-(18, '640x360.png', 'png', 5555, '2024-01-23 01:17:09', 1, '2024-01-23 01:17:09', 1);
+(19, 'placeholderbanner_1920x400.png', 'png', 29410, '2024-01-24 23:20:09', 1, '2024-01-24 18:50:58', 1),
+(20, 'placeholderlogo_200x200.png', 'png', 2835, '2024-01-25 01:31:24', 1, '2024-01-24 20:31:41', 1);
 
 -- --------------------------------------------------------
 
@@ -953,22 +977,22 @@ CREATE TABLE `school` (
 --
 
 INSERT INTO `school` (`id`, `name`, `address`, `city`, `state`, `zipcode`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 'Western Governor&#039;s University - WGU', '4001 700 East', 'Millcreek', 'UT', '84107', 1, 1, '2023-11-09 20:28:23', '2023-12-07 23:43:16'),
-(2, 'University of North Carolina at Charlotte - UNCC', '9201 University City Blvd', 'Charlotte', 'NC', '28223', 1, 1, '2023-10-24 17:47:54', '2023-12-07 23:41:55'),
-(3, 'Stanly Community College - SCC', '141 College Drive', 'Albemarle', 'NC', '28001', 1, 1, '2023-11-02 17:35:22', '2023-12-07 23:36:19'),
-(4, 'Rowan-Cabarrus Community College - RCCC', '1333 Jake Alexander Blvd., S.', 'Salisbury', 'NC', '28146', 1, 1, '2023-12-07 16:05:07', '2023-12-07 21:11:56'),
-(5, 'University of North Carolina at Greensboro - UNCG', '1400 Spring Garden Street', 'Greensboro', 'NC', '27412', 1, 1, '2023-12-08 00:17:09', '2023-12-08 00:24:06'),
-(6, 'Harvard University', '86 Brattle Street', 'Cambridge', 'MA', '02138', 1, 1, '2024-01-16 19:47:09', '2024-01-22 20:26:31'),
-(7, 'Stanford University', '450 Serra Mall', 'Stanford', 'CA', '94305', 1, 1, '2024-01-16 19:49:48', '2024-01-23 00:21:20'),
-(8, 'Massachusetts Institute of Technology - MIT', '77 Massachusetts Ave', 'Cambridge', 'MA', '02139', 1, 1, '2024-01-16 19:52:29', '2024-01-16 19:52:29'),
-(9, 'University of California, Berkeley', '110 Sproul Hall #4206', 'Berkeley', 'CA', '94720', 1, 1, '2024-01-16 19:53:40', '2024-01-16 19:54:56'),
-(10, 'Yale University', '63 High Street', 'New Haven', 'CT', '06511', 1, 1, '2024-01-16 19:56:36', '2024-01-16 19:56:36'),
-(11, 'University of Chicago', '5801 S Ellis Ave', 'Chicago', 'IL', '60637', 1, 1, '2024-01-16 19:58:05', '2024-01-16 19:58:05'),
-(12, 'Columbia University', '116th St &amp; Broadway', 'New York', 'NY', '10027', 1, 1, '2024-01-16 19:59:50', '2024-01-16 19:59:50'),
-(13, 'Duke University', '103 Allen Building', 'Durham', 'NC', '27708', 1, 1, '2024-01-16 20:01:09', '2024-01-16 20:01:09'),
-(14, 'University of North Carolina at Chapel Hill - UNC Chapel Hill', '103 South Bldg Cb 9100', 'Chapel Hill', 'NC', '27599', 1, 1, '2024-01-16 20:02:59', '2024-01-16 20:02:59'),
-(15, 'North Carolina State University', '2101 Hillsborough Street', 'Raleigh', 'NC', '27695', 1, 1, '2024-01-16 20:04:51', '2024-01-16 20:04:51'),
-(16, 'Wake Forest University', '1834 Wake Forest Road', 'Winston-Salem', 'NC', '27109', 1, 1, '2024-01-16 20:06:30', '2024-01-16 20:06:30');
+(1, 'Western Governor&#039;s University - WGU', '4001 700 East', 'Millcreek', 'UT', '84107', 1, 1, '2023-11-09 20:28:23', '2024-01-25 01:32:11'),
+(2, 'University of North Carolina at Charlotte - UNCC', '9201 University City Blvd', 'Charlotte', 'NC', '28223', 1, 1, '2023-10-24 17:47:54', '2024-01-25 01:32:38'),
+(3, 'Stanly Community College - SCC', '141 College Drive', 'Albemarle', 'NC', '28001', 1, 1, '2023-11-02 17:35:22', '2024-01-25 01:32:50'),
+(4, 'Rowan-Cabarrus Community College - RCCC', '1333 Jake Alexander Blvd., S.', 'Salisbury', 'NC', '28146', 1, 1, '2023-12-07 16:05:07', '2024-01-25 01:38:01'),
+(5, 'University of North Carolina at Greensboro - UNCG', '1400 Spring Garden Street', 'Greensboro', 'NC', '27412', 1, 1, '2023-12-08 00:17:09', '2024-01-25 01:33:30'),
+(6, 'Harvard University', '86 Brattle Street', 'Cambridge', 'MA', '02138', 1, 1, '2024-01-16 19:47:09', '2024-01-25 01:33:44'),
+(7, 'Stanford University', '450 Serra Mall', 'Stanford', 'CA', '94305', 1, 1, '2024-01-16 19:49:48', '2024-01-25 01:33:58'),
+(8, 'Massachusetts Institute of Technology - MIT', '77 Massachusetts Ave', 'Cambridge', 'MA', '02139', 1, 1, '2024-01-16 19:52:29', '2024-01-25 01:34:12'),
+(9, 'University of California, Berkeley', '110 Sproul Hall #4206', 'Berkeley', 'CA', '94720', 1, 1, '2024-01-16 19:53:40', '2024-01-25 01:34:29'),
+(10, 'Yale University', '63 High Street', 'New Haven', 'CT', '06511', 1, 1, '2024-01-16 19:56:36', '2024-01-25 01:34:46'),
+(11, 'University of Chicago', '5801 S Ellis Ave', 'Chicago', 'IL', '60637', 1, 1, '2024-01-16 19:58:05', '2024-01-25 01:35:03'),
+(12, 'Columbia University', '116th St &amp; Broadway', 'New York', 'NY', '10027', 1, 1, '2024-01-16 19:59:50', '2024-01-25 01:35:18'),
+(13, 'Duke University', '103 Allen Building', 'Durham', 'NC', '27708', 1, 1, '2024-01-16 20:01:09', '2024-01-25 01:35:32'),
+(14, 'University of North Carolina at Chapel Hill - UNC Chapel Hill', '103 South Bldg Cb 9100', 'Chapel Hill', 'NC', '27599', 1, 1, '2024-01-16 20:02:59', '2024-01-25 01:35:55'),
+(15, 'North Carolina State University', '2101 Hillsborough Street', 'Raleigh', 'NC', '27695', 1, 1, '2024-01-16 20:04:51', '2024-01-25 01:36:10'),
+(16, 'Wake Forest University', '1834 Wake Forest Road', 'Winston-Salem', 'NC', '27109', 1, 1, '2024-01-16 20:06:30', '2024-01-25 01:36:27');
 
 -- --------------------------------------------------------
 
@@ -988,22 +1012,22 @@ CREATE TABLE `school_branding` (
 --
 
 INSERT INTO `school_branding` (`id`, `school_id`, `school_logo`, `school_color`) VALUES
-(1, 1, 5, '#003057'),
-(2, 3, 6, '#ffd200'),
-(3, 2, 7, '#005035'),
-(4, 4, 8, '#002f6d'),
-(5, 5, 9, '#0f2044'),
-(6, 6, 10, '#a51c30'),
-(7, 7, 11, '#8c1515'),
-(8, 8, NULL, '#750014'),
-(9, 9, NULL, '#003262'),
-(10, 10, NULL, '#00356b'),
-(11, 11, NULL, '#800000'),
-(12, 12, NULL, '#0849a3'),
-(13, 13, NULL, '#012169'),
-(14, 14, NULL, '#4b9cd3'),
-(15, 15, NULL, '#cc0000'),
-(16, 16, NULL, '#8c6d2c');
+(1, 1, 20, '#003057'),
+(2, 3, 20, '#ffd200'),
+(3, 2, 20, '#005035'),
+(4, 4, 20, '#002f6d'),
+(5, 5, 20, '#0f2044'),
+(6, 6, 20, '#a51c30'),
+(7, 7, 20, '#8c1515'),
+(8, 8, 20, '#750014'),
+(9, 9, 20, '#003262'),
+(10, 10, 20, '#00356b'),
+(11, 11, 20, '#800000'),
+(12, 12, 20, '#0849a3'),
+(13, 13, 20, '#012169'),
+(14, 14, 20, '#4b9cd3'),
+(15, 15, 20, '#cc0000'),
+(16, 16, 20, '#8c6d2c');
 
 -- --------------------------------------------------------
 
@@ -1033,7 +1057,7 @@ CREATE TABLE `settings` (
 --
 
 INSERT INTO `settings` (`isSet`, `app_name`, `app_url`, `mail_from_address`, `mail_from_name`, `mail_mailer`, `mail_host`, `mail_port`, `mail_auth_req`, `mail_username`, `mail_password`, `mail_encryption`, `privacy_policy`, `terms_conditions`) VALUES
-('SET', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '# Privacy Policy\r\n\r\n[[\"We\" or \"I\", or Website or App name]] takes your privacy seriously. To better protect your privacy [[\"we\" or \"I\"]] provide this privacy policy notice explaining the way your personal information is collected and used.\r\n\r\n\r\n## Collection of Routine Information\r\n\r\nThis [[\"website\" or \"app\"]] track basic information about their [[\"visitors\" or \"users\"]]. This information includes, but is not limited to, IP addresses, [[\"browser\" or \"app\"]] details, timestamps and referring pages. None of this information can personally identify specific [[\"visitors\" or \"user\"]] to this [[\"website\" or \"app\"]]. The information is tracked for routine administration and maintenance purposes.\r\n\r\n\r\n## Cookies\r\n\r\nWhere necessary, this [[\"website\" or \"app\"]] uses cookies to store information about a visitor’s preferences and history in order to better serve the [[\"visitor\" or \"user\"]] and/or present the [[\"visitor\" or \"user\"]] with customized content.\r\n\r\n\r\n## Advertisement and Other Third Parties\r\n\r\nAdvertising partners and other third parties may use cookies, scripts and/or web beacons to track [[\"visitors\" or \"user\"]] activities on this [[\"website\" or \"app\"]] in order to display advertisements and other useful information. Such tracking is done directly by the third parties through their own servers and is subject to their own privacy policies. This [[\"website\" or \"app\"]] has no access or control over these cookies, scripts and/or web beacons that may be used by third parties. Learn how to [opt out of Google’s cookie usage](http://www.google.com/privacy_ads.html).\r\n\r\n\r\n## Links to Third Party Websites\r\n\r\n[[\"We\" or \"I\"]] have included links on this [[\"website\" or \"app\"]] for your use and reference. [[\"We\" or \"I\"]] are not responsible for the privacy policies on these websites. You should be aware that the privacy policies of these websites may differ from [[\"our\" or \"my\"]] own.\r\n\r\n\r\n## Security\r\n\r\nThe security of your personal information is important to [[\"us\" or \"me\"]], but remember that no method of transmission over the Internet, or method of electronic storage, is 100% secure. While [[\"we\" or \"I\"]] strive to use commercially acceptable means to protect your personal information, [[\"we\" or \"I\"]] cannot guarantee its absolute security.\r\n\r\n\r\n## Changes To This Privacy Policy\r\n\r\nThis Privacy Policy is effective as of [[Date]] and will remain in effect except with respect to any changes in its provisions in the future, which will be in effect immediately after being posted on this page.\r\n\r\n[[\"We\" or \"I\"]] reserve the right to update or change [[\"our\" or \"my\"]] Privacy Policy at any time and you should check this Privacy Policy periodically. If [[\"we\" or \"I\"]] make any material changes to this Privacy Policy, [[\"we\" or \"I\"]] will notify you either through the email address you have provided [[\"us\" or \"me\"]], or by placing a prominent notice on [[\"our\" or \"my\"]] [[\"website\" or \"app\"]].\r\n\r\n\r\n## Contact Information\r\n\r\nFor any questions or concerns regarding the privacy policy, please send [[\"us\" or \"me\"]] an email to [[Contact Email Address]].', NULL);
+('SET', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>', '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>');
 
 -- --------------------------------------------------------
 
@@ -1066,15 +1090,12 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`id`, `first_name`, `last_name`, `email`, `phone`, `address`, `city`, `state`, `zipcode`, `interest`, `degree`, `major`, `school`, `position`, `graduation`, `created_at`, `updated_at`) VALUES
-(1, 'Patrick', 'Barnhardt', 'thecrimsonstrife@gmail.com', '7047962590', '2221 Devon Dr', 'Dallas', 'NC', '28034', 2, 7, 1, 1, 'FULL', '2024-03-31', '2023-12-15 21:12:56', '2023-12-15 21:12:56'),
-(2, 'Kelsey', 'Berkman', 'kberkm1@example.com', '7048981942', '2221 Devon Dr', 'Dallas', 'NC', '28034', 6, 5, 2, 1, 'INTERN', '2024-11-30', '2023-12-16 00:55:48', '2023-12-16 00:55:48'),
 (5, 'Sam', 'Smith', 'ssmith@example.com', '223-432-5454', '2221 Devon Dr', 'Dallas', 'NC', '28034', 1, 11, 6, 2, 'FULL', '2023-12-31', '2023-12-16 01:02:37', '2023-12-16 01:02:37'),
 (6, 'Emily', 'Johnson', 'emily.johnson@email.com', '(555) 123-4567', '123 College Avenue', 'Durham', 'NC', '27708', 1, 11, 6, 13, 'FULL', '2025-05-31', '2024-01-16 20:34:21', '2024-01-16 20:34:21'),
 (7, 'Alex', 'Davis', 'alex.davis@email.com', '(555) 234-5678', '456 University Street', 'Stanford', 'CA', '94305', 4, 9, 8, 7, 'FULL', '2024-05-30', '2024-01-16 20:39:12', '2024-01-16 20:39:12'),
 (8, 'Olivia', 'Thompson', 'olivia.thompson@email.com', '(555) 567-8901', '234 Elm Street', 'Winston-Salem', 'NC', '27109', 7, 8, 9, 16, 'FULL', '2024-12-31', '2024-01-16 20:42:21', '2024-01-16 20:42:21'),
 (9, 'Sophia', 'Brown', 'sophia.brown@email.com', '(555) 567-8901', '234 Duke Circle', 'Durham', 'NC', '27708', 5, 11, 10, 13, 'INTERN', '2026-05-31', '2024-01-16 20:47:01', '2024-01-16 20:47:01'),
-(10, 'Michael', 'Miller', 'michael.miller@email.com', '(555) 456-7890', '101 Blue Ridge Road', 'Durham', 'NC', '27708', 1, 11, 6, 13, 'FULL', '2024-05-31', '2024-01-16 20:48:33', '2024-01-16 20:48:33'),
-(11, 'Patrick', 'Barnhardt', 'pbarnh1@wgu.edu', '(555) 123-4567', '2221 Puddle Duck Rd', 'Charlotte', 'NC', '28025', 1, 11, 1, 1, 'FULL', '2024-03-31', '2024-01-16 20:51:49', '2024-01-16 20:51:49');
+(10, 'Michael', 'Miller', 'michael.miller@email.com', '(555) 456-7890', '101 Blue Ridge Road', 'Durham', 'NC', '27708', 1, 11, 6, 13, 'FULL', '2024-05-31', '2024-01-16 20:48:33', '2024-01-16 20:48:33');
 
 -- --------------------------------------------------------
 
@@ -1093,13 +1114,10 @@ CREATE TABLE `student_at_event` (
 --
 
 INSERT INTO `student_at_event` (`id`, `student_id`, `event_id`) VALUES
-(1, 1, 1),
-(2, 2, 1),
 (3, 6, 8),
 (4, 8, 5),
 (5, 9, 8),
-(6, 10, 8),
-(7, 11, 1);
+(6, 10, 8);
 
 -- --------------------------------------------------------
 
@@ -1386,7 +1404,7 @@ ALTER TABLE `user_token_auth`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=258;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=306;
 
 --
 -- AUTO_INCREMENT for table `aoi`
@@ -1428,7 +1446,7 @@ ALTER TABLE `event_slugs`
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `major`
@@ -1440,7 +1458,7 @@ ALTER TABLE `major`
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1482,13 +1500,13 @@ ALTER TABLE `school_branding`
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `student_at_event`
 --
 ALTER TABLE `student_at_event`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`
