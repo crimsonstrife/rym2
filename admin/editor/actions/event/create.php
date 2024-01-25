@@ -68,6 +68,9 @@ if (!$hasPermission) {
     $addMediaToNewEvent = false;
     $logoMedia_id = null;
     $bannerMedia_id = null;
+    $event_logo = null;
+    $event_banner = null;
+    $eventCreated = false;
 
     //if the action is edit, get the event id from the url parameter
     if ($action == 'edit') {
