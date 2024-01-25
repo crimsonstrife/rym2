@@ -54,9 +54,12 @@ if (!$hasPermission) {
         }
         //get the job description from the form
         if (isset($_POST["job_description"])) {
-            $job_description = trim($_POST["job_description"]);
-            //prepare the job description
-            $job_description = prepareData($job_description);
+            $job_description = $_POST["job_description"];
+        }
+
+        //get the job skills from the form
+        if (isset($_POST["job_skills"])) {
+            $job_skills = $_POST["job_skills"];
         }
         //get the job type from the form
         if (isset($_POST["job_type"])) {
@@ -77,7 +80,7 @@ if (!$hasPermission) {
             $user_id = intval($_SESSION['user_id']);
 
             //create the job
-            $jobCreated = $job->addJob($job_title, $job_description, $job_type, intval($job_field), $user_id);
+            $jobCreated = $job->addJob($job_title, $job_description, $job_type, intval($job_field), $job_skills, $user_id);
         }
     } ?>
     <!-- Completion page content -->

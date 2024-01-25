@@ -100,19 +100,26 @@ class Job
      * Get a jobs description from the job ID
      *
      * @param int $id //job id
-     * @return string
+     * @return array
      */
-    public function getJobDescription(int $id): string
+    public function getJobDescription(int $id): array
     {
         $sql = "SELECT description FROM jobs WHERE id = $id";
         $result = $this->mysqli->query($sql);
-        $description = "";
+        $description = '';
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $description = $row['description'];
             }
         }
-        return $description;
+
+        //if the description is empty, return an empty array
+        if (empty($description) || $description == null) {
+            return array();
+        } else {
+            //parse the JSON string into an array
+            return json_decode($description, true);
+        }
     }
 
     /**
@@ -303,20 +310,27 @@ class Job
      * Add a job to the database
      *
      * @param string $name //job name
-     * @param string $description //job description
+     * @param array $description //job description
      * @param string $type //job type
      * @param int $field //job field
+     * @param array $skills //required job skills
      * @param int $created_by //user id of the user creating the job
      * @return bool
      */
-    public function addJob(string $name, string $description, string $type, int $field, int $created_by): bool
+    public function addJob(string $name, array $description, string $type, int $field, array $skills, int $created_by): bool
     {
+        //convert the description array to a JSON string
+        $description = json_encode($description);
+
+        //convert the skills array to a JSON string
+        $skills = json_encode($skills);
+
         //get the current date and time
         $date = date('Y-m-d H:i:s');
         //prepare the sql statement
-        $sql = "INSERT INTO jobs (name, description, type, field, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO jobs (name, description, type, field, skills, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param("ssssssii", $name, $description, $type, $field, $date, $date, $created_by, $created_by);
+        $stmt->bind_param("sssssssii", $name, $description, $type, $field, $skills, $date, $date, $created_by, $created_by);
         $stmt->execute();
 
         //check if the query was successful
@@ -335,20 +349,25 @@ class Job
      *
      * @param int $id //job id
      * @param string $name //job name
-     * @param string $description //job description
+     * @param array $description //job description
      * @param string $type //job type
      * @param int $field //job field
+     * @param array $skills //required job skills
      * @param int $updated_by //user id of the user updating the job
      * @return bool
      */
-    public function updateJob(int $id, string $name, string $description, string $type, int $field, int $updated_by): bool
+    public function updateJob(int $id, string $name, array $description, string $type, int $field, array $skills, int $updated_by): bool
     {
+        //convert the description array to a JSON string
+        $description = json_encode($description);
+        //convert the skills array to a JSON string
+        $skills = json_encode($skills);
         //get the current date and time
         $date = date('Y-m-d H:i:s');
         //prepare the sql statement
-        $sql = "UPDATE jobs SET name = ?, description = ?, type = ?, field = ?, updated_at = ?, updated_by = ? WHERE id = ?";
+        $sql = "UPDATE jobs SET name = ?, description = ?, type = ?, field = ?, skills = ?, updated_at = ?, updated_by = ? WHERE id = ?";
         $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param("sssssii", $name, $description, $type, $field, $date, $updated_by, $id);
+        $stmt->bind_param("ssssssii", $name, $description, $type, $field, $skills, $date, $updated_by, $id);
         $stmt->execute();
 
         //check if the query was successful
@@ -424,5 +443,59 @@ class Job
 
         //return the result
         return $result;
+    }
+
+    /**
+     * Get the job skills from the job ID
+     *
+     * @param int $id //job id
+     * @return array
+     */
+    public function getJobSkills(int $id): array
+    {
+        $sql = "SELECT skills FROM jobs WHERE id = $id";
+        $result = $this->mysqli->query($sql);
+        $skills = '';
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $skills = $row['skills'];
+            }
+        }
+
+        //if the skills is empty, return an empty array
+        if (empty($skills) || $skills == null) {
+            return array();
+        } else {
+            //parse the JSON string into an array
+            return json_decode($skills, true);
+        }
+    }
+
+    /**
+     * Set the job skills for a job
+     *
+     * @param int $id //job id
+     * @param array $skills //job skills
+     *
+     * @return bool
+     */
+    public function setJobSkills(int $id, array $skills): bool
+    {
+        //convert the skills array to a JSON string
+        $skills = json_encode($skills);
+        //get the current date and time
+        $date = date('Y-m-d H:i:s');
+        //prepare the sql statement
+        $sql = "UPDATE jobs SET skills = ?, updated_at = ? WHERE id = ?";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param("ssi", $skills, $date, $id);
+        $stmt->execute();
+
+        //check if the query was successful
+        if ($stmt->affected_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

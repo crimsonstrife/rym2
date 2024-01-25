@@ -1,7 +1,11 @@
 <?php
 //Prevent direct access to this file by checking if the constant ISVALIDUSER is defined.
 if (!defined('ISVALIDUSER')) {
-    die('Error: Invalid request');
+    //set the error type
+    $thisError = 'INVALID_USER_REQUEST';
+
+    //include the error message file
+    include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
 }
 
 //include the permissions class
@@ -73,55 +77,48 @@ if (isset($_GET['action'])) {
             //if not empty, display the job information
             if (!empty($object)) {
 ?>
-<div class="container-fluid px-4">
-    <h1 class="mt-4"><?php echo $job->getJobTitle(intval($job_id)); ?></h1>
-    <div class="row">
-        <div class="card mb-4">
-            <!-- Edit Form -->
-            <form
-                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&job=' . $_GET['job'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>"
-                method="post" enctype="multipart/form-data">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fa-solid fa-calendar-day"></i>
-                        Edit Job
-                    </div>
-                    <div class="card-buttons">
-                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=list'; ?>"
-                            class="btn btn-secondary">Back to Jobs</a>
-                    </div>
-                </div>
-                <div class="card-body">
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4"><?php echo $job->getJobTitle(intval($job_id)); ?></h1>
                     <div class="row">
-                        <div class="col-md-6">
-                            <p>
-                                <strong>
-                                    <label for="jobTitle">Job Title:</label>
-                                </strong>
-                            </p>
-                            <p>
-                                <input type="text" id="jobTitle" name="job_title" class="form-control"
-                                    value="<?php echo $job->getJobTitle(intval($job_id)); ?>"
-                                    placeholder="<?php echo $job->getJobTitle(intval($job_id)); ?>" required>
-                            </p>
-                            <p>
-                                <strong>
-                                    <label for="jobDescription">Job Description:</label>
-                                </strong>
-                            </p>
-                            <p>
-                                <textarea id="jobDescription" name="job_description" class="form-control" rows="10"
-                                    placeholder="<?php echo $job->getJobDescription(intval($job_id)); ?>"
-                                    required><?php echo $job->getJobDescription(intval($job_id)); ?></textarea>
-                            </p>
-                            <p>
-                                <strong>
-                                    <label for="jobType">Job Type:</label>
-                                </strong>
-                            </p>
-                            <p>
-                                <select id="jobType" name="job_type" class="form-control app-forms" required>
-                                    <?php
+                        <div class="card mb-4">
+                            <!-- Edit Form -->
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&job=' . $_GET['job'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>" method="post" enctype="multipart/form-data">
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        <i class="fa-solid fa-calendar-day"></i>
+                                        Edit Job
+                                    </div>
+                                    <div class="card-buttons">
+                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=list'; ?>" class="btn btn-secondary">Back to Jobs</a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p>
+                                                <strong>
+                                                    <label for="jobTitle">Job Title:</label>
+                                                </strong>
+                                            </p>
+                                            <p>
+                                                <input type="text" id="jobTitle" name="job_title" class="form-control" value="<?php echo $job->getJobTitle(intval($job_id)); ?>" placeholder="<?php echo $job->getJobTitle(intval($job_id)); ?>" required>
+                                            </p>
+                                            <p>
+                                                <strong>
+                                                    <label for="jobDescription">Job Description:</label>
+                                                </strong>
+                                            </p>
+                                            <p>
+                                                <textarea id="jobDescription" name="job_description" class="form-control" rows="10" placeholder="<?php echo $job->getJobDescription(intval($job_id)); ?>" required><?php echo $job->getJobDescription(intval($job_id)); ?></textarea>
+                                            </p>
+                                            <p>
+                                                <strong>
+                                                    <label for="jobType">Job Type:</label>
+                                                </strong>
+                                            </p>
+                                            <p>
+                                                <select id="jobType" name="job_type" class="form-control app-forms" required>
+                                                    <?php
                                                     //for each item in the position type list, display it as an option
                                                     foreach ($positionType_list as $positionType) {
                                                         //check if the item in the list matches the job type
@@ -133,16 +130,16 @@ if (isset($_GET['action'])) {
                                                             echo '<option value="' . $positionType['value'] . '">' . $positionType['label'] . '</option>';
                                                         }
                                                     } ?>
-                                </select>
-                            </p>
-                            <p>
-                                <strong>
-                                    <label for="jobField">Job Field:</label>
-                                </strong>
-                            </p>
-                            <p>
-                                <select id="jobField" name="job_field" class="form-control app-forms" required>
-                                    <?php
+                                                </select>
+                                            </p>
+                                            <p>
+                                                <strong>
+                                                    <label for="jobField">Job Field:</label>
+                                                </strong>
+                                            </p>
+                                            <p>
+                                                <select id="jobField" name="job_field" class="form-control app-forms" required>
+                                                    <?php
                                                     //include the job field class
                                                     $jobField = new JobField();
                                                     //get all job fields
@@ -158,21 +155,20 @@ if (isset($_GET['action'])) {
                                                             echo '<option value="' . $jobField['id'] . '">' . $jobField['name'] . '</option>';
                                                         }
                                                     } ?>
-                                </select>
-                            </p>
+                                                </select>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" card-footer">
+                                    <button name="create_Button" type="submit" class="btn btn-primary">Save Changes</button>
+                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=list'; ?>" class="btn btn-secondary">Cancel</a>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <div class=" card-footer">
-                    <button name="create_Button" type="submit" class="btn btn-primary">Save Changes</button>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=list'; ?>"
-                        class="btn btn-secondary">Cancel</a>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<?php }
+            <?php }
         }
     } else if ($action == 'create') { //else if the action is create, show the job creation form
         //get the create job permission id
@@ -206,85 +202,79 @@ if (isset($_GET['action'])) {
             } else {
                 //display the job creation form
             ?>
-<div class="container-fluid px-4">
-    <h1 class="mt-4">New Job</h1>
-    <div class="row">
-        <div class="card mb-4">
-            <!-- Create Form -->
-            <form
-                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&job=' . $_GET['job'] . '&action=' . $_GET['action']; ?>"
-                method="post" enctype="multipart/form-data">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fa-solid fa-calendar-day"></i>
-                        Create Job
-                    </div>
-                    <div class="card-buttons">
-                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=list'; ?>"
-                            class="btn btn-secondary">Back to Jobs</a>
-                    </div>
-                </div>
-                <div class="card-body">
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">New Job</h1>
                     <div class="row">
-                        <div class="col-md-6">
-                            <p>
-                                <strong>
-                                    <label for="jobTitle">Job Title:</label>
-                                </strong>
-                            </p>
-                            <p>
-                                <input type="text" id="jobTitle" name="job_title" class="form-control"
-                                    placeholder="Job Title" required>
-                            </p>
-                            <p>
-                                <strong>
-                                    <label for="jobDescription">Job Description:</label>
-                                </strong>
-                            </p>
-                            <p>
-                                <textarea id="jobDescription" name="job_description" class="form-control" rows="10"
-                                    placeholder="Job Description" required></textarea>
-                            </p>
-                            <p>
-                                <strong>
-                                    <label for="jobType">Job Type:</label>
-                                </strong>
-                            </p>
-                            <p>
-                                <select id="jobType" name="job_type" class="form-control app-forms" required>
-                                    <?php
+                        <div class="card mb-4">
+                            <!-- Create Form -->
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&job=' . $_GET['job'] . '&action=' . $_GET['action']; ?>" method="post" enctype="multipart/form-data">
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        <i class="fa-solid fa-calendar-day"></i>
+                                        Create Job
+                                    </div>
+                                    <div class="card-buttons">
+                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=list'; ?>" class="btn btn-secondary">Back to Jobs</a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p>
+                                                <strong>
+                                                    <label for="jobTitle">Job Title:</label>
+                                                </strong>
+                                            </p>
+                                            <p>
+                                                <input type="text" id="jobTitle" name="job_title" class="form-control" placeholder="Job Title" required>
+                                            </p>
+                                            <p>
+                                                <strong>
+                                                    <label for="jobDescription">Job Description:</label>
+                                                </strong>
+                                            </p>
+                                            <p>
+                                                <textarea id="jobDescription" name="job_description" class="form-control" rows="10" placeholder="Job Description" required></textarea>
+                                            </p>
+                                            <p>
+                                                <strong>
+                                                    <label for="jobType">Job Type:</label>
+                                                </strong>
+                                            </p>
+                                            <p>
+                                                <select id="jobType" name="job_type" class="form-control app-forms" required>
+                                                    <?php
                                                     //for each item in the position type list, display it as an option
                                                     foreach ($positionType_list as $positionType) {
                                                         echo '<option value="' . $positionType['value'] . '">' . $positionType['label'] . '</option>';
                                                     } ?>
-                                </select>
-                            </p>
-                            <p>
-                                <strong>
-                                    <label for="jobField">Job Field:</label>
-                                </strong>
-                            </p>
-                            <p>
-                                <select id="jobField" name="job_field" class="form-control app-forms" required>
-                                    <?php
+                                                </select>
+                                            </p>
+                                            <p>
+                                                <strong>
+                                                    <label for="jobField">Job Field:</label>
+                                                </strong>
+                                            </p>
+                                            <p>
+                                                <select id="jobField" name="job_field" class="form-control app-forms" required>
+                                                    <?php
                                                     //for each job field, display it as an option
                                                     foreach ($jobFieldArray as $jobField) {
                                                         echo '<option value="' . $jobField['id'] . '">' . $jobField['name'] . '</option>';
                                                     } ?>
-                                </select>
-                            </p>
+                                                </select>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" card-footer">
+                                    <button name="create_Button" type="submit" class="btn btn-primary">Save</button>
+                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=list'; ?>" class="btn btn-secondary">Cancel</a>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <div class=" card-footer">
-                    <button name="create_Button" type="submit" class="btn btn-primary">Save</button>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=list'; ?>"
-                        class="btn btn-secondary">Cancel</a>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 <?php }
         }
     }
