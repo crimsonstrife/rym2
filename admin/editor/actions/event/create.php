@@ -64,6 +64,11 @@ if (!$hasPermission) {
     //get the action from the url parameter
     $action = $_GET['action'];
 
+    //other variables
+    $addMediaToNewEvent = false;
+    $logoMedia_id = null;
+    $bannerMedia_id = null;
+
     //if the action is edit, get the event id from the url parameter
     if ($action == 'edit') {
         $event_id = $_GET['id'];
@@ -126,6 +131,11 @@ if (!$hasPermission) {
             }
         }
 
+        //if the event logo is empty, set the event logo to null
+        if (empty($event_logo)) {
+            $event_logo = null;
+        }
+
         //get the event banner from the form
         if (isset($_POST["event_bannerSelect"])) {
             $event_bannerSelection = $_POST["event_bannerSelect"];
@@ -152,19 +162,6 @@ if (!$hasPermission) {
             }
         }
 
-        //other variables
-        $addFilesToNewEvent = false;
-        $target_file_banner = null;
-        $target_file_logo = null;
-        $imageFileType_logo = null;
-        $imageFileType_banner = null;
-        $media_id = null;
-
-        //if the event logo is empty, set the event logo to null
-        if (empty($event_logo)) {
-            $event_logo = null;
-        }
-
         //if the event banner is empty, set the event banner to null
         if (empty($event_banner)) {
             $event_banner = null;
@@ -172,123 +169,38 @@ if (!$hasPermission) {
 
         //if there are files to upload, upload them
         if (!empty($event_logo) || !empty($event_banner)) {
-            //Php upload script based loosely on https://www.w3schools.com/php/php_file_upload.asp
-            $target_dir = dirname(__FILE__) . '/../../../../public/content/uploads/';
-            //get the file names if they are not empty or null
-            if (!empty($event_logo)) {
-                $event_logo_file = basename($_FILES["event_logo"]["name"]);
-                //log the file name
-                //error_log('File name: ' . $event_logo_file);
-            }
-            if (!empty($event_banner)) {
-                $event_banner_file = basename($_FILES["event_banner"]["name"]);
-                //log the file name
-                //error_log('File name: ' . $event_banner_file);
-            }
-            //set the target file paths
-            if (!empty($event_logo_file)) {
-                $target_file_logo = $target_dir . $event_logo_file;
-                //log the target file path
-                //error_log('Target file: ' . $target_file_logo);
-            }
-            if (!empty($event_banner_file)) {
-                $target_file_banner = $target_dir . $event_banner_file;
-                //log the target file path
-                //error_log('Target file: ' . $target_file_banner);
-            }
-            //upload status booleans
-            $uploadOk_logo = 1;
-            $uploadOk_banner = 1;
-            //if the logo target file is not empty, setup the type and size checks
-            if (!empty($target_file_logo)) {
-                $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
-                $check_logo = getimagesize($_FILES["event_logo"]["tmp_name"]);
-                if ($check_logo === false) {
-                    $event_logo = null;
-                    $uploadOk_logo = 0;
+            //if the event logo is not empty or null, try to upload it
+            if (!empty($event_logo) && $event_logo != null) {
+                //if the event logo is an array, upload the file
+                if (is_array($event_logo)) {
+                    $logoMedia_id = $media->uploadMedia($event_logo, intval($_SESSION['user_id']));
                 } else {
-                    $uploadOk_logo = 1;
+                    //if the event logo is not an array, set the media id to the event logo int
+                    $logoMedia_id = $event_logo;
                 }
             }
-            //if the banner target file is not empty, setup the type and size checks
-            if (!empty($target_file_banner)) {
-                $imageFileType_banner = strtolower(pathinfo($target_file_banner, PATHINFO_EXTENSION));
-                $check_banner = getimagesize($_FILES["event_banner"]["tmp_name"]);
-                if ($check_banner === false) {
-                    $event_banner = null;
-                    $uploadOk_banner = 0;
+
+            //if the event banner is not empty or null, try to upload it
+            if (!empty($event_banner) && $event_banner != null) {
+                //if the event banner is an array, upload the file
+                if (is_array($event_banner)) {
+                    $bannerMedia_id = $media->uploadMedia($event_banner, intval($_SESSION['user_id']));
                 } else {
-                    $uploadOk_banner = 1;
-                }
-            }
-
-            // Check if file already exists
-            if (file_exists($target_file_logo)) {
-                $event_logo = null;
-                $uploadOk_logo = 0;
-            }
-            if (file_exists($target_file_banner)) {
-                $event_banner = null;
-                $uploadOk_banner = 0;
-            }
-
-            // Check file size
-            if (
-                $_FILES["event_logo"]["size"] > 500000
-            ) { //500kb
-                $event_logo = null;
-                $uploadOk_logo = 0;
-            }
-            if (
-                $_FILES["event_banner"]["size"] > 500000
-            ) { //500kb
-                $event_banner = null;
-                $uploadOk_banner = 0;
-            }
-
-            // Allow certain file formats
-            if (
-                $imageFileType_logo != "jpg" && $imageFileType_logo != "png" && $imageFileType_logo != "jpeg"
-                && $imageFileType_banner != "jpg" && $imageFileType_banner != "png" && $imageFileType_banner != "jpeg"
-            ) {
-                $event_logo = null;
-                $event_banner = null;
-                $uploadOk_logo = 0;
-                $uploadOk_banner = 0;
-            }
-
-            // Check if $uploadOk is set to 0 by an error
-            if ($uploadOk_logo == 0) {
-                $event_logo = null;
-                // if everything is ok, try to upload file
-            } else {
-                if (!empty($target_file_logo)) {
-                    if (move_uploaded_file($_FILES["event_logo"]["tmp_name"], $target_file_logo)) {
-                        $event_logo = $event_logo_file;
-                    } else {
-                        $event_logo = null;
-                    }
-                }
-            }
-
-            // Check if $uploadOk is set to 0 by an error
-            if ($uploadOk_banner == 0) {
-                $event_banner = null;
-                // if everything is ok, try to upload file
-            } else {
-                if (!empty($target_file_banner)) {
-                    if (move_uploaded_file($_FILES["event_banner"]["tmp_name"], $target_file_banner)) {
-                        $event_banner = $event_banner_file;
-                    } else {
-                        $event_banner = null;
-                    }
+                    //if the event banner is not an array, set the media id to the event banner int
+                    $bannerMedia_id = $event_banner;
                 }
             }
 
             //if the action is create, check if there are files to add after the event is created
             if ($action == 'create') {
                 //if neither the logo or banner are empty, set a variable to call later after the event is created.
-                $addFilesToNewEvent = true;
+                if (!empty($logoMedia_id) && !empty($bannerMedia_id)) {
+                    $addMediaToNewEvent = true;
+                } else if (!empty($logoMedia_id)) {
+                    $addMediaToNewEvent = true;
+                } else if (!empty($bannerMedia_id)) {
+                    $addMediaToNewEvent = true;
+                }
             }
         }
 
@@ -303,18 +215,16 @@ if (!$hasPermission) {
                 $event_id = $event->getEventIdByName($event_name);
             }
             //if the event was created and there are files to add, add them
-            if ($eventCreated && $addFilesToNewEvent) {
+            if ($eventCreated && $addMediaToNewEvent) {
                 //if neither the logo or banner are empty, update the event logo and banner
-                if (!empty($event_logo) && !empty($event_banner)) {
-                    $event->setEventLogoAndBanner($event_id, $event_logo, $event_banner);
-                } else if (!empty($event_logo)) {
-                    $event->setEventLogo($event_id, $event_logo);
-                } else if (!empty($event_banner)) {
-                    $event->setEventBanner($event_id, $event_banner);
+                if (!empty($logoMedia_id) && !empty($bannerMedia_id)) {
+                    $event->setEventLogoAndBanner($event_id, $logoMedia_id, $bannerMedia_id);
+                } else if (!empty($logoMedia_id)) {
+                    $event->setEventLogo($event_id, $logoMedia_id);
+                } else if (!empty($bannerMedia_id)) {
+                    $event->setEventBanner($event_id, $bannerMedia_id);
                 }
             }
-            //redirect to the event list
-            //echo "<script>window.location.href = '" . APP_URL . "/admin/dashboard.php?view=events&event=list';</script>";
         }
     } ?>
     <!-- Completion page content -->
@@ -324,12 +234,13 @@ if (!$hasPermission) {
                 <!-- show completion message -->
                 <div class="card-header">
                     <div class="card-title">
-                        <i class="fa-solid fa-check"></i>
                         <?php
                         if ($action == 'create') {
                             if ($eventCreated) {
+                                echo '<i class="fa-solid fa-check"></i>';
                                 echo 'Event Created';
                             } else {
+                                echo '<i class="fa-solid fa-x"></i>';
                                 echo 'Error: Event Not Created';
                             }
                         }
