@@ -52,21 +52,52 @@ if (!$hasPermission) {
             //prepare the job title
             $job_title = prepareData($job_title);
         }
+
+        //placeholder for job summary and description
+        $job_summary = '';
+        $job_description = '';
+
+        //get the job summary from the form
+        if (isset($_POST["job_summary"])) {
+            $job_summary = trim($_POST["job_summary"]);
+            //prepare the job summary
+            $job_summary = prepareData($job_summary);
+        }
+
         //get the job description from the form
         if (isset($_POST["job_description"])) {
             $job_description = $_POST["job_description"];
         }
 
+        //create an array to hold the job description and job summary
+        $job_info = array(
+            'job_summary' => $job_summary,
+            'job_description' => $job_description
+        );
+
         //get the job skills from the form
-        if (isset($_POST["job_skills"])) {
-            $job_skills = $_POST["job_skills"];
+        if (isset($_POST["job_skills_array"])) {
+            $job_skillItems = $_POST["job_skills_array"];
         }
+
+        //create an array to hold the job skills
+        $job_skills = array();
+
+        //if the job skill items are set, explode the string into an array
+        if (isset($job_skillItems)) {
+            $jobSkillsString = $job_skillItems[0];
+
+            //explode the string into an array
+            $job_skills = explode(',', $jobSkillsString);
+        }
+
         //get the job type from the form
         if (isset($_POST["job_type"])) {
             $job_type = trim($_POST["job_type"]);
             //prepare the job type
             $job_type = prepareData($job_type);
         }
+
         //get the job field from the form
         if (isset($_POST["job_field"])) {
             $job_field = trim($_POST["job_field"]);
@@ -80,7 +111,7 @@ if (!$hasPermission) {
             $user_id = intval($_SESSION['user_id']);
 
             //create the job
-            $jobCreated = $job->addJob($job_title, $job_description, $job_type, intval($job_field), $job_skills, $user_id);
+            $jobCreated = $job->addJob($job_title, $job_info, $job_type, intval($job_field), $job_skills, $user_id);
         }
     } ?>
     <!-- Completion page content -->
