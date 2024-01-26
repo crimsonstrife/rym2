@@ -140,16 +140,24 @@ if (!$hasPermission) {
                                 <div class="col-md-6">
                                     <p><?php echo $mediaData['filename']; ?></p>
                                     <p><?php echo "." . strtoupper($mediaData['filetype']); ?></p>
-                                    <p><?php echo formatFilesize($media->getMediaFileSize(intval($media_id))); ?></p>
+                                    <p>
+                                        <?php if ($mediaData['filesize'] != NULL) {
+                                                    echo formatFilesize($mediaData['filesize']);
+                                                } else {
+                                                    echo "N/A";
+                                                } ?>
+                                    </p>
                                     <?php
                                             $imagePath = __DIR__ . '/../../../public/content/uploads/' . $mediaData['filename'];
                                             $imageDimensions = file_exists($imagePath) ? getImageDimensions($imagePath) : null;
                                             ?>
-                                    <p><?php if ($imageDimensions != NULL) {
+                                    <p>
+                                        <?php if ($imageDimensions != NULL) {
                                                     echo strval($imageDimensions[0]) . "x" . strval($imageDimensions[1]);
                                                 } else {
                                                     echo "N/A";
-                                                } ?></p>
+                                                } ?>
+                                    </p>
                                     <p><?php echo $mediaData['created_at']; ?></p>
                                     <p><?php echo $user->getUserUsername(intval($mediaData['created_by'])); ?></p>
                                     <p><?php echo $mediaData['updated_at']; ?></p>

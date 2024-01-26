@@ -198,6 +198,9 @@ if (!$hasReadPermission) {
                             <div class="col-md-3">
                                 <div class="thumbnail">
                                     <?php
+                                                    //get the media id
+                                                    $mediaID = $mediaArray[$mediaIndex]['id'];
+
                                                     //get the media filename
                                                     $mediaFilename = $mediaArray[$mediaIndex]['filename'];
 
@@ -220,7 +223,7 @@ if (!$hasReadPermission) {
                                     <div class="thumbnail-container"
                                         style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
                                         <img id="thumbnail" class="img-thumbnail"
-                                            src="<?php echo getUploadPath() . $mediaFilename; ?>"
+                                            src="<?php echo getUploadPath() . $mediaData->getMediaThumbnail(intval($mediaID)); ?>"
                                             alt="<?php echo $mediaFilename; ?>">
                                     </div>
                                     <div class="caption">
@@ -236,7 +239,7 @@ if (!$hasReadPermission) {
                                                             if ($hasReadPermission) { ?>
                                             <button type="button" id="openReadModal" class="btn btn-primary"
                                                 data-bs-toggle="modal" data-bs-target="#readMediaModal"
-                                                onclick="setReadID(<?php echo $mediaArray[$mediaIndex]['id']; ?>)">
+                                                onclick="setReadID(<?php echo $mediaID; ?>)">
                                                 View Media
                                             </button>
                                             <?php } ?>
@@ -485,8 +488,18 @@ if (!$hasReadPermission) {
             readModal.querySelector("#updated_at").innerHTML = mediaArray.find(media => media.id == id).updated_at;
             readModal.querySelector("#updated_by").innerHTML = mediaArray.find(media => media.id == id).updated_by;
 
+            //check if the thumbnail file exists in the uploads folder
+            var thumbnailExists = fileExists("<?php echo getUploadPath() ?>" + "thumb_600_" + mediaName);
+
             //set the image source
-            img.src = "<?php echo getUploadPath() ?>" + mediaName;
+            if (thumbnailExists) {
+                img.src = "<?php echo getUploadPath() ?>" + "thumb_600_" + mediaName;
+            } else {
+                img.src = "<?php echo getUploadPath() ?>" + mediaName;
+            }
+
+            //set the image alt
+            img.alt = mediaName;
 
             //set the url of the view media button
             viewMediaBtn.href = "<?php echo APP_URL . '/admin/dashboard.php?view=media&media=single' ?>&id=" + id;
@@ -502,6 +515,13 @@ if (!$hasReadPermission) {
         function clearReadID() {
             //set the action url of the read modal
             document.getElementById("readMediaForm").action = "";
+        }
+
+        function fileExists(url) {
+            var http = new XMLHttpRequest();
+            http.open('HEAD', url, false);
+            http.send();
+            return http.status != 404;
         }
         </script>
         <?php } ?>

@@ -114,52 +114,43 @@ if (!$hasPermission) {
             //see if the media name already exists
             $mediaExists = $media->getMediaIDByFileName($mediaFile_name);
 
-            //if the media exists, set the error type
-            if ($mediaExists != Null && $mediaExists > 0) {
-                //set the error type
-                $thisError = 'FILE_EXISTS_ERROR';
+            //check if the file name is being changed
+            if ($fileNameChanged) {
+                //compare the media file name to the new media name
+                if ($mediaFile_name != $media_name) {
+                    //try to upload the media
+                    $uploaded = $media->uploadMedia($mediaFile, intval($_SESSION['user_id']));
 
-                //include the error message file
-                include_once(__DIR__ . '/../../../../includes/errors/errorMessage.inc.php');
-            } else {
-                //check if the file name is being changed
-                if ($fileNameChanged) {
-                    //compare the media file name to the new media name
-                    if ($mediaFile_name != $media_name) {
-                        //try to upload the media
-                        $uploaded = $media->uploadMedia($mediaFile, intval($_SESSION['user_id']));
+                    //if the media was uploaded, set the media id
+                    if (isset($uploaded) && ($uploaded != null || $uploaded != 0)) {
+                        $media_id = $uploaded;
+                    }
 
-                        //if the media was uploaded, set the media id
-                        if (isset($uploaded) && ($uploaded != null || $uploaded != 0)) {
-                            $media_id = $uploaded;
-                        }
-
-                        //if the media id is set, update the media name
-                        if (isset($media_id) && ($media_id != null || $media_id != 0)) {
-                            $mediaUpdated = $media->renameMedia($media_id, $media_name, intval($_SESSION['user_id']));
-                        }
-                    } else {
-                        //replace the media file
-                        $mediaUpdated = $media->updateMediaFile($media_id, $mediaFile, intval($_SESSION['user_id']));
+                    //if the media id is set, update the media name
+                    if (isset($media_id) && ($media_id != null || $media_id != 0)) {
+                        $mediaUpdated = $media->renameMedia($media_id, $media_name, intval($_SESSION['user_id']));
                     }
                 } else {
                     //replace the media file
                     $mediaUpdated = $media->updateMediaFile($media_id, $mediaFile, intval($_SESSION['user_id']));
                 }
+            } else {
+                //replace the media file
+                $mediaUpdated = $media->updateMediaFile($media_id, $mediaFile, intval($_SESSION['user_id']));
             }
         }
     }
 ?>
-    <!-- Completion page content -->
-    <div class="container-fluid px-4">
-        <div class="row">
-            <div class="card mb-4">
-                <!-- show completion message -->
-                <div class="card-header">
-                    <div class="card-title">
-                        <div>
-                            <i class="fa-solid fa-check"></i>
-                            <?php
+<!-- Completion page content -->
+<div class="container-fluid px-4">
+    <div class="row">
+        <div class="card mb-4">
+            <!-- show completion message -->
+            <div class="card-header">
+                <div class="card-title">
+                    <div>
+                        <i class="fa-solid fa-check"></i>
+                        <?php
                             if ($action == 'edit') {
                                 if ($mediaUpdated) {
                                     echo 'Media Updated';
@@ -168,10 +159,10 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 <?php } ?>
