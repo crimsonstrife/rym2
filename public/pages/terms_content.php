@@ -2,7 +2,6 @@
 
 /**
  * This is the content for the terms and conditions page of the website
- * it uses the markdown format to display the content
  *
  * Author:  Patrick Barnhardt
  * Author Email: pbarnh1@wgu.edu
