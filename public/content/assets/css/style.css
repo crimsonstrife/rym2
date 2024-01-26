@@ -152,6 +152,48 @@ td > .td-actions > button {
 
 .modal-dialog {
 	min-width: 50%;
+	height: 50vh;
+}
+
+.modal-body {
+	height: 100%;
+	width: 100%;
+	display: grid;
+}
+
+.modal-content {
+	height: 100%;
+	width: 100%;
+}
+
+.modal-thumbnail-container {
+	height: 100%;
+	width: 100%;
+	max-width: 600px;
+	max-height: 300px;
+	margin: auto;
+	margin-top: 5%;
+	margin-bottom: 5%;
+	overflow: hidden;
+	padding: 0.25rem;
+	background-color: var(--bs-body-bg);
+	border: var(--bs-border-width) solid var(--bs-border-color);
+	border-radius: var(--bs-border-radius);
+}
+
+.modal-thumb {
+	max-width: -moz-max-content;
+	max-width: max-content;
+	max-height: -moz-max-content;
+	max-height: max-content;
+}
+
+.modal-footer {
+	height: fit-content;
+	position: absolute;
+	bottom: 0em;
+	right: 0em;
+	width: 100%;
 }
 
 #map {
@@ -409,4 +451,32 @@ span.select2-selection.select2-selection--single {
 
 .hidden {
 	display: none;
+}
+
+.btn-close {
+	background: transparent;
+	font-size: 2.5em;
+	text-align: center;
+}
+
+.btn-close:hover {
+	background: transparent;
+}
+
+.btn-close:focus {
+	background: transparent;
+}
+
+.btn-close:active {
+	background: transparent;
+}
+
+.btn-close:visited {
+	background: transparent;
+}
+
+.btn-close > i,
+.btn-close > svg {
+	vertical-align: top;
+	position: relative;
 }

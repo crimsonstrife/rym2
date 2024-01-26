@@ -1155,6 +1155,9 @@ class Media
         //placeholder for the filename
         $filename = '';
 
+        //the upload path
+        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+
         //get the file name
         $original_filename = $this->getMediaFileName($media_id);
 
@@ -1162,7 +1165,7 @@ class Media
         switch ($size) {
             case 'modal':
                 //if the modal thumbnail exists, get the modal thumbnail
-                if (file_exists(getUploadPath() . 'thumb_600_' . $original_filename)) {
+                if (file_exists($upload_path . 'thumb_600_' . $original_filename)) {
                     $filename = 'thumb_600_' . $original_filename;
                 } else {
                     //if the modal thumbnail does not exist, get the original file
@@ -1172,7 +1175,7 @@ class Media
                 return $filename;
             case 'list':
                 //if the list thumbnail exists, get the list thumbnail
-                if (file_exists(getUploadPath() . 'thumb_200_' . $original_filename)) {
+                if (file_exists($upload_path . 'thumb_200_' . $original_filename)) {
                     $filename = 'thumb_200_' . $original_filename;
                 } else {
                     //if the list thumbnail does not exist, get the original file

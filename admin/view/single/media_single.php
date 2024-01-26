@@ -228,7 +228,7 @@ if (!$hasPermission) {
                                                                         $event_id = intval($eventUsage); ?>
                                                 <tr>
                                                     <td><?php echo $event->getEventName(intval($event_id)); ?></td>
-                                                    <td><a href="<?php echo APP_URL . '/admin/dashboard.php?view=event&event=single&id=' . $event_id; ?>"
+                                                    <td><a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single&id=' . $event_id; ?>"
                                                             class="btn btn-primary">View Event</a></td>
                                                 </tr>
                                                 <?php } ?>
@@ -282,7 +282,7 @@ if (!$hasPermission) {
                                                                         $school_id = intval($schoolUsage); ?>
                                                 <tr>
                                                     <td><?php echo $school->getSchoolName(intval($school_id)); ?></td>
-                                                    <td><a href="<?php echo APP_URL . '/admin/dashboard.php?view=school&school=single&id=' . $school_id; ?>"
+                                                    <td><a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=single&id=' . $school_id; ?>"
                                                             class="btn btn-primary">View School</a></td>
                                                 </tr>
                                                 <?php } ?>

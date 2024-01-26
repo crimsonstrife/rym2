@@ -145,8 +145,12 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                         <div id="eventBranding">
                             <h3>School Branding</h3>
                             <p><strong>School Logo:</strong></p>
-                            <img src="<?php echo getUploadPath() . $media->getMediaFileName($school->getSchoolLogo(intval($school_id))); ?>"
-                                alt="School Logo" style="max-width: 200px; max-height: auto;">
+                            <div class="thumbnail-container"
+                                style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
+                                <img id="thumbnail" class="img-thumbnail"
+                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($school->getSchoolLogo(intval($school_id))); ?>"
+                                    alt="School Logo Image">
+                            </div>
                             <p><strong>School Primary Color:</strong></p>
                             <div
                                 style="width: 100px; height: 100px; background-color: <?php echo $school->getSchoolColor(intval($school_id)) ?? '#000000'; ?>;">
