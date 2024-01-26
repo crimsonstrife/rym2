@@ -480,3 +480,67 @@ span.select2-selection.select2-selection--single {
 	vertical-align: top;
 	position: relative;
 }
+
+#removeSkill {
+	max-height: 2.5em;
+	border-top-right-radius: var(--bs-border-radius);
+	border-bottom-right-radius: var(--bs-border-radius);
+}
+
+.btn-remove {
+	max-height: 2.5em;
+	border-top-right-radius: var(--bs-border-radius);
+	border-bottom-right-radius: var(--bs-border-radius);
+}
+
+.btn-remove:hover {
+	background-color: var(--bs-danger);
+}
+
+.btn-remove:focus {
+	background-color: var(--bs-danger);
+}
+
+.btn-add {
+	max-height: 2.5em;
+	border-top-left-radius: var(--bs-border-radius);
+	border-bottom-left-radius: var(--bs-border-radius);
+}
+
+.btn-add:hover {
+	background-color: var(--bs-success);
+}
+
+.btn-add:focus {
+	background-color: var(--bs-success);
+}
+
+.btn-add:active {
+	background-color: var(--bs-success);
+}
+
+.btn-skill-btn {
+	max-width: 10em;
+}
+
+.job-skill-list {
+	display: flex;
+	flex-flow: wrap;
+	flex-direction: row;
+	border-bottom-right-radius: var(--bs-border-radius);
+}
+
+.job-skill-list > .job-skill-item {
+	margin: 1%;
+	border-top-width: inherit;
+	-webkit-border-radius: var(--bs-border-radius);
+	-moz-border-radius: var(--bs-border-radius);
+	-ms-border-radius: var(--bs-border-radius);
+	-o-border-radius: var(--bs-border-radius);
+	border-radius: var(--bs-border-radius);
+}
+
+.list-group-item.job-skill-item.selected {
+	background-color: var(--bs-primary);
+	color: var(--bs-white);
+}
