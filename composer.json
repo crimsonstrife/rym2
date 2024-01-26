@@ -27,6 +27,15 @@
         "chillerlan/php-qrcode": "^5.0",
         "nnnick/chartjs": "^4.4"
     },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.1.2",
+            "ext-imagick": "7.1.1"
+        }
+    },
     "autoload": {
         "psr-4": {
             "CrimsonStrife\\RYM2\\Classes\\": "includes/classes/",
