@@ -76,11 +76,11 @@ if (!isset($hasViewDashboardPermission)) {
                                         include_once('./editor/actions/job/delete.php');
                                         break;
                                     default:
-                                        include_once('./view/list/job_list.php');
+                                        include_once('./view/single/job_single.php');
                                         break;
                                 }
                             } else {
-                                include_once('./view/list/job_list.php');
+                                include_once('./view/single/job_single.php');
                             }
                             break;
                         default:
