@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.2
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Jan 29, 2024 at 09:04 AM
--- Server version: 5.7.24
--- PHP Version: 7.4.16
+-- Host: localhost:8889
+-- Generation Time: Jan 29, 2024 at 03:44 PM
+-- Server version: 5.7.39
+-- PHP Version: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -356,7 +356,9 @@ INSERT INTO `activity_log` (`id`, `user_id`, `action`, `performed_on`, `action_d
 (314, 1, 'DELETE', 'Job ID: 3 Job Name: Intern', '2024-01-26 18:22:20'),
 (315, 1, 'OTHER', 'CREATEDIntern', '2024-01-26 18:30:03'),
 (316, 1, 'OTHER', 'UPDATEDIntern', '2024-01-26 21:57:51'),
-(317, 1, 'CREATE', 'Report:  Jobs by Field - ID: 58 Date: 01/26/2024', '2024-01-26 22:17:18');
+(317, 1, 'CREATE', 'Report:  Jobs by Field - ID: 58 Date: 01/26/2024', '2024-01-26 22:17:18'),
+(318, 1, 'OTHER', 'UPDATEDIntern', '2024-01-29 19:38:56'),
+(319, 1, 'CREATE', 'Report:  Top Degree by School - ID: 59 Date: 01/29/2024', '2024-01-30 01:29:39');
 
 -- --------------------------------------------------------
 
@@ -551,7 +553,8 @@ CREATE TABLE `jobs` (
   `description` longtext COLLATE utf8mb4_unicode_520_ci,
   `summary` text COLLATE utf8mb4_unicode_520_ci,
   `type` enum('FULL','PART','INTERN') COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'INTERN',
-  `field` bigint(20) NOT NULL,
+  `field` bigint(20) DEFAULT NULL,
+  `education` bigint(20) DEFAULT NULL,
   `skills` json DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -563,8 +566,8 @@ CREATE TABLE `jobs` (
 -- Dumping data for table `jobs`
 --
 
-INSERT INTO `jobs` (`id`, `name`, `description`, `summary`, `type`, `field`, `skills`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
-(4, 'Intern', '<p><strong>[Intro paragraph] </strong>The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers and set yourself apart from competing job listings.</p><p><strong>Intern Job Responsibilities:</strong></p><ul><li>Understands the overall concept of the company, including the brand, customer, product goals, and all other aspects of service.</li><li>Rotates through our divisions of responsibility and provides ideas to grow and improve the business.</li><li>Accepts designated, business-focus projects to research, propose ideas and solutions, and present final project during the internship.</li><li>Engages with customers or clients and provides service and/or sales.</li><li>Provide suggestions to management for improving customer service and internal processes.</li><li>Learns and becomes proficient on internal software systems.</li><li>Assists in creating performance reports.</li></ul><p><strong>[Work Hours &amp; Benefits]</strong> It’s always a good idea to highlight the <strong>working hours and benefits </strong>specific to your business. Potential interns want to learn things like team size, mentor-to-intern ratios, and weekly hour requirements. You can also highlight any of the benefits that set you apart, like contact with upper management or school credits.</p>', 'The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers.', 'INTERN', 2, '[\"Communication\", \"Problem solving skills\", \"Analysis\", \"Adaptability\", \"Computer skills\", \"Initiative\", \"Critical thinking\", \"Time management\", \"Collaboration\", \"Planning and prioritizing\", \"Teamwork\", \"Work ethic\", \"Customer service\", \"Interpersonal\", \"Networking\", \"Passionate\", \"Punctuality\", \"Scripting\"]', '2024-01-26 21:57:51', '2024-01-26 21:57:51', 1, 1);
+INSERT INTO `jobs` (`id`, `name`, `description`, `summary`, `type`, `field`, `education`, `skills`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
+(4, 'Intern', '<p><strong>[Intro paragraph] </strong>The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers and set yourself apart from competing job listings.</p><p><strong>Intern Job Responsibilities:</strong></p><ul><li>Understands the overall concept of the company, including the brand, customer, product goals, and all other aspects of service.</li><li>Rotates through our divisions of responsibility and provides ideas to grow and improve the business.</li><li>Accepts designated, business-focus projects to research, propose ideas and solutions, and present final project during the internship.</li><li>Engages with customers or clients and provides service and/or sales.</li><li>Provide suggestions to management for improving customer service and internal processes.</li><li>Learns and becomes proficient on internal software systems.</li><li>Assists in creating performance reports.</li></ul><p><strong>[Work Hours &amp; Benefits]</strong> It’s always a good idea to highlight the <strong>working hours and benefits </strong>specific to your business. Potential interns want to learn things like team size, mentor-to-intern ratios, and weekly hour requirements. You can also highlight any of the benefits that set you apart, like contact with upper management or school credits.</p>', 'The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers.', 'INTERN', 2, 4, '[\"Communication\", \"Problem solving skills\", \"Analysis\", \"Adaptability\", \"Computer skills\", \"Initiative\", \"Critical thinking\", \"Time management\", \"Collaboration\", \"Planning and prioritizing\", \"Teamwork\", \"Work ethic\", \"Customer service\", \"Interpersonal\", \"Networking\", \"Passionate\", \"Punctuality\", \"Scripting\"]', '2024-01-29 14:38:56', '2024-01-29 19:38:56', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -770,7 +773,8 @@ INSERT INTO `reports` (`id`, `report_type`, `data`, `created_by`, `created_at`, 
 (55, 'Major to Field Ratio by School', '[{\"field\": \"IT\", \"major\": \"Software Development\", \"ratio\": 0.33, \"school\": \"Western Governor&#039;s University - WGU\"}, {\"field\": \"Programming\", \"major\": \"Software Development\", \"ratio\": 0.33, \"school\": \"Western Governor&#039;s University - WGU\"}, {\"field\": \"Supply Chain\", \"major\": \"Business Administration\", \"ratio\": 0.33, \"school\": \"Western Governor&#039;s University - WGU\"}, {\"field\": \"IT\", \"major\": \"Computer Science\", \"ratio\": 1, \"school\": \"University of North Carolina at Charlotte - UNCC\"}, {\"field\": \"Cybersecurity\", \"major\": \"Electrical Engineering\", \"ratio\": 1, \"school\": \"Stanford University\"}, {\"field\": \"IT\", \"major\": \"Computer Science\", \"ratio\": 0.67, \"school\": \"Duke University\"}, {\"field\": \"Finance\", \"major\": \"Economics\", \"ratio\": 0.33, \"school\": \"Duke University\"}, {\"field\": \"Sales\", \"major\": \"Psychology\", \"ratio\": 1, \"school\": \"Wake Forest University\"}]', 1, '2024-01-17 23:48:35', 1, '2024-01-17 23:48:35'),
 (56, 'Jobs by Field', '[{\"jobs\": \"Helpdesk\", \"job_count\": 1, \"job_field_name\": \"IT\"}, {\"jobs\": \"Business Analyst\", \"job_count\": 1, \"job_field_name\": \"Analytics\"}, {\"jobs\": \"Job\", \"job_count\": 1, \"job_field_name\": \"Cybersecurity\"}, {\"jobs\": \"Packaging Operator\", \"job_count\": 1, \"job_field_name\": \"Supply Chain\"}]', 1, '2024-01-17 23:48:37', 1, '2024-01-17 23:48:37'),
 (57, 'Contact Follow-Up Percentage', '[{\"total\": 21, \"percentage\": \"66.66667\", \"top_sending_user\": \"admin\"}]', 1, '2024-01-17 23:48:39', 1, '2024-01-17 23:48:39'),
-(58, 'Jobs by Field', '[{\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Programming\"}]', 1, '2024-01-26 22:17:18', 1, '2024-01-26 22:17:18');
+(58, 'Jobs by Field', '[{\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Programming\"}]', 1, '2024-01-26 22:17:18', 1, '2024-01-26 22:17:18'),
+(59, 'Top Degree by School', '[{\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"Duke University\", \"student_count\": 2}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1}, {\"major\": \"Electrical Engineering\", \"degree\": \"MS - Master of Science\", \"school\": \"Stanford University\", \"student_count\": 1}, {\"major\": \"Psychology\", \"degree\": \"MA - Master of Arts\", \"school\": \"Wake Forest University\", \"student_count\": 1}, {\"major\": \"Economics\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"Duke University\", \"student_count\": 1}]', 1, '2024-01-30 01:29:39', 1, '2024-01-30 01:29:39');
 
 -- --------------------------------------------------------
 
@@ -1293,7 +1297,8 @@ ALTER TABLE `jobs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `jobField` (`field`),
   ADD KEY `jobCreatedBy` (`created_by`),
-  ADD KEY `jobUpdatedBy` (`updated_by`);
+  ADD KEY `jobUpdatedBy` (`updated_by`),
+  ADD KEY `jobEducation` (`education`);
 
 --
 -- Indexes for table `major`
@@ -1425,7 +1430,7 @@ ALTER TABLE `user_token_auth`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=318;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=320;
 
 --
 -- AUTO_INCREMENT for table `aoi`
@@ -1479,7 +1484,7 @@ ALTER TABLE `major`
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1491,7 +1496,7 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -1599,6 +1604,7 @@ ALTER TABLE `event_slugs`
 --
 ALTER TABLE `jobs`
   ADD CONSTRAINT `jobCreatedBy` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `jobEducation` FOREIGN KEY (`education`) REFERENCES `degree_lvl` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `jobField` FOREIGN KEY (`field`) REFERENCES `aoi` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `jobUpdatedBy` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
