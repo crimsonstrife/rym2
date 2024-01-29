@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.1.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:8889
--- Generation Time: Jan 25, 2024 at 04:03 PM
--- Server version: 5.7.39
--- PHP Version: 7.4.33
+-- Host: localhost:3306
+-- Generation Time: Jan 29, 2024 at 09:04 AM
+-- Server version: 5.7.24
+-- PHP Version: 7.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -344,7 +344,19 @@ INSERT INTO `activity_log` (`id`, `user_id`, `action`, `performed_on`, `action_d
 (302, 1, 'MODIFY', 'The privacy policy was changed.', '2024-01-26 01:41:47'),
 (303, 1, 'MODIFY', 'The terms and conditions were changed.', '2024-01-26 01:41:47'),
 (304, 1, 'MODIFY', 'The privacy policy was changed.', '2024-01-26 01:44:09'),
-(305, 1, 'MODIFY', 'The terms and conditions were changed.', '2024-01-26 01:44:09');
+(305, 1, 'MODIFY', 'The terms and conditions were changed.', '2024-01-26 01:44:09'),
+(306, 1, 'OTHER', 'Media Uploaded: gc4pJHd.jpg', '2024-01-26 01:21:33'),
+(307, 1, 'OTHER', 'Media Uploaded: gc4pJHd.jpg', '2024-01-26 01:28:03'),
+(308, 1, 'ERROR', 'CODE: [HARMONY]- AT: /admin/dashboard.php?view=media&media=edit&action=edit&id=19', '2024-01-26 01:30:24'),
+(309, NULL, 'LOGIN', 'User admin', '2024-01-26 13:13:33'),
+(310, 1, 'OTHER', 'CREATEDIntern', '2024-01-26 17:35:06'),
+(311, 1, 'OTHER', 'CREATEDIntern', '2024-01-26 17:39:44'),
+(312, 1, 'DELETE', 'Job ID: 2 Job Name: Intern', '2024-01-26 18:16:43'),
+(313, 1, 'OTHER', 'CREATEDIntern', '2024-01-26 18:18:09'),
+(314, 1, 'DELETE', 'Job ID: 3 Job Name: Intern', '2024-01-26 18:22:20'),
+(315, 1, 'OTHER', 'CREATEDIntern', '2024-01-26 18:30:03'),
+(316, 1, 'OTHER', 'UPDATEDIntern', '2024-01-26 21:57:51'),
+(317, 1, 'CREATE', 'Report:  Jobs by Field - ID: 58 Date: 01/26/2024', '2024-01-26 22:17:18');
 
 -- --------------------------------------------------------
 
@@ -357,7 +369,7 @@ CREATE TABLE `aoi` (
   `name` varchar(55) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_by` bigint(20) DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
@@ -422,7 +434,7 @@ INSERT INTO `contact_log` (`id`, `student`, `auto`, `sender`, `send_date`, `subj
 CREATE TABLE `degree_lvl` (
   `id` bigint(20) NOT NULL,
   `name` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_by` bigint(20) DEFAULT NULL
@@ -454,7 +466,7 @@ CREATE TABLE `event` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `event_date` date NOT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_by` bigint(20) DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
@@ -536,15 +548,23 @@ INSERT INTO `event_slugs` (`id`, `event_id`, `slug`) VALUES
 CREATE TABLE `jobs` (
   `id` bigint(20) NOT NULL,
   `name` varchar(150) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `description` json DEFAULT NULL,
+  `description` longtext COLLATE utf8mb4_unicode_520_ci,
+  `summary` text COLLATE utf8mb4_unicode_520_ci,
   `type` enum('FULL','PART','INTERN') COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'INTERN',
   `field` bigint(20) NOT NULL,
   `skills` json DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_by` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+--
+-- Dumping data for table `jobs`
+--
+
+INSERT INTO `jobs` (`id`, `name`, `description`, `summary`, `type`, `field`, `skills`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
+(4, 'Intern', '<p><strong>[Intro paragraph] </strong>The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers and set yourself apart from competing job listings.</p><p><strong>Intern Job Responsibilities:</strong></p><ul><li>Understands the overall concept of the company, including the brand, customer, product goals, and all other aspects of service.</li><li>Rotates through our divisions of responsibility and provides ideas to grow and improve the business.</li><li>Accepts designated, business-focus projects to research, propose ideas and solutions, and present final project during the internship.</li><li>Engages with customers or clients and provides service and/or sales.</li><li>Provide suggestions to management for improving customer service and internal processes.</li><li>Learns and becomes proficient on internal software systems.</li><li>Assists in creating performance reports.</li></ul><p><strong>[Work Hours &amp; Benefits]</strong> It’s always a good idea to highlight the <strong>working hours and benefits </strong>specific to your business. Potential interns want to learn things like team size, mentor-to-intern ratios, and weekly hour requirements. You can also highlight any of the benefits that set you apart, like contact with upper management or school credits.</p>', 'The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers.', 'INTERN', 2, '[\"Communication\", \"Problem solving skills\", \"Analysis\", \"Adaptability\", \"Computer skills\", \"Initiative\", \"Critical thinking\", \"Time management\", \"Collaboration\", \"Planning and prioritizing\", \"Teamwork\", \"Work ethic\", \"Customer service\", \"Interpersonal\", \"Networking\", \"Passionate\", \"Punctuality\", \"Scripting\"]', '2024-01-26 21:57:51', '2024-01-26 21:57:51', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -555,7 +575,7 @@ CREATE TABLE `jobs` (
 CREATE TABLE `major` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_by` bigint(20) DEFAULT NULL
@@ -749,7 +769,8 @@ INSERT INTO `reports` (`id`, `report_type`, `data`, `created_by`, `created_at`, 
 (54, 'Top Field by School', '[{\"school\": \"Duke University\", \"student_count\": 2, \"field_of_study\": \"IT\"}, {\"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1, \"field_of_study\": \"IT\"}, {\"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1, \"field_of_study\": \"Programming\"}, {\"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1, \"field_of_study\": \"Supply Chain\"}, {\"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1, \"field_of_study\": \"IT\"}, {\"school\": \"Stanford University\", \"student_count\": 1, \"field_of_study\": \"Cybersecurity\"}, {\"school\": \"Wake Forest University\", \"student_count\": 1, \"field_of_study\": \"Sales\"}, {\"school\": \"Duke University\", \"student_count\": 1, \"field_of_study\": \"Finance\"}]', 1, '2024-01-17 23:48:33', 1, '2024-01-17 23:48:33'),
 (55, 'Major to Field Ratio by School', '[{\"field\": \"IT\", \"major\": \"Software Development\", \"ratio\": 0.33, \"school\": \"Western Governor&#039;s University - WGU\"}, {\"field\": \"Programming\", \"major\": \"Software Development\", \"ratio\": 0.33, \"school\": \"Western Governor&#039;s University - WGU\"}, {\"field\": \"Supply Chain\", \"major\": \"Business Administration\", \"ratio\": 0.33, \"school\": \"Western Governor&#039;s University - WGU\"}, {\"field\": \"IT\", \"major\": \"Computer Science\", \"ratio\": 1, \"school\": \"University of North Carolina at Charlotte - UNCC\"}, {\"field\": \"Cybersecurity\", \"major\": \"Electrical Engineering\", \"ratio\": 1, \"school\": \"Stanford University\"}, {\"field\": \"IT\", \"major\": \"Computer Science\", \"ratio\": 0.67, \"school\": \"Duke University\"}, {\"field\": \"Finance\", \"major\": \"Economics\", \"ratio\": 0.33, \"school\": \"Duke University\"}, {\"field\": \"Sales\", \"major\": \"Psychology\", \"ratio\": 1, \"school\": \"Wake Forest University\"}]', 1, '2024-01-17 23:48:35', 1, '2024-01-17 23:48:35'),
 (56, 'Jobs by Field', '[{\"jobs\": \"Helpdesk\", \"job_count\": 1, \"job_field_name\": \"IT\"}, {\"jobs\": \"Business Analyst\", \"job_count\": 1, \"job_field_name\": \"Analytics\"}, {\"jobs\": \"Job\", \"job_count\": 1, \"job_field_name\": \"Cybersecurity\"}, {\"jobs\": \"Packaging Operator\", \"job_count\": 1, \"job_field_name\": \"Supply Chain\"}]', 1, '2024-01-17 23:48:37', 1, '2024-01-17 23:48:37'),
-(57, 'Contact Follow-Up Percentage', '[{\"total\": 21, \"percentage\": \"66.66667\", \"top_sending_user\": \"admin\"}]', 1, '2024-01-17 23:48:39', 1, '2024-01-17 23:48:39');
+(57, 'Contact Follow-Up Percentage', '[{\"total\": 21, \"percentage\": \"66.66667\", \"top_sending_user\": \"admin\"}]', 1, '2024-01-17 23:48:39', 1, '2024-01-17 23:48:39'),
+(58, 'Jobs by Field', '[{\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Programming\"}]', 1, '2024-01-26 22:17:18', 1, '2024-01-26 22:17:18');
 
 -- --------------------------------------------------------
 
@@ -968,7 +989,7 @@ CREATE TABLE `school` (
   `zipcode` varchar(15) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_by` bigint(20) DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
@@ -1081,7 +1102,7 @@ CREATE TABLE `student` (
   `school` bigint(20) NOT NULL,
   `position` enum('FULL','PART','INTERN') COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'INTERN',
   `graduation` date NOT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
@@ -1154,7 +1175,7 @@ CREATE TABLE `user_has_role` (
   `id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `role_id` bigint(20) NOT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_by` bigint(20) DEFAULT NULL
@@ -1404,7 +1425,7 @@ ALTER TABLE `user_token_auth`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=306;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=318;
 
 --
 -- AUTO_INCREMENT for table `aoi`
@@ -1446,7 +1467,7 @@ ALTER TABLE `event_slugs`
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `major`
@@ -1458,7 +1479,7 @@ ALTER TABLE `major`
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1470,7 +1491,7 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT for table `roles`
