@@ -510,7 +510,7 @@ if (!$hasReadPermission) {
                 DataTable
             } from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
             const dt = new DataTable("table", {
-                scrollY: "100vh",
+                scrollY: "50vh",
                 rowNavigation: true,
                 perPageSelect: [5, 10, 15, 20, 25, 50, ["All", -1]],
                 classes: {
@@ -563,7 +563,7 @@ if (!$hasReadPermission) {
                         searchable: false
                     }
                 ],
-                template: options => `<div class='${options.classes.top} fixed-table-toolbar'>
+                template: options => `<div class='${options.classes.top} '>
     ${
     options.paging && options.perPageSelect ?
         `<div class='${options.classes.dropdown} bs-bars float-left'>
@@ -582,7 +582,7 @@ if (!$hasReadPermission) {
 }
 </div>
 <div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
-<div class='${options.classes.bottom} fixed-table-toolbar'>
+<div class='${options.classes.bottom} '>
     ${
     options.paging ?
         `<div class='${options.classes.info}'></div>` :

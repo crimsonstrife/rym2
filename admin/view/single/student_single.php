@@ -106,19 +106,18 @@ if (!$hasPermission) {
             }
         }
 ?>
-<div class="container-fluid px-4">
-    <h1 class="mt-4"><?php echo $student->getStudentFullName($student_id); ?></h1>
-    <div class="row">
-        <div class="card mb-4">
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fa-solid fa-calendar-day"></i>
-                    Student Information
-                </div>
-                <div class="card-buttons">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>"
-                        class="btn btn-secondary">Back to Students</a>
-                    <?php /*confirm user has a role with delete student permissions*/
+        <div class="container-fluid px-4">
+            <h1 class="mt-4"><?php echo $student->getStudentFullName($student_id); ?></h1>
+            <div class="row">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fa-solid fa-calendar-day"></i>
+                            Student Information
+                        </div>
+                        <div class="card-buttons">
+                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>" class="btn btn-secondary">Back to Students</a>
+                            <?php /*confirm user has a role with delete student permissions*/
                             //get the delete student permission id
                             $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
 
@@ -127,70 +126,68 @@ if (!$hasPermission) {
 
                             //only show the delete button if the user has the delete student permission
                             if ($hasDeletePermission) { ?>
-                    <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
-                        data-bs-target="#deleteStudentModal">
-                        Delete Student
-                    </button>
-                    <?php } ?>
-                </div>
-            </div>
-            <div class="card-body">
-                <!-- Single Student information -->
-                <div class="row">
-                    <!-- Student Details -->
-                    <div class="col-md-6" style="height: 100%;">
-                        <h3>Student Details</h3>
-                        <div id="info" class="">
-                            <p>
-                                <strong>First Name:</strong> <?php echo $student->getStudentFirstName($student_id); ?>
-                            </p>
-                            <p>
-                                <strong>Last Name:</strong> <?php echo $student->getStudentLastName($student_id); ?>
-                            </p>
-                            <p>
-                                <strong>Email:</strong>
-                                <?php echo formatEmail($student->getStudentEmail($student_id)); ?>
-                            </p>
-                            <p>
-                                <strong>Phone:</strong>
-                                <?php echo formatPhone($student->getStudentPhone($student_id)); ?>
-                            </p>
-                            <p>
-                                <strong>Address:</strong>
-                                <?php
+                                <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteStudentModal">
+                                    Delete Student
+                                </button>
+                            <?php } ?>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Single Student information -->
+                        <div class="row">
+                            <!-- Student Details -->
+                            <div class="col-md-6" style="height: 100%;">
+                                <h3>Student Details</h3>
+                                <div id="info" class="">
+                                    <p>
+                                        <strong>First Name:</strong> <?php echo $student->getStudentFirstName($student_id); ?>
+                                    </p>
+                                    <p>
+                                        <strong>Last Name:</strong> <?php echo $student->getStudentLastName($student_id); ?>
+                                    </p>
+                                    <p>
+                                        <strong>Email:</strong>
+                                        <?php echo formatEmail($student->getStudentEmail($student_id)); ?>
+                                    </p>
+                                    <p>
+                                        <strong>Phone:</strong>
+                                        <?php echo formatPhone($student->getStudentPhone($student_id)); ?>
+                                    </p>
+                                    <p>
+                                        <strong>Address:</strong>
+                                        <?php
                                         //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
                                         $address = $student->getStudentFormattedAddress($student_id);
                                         $address = urlencode($address);
                                         ?>
-                                <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
-                                    target="_blank"><?php echo $student->getStudentFormattedAddress($student_id); ?></a>
-                            </p>
-                            <p>
-                                <strong>Field of Study/Area of Interest:</strong>
-                                <?php echo $fieldsData->getSubjectName($student->getStudentInterest($student_id)); ?>
-                            </p>
-                            <p>
-                                <strong>Position Type:</strong>
-                                <?php echo $student->getStudentPosition($student_id); ?>
-                            </p>
-                            <p>
-                                <strong>Degree:</strong>
-                                <?php echo $student->getStudentDegree($student_id); ?>
-                            </p>
-                            <p>
-                                <strong>Graduation Date:</strong>
-                                <?php echo formatDate($student->getStudentGraduation($student_id)); ?>
-                            </p>
-                            <p>
-                                <strong>School:</strong>
-                                <?php echo $schoolsData->getSchoolName($student->getStudentSchool($student_id)); ?>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Student Event Attendance -->
-                    <div class="col-md-6" style="height: 100%;">
-                        <h3>Event Attendance</h3>
-                        <?php /*confirm user has a role with read events permissions*/
+                                        <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>" target="_blank"><?php echo $student->getStudentFormattedAddress($student_id); ?></a>
+                                    </p>
+                                    <p>
+                                        <strong>Field of Study/Area of Interest:</strong>
+                                        <?php echo $fieldsData->getSubjectName($student->getStudentInterest($student_id)); ?>
+                                    </p>
+                                    <p>
+                                        <strong>Position Type:</strong>
+                                        <?php echo $student->getStudentPosition($student_id); ?>
+                                    </p>
+                                    <p>
+                                        <strong>Degree:</strong>
+                                        <?php echo $student->getStudentDegree($student_id); ?>
+                                    </p>
+                                    <p>
+                                        <strong>Graduation Date:</strong>
+                                        <?php echo formatDate($student->getStudentGraduation($student_id)); ?>
+                                    </p>
+                                    <p>
+                                        <strong>School:</strong>
+                                        <?php echo $schoolsData->getSchoolName($student->getStudentSchool($student_id)); ?>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Student Event Attendance -->
+                            <div class="col-md-6" style="height: 100%;">
+                                <h3>Event Attendance</h3>
+                                <?php /*confirm user has a role with read events permissions*/
                                 //get the read event permission id
                                 $readEventPermissionID = $permissionsObject->getPermissionIdByName('READ EVENT');
 
@@ -199,47 +196,47 @@ if (!$hasPermission) {
 
                                 //only show the event attendance info if the user has the read event permission
                                 if ($hasReadEventPermission) { ?>
-                        <div id="info" class="">
-                            <?php
+                                    <div id="info" class="">
+                                        <?php
                                         //get the events the student has attended
                                         $events = $student->getStudentEventAttendace($student_id);
                                         //if there are events, display them
                                         if ($events) {
                                             foreach ($events as $event) {
                                         ?>
-                            <p>
-                                <i class="fa-solid fa-calendar-day"></i>
-                                <strong><?php echo $eventsData->getEventName($event['event_id']) ?></strong>
-                                <br />
-                                <?php echo $eventsData->getEventLocation($event['event_id']); ?>
-                                <br />
-                                <?php echo formatDate($eventsData->getEventDate($event['event_id'])); ?>
-                            </p>
-                            <?php
+                                                <p>
+                                                    <i class="fa-solid fa-calendar-day"></i>
+                                                    <strong><?php echo $eventsData->getEventName($event['event_id']) ?></strong>
+                                                    <br />
+                                                    <?php echo $eventsData->getEventLocation($event['event_id']); ?>
+                                                    <br />
+                                                    <?php echo formatDate($eventsData->getEventDate($event['event_id'])); ?>
+                                                </p>
+                                        <?php
                                             }
                                         } else {
                                             //otherwise, display a message
                                             echo "<p>This student has not attended any specific events.</p>";
                                         }
                                         ?>
-                        </div>
-                        <?php } else { ?>
-                        <div id="info" class="">
-                            <p>You do not have permission to view event attendance.</p>
-                        </div>
-                        <?php } ?>
-                    </div>
-                    <!-- Student Notes -->
-                    <?php
+                                    </div>
+                                <?php } else { ?>
+                                    <div id="info" class="">
+                                        <p>You do not have permission to view event attendance.</p>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                            <!-- Student Notes -->
+                            <?php
                             //TODO: Add notes functionality
                             ?>
-                </div>
-                <!-- Student Contact Log -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Contact Log</h3>
-                        <div id="info" class="">
-                            <?php
+                        </div>
+                        <!-- Student Contact Log -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3>Contact Log</h3>
+                                <div id="info" class="">
+                                    <?php
                                     /*confirm user has a role with read contact permissions*/
                                     //get the read contact permission id
                                     $readContactPermissionID = $permissionsObject->getPermissionIdByName('READ CONTACT');
@@ -254,27 +251,27 @@ if (!$hasPermission) {
                                         //if there is contact history, display it in a table
                                         if ($contactHistoryArray) {
                                     ?>
-                            <div>
-                                <table id="dataTable" class="table table-striped table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Time</th>
-                                            <th>Subject</th>
-                                            <th>Automated?</th>
-                                            <th>Sending User</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
+                                            <div>
+                                                <table id="dataTable" class="table table-striped table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Date</th>
+                                                            <th>Time</th>
+                                                            <th>Subject</th>
+                                                            <th>Automated?</th>
+                                                            <th>Sending User</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php
                                                         //for each contact history, display it in a table row
                                                         foreach ($contactHistoryArray as $contactHistory) {
                                                         ?>
-                                        <tr>
-                                            <td><?php echo formatDate($contactHistory['send_date']); ?></td>
-                                            <td><?php echo formatTime($contactHistory['send_date']); ?></td>
-                                            <td><?php echo $contactHistory['subject']; ?></td>
-                                            <?php
+                                                            <tr>
+                                                                <td><?php echo formatDate($contactHistory['send_date']); ?></td>
+                                                                <td><?php echo formatTime($contactHistory['send_date']); ?></td>
+                                                                <td><?php echo $contactHistory['subject']; ?></td>
+                                                                <?php
                                                                 //if the contact history is automated, display yes, otherwise display no
                                                                 if ($contactHistory['auto'] == 1) {
                                                                     $contactHistory['auto'] = "Yes";
@@ -282,8 +279,8 @@ if (!$hasPermission) {
                                                                     $contactHistory['auto'] = "No";
                                                                 }
                                                                 ?>
-                                            <td><?php echo $contactHistory['auto']; ?></td>
-                                            <?php
+                                                                <td><?php echo $contactHistory['auto']; ?></td>
+                                                                <?php
                                                                 //if the user id is NULL, display "SYSTEM", otherwise display the user's username
                                                                 if ($contactHistory['sender'] == NULL) {
                                                                     $contactHistory['sender'] = "SYSTEM";
@@ -291,34 +288,34 @@ if (!$hasPermission) {
                                                                     $contactHistory['sender'] = $user->getUserUsername($contactHistory['sender']);
                                                                 }
                                                                 ?>
-                                            <td><?php echo $contactHistory['sender']; ?></td>
-                                        </tr>
-                                        <?php
+                                                                <td><?php echo $contactHistory['sender']; ?></td>
+                                                            </tr>
+                                                        <?php
                                                         }
                                                         ?>
-                                    </tbody>
-                                </table>
-                                <?php
+                                                    </tbody>
+                                                </table>
+                                            <?php
                                         } else {
                                             //otherwise, display a message
                                             echo "<p>This student has not been contacted.</p>";
                                         }
                                     } else { ?>
-                                <p>You do not have permission to view contact history.</p>
-                                <?php }
+                                            <p>You do not have permission to view contact history.</p>
+                                        <?php }
                                         ?>
+                                            </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- Contact Menu -->
-                    <?php
+                            <!-- Contact Menu -->
+                            <?php
                             //set student name and email variables
                             $student_name = $student->getStudentFullName($student_id);
                             $student_email = $student->getStudentEmail($student_id);
                             ?>
-                    <div class="col-md-6">
-                        <h5>Contact Student</h5>
-                        <?php /*confirm user has a role with contact student permissions*/
+                            <div class="col-md-6">
+                                <h5>Contact Student</h5>
+                                <?php /*confirm user has a role with contact student permissions*/
                                 //get the contact student permission id
                                 $contactPermissionID = $permissionsObject->getPermissionIdByName('CONTACT STUDENT');
 
@@ -327,81 +324,64 @@ if (!$hasPermission) {
 
                                 //only show the contact form if the user has the contact student permission
                                 if ($hasContactPermission) { ?>
-                        <div id="info" class="">
-                            <!-- Contact Student Form Modal-->
-                            <button type="button" id="openContactModal" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#contactStudentModal">
-                                Contact Student
-                            </button>
-                            <!-- Modal -->
-                            <div id="contactStudentModal" class="modal fade contact" tabindex="-1" role="dialog"
-                                aria-labelledby="#studentContactForm" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h3 class="modal-title" id="studentContactForm">Contact Student -
-                                                <?php echo $student_name; ?></h3>
-                                            <button type="button" class="btn-close close" data-bs-dismiss="modal"
-                                                aria-label="Close">
-                                                <i class="fa-solid fa-times"></i>
-                                            </button>
+                                    <div id="info" class="">
+                                        <!-- Contact Student Form Modal-->
+                                        <button type="button" id="openContactModal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contactStudentModal">
+                                            Contact Student
+                                        </button>
+                                        <!-- Modal -->
+                                        <div id="contactStudentModal" class="modal fade contact" tabindex="-1" role="dialog" aria-labelledby="#studentContactForm" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h3 class="modal-title" id="studentContactForm">Contact Student -
+                                                            <?php echo $student_name; ?></h3>
+                                                        <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
+                                                            <i class="fa-solid fa-times"></i>
+                                                        </button>
+                                                    </div>
+                                                    <form id=" contactForm" action="#" method="post">
+                                                        <div class="modal-body">
+                                                            <label for="studentName">Student Name:</label>
+                                                            <input class="form-control" type="text" id="studentName" name="studentName" value="<?php echo $student_name; ?>" placeholder="<?php echo $student_name; ?>" disabled required>
+
+                                                            <label for="studentEmail">Student Email:</label>
+                                                            <input class="form-control" type="email" id="studentEmail" name="studentEmail" value="<?php echo $student_email; ?>" placeholder="<?php echo $student_email; ?>" disabled required>
+
+                                                            <label for="subject">Subject:</label>
+                                                            <input class="form-control" type="text" id="subject" name="subject" required>
+
+                                                            <label for="message">Message:</label>
+                                                            <textarea class="form-control" id="message" name="message" required></textarea>
+
+                                                            <input class="form-control" type="hidden" id="studentId" name="studentId" value="<?php echo $student_id; ?>">
+                                                            <input class="form-control" type="hidden" id="studentName" name="studentName" value="<?php echo $student_name; ?>">
+                                                            <input class="form-control" type="hidden" id="studentEmail" name="studentEmail" value="<?php echo $student_email; ?>">
+                                                            <input class="form-control" type="hidden" id="senderId" name="senderId" value="<?php echo $_SESSION['user_id']; ?>">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                            <input class="form-control" type="submit" id="submitContact" name="submitContact" value="Send">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <form id=" contactForm" action="#" method="post">
-                                            <div class="modal-body">
-                                                <label for="studentName">Student Name:</label>
-                                                <input class="form-control" type="text" id="studentName"
-                                                    name="studentName" value="<?php echo $student_name; ?>"
-                                                    placeholder="<?php echo $student_name; ?>" disabled required>
-
-                                                <label for="studentEmail">Student Email:</label>
-                                                <input class="form-control" type="email" id="studentEmail"
-                                                    name="studentEmail" value="<?php echo $student_email; ?>"
-                                                    placeholder="<?php echo $student_email; ?>" disabled required>
-
-                                                <label for="subject">Subject:</label>
-                                                <input class="form-control" type="text" id="subject" name="subject"
-                                                    required>
-
-                                                <label for="message">Message:</label>
-                                                <textarea class="form-control" id="message" name="message"
-                                                    required></textarea>
-
-                                                <input class="form-control" type="hidden" id="studentId"
-                                                    name="studentId" value="<?php echo $student_id; ?>">
-                                                <input class="form-control" type="hidden" id="studentName"
-                                                    name="studentName" value="<?php echo $student_name; ?>">
-                                                <input class="form-control" type="hidden" id="studentEmail"
-                                                    name="studentEmail" value="<?php echo $student_email; ?>">
-                                                <input class="form-control" type="hidden" id="senderId" name="senderId"
-                                                    value="<?php echo $_SESSION['user_id']; ?>">
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Cancel</button>
-                                                <input class="form-control" type="submit" id="submitContact"
-                                                    name="submitContact" value="Send">
-                                            </div>
-                                        </form>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="info" class="">
-                            <!-- Contact Result Modal-->
-                            <div id="contactResultModal" class="modal fade contact" tabindex="-1" role="dialog"
-                                aria-labelledby="#studentContactResult" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h3 class="modal-title" id="studentContactResult">Contact Student -
-                                                <?php echo $student_name; ?> : Result</h3>
-                                            <button type="button" class="btn-close close" data-bs-dismiss="modal"
-                                                aria-label="Close">
-                                                <i class="fa-solid fa-times"></i>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <?php
+                                    <div id="info" class="">
+                                        <!-- Contact Result Modal-->
+                                        <div id="contactResultModal" class="modal fade contact" tabindex="-1" role="dialog" aria-labelledby="#studentContactResult" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h3 class="modal-title" id="studentContactResult">Contact Student -
+                                                            <?php echo $student_name; ?> : Result</h3>
+                                                        <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
+                                                            <i class="fa-solid fa-times"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <?php
                                                         //check that mailResult is set
                                                         if (isset($mailResult)) {
                                                             //if the mailResult is false, display an error message
@@ -417,26 +397,24 @@ if (!$hasPermission) {
                                                             }
                                                         }
                                                         ?>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Dismiss</button>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                <?php } else { ?>
+                                    <div id="info" class="">
+                                        <p>You do not have permission to contact students.</p>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
-                        <?php } else { ?>
-                        <div id="info" class="">
-                            <p>You do not have permission to contact students.</p>
-                        </div>
-                        <?php } ?>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>"
-                        class="btn btn-secondary">Back to Students</a>
-                    <?php /*confirm user has a role with delete student permissions*/
+                        <div class="card-footer">
+                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>" class="btn btn-secondary">Back to Students</a>
+                            <?php /*confirm user has a role with delete student permissions*/
                             //get the delete student permission id
                             $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
 
@@ -445,104 +423,98 @@ if (!$hasPermission) {
 
                             //only show the delete button if the user has the delete student permission
                             if ($hasDeletePermission) { ?>
-                    <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
-                        data-bs-target="#deleteStudentModal">
-                        Delete Student
-                    </button>
-                    <?php } ?>
-                </div>
-                <?php if ($hasDeletePermission) { ?>
-                <div id="info" class="">
-                    <!-- Delete Student Modal-->
-                    <!-- Modal -->
-                    <div id="deleteStudentModal" class="modal fade delete" tabindex="-1" role="dialog"
-                        aria-labelledby="#studentDeleteModal" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h3 class="modal-title" id="studentDeleteModal">Delete Student -
-                                        <?php echo $student->getStudentFullName(intval($student_id)); ?></h3>
-                                    <button type="button" class="btn-close close" data-bs-dismiss="modal"
-                                        aria-label="Close">
-                                        <i class="fa-solid fa-times"></i>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Are you sure you want to delete this student?</p>
-                                    <p>This action cannot be undone.</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <form
-                                        action="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single&action=delete&id=' . $student_id; ?>"
-                                        method="post">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-danger">Delete Student</button>
-                                    </form>
+                                <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteStudentModal">
+                                    Delete Student
+                                </button>
+                            <?php } ?>
+                        </div>
+                        <?php if ($hasDeletePermission) { ?>
+                            <div id="info" class="">
+                                <!-- Delete Student Modal-->
+                                <!-- Modal -->
+                                <div id="deleteStudentModal" class="modal fade delete" tabindex="-1" role="dialog" aria-labelledby="#studentDeleteModal" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title" id="studentDeleteModal">Delete Student -
+                                                    <?php echo $student->getStudentFullName(intval($student_id)); ?></h3>
+                                                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
+                                                    <i class="fa-solid fa-times"></i>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are you sure you want to delete this student?</p>
+                                                <p>This action cannot be undone.</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form action="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single&action=delete&id=' . $student_id; ?>" method="post">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-danger">Delete Student</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php } ?>
                     </div>
                 </div>
-                <?php } ?>
             </div>
-        </div>
-    </div>
-    <?php
+            <?php
             //if mailSend is true, display the contact result modal
             if ($mailSend) { ?>
-    <script>
-    $(document).ready(function() {
-        $('#contactResultModal').modal('show');
-    });
-    </script>
-    <?php } ?>
-</div>
-<script type="module">
-/** import the simple-datatables module, implementation based on the demos/documentation from @fiduswriter/simple-datatables
- * from https://fiduswriter.github.io/simple-datatables/documentation/
- **/
-import {
-    DataTable
-} from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
-const dt = new DataTable("table", {
-    scrollY: "50%",
-    rowNavigation: true,
-    perPageSelect: [5, 10, 15, 20, 25, 50, ["All", -1]],
-    classes: {
-        active: "active",
-        disabled: "disabled",
-        selector: "form-select",
-        paginationList: "pagination",
-        paginationListItem: "page-item",
-        paginationListItemLink: "page-link"
-    },
-    columns: [{
-            select: 0,
-            type: "date",
-            format: "MM/DD/YYYY",
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 1,
-            type: "date",
-            format: "h:i A",
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 2,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 3,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 4,
-            sortSequence: ["desc", "asc"]
-        }
-    ],
-    template: options => `<div class='${options.classes.top} fixed-table-toolbar'>
+                <script>
+                    $(document).ready(function() {
+                        $('#contactResultModal').modal('show');
+                    });
+                </script>
+            <?php } ?>
+        </div>
+        <script type="module">
+            /** import the simple-datatables module, implementation based on the demos/documentation from @fiduswriter/simple-datatables
+             * from https://fiduswriter.github.io/simple-datatables/documentation/
+             **/
+            import {
+                DataTable
+            } from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
+            const dt = new DataTable("table", {
+                scrollY: "50%",
+                rowNavigation: true,
+                perPageSelect: [5, 10, 15, 20, 25, 50, ["All", -1]],
+                classes: {
+                    active: "active",
+                    disabled: "disabled",
+                    selector: "form-select",
+                    paginationList: "pagination",
+                    paginationListItem: "page-item",
+                    paginationListItemLink: "page-link"
+                },
+                columns: [{
+                        select: 0,
+                        type: "date",
+                        format: "MM/DD/YYYY",
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 1,
+                        type: "date",
+                        format: "h:i A",
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 2,
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 3,
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 4,
+                        sortSequence: ["desc", "asc"]
+                    }
+                ],
+                template: options => `<div class='${options.classes.top} '>
     ${
     options.paging && options.perPageSelect ?
         `<div class='${options.classes.dropdown} bs-bars float-left'>
@@ -561,7 +533,7 @@ const dt = new DataTable("table", {
 }
 </div>
 <div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
-<div class='${options.classes.bottom} fixed-table-toolbar'>
+<div class='${options.classes.bottom} '>
     ${
     options.paging ?
         `<div class='${options.classes.info}'></div>` :
@@ -569,53 +541,53 @@ const dt = new DataTable("table", {
 }
     <nav class='${options.classes.pagination}'></nav>
 </div>`,
-    tableRender: (_data, table, _type) => {
-        const thead = table.childNodes[0]
-        thead.childNodes[0].childNodes.forEach(th => {
-            //if the th is not sortable, don't add the sortable class
-            if (th.options?.sortable === false) {
-                return
-            } else {
-                if (!th.attributes) {
-                    th.attributes = {}
-                }
-                th.attributes.scope = "col"
-                const innerHeader = th.childNodes[0]
-                if (!innerHeader.attributes) {
-                    innerHeader.attributes = {}
-                }
-                let innerHeaderClass = innerHeader.attributes.class ?
-                    `${innerHeader.attributes.class} th-inner` : "th-inner"
+                tableRender: (_data, table, _type) => {
+                    const thead = table.childNodes[0]
+                    thead.childNodes[0].childNodes.forEach(th => {
+                        //if the th is not sortable, don't add the sortable class
+                        if (th.options?.sortable === false) {
+                            return
+                        } else {
+                            if (!th.attributes) {
+                                th.attributes = {}
+                            }
+                            th.attributes.scope = "col"
+                            const innerHeader = th.childNodes[0]
+                            if (!innerHeader.attributes) {
+                                innerHeader.attributes = {}
+                            }
+                            let innerHeaderClass = innerHeader.attributes.class ?
+                                `${innerHeader.attributes.class} th-inner` : "th-inner"
 
-                if (innerHeader.nodeName === "a") {
-                    innerHeaderClass += " sortable sortable-center both"
-                    if (th.attributes.class?.includes("desc")) {
-                        innerHeaderClass += " desc"
-                    } else if (th.attributes.class?.includes("asc")) {
-                        innerHeaderClass += " asc"
+                            if (innerHeader.nodeName === "a") {
+                                innerHeaderClass += " sortable sortable-center both"
+                                if (th.attributes.class?.includes("desc")) {
+                                    innerHeaderClass += " desc"
+                                } else if (th.attributes.class?.includes("asc")) {
+                                    innerHeaderClass += " asc"
+                                }
+                            }
+                            innerHeader.attributes.class = innerHeaderClass
+                        }
+                    })
+
+                    return table
+                }
+            })
+            dt.columns.add({
+                data: dt.data.data.map((_row, index) => index),
+                heading: "#",
+                render: (_data, td, _index, _cIndex) => {
+                    if (!td.attributes) {
+                        td.attributes = {}
                     }
+                    td.attributes.scope = "row"
+                    td.nodeName = "TH"
+                    return td
                 }
-                innerHeader.attributes.class = innerHeaderClass
-            }
-        })
-
-        return table
-    }
-})
-dt.columns.add({
-    data: dt.data.data.map((_row, index) => index),
-    heading: "#",
-    render: (_data, td, _index, _cIndex) => {
-        if (!td.attributes) {
-            td.attributes = {}
-        }
-        td.attributes.scope = "row"
-        td.nodeName = "TH"
-        return td
-    }
-})
-dt.columns.order([0, 1, 2, 3, 4])
-window.dt = dt
-</script>
+            })
+            dt.columns.order([0, 1, 2, 3, 4])
+            window.dt = dt
+        </script>
 <?php }
 } ?>

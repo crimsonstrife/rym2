@@ -62,17 +62,17 @@ if (!$hasPermission) {
         header('Location: ' . APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType));
     }
 ?>
-<div class="container-fluid px-4">
-    <h1 class="mt-4"><?php echo $reportListTitle; ?></h1>
-    <div class="row">
-        <div class="card mb-4">
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fa-solid fa-table"></i>
-                    Report List
-                </div>
-                <div class="card-tools">
-                    <?php
+    <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $reportListTitle; ?></h1>
+        <div class="row">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-table"></i>
+                        Report List
+                    </div>
+                    <div class="card-tools">
+                        <?php
                         //button to trigger the generate report function only if the report type is not all and the user has the create report permission
                         //get the id of the create report permission
                         $createReportPermissionID = $permissionsObject->getPermissionIdByName('CREATE REPORT');
@@ -84,33 +84,31 @@ if (!$hasPermission) {
                         if ($hasCreatePermission) {
                             //if the report type is not all, display the generate report button
                             if ($reportType != 'all') { ?>
-                    <form
-                        action="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType); ?>"
-                        method="post">
-                        <input type="hidden" name="generate_report" value="true">
-                        <button type="submit" class="btn btn-primary">Generate Report</button>
-                    </form>
-                    <?php }
+                                <form action="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType); ?>" method="post">
+                                    <input type="hidden" name="generate_report" value="true">
+                                    <button type="submit" class="btn btn-primary">Generate Report</button>
+                                </form>
+                        <?php }
                         } ?>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div>
-                    <!-- display the report list for the report type -->
-                    <table id="dataTable" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Report ID</th>
-                                <th>Report Type</th>
-                                <th>Date Created</th>
-                                <th>Created By</th>
-                                <th>Date Updated</th>
-                                <th>Updated By</th>
-                                <th data-sortable="false">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
+                <div class="card-body">
+                    <div>
+                        <!-- display the report list for the report type -->
+                        <table id="dataTable" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Report ID</th>
+                                    <th>Report Type</th>
+                                    <th>Date Created</th>
+                                    <th>Created By</th>
+                                    <th>Date Updated</th>
+                                    <th>Updated By</th>
+                                    <th data-sortable="false">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
                                 /* Setup datatable of reports */
                                 //include the users class
                                 $usersData = new User();
@@ -123,18 +121,18 @@ if (!$hasPermission) {
                                 //for each report, display it
                                 foreach ($reportsArray as $report) {
                                 ?>
-                            <tr>
-                                <td><?php echo $report['id']; ?></td>
-                                <td><?php echo $report['report_type']; ?></td>
-                                <td><?php echo $report['created_at']; ?></td>
-                                <td><?php echo $report['created_by']; ?>
-                                </td>
-                                <td><?php echo $report['updated_at']; ?></td>
-                                <td><?php echo $report['updated_by']; ?>
-                                </td>
-                                <td>
-                                    <span class="td-actions">
-                                        <?php /*confirm user has a role with read report permissions*/
+                                    <tr>
+                                        <td><?php echo $report['id']; ?></td>
+                                        <td><?php echo $report['report_type']; ?></td>
+                                        <td><?php echo $report['created_at']; ?></td>
+                                        <td><?php echo $report['created_by']; ?>
+                                        </td>
+                                        <td><?php echo $report['updated_at']; ?></td>
+                                        <td><?php echo $report['updated_by']; ?>
+                                        </td>
+                                        <td>
+                                            <span class="td-actions">
+                                                <?php /*confirm user has a role with read report permissions*/
                                                 //get the read report permission id
                                                 $updatePermissionID = $permissionsObject->getPermissionIdByName('READ REPORT');
 
@@ -143,10 +141,9 @@ if (!$hasPermission) {
 
                                                 //only show the edit button if the user has the read report permission
                                                 if ($hasReadPermission) { ?>
-                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=single&type=' . urlencode($reportType) . '&id=' . $report['id']; ?>"
-                                            class="btn btn-success">View</a>
-                                        <?php } ?>
-                                        <?php /*confirm user has a role with delete report permissions*/
+                                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=single&type=' . urlencode($reportType) . '&id=' . $report['id']; ?>" class="btn btn-success">View</a>
+                                                <?php } ?>
+                                                <?php /*confirm user has a role with delete report permissions*/
                                                 //get the delete report permission id
                                                 $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE REPORT');
 
@@ -155,142 +152,136 @@ if (!$hasPermission) {
 
                                                 //only show the delete button if the user has the delete report permission
                                                 if ($hasDeletePermission) { ?>
-                                        <button type="button" id="openDeleteModal" class="btn btn-danger"
-                                            data-bs-toggle="modal" data-bs-target="#deleteReportModal"
-                                            onclick="setDeleteID(<?php echo $report['id']; ?>)">
-                                            Delete Report
-                                        </button>
-                                        <?php } ?>
-                                    </span>
-                                </td>
-                            </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
+                                                    <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteReportModal" onclick="setDeleteID(<?php echo $report['id']; ?>)">
+                                                        Delete Report
+                                                    </button>
+                                                <?php } ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <?php if ($hasDeletePermission) { ?>
-            <div id="info" class="">
-                <!-- Delete Report Modal-->
-                <!-- Modal -->
-                <div id="deleteReportModal" class="modal fade delete" tabindex="-1" role="dialog"
-                    aria-labelledby="#reportDeleteModal" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 class="modal-title" id="reportDeleteModal">Delete Report - <span
-                                        id="reportName-Title">Report Name</span></h3>
-                                <button type="button" class="btn-close close" data-bs-dismiss="modal"
-                                    aria-label="Close">
-                                    <i class="fa-solid fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Are you sure you want to delete this report?</p>
-                                <p>This action cannot be undone.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <script>
-                                var deleteBaseURL =
-                                    "<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=single&action=delete'; ?>";
-                                </script>
-                                <form id="deleteReportForm" action="" method="post">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                                        onclick="clearDeleteID()">Cancel</button>
-                                    <button type="submit" class="btn btn-danger">Delete Report</button>
-                                </form>
+                <?php if ($hasDeletePermission) { ?>
+                    <div id="info" class="">
+                        <!-- Delete Report Modal-->
+                        <!-- Modal -->
+                        <div id="deleteReportModal" class="modal fade delete" tabindex="-1" role="dialog" aria-labelledby="#reportDeleteModal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="reportDeleteModal">Delete Report - <span id="reportName-Title">Report Name</span></h3>
+                                        <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete this report?</p>
+                                        <p>This action cannot be undone.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <script>
+                                            var deleteBaseURL =
+                                                "<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=single&action=delete'; ?>";
+                                        </script>
+                                        <form id="deleteReportForm" action="" method="post">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clearDeleteID()">Cancel</button>
+                                            <button type="submit" class="btn btn-danger">Delete Report</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                <?php } ?>
             </div>
-            <?php } ?>
         </div>
+        <?php if ($hasDeletePermission) { ?>
+            <script>
+                //set the reports array to a javascript variable
+                var reportsArray = <?php echo json_encode($reportsArray); ?>;
+
+                //function to set the delete id on the action url of the delete modal based on which report is selected
+                function setDeleteID(id) {
+                    //get the report name
+                    var reportName = reportsArray.find(report => report.id == id).report_type;
+
+                    //get the report type
+                    var reportType = reportsArray.find(report => report.id == id).report_type;
+
+                    //url encode the report type
+                    reportType = encodeURIComponent(reportType);
+
+                    //set the report name in the modal title
+                    document.getElementById("reportName-Title").innerHTML = reportName + " Report ID: " + id;
+                    //set the action url of the delete modal
+                    document.getElementById("deleteReportForm").action = deleteBaseURL + "&type=" + reportType + "&id=" + id;
+                }
+
+                function clearDeleteID() {
+                    //set the action url of the delete modal
+                    document.getElementById("deleteReportForm").action = "";
+                }
+            </script>
+        <?php } ?>
     </div>
-    <?php if ($hasDeletePermission) { ?>
-    <script>
-    //set the reports array to a javascript variable
-    var reportsArray = <?php echo json_encode($reportsArray); ?>;
-
-    //function to set the delete id on the action url of the delete modal based on which report is selected
-    function setDeleteID(id) {
-        //get the report name
-        var reportName = reportsArray.find(report => report.id == id).report_type;
-
-        //get the report type
-        var reportType = reportsArray.find(report => report.id == id).report_type;
-
-        //url encode the report type
-        reportType = encodeURIComponent(reportType);
-
-        //set the report name in the modal title
-        document.getElementById("reportName-Title").innerHTML = reportName + " Report ID: " + id;
-        //set the action url of the delete modal
-        document.getElementById("deleteReportForm").action = deleteBaseURL + "&type=" + reportType + "&id=" + id;
-    }
-
-    function clearDeleteID() {
-        //set the action url of the delete modal
-        document.getElementById("deleteReportForm").action = "";
-    }
-    </script>
-    <?php } ?>
-</div>
-<script type="module">
-/** import the simple-datatables module, implementation based on the demos/documentation from @fiduswriter/simple-datatables
- * from https://fiduswriter.github.io/simple-datatables/documentation/
- **/
-import {
-    DataTable
-} from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
-const dt = new DataTable("table", {
-    scrollY: "100vh",
-    rowNavigation: true,
-    perPageSelect: [5, 10, 15, 20, 25, 50, ["All", -1]],
-    classes: {
-        active: "active",
-        disabled: "disabled",
-        selector: "form-select",
-        paginationList: "pagination",
-        paginationListItem: "page-item",
-        paginationListItemLink: "page-link"
-    },
-    columns: [{
-            select: 0,
-            type: "numeric",
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 1,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 2,
-            type: "date",
-            format: "YYYY-MM-DD HH:mm:ss",
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 3,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 4,
-            type: "date",
-            format: "YYYY-MM-DD HH:mm:ss",
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 5,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 6,
-            sortable: false,
-            searchable: false
-        }
-    ],
-    template: options => `<div class='${options.classes.top} fixed-table-toolbar'>
+    <script type="module">
+        /** import the simple-datatables module, implementation based on the demos/documentation from @fiduswriter/simple-datatables
+         * from https://fiduswriter.github.io/simple-datatables/documentation/
+         **/
+        import {
+            DataTable
+        } from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
+        const dt = new DataTable("table", {
+            scrollY: "50vh",
+            rowNavigation: true,
+            perPageSelect: [5, 10, 15, 20, 25, 50, ["All", -1]],
+            classes: {
+                active: "active",
+                disabled: "disabled",
+                selector: "form-select",
+                paginationList: "pagination",
+                paginationListItem: "page-item",
+                paginationListItemLink: "page-link"
+            },
+            columns: [{
+                    select: 0,
+                    type: "numeric",
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 1,
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 2,
+                    type: "date",
+                    format: "YYYY-MM-DD HH:mm:ss",
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 3,
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 4,
+                    type: "date",
+                    format: "YYYY-MM-DD HH:mm:ss",
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 5,
+                    sortSequence: ["desc", "asc"]
+                },
+                {
+                    select: 6,
+                    sortable: false,
+                    searchable: false
+                }
+            ],
+            template: options => `<div class='${options.classes.top} '>
     ${
     options.paging && options.perPageSelect ?
         `<div class='${options.classes.dropdown} bs-bars float-left'>
@@ -309,7 +300,7 @@ const dt = new DataTable("table", {
 }
 </div>
 <div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
-<div class='${options.classes.bottom} fixed-table-toolbar'>
+<div class='${options.classes.bottom} '>
     ${
     options.paging ?
         `<div class='${options.classes.info}'></div>` :
@@ -317,52 +308,52 @@ const dt = new DataTable("table", {
 }
     <nav class='${options.classes.pagination}'></nav>
 </div>`,
-    tableRender: (_data, table, _type) => {
-        const thead = table.childNodes[0]
-        thead.childNodes[0].childNodes.forEach(th => {
-            //if the th is not sortable, don't add the sortable class
-            if (th.options?.sortable === false) {
-                return
-            } else {
-                if (!th.attributes) {
-                    th.attributes = {}
-                }
-                th.attributes.scope = "col"
-                const innerHeader = th.childNodes[0]
-                if (!innerHeader.attributes) {
-                    innerHeader.attributes = {}
-                }
-                let innerHeaderClass = innerHeader.attributes.class ?
-                    `${innerHeader.attributes.class} th-inner` : "th-inner"
+            tableRender: (_data, table, _type) => {
+                const thead = table.childNodes[0]
+                thead.childNodes[0].childNodes.forEach(th => {
+                    //if the th is not sortable, don't add the sortable class
+                    if (th.options?.sortable === false) {
+                        return
+                    } else {
+                        if (!th.attributes) {
+                            th.attributes = {}
+                        }
+                        th.attributes.scope = "col"
+                        const innerHeader = th.childNodes[0]
+                        if (!innerHeader.attributes) {
+                            innerHeader.attributes = {}
+                        }
+                        let innerHeaderClass = innerHeader.attributes.class ?
+                            `${innerHeader.attributes.class} th-inner` : "th-inner"
 
-                if (innerHeader.nodeName === "a") {
-                    innerHeaderClass += " sortable sortable-center both"
-                    if (th.attributes.class?.includes("desc")) {
-                        innerHeaderClass += " desc"
-                    } else if (th.attributes.class?.includes("asc")) {
-                        innerHeaderClass += " asc"
+                        if (innerHeader.nodeName === "a") {
+                            innerHeaderClass += " sortable sortable-center both"
+                            if (th.attributes.class?.includes("desc")) {
+                                innerHeaderClass += " desc"
+                            } else if (th.attributes.class?.includes("asc")) {
+                                innerHeaderClass += " asc"
+                            }
+                        }
+                        innerHeader.attributes.class = innerHeaderClass
                     }
-                }
-                innerHeader.attributes.class = innerHeaderClass
+                })
+
+                return table
             }
         })
-
-        return table
-    }
-})
-dt.columns.add({
-    data: dt.data.data.map((_row, index) => index),
-    heading: "#",
-    render: (_data, td, _index, _cIndex) => {
-        if (!td.attributes) {
-            td.attributes = {}
-        }
-        td.attributes.scope = "row"
-        td.nodeName = "TH"
-        return td
-    }
-})
-dt.columns.order([0, 1, 2, 3, 4, 5, 6])
-window.dt = dt
-</script>
+        dt.columns.add({
+            data: dt.data.data.map((_row, index) => index),
+            heading: "#",
+            render: (_data, td, _index, _cIndex) => {
+                if (!td.attributes) {
+                    td.attributes = {}
+                }
+                td.attributes.scope = "row"
+                td.nodeName = "TH"
+                return td
+            }
+        })
+        dt.columns.order([0, 1, 2, 3, 4, 5, 6])
+        window.dt = dt
+    </script>
 <?php } ?>

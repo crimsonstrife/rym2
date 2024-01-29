@@ -105,13 +105,20 @@ if (!$hasPermission) {
             $job_field = prepareData($job_field);
         }
 
+        //get the job education from the form
+        if (isset($_POST["job_education"])) {
+            $job_education = trim($_POST["job_education"]);
+            //prepare the job education
+            $job_education = prepareData($job_education);
+        }
+
         //if the action is create, create the job
         if ($action == 'create') {
             //get current user ID
             $user_id = intval($_SESSION['user_id']);
 
             //create the job
-            $jobCreated = $job->addJob($job_title, $job_info, $job_type, intval($job_field), $job_skills, $user_id);
+            $jobCreated = $job->addJob($job_title, $job_info, $job_type, intval($job_field), intval($job_education), $job_skills, $user_id);
         }
     } ?>
     <!-- Completion page content -->

@@ -29,7 +29,7 @@ $terms = $APP->getTerms();
 <div id="layout">
     <!-- main content -->
     <main>
-        <div id="layout_content">
+        <div id="layout_content" class="nav-less">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">

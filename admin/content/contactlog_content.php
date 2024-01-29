@@ -47,36 +47,36 @@ if (!isset($hasViewDashboardPermission)) {
             include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
         } else {
 ?>
-<!-- main content -->
-<div id="layout_content">
-    <main>
-        <div class="container-fluid px-4">
-            <h1 class="mt-4">Contact Log</h1>
-            <div class="row">
-                <!-- Contact Log -->
-                <div class="row">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fa-solid fa-table"></i>
-                            Student Outreach Contact Log
-                        </div>
-                        <div class="card-body">
-                            <div>
-                                <table id="dataTable" class="table table-striped table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Student Name</th>
-                                            <th>Student Email</th>
-                                            <th>School</th>
-                                            <th>Degree</th>
-                                            <th>Automatic Email?</th>
-                                            <th>Send Date</th>
-                                            <th>Sending User</th>
-                                            <th>Subject</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
+            <!-- main content -->
+            <div id="layout_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Contact Log</h1>
+                        <div class="row">
+                            <!-- Contact Log -->
+                            <div class="row">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fa-solid fa-table"></i>
+                                        Student Outreach Contact Log
+                                    </div>
+                                    <div class="card-body">
+                                        <div>
+                                            <table id="dataTable" class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Student Name</th>
+                                                        <th>Student Email</th>
+                                                        <th>School</th>
+                                                        <th>Degree</th>
+                                                        <th>Automatic Email?</th>
+                                                        <th>Send Date</th>
+                                                        <th>Sending User</th>
+                                                        <th>Subject</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
                                                     /* Setup datatable of students */
                                                     //include the student class
                                                     $studentsData = new Student();
@@ -131,17 +131,17 @@ if (!isset($hasViewDashboardPermission)) {
                                                             $automaticEmail = "Manual";
                                                         }
                                                     ?>
-                                        <tr>
-                                            <td><?php echo $studentName; ?></td>
-                                            <td><?php echo $studentEmail; ?></td>
-                                            <td><?php echo $schoolName; ?></td>
-                                            <td><?php echo $degreeName; ?></td>
-                                            <td><?php echo $automaticEmail; ?></td>
-                                            <td><?php echo $sendDate; ?></td>
-                                            <td><?php echo $sendingUserName; ?></td>
-                                            <td><?php echo $subject; ?></td>
-                                        </tr>
-                                        <?php
+                                                        <tr>
+                                                            <td><?php echo $studentName; ?></td>
+                                                            <td><?php echo $studentEmail; ?></td>
+                                                            <td><?php echo $schoolName; ?></td>
+                                                            <td><?php echo $degreeName; ?></td>
+                                                            <td><?php echo $automaticEmail; ?></td>
+                                                            <td><?php echo $sendDate; ?></td>
+                                                            <td><?php echo $sendingUserName; ?></td>
+                                                            <td><?php echo $subject; ?></td>
+                                                        </tr>
+                                                    <?php
                                                         //setup a download array
                                                         $studentContactArray[] = array(
                                                             'Student Name' => $studentName,
@@ -156,82 +156,80 @@ if (!isset($hasViewDashboardPermission)) {
                                                         );
                                                     }
                                                     ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <!-- Download CSV -->
-                            <?php
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <!-- Download CSV -->
+                                        <?php
                                         //prepare the user array for download
                                         $csvArray = $studentContactArray; ?>
-                            <form target="_blank"
-                                action="<?php echo APP_URL . '/admin/download.php?type=contact_log&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
-                                method="post" enctype="multipart/form-data">
-                                <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
-                            </form>
+                                        <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=contact_log&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                                            <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </main>
             </div>
-        </div>
-    </main>
-</div>
-<script type="module">
-/** import the simple-datatables module, implementation based on the demos/documentation from @fiduswriter/simple-datatables
- * from https://fiduswriter.github.io/simple-datatables/documentation/
- **/
-import {
-    DataTable
-} from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
-const dt = new DataTable("table", {
-    scrollY: "100vh",
-    rowNavigation: true,
-    perPageSelect: [5, 10, 15, 20, 25, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, ["All", -1]],
-    classes: {
-        active: "active",
-        disabled: "disabled",
-        selector: "form-select",
-        paginationList: "pagination",
-        paginationListItem: "page-item",
-        paginationListItemLink: "page-link"
-    },
-    columns: [{
-            select: 0,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 1,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 2,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 3,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 4,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 5,
-            type: "date",
-            format: "MM/DD/YYYY",
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 6,
-            sortSequence: ["desc", "asc"]
-        },
-        {
-            select: 7,
-            sortSequence: ["desc", "asc"]
-        }
-    ],
-    template: options => `<div class='${options.classes.top} fixed-table-toolbar'>
+            <script type="module">
+                /** import the simple-datatables module, implementation based on the demos/documentation from @fiduswriter/simple-datatables
+                 * from https://fiduswriter.github.io/simple-datatables/documentation/
+                 **/
+                import {
+                    DataTable
+                } from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
+                const dt = new DataTable("table", {
+                    scrollY: "50vh",
+                    rowNavigation: true,
+                    perPageSelect: [5, 10, 15, 20, 25, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, ["All", -1]],
+                    classes: {
+                        active: "active",
+                        disabled: "disabled",
+                        selector: "form-select",
+                        paginationList: "pagination",
+                        paginationListItem: "page-item",
+                        paginationListItemLink: "page-link"
+                    },
+                    columns: [{
+                            select: 0,
+                            sortSequence: ["desc", "asc"]
+                        },
+                        {
+                            select: 1,
+                            sortSequence: ["desc", "asc"]
+                        },
+                        {
+                            select: 2,
+                            sortSequence: ["desc", "asc"]
+                        },
+                        {
+                            select: 3,
+                            sortSequence: ["desc", "asc"]
+                        },
+                        {
+                            select: 4,
+                            sortSequence: ["desc", "asc"]
+                        },
+                        {
+                            select: 5,
+                            type: "date",
+                            format: "MM/DD/YYYY",
+                            sortSequence: ["desc", "asc"]
+                        },
+                        {
+                            select: 6,
+                            sortSequence: ["desc", "asc"]
+                        },
+                        {
+                            select: 7,
+                            sortSequence: ["desc", "asc"]
+                        }
+                    ],
+                    template: options => `<div class='${options.classes.top} '>
     ${
     options.paging && options.perPageSelect ?
         `<div class='${options.classes.dropdown} bs-bars float-left'>
@@ -250,7 +248,7 @@ const dt = new DataTable("table", {
 }
 </div>
 <div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
-<div class='${options.classes.bottom} fixed-table-toolbar'>
+<div class='${options.classes.bottom} '>
     ${
     options.paging ?
         `<div class='${options.classes.info}'></div>` :
@@ -258,54 +256,54 @@ const dt = new DataTable("table", {
 }
     <nav class='${options.classes.pagination}'></nav>
 </div>`,
-    tableRender: (_data, table, _type) => {
-        const thead = table.childNodes[0]
-        thead.childNodes[0].childNodes.forEach(th => {
-            //if the th is not sortable, don't add the sortable class
-            if (th.options?.sortable === false) {
-                return
-            } else {
-                if (!th.attributes) {
-                    th.attributes = {}
-                }
-                th.attributes.scope = "col"
-                const innerHeader = th.childNodes[0]
-                if (!innerHeader.attributes) {
-                    innerHeader.attributes = {}
-                }
-                let innerHeaderClass = innerHeader.attributes.class ?
-                    `${innerHeader.attributes.class} th-inner` : "th-inner"
+                    tableRender: (_data, table, _type) => {
+                        const thead = table.childNodes[0]
+                        thead.childNodes[0].childNodes.forEach(th => {
+                            //if the th is not sortable, don't add the sortable class
+                            if (th.options?.sortable === false) {
+                                return
+                            } else {
+                                if (!th.attributes) {
+                                    th.attributes = {}
+                                }
+                                th.attributes.scope = "col"
+                                const innerHeader = th.childNodes[0]
+                                if (!innerHeader.attributes) {
+                                    innerHeader.attributes = {}
+                                }
+                                let innerHeaderClass = innerHeader.attributes.class ?
+                                    `${innerHeader.attributes.class} th-inner` : "th-inner"
 
-                if (innerHeader.nodeName === "a") {
-                    innerHeaderClass += " sortable sortable-center both"
-                    if (th.attributes.class?.includes("desc")) {
-                        innerHeaderClass += " desc"
-                    } else if (th.attributes.class?.includes("asc")) {
-                        innerHeaderClass += " asc"
+                                if (innerHeader.nodeName === "a") {
+                                    innerHeaderClass += " sortable sortable-center both"
+                                    if (th.attributes.class?.includes("desc")) {
+                                        innerHeaderClass += " desc"
+                                    } else if (th.attributes.class?.includes("asc")) {
+                                        innerHeaderClass += " asc"
+                                    }
+                                }
+                                innerHeader.attributes.class = innerHeaderClass
+                            }
+                        })
+
+                        return table
                     }
-                }
-                innerHeader.attributes.class = innerHeaderClass
-            }
-        })
-
-        return table
-    }
-})
-dt.columns.add({
-    data: dt.data.data.map((_row, index) => index),
-    heading: "#",
-    render: (_data, td, _index, _cIndex) => {
-        if (!td.attributes) {
-            td.attributes = {}
-        }
-        td.attributes.scope = "row"
-        td.nodeName = "TH"
-        return td
-    }
-})
-dt.columns.order([0, 1, 2, 3, 4, 5, 6, 7])
-window.dt = dt
-</script>
+                })
+                dt.columns.add({
+                    data: dt.data.data.map((_row, index) => index),
+                    heading: "#",
+                    render: (_data, td, _index, _cIndex) => {
+                        if (!td.attributes) {
+                            td.attributes = {}
+                        }
+                        td.attributes.scope = "row"
+                        td.nodeName = "TH"
+                        return td
+                    }
+                })
+                dt.columns.order([0, 1, 2, 3, 4, 5, 6, 7])
+                window.dt = dt
+            </script>
 <?php }
     }
 } ?>

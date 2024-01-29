@@ -310,11 +310,12 @@ class Job
      * @param array $description //job description
      * @param string $type //job type
      * @param int $field //job field
+     * @param int $education //degree level
      * @param array $skills //required job skills
      * @param int $created_by //user id of the user creating the job
      * @return bool
      */
-    public function addJob(string $name, array $description, string $type, int $field, array $skills, int $created_by): bool
+    public function addJob(string $name, array $description, string $type, int $field, int $education, array $skills, int $created_by): bool
     {
         //split the description array into the summary and description
         $summary = $description['job_summary'];
@@ -325,10 +326,16 @@ class Job
 
         //get the current date and time
         $date = date('Y-m-d H:i:s');
+
+        //if the education is empty or 0, set it to null
+        if ($education == 0 || $education == null) {
+            $education = null;
+        }
+
         //prepare the sql statement
-        $sql = "INSERT INTO jobs (name, description, summary, type, field, skills, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO jobs (name, description, summary, type, field, education, skills, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param("ssssssssii", $name, $description, $summary, $type, $field, $skillsString, $date, $date, $created_by, $created_by);
+        $stmt->bind_param("ssssiisssii", $name, $description, $summary, $type, $field, $education, $skillsString, $date, $date, $created_by, $created_by);
         $stmt->execute();
 
         //check if the query was successful
@@ -350,11 +357,12 @@ class Job
      * @param array $description //job description
      * @param string $type //job type
      * @param int $field //job field
+     * @param int $education //degree level
      * @param array $skills //required job skills
      * @param int $updated_by //user id of the user updating the job
      * @return bool
      */
-    public function updateJob(int $id, string $name, array $description, string $type, int $field, array $skills, int $updated_by): bool
+    public function updateJob(int $id, string $name, array $description, string $type, int $field, int $education, array $skills, int $updated_by): bool
     {
         //split the description array into the summary and description
         $summary = $description['job_summary'];
@@ -362,12 +370,19 @@ class Job
 
         //convert the skills array to a JSON string
         $skillsString = json_encode($skills);
+
         //get the current date and time
         $date = date('Y-m-d H:i:s');
+
+        //if the education is empty or 0, set it to null
+        if ($education == 0 || $education == null) {
+            $education = null;
+        }
+
         //prepare the sql statement
-        $sql = "UPDATE jobs SET name = ?, description = ?, summary = ?, type = ?, field = ?, skills = ?, updated_at = ?, updated_by = ? WHERE id = ?";
+        $sql = "UPDATE jobs SET name = ?, description = ?, summary = ?, type = ?, field = ?, education = ?, skills = ?, updated_at = ?, updated_by = ? WHERE id = ?";
         $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param("sssssssii", $name, $description, $summary, $type, $field, $skillsString, $date, $updated_by, $id);
+        $stmt->bind_param("ssssiissii", $name, $description, $summary, $type, $field, $education, $skillsString, $date, $updated_by, $id);
         $stmt->execute();
 
         //check if the query was successful
@@ -532,5 +547,71 @@ class Job
 
         //return the summary
         return $summary;
+    }
+
+    /**
+     * Get the job education/ degree level from the job ID
+     *
+     * @param int $id //job id
+     *
+     * @return int
+     */
+    public function getJobEducation(int $id): int
+    {
+        //placeholder for the education
+        $education = 0;
+
+        //sql statement to get the job education
+        $sql = "SELECT education FROM jobs WHERE id = $id";
+
+        //execute the sql statement
+        $result = $this->mysqli->query($sql);
+
+        //if there are results
+        if ($result->num_rows > 0) {
+            //loop through the results
+            while ($row = $result->fetch_assoc()) {
+                //set the education
+                $education = $row['education'];
+            }
+        }
+
+        //if the education is null, return 0
+        if ($education == null) {
+            return 0;
+        } else {
+            //return the education
+            return intval($education);
+        }
+    }
+
+    /**
+     * Set the job education/ degree level for a job
+     *
+     * @param int $id //job id
+     * @param int $education //degree level
+     * @param int $updated_by //user id of the user updating the job
+     *
+     * @return bool
+     */
+    public function setJobEducation(int $id, int $education, int $updated_by = null): bool
+    {
+        //get the current date and time
+        $date = date('Y-m-d H:i:s');
+        //prepare the sql statement
+        $sql = "UPDATE jobs SET education = ?, updated_at = ?, updated_by = ? WHERE id = ?";
+        $stmt = $this->mysqli->prepare($sql);
+        $stmt->bind_param("isii", $education, $date, $updated_by, $id);
+        $stmt->execute();
+
+        //check if the query was successful
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($updated_by, 'JOB', 'UPDATED EDUCATION LEVEL FOR JOB ID: ' . $id);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

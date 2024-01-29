@@ -8,9 +8,6 @@ if (!defined('ISVALIDUSER')) {
     include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
 }
 
-use chillerlan\QRCode\{QRCode, QROptions};
-use chillerlan\QRCode\Output\QROutputInterface;
-
 //autoload composer dependencies
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
@@ -133,7 +130,7 @@ if (!$hasPermission) {
                                 <h3>Event Details</h3>
                                 <div id="info" class="">
                                     <p><strong>Event Name:</strong> <?php echo $event->getEventName($event_id); ?></p>
-                                    <p><strong>Event URL Slug:</strong> <a href="<?php echo APP_URL . '/index.php?event=' . $event->getEventSlug($event_id); ?>"><?php echo $event->getEventSlug($event_id); ?></a>
+                                    <p><span><strong>Event URL Slug:</strong> <a href="<?php echo APP_URL . '/index.php?event=' . $event->getEventSlug($event_id); ?>"><?php echo $event->getEventSlug($event_id); ?></a>&nbsp;&nbsp;<a href="<?php echo APP_URL . '/index.php?path=qrcode&event=' . $event->getEventSlug($event_id) ?>" target="_blank" class="btn btn-info btn-sm">QRCode Display Page <i class="fa-solid fa-arrow-up-right-from-square"></i></a></span>
                                     </p>
                                     <p><strong>Event Date:</strong> <?php echo $event->getEventDate($event_id); ?></p>
                                     <p><strong>Event Location:</strong> <?php echo $event->getEventLocation($event_id); ?></p>
@@ -154,19 +151,12 @@ if (!$hasPermission) {
                                 <div>
                                     <p><strong>Event QRCode:</strong> (Links to the event page)</p>
                                     <div>
-                                        <!-- QRCode -->
-                                        <?php
-                                        $qrCodeData = APP_URL . '/index.php?event=' . $event->getEventSlug($event_id);
-                                        $qrCodeOptions = new QROptions;
-                                        $qrCodeOptions->version = 7;
-                                        $qrCodeOptions->outputType = QROutputInterface::GDIMAGE_PNG;
-                                        $qrCodeOptions->scale = 20;
-                                        $qrCodeOptions->outputBase64 = true;
-                                        $qrCode = (new QRCode($qrCodeOptions))->render($qrCodeData); // per the documentation, https://php-qrcode.readthedocs.io/en/main/Usage/Quickstart.html
-                                        //output the QRCode JPG
-                                        header('Content-type: image/png');
-                                        echo '<img src="' . $qrCode . '" alt="QRCode" style="max-width: 200px; max-height: auto;">';
-                                        ?>
+                                        <a href="<?php echo APP_URL . '/index.php?path=qrcode&event=' . $event->getEventSlug($event_id) ?>" target="_blank">
+                                            <!-- QRCode -->
+                                            <?php $qrcode_max_width = '200px';
+                                            include_once(__DIR__ . '/../qrcode_display.php');
+                                            ?>
+                                        </a>
                                     </div>
                                 </div>
                                 <hr>
@@ -338,7 +328,7 @@ if (!$hasPermission) {
                     sortSequence: ["desc", "asc"]
                 }
             ],
-            template: options => `<div class='${options.classes.top} fixed-table-toolbar'>
+            template: options => `<div class='${options.classes.top} '>
     ${
     options.paging && options.perPageSelect ?
         `<div class='${options.classes.dropdown} bs-bars float-left'>
@@ -357,7 +347,7 @@ if (!$hasPermission) {
 }
 </div>
 <div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
-<div class='${options.classes.bottom} fixed-table-toolbar'>
+<div class='${options.classes.bottom} '>
     ${
     options.paging ?
         `<div class='${options.classes.info}'></div>` :

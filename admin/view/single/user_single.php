@@ -325,7 +325,7 @@ if ((!$hasPermission && !$isOwnProfile)) {
                         sortSequence: ["desc", "asc"]
                     }
                 ],
-                template: options => `<div class='${options.classes.top} fixed-table-toolbar'>
+                template: options => `<div class='${options.classes.top} '>
     ${
     options.paging && options.perPageSelect ?
         `<div class='${options.classes.dropdown} bs-bars float-left'>
@@ -344,7 +344,7 @@ if ((!$hasPermission && !$isOwnProfile)) {
 }
 </div>
 <div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
-<div class='${options.classes.bottom} fixed-table-toolbar'>
+<div class='${options.classes.bottom} '>
     ${
     options.paging ?
         `<div class='${options.classes.info}'></div>` :

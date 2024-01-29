@@ -10,11 +10,34 @@ table {
 	width: 100%;
 }
 
+#layout {
+	display: flex;
+	flex-flow: nowrap;
+}
+
 footer#layout_footer {
 	height: 8vh;
-	position: sticky;
+	position: fixed;
 	z-index: 1038;
 	bottom: 0;
+	right: 0;
+	left: 0;
+	width: 100vw;
+}
+
+.container-fluid {
+	max-width: 80%;
+	margin-left: 5%;
+}
+
+footer#layout_footer.container-fluid {
+	max-width: unset;
+	margin-left: unset;
+}
+
+footer#layout_footer.container-fluid > div.container-fluid {
+	max-width: unset;
+	margin-left: unset;
 }
 
 .table-fixedHead {
@@ -127,18 +150,6 @@ td > .td-actions > button {
 	z-index: 1;
 }
 
-.datatable-top.fixed-table-toolbar {
-	position: sticky;
-	top: 0;
-	z-index: 1;
-}
-
-.datatable-bottom.fixed-table-toolbar {
-	position: sticky;
-	bottom: 0;
-	z-index: 1;
-}
-
 .datatable-sorter,
 .datatable-filter {
 	width: max-content;
@@ -216,7 +227,7 @@ td > .td-actions > button {
 }
 .nav-fixed #layout #layout_nav {
 	width: 225px;
-	height: 93vh;
+	height: 91vh;
 	z-index: 1038;
 	background-color: var(--bs-body-bg);
 }
@@ -228,8 +239,17 @@ td > .td-actions > button {
 	overflow-y: auto;
 }
 .nav-fixed #layout #layout_content {
-	padding-left: 225px;
-	top: 56px;
+	top: 15%;
+	left: 15%;
+	position: relative;
+	height: 100vh;
+	overflow: auto;
+	width: 100vw;
+	margin-bottom: 8vh;
+}
+.nav-fixed #layout #layout_content.nav-less {
+	top: 15%;
+	left: 0%;
 }
 
 .icon::before {
@@ -416,7 +436,7 @@ span.select2-selection.select2-selection--single {
 }
 
 .events-list {
-	margin: 2%;
+	margin: 0.5%;
 	display: inline-flex;
 	flex-direction: row;
 	width: 100%;
@@ -426,7 +446,8 @@ span.select2-selection.select2-selection--single {
 	margin-left: auto;
 	margin-right: auto;
 	width: 100%;
-	padding: 2%;
+	padding: 1%;
+	padding-right: 0.5%;
 	border: none;
 }
 
@@ -543,4 +564,21 @@ span.select2-selection.select2-selection--single {
 .list-group-item.job-skill-item.selected {
 	background-color: var(--bs-primary);
 	color: var(--bs-white);
+}
+
+.qr-code-container {
+	width: 100%;
+}
+
+.qr-code-container .qr-code-render {
+	width: 100%;
+	display: flex;
+}
+
+.qr-code-container .qr-code-render img {
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	align-self: center;
+	max-width: 90vh !important;
 }

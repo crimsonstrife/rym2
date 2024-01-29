@@ -81,14 +81,17 @@ class Event
     {
         //SQL statement to get a single event by ID
         $sql = "SELECT * FROM event WHERE id = $id";
+
         //Query the database
         $result = $this->mysqli->query($sql);
+
         //If the query returns a result
         if ($result) {
             //Loop through the result and add each row to the events array
             while ($row = $result->fetch_assoc()) {
-                $event[] = $row;
+                $event = $row;
             }
+
             //if the event array is not empty, return the event
             if (!empty($event)) {
                 return $event;
@@ -727,20 +730,27 @@ class Event
     {
         //SQL statement to get the event by slug
         $sql = "SELECT * FROM event_slugs WHERE slug = ?";
+
         //prepare the statement
         $stmt = $this->mysqli->prepare($sql);
+
         //bind the parameters
         $stmt->bind_param("s", $slug);
+
         //execute the statement
         $stmt->execute();
+
         //get the result
         $result = $stmt->get_result();
+
         //if the result has rows, return the event
         if ($result->num_rows > 0) {
             //get the event id
             $id = $result->fetch_assoc()['event_id'];
+
             //get the event
             $event = $this->getEventById($id);
+
             //return the event
             return $event;
         } else {
