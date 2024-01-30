@@ -582,3 +582,7 @@ span.select2-selection.select2-selection--single {
 	align-self: center;
 	max-width: 90vh !important;
 }
+
+.required {
+	color: #dc3545;
+}
