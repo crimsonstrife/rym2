@@ -25,8 +25,6 @@ if (!isset($hasViewDashboardPermission)) {
         include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
     } else {
 
-        //TODO: check if the user is an admin or has permission to view this page
-
         //include the application class
         $APP = new Application();
 
