@@ -131,19 +131,49 @@ if (isset($_GET['action'])) {
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <!-- Form Information -->
                         <div class="col-md-6">
-                            <p><strong><label for="eventName">Event Name:</label></strong></p>
+                            <div class="info">
+                                <p>
+                                    <span class="info-title"><strong>Instructions:</strong> </span>
+                                    <span class="info-text">Use this form to edit the event information, <strong><span
+                                                class="required">*</span></strong> denotes a required field.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Event Information</h4>
+                            <p><strong><label for="eventName">Event Name: <strong><span
+                                                class="required">*</span></strong></label></strong></p>
                             <p><input type="text" id="eventName" name="event_name" class="form-control"
                                     value="<?php echo $event->getEventName($event_id); ?>"
                                     placeholder="<?php echo $event->getEventName($event_id); ?>" required></p>
-                            <p><strong><label for="eventDate">Event Date:</label></strong></p>
+                            <small id="eventNameHelp" class="form-text text-muted">Enter a unique name for the
+                                event.</small>
+                            <div class="alert alert-warning" role="alert"><span class="note-icon"><i
+                                        class="fa-solid fa-circle-exclamation"></i></span>
+                                <span class="note-text">While events can share the same name, the URL links are
+                                    generated from the name and must be unique, when multiple events share a name, the
+                                    slug
+                                    may be dramatically altered to ensure it is unique.</span>
+                            </div>
+                            <p></p>
+                            <p><strong><label for="eventDate">Event Date: <strong><span
+                                                class="required">*</span></strong></label></strong></p>
                             <p><input type="date" id="eventDate" name="event_date" class="form-control"
                                     value="<?php echo $event->getEventDate($event_id); ?>"
-                                    placeholder="<?php echo $event->getEventDate($event_id); ?>"></p>
-                            <p><strong><label for="eventLocation">Event Location:</label></strong></p>
+                                    placeholder="<?php echo $event->getEventDate($event_id); ?>" required></p>
+                            <small id="eventDateHelp" class="form-text text-muted">Enter the date of the event, must
+                                be
+                                a date in the future.</small>
+                            <p></p>
+                            <p><strong><label for="eventLocation">Event Location: <strong><span
+                                                class="required">*</span></strong></label></strong></p>
                             <div id="schoolParent" class="col-md-12 school-dropdown">
                                 <select name="event_school" id="eventLocation"
-                                    class="select2 select2-school form-control app-forms" style="width: 100%;">
+                                    class="select2 select2-school form-control app-forms" style="width: 100%;" required>
                                     <?php
                                                         //loop through the schools list
                                                         foreach ($schools_list as $school => $value) {
@@ -175,10 +205,19 @@ if (isset($_GET['action'])) {
                                                         ?>
                                 </select>
                             </div>
+                            <small id="eventLocationHelp" class="form-text text-muted">Select the location (school) of
+                                the
+                                event, if the school does not yet exist, create it in the Schools section.</small>
                         </div>
                         <div class="col-md-6">
                             <!-- Event Branding (optional) -->
                             <h4>Event Branding</h4>
+                            <div class="alert alert-info" role="alert"><span class="note-icon"><i
+                                        class="fa-solid fa-circle-info"></i></span>
+                                <span class="note-text">If you do not have a logo or banner to upload, you can create
+                                    the
+                                    event and add them later.</span>
+                            </div>
                             <p>
                                 <strong><label for="eventLogo">Event Logo:</label></strong>
                                 <!-- if there is an existing logo, show the file -->
@@ -211,6 +250,14 @@ if (isset($_GET['action'])) {
                                 <input type="file" id="eventLogoUpload" name="event_logoUpload" class="form-control"
                                     disabled hidden>
                             </p>
+                            <small id="eventLogoHelp" class="form-text text-muted">To upload a new file, select "Upload
+                                a New Logo" from the dropdown. To use an existing file, select the filename.</small>
+                            <div class="alert alert-warning" role="alert"><span class="note-icon"><i
+                                        class="fa-solid fa-circle-exclamation"></i></span>
+                                <span class="note-text">If the upload option is not available, contact the administrator
+                                    for assistance.</span>
+                            </div>
+                            <p></p>
                             <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
                                                     if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                             <p><strong><label for="eventLogo">Upload a New Logo:</label></strong></p>
@@ -265,6 +312,15 @@ if (isset($_GET['action'])) {
                                 administrator.</p>
                             <?php }
                                                 } ?>
+                            <small id="eventBannerHelp" class="form-text text-muted">To upload a new file, select
+                                "Upload
+                                a New Banner" from the dropdown. To use an existing file, select the filename.</small>
+                            <div class="alert alert-warning" role="alert"><span class="note-icon"><i
+                                        class="fa-solid fa-circle-exclamation"></i></span>
+                                <span class="note-text">If the upload option is not available, contact the administrator
+                                    for assistance.</span>
+                            </div>
+                            <p></p>
                         </div>
                     </div>
                 </div>
@@ -326,18 +382,49 @@ if (isset($_GET['action'])) {
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <!-- Form Information -->
+                        <div class="col-md-6">
+                            <div class="info">
+                                <p>
+                                    <span class="info-title"><strong>Instructions:</strong> </span>
+                                    <span class="info-text">Use this form to enter the new event information,
+                                        <strong><span class="required">*</span></strong> denotes a required
+                                        field.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <!-- Event Details -->
                         <div class="col-md-6">
-                            <p><strong><label for="eventName">Event Name:</label></strong></p>
+                            <h4>Event Information</h4>
+                            <p><strong><label for="eventName">Event Name: <strong><span
+                                                class="required">*</span></strong></label></strong></p>
                             <p><input type="text" id="eventName" name="event_name" class="form-control"
                                     placeholder="Event Name" required></p>
-                            <p><strong><label for="eventDate">Event Date:</label></strong></p>
+                            <small id="eventNameHelp" class="form-text text-muted">Enter a unique name for the
+                                event.</small>
+                            <div class="alert alert-warning" role="alert"><span class="note-icon"><i
+                                        class="fa-solid fa-circle-exclamation"></i></span>
+                                <span class="note-text">While events can share the same name, the URL links are
+                                    generated from the name and must be unique, when multiple events share a name, the
+                                    slug
+                                    may be dramatically altered to ensure it is unique.</span>
+                            </div>
+                            <p></p>
+                            <p><strong><label for="eventDate">Event Date: <strong><span
+                                                class="required">*</span></strong></label></strong></p>
                             <p><input type="date" id="eventDate" name="event_date" class="form-control"
-                                    placeholder="Event Date"></p>
-                            <p><strong><label for="eventLocation">Event Location:</label></strong></p>
+                                    placeholder="Event Date" required></p>
+                            <small id="eventDateHelp" class="form-text text-muted">Enter the date of the event, must
+                                be
+                                a date in the future.</small>
+                            <p></p>
+                            <p><strong><label for="eventLocation">Event Location: <strong><span
+                                                class="required">*</span></strong></label></strong></p>
                             <div id="schoolParent" class="col-md-12 school-dropdown">
                                 <select name="event_school" id="eventLocation"
-                                    class="select2 select2-school form-control app-forms" style="width: 100%;">
+                                    class="select2 select2-school form-control app-forms" style="width: 100%;" required>
                                     <?php
                                                     //loop through the schools list
                                                     foreach ($schools_list as $school => $value) {
@@ -350,10 +437,19 @@ if (isset($_GET['action'])) {
                                                     ?>
                                 </select>
                             </div>
+                            <small id="eventLocationHelp" class="form-text text-muted">Select the location (school) of
+                                the
+                                event, if the school does not yet exist, create it in the Schools section.</small>
                         </div>
                         <div class="col-md-6">
                             <!-- Event Branding (optional) -->
                             <h4>Event Branding</h4>
+                            <div class="alert alert-info" role="alert"><span class="note-icon"><i
+                                        class="fa-solid fa-circle-info"></i></span>
+                                <span class="note-text">If you do not have a logo or banner to upload, you can create
+                                    the
+                                    event and add them later.</span>
+                            </div>
                             <p>
                                 <strong><label for="eventLogo">Event Logo:</label></strong>
                             </p>
@@ -388,6 +484,14 @@ if (isset($_GET['action'])) {
                                 administrator.</p>
                             <?php }
                                             } ?>
+                            <small id="eventLogoHelp" class="form-text text-muted">To upload a new file, select "Upload
+                                a New Logo" from the dropdown. To use an existing file, select the filename.</small>
+                            <div class="alert alert-warning" role="alert"><span class="note-icon"><i
+                                        class="fa-solid fa-circle-exclamation"></i></span>
+                                <span class="note-text">If the upload option is not available, contact the administrator
+                                    for assistance.</span>
+                            </div>
+                            <p></p>
                             <p>
                                 <strong><label for="eventBanner">Event Banner:</label></strong>
                             </p>
@@ -422,6 +526,15 @@ if (isset($_GET['action'])) {
                                 administrator.</p>
                             <?php }
                                             } ?>
+                            <small id="eventBannerHelp" class="form-text text-muted">To upload a new file, select
+                                "Upload
+                                a New Banner" from the dropdown. To use an existing file, select the filename.</small>
+                            <div class="alert alert-warning" role="alert"><span class="note-icon"><i
+                                        class="fa-solid fa-circle-exclamation"></i></span>
+                                <span class="note-text">If the upload option is not available, contact the administrator
+                                    for assistance.</span>
+                            </div>
+                            <p></p>
                         </div>
                     </div>
                 </div>
