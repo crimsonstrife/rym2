@@ -26,6 +26,8 @@
         <div class="d-flex align-items-center justify-content-between small">
             <div class="text-muted">Copyright &copy; Patrick Barnhardt 2023</div>
             <div>
+                <a href="<?php echo APP_URL . '/admin/dashboard.php'; ?>">Admin Login</a>
+                &middot;
                 <a href="<?php echo APP_URL . '/index.php?path=privacy'; ?>">Privacy Policy</a>
                 &middot;
                 <a href="<?php echo APP_URL . '/index.php?path=terms'; ?>">Terms &amp; Conditions</a>
@@ -36,21 +38,21 @@
 </footer>
 <!-- Select2 script -->
 <script type="text/javascript">
-$(document).ready(function() {
-    $('.select2-major').select2({
-        dropdownParent: $('#majorsParent'),
-        tags: true
+    $(document).ready(function() {
+        $('.select2-major').select2({
+            dropdownParent: $('#majorsParent'),
+            tags: true
+        });
+        $('.select2-degree').select2({
+            dropdownParent: $('#degreeParent'),
+        });
+        $('.select2-school').select2({
+            dropdownParent: $('#schoolParent'),
+        });
+        $('.select2-aoi').select2({
+            dropdownParent: $('#aoiParent'),
+        });
     });
-    $('.select2-degree').select2({
-        dropdownParent: $('#degreeParent'),
-    });
-    $('.select2-school').select2({
-        dropdownParent: $('#schoolParent'),
-    });
-    $('.select2-aoi').select2({
-        dropdownParent: $('#aoiParent'),
-    });
-});
 </script>
 
 </html>
