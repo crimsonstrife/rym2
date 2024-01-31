@@ -24,10 +24,10 @@ if (!isset($hasViewDashboardPermission)) {
         //include the error message file
         include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
     } else { ?>
-<!-- main content -->
-<div id="layout_content">
-    <main>
-        <?php
+        <!-- main content -->
+        <div id="layout_content" class="w-95 mx-auto">
+            <main>
+                <?php
                 if (isset($_GET['school'])) {
                     switch ($_GET['school']) {
                         case 'list':
@@ -91,7 +91,7 @@ if (!isset($hasViewDashboardPermission)) {
                     include_once('./view/list/school_list.php');
                 }
                 ?>
-    </main>
-</div>
+            </main>
+        </div>
 <?php }
 } ?>
