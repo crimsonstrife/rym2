@@ -47,7 +47,7 @@ if (!isset($hasViewDashboardPermission)) {
         } else {
 ?>
             <!-- main content -->
-            <div id="layout_content">
+            <div id="layout_content" class="w-95 mx-auto">
                 <main>
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">Activity Log</h1>
