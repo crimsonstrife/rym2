@@ -90,24 +90,63 @@ if (isset($_GET['action'])) {
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="row">
+                        <!-- Form Information -->
+                        <div class="col-md-6">
+                            <div class="info">
+                                <p>
+                                    <span class="info-title"><strong>Instructions:</strong> </span>
+                                    <span class="info-text">Use this form to edit the media, <strong><span
+                                                class="required">*</span></strong> denotes a required field.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Update Media File Name -->
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong><label for="mediaName">Media File Name:</label></strong></p>
-                            <p><input type="text" id="mediaName" name="media_name" class="form-control"
-                                    value="<?php echo $media->getMediaFileName(intval($media_id)); ?>"
-                                    placeholder="<?php echo $media->getMediaFileName(intval($media_id)); ?>" required>
-                            </p>
+                            <div class="form-group">
+                                <p><strong><label for="mediaName">Media File Name: <strong><span
+                                                    class="required">*</span></strong></label></strong></p>
+                                <p>
+                                <div class="input-group">
+                                    <?php
+                                                    //get the media file name without the extension
+                                                    $mediaFileName = $media->getMediaFileName(intval($media_id));
+                                                    $mediaFileNameComponents = explode('.', $mediaFileName);
+                                                    $mediaFileName = $mediaFileNameComponents[0];
+                                                    ?>
+                                    <input type="text" id="mediaName" name="media_name" class="form-control"
+                                        value="<?php echo $mediaFileName; ?>"
+                                        placeholder="<?php echo $mediaFileName; ?>" required>
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <?php echo '.' . $media->getMediaFileType(intval($media_id)); ?></div>
+                                    </div>
+                                </div>
+                                </p>
+                                <p><small id="mediaNameHelp" class="form-text text-muted">Enter a unique name for the
+                                        media, without the extension.</small></p>
+                                <div class="alert alert-warning" role="alert"><span class="note-icon"><i
+                                            class="fa-solid fa-circle-exclamation"></i></span>
+                                    <span class="note-text">Changing the media name will result in renaming the file on
+                                        the server.</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- Update Media File -->
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong><label for="mediaFile">New Media File:</label></strong></p>
-                            <p><input type="file" id="mediaFile" name="media_file" class="form-control"
-                                    value="<?php echo $media->getMediaFileName(intval($media_id)); ?>"
-                                    placeholder="<?php echo $media->getMediaFileName(intval($media_id)); ?>">
-                            </p>
+                            <div class="form-group">
+                                <p><strong><label for="mediaFile">New Media File:</label></strong></p>
+                                <p><input type="file" id="mediaFile" name="media_file" class="form-control"
+                                        value="<?php echo $media->getMediaFileName(intval($media_id)); ?>"
+                                        placeholder="<?php echo $media->getMediaFileName(intval($media_id)); ?>">
+                                </p>
+                                <p><small id="mediaFileHelp" class="form-text text-muted">Select a new media file to
+                                        replace the current file.</small></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -157,6 +196,18 @@ if (isset($_GET['action'])) {
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="row">
+                        <!-- Form Information -->
+                        <div class="col-md-6">
+                            <div class="info">
+                                <p>
+                                    <span class="info-title"><strong>Instructions:</strong> </span>
+                                    <span class="info-text">Use this form to create a new media object, <strong><span
+                                                class="required">*</span></strong> denotes a required field.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Media File Name -->
                     <div class="row">
                         <div class="col-md-6">
@@ -164,15 +215,20 @@ if (isset($_GET['action'])) {
                             <p><input type="text" id="mediaName" name="media_name" class="form-control" value=""
                                     placeholder="TO BE GENERATED FROM FILENAME" disabled>
                             </p>
+                            <p><small id="mediaNameHelp" class="form-text text-muted">The media file name will be taken
+                                    from the uploaded file.</small></p>
                         </div>
                     </div>
                     <!-- Upload Media File -->
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong><label for="mediaFile">Media File:</label></strong></p>
+                            <p><strong><label for="mediaFile">Media File: <strong><span
+                                                class="required">*</span></strong></label></strong></p>
                             <p><input type="file" id="mediaFile" name="media_file" class="form-control" value=""
                                     placeholder="" required>
                             </p>
+                            <p><small id="mediaFileHelp" class="form-text text-muted">Select a media file to
+                                    upload.</small></p>
                         </div>
                     </div>
                 </div>
