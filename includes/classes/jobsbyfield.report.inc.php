@@ -449,7 +449,7 @@ class JobsByFieldReport extends Report
         $reportData = $report['data'];
 
         //declare the chart type
-        $chartType = 'bar';
+        $chartType = 'pie';
 
         //create an array to store the chart labels
         $labels = array();
@@ -471,8 +471,11 @@ class JobsByFieldReport extends Report
             //get the list of jobs
             $jobs = $row['jobs'];
 
+            //setup the label name
+            $label = $jobFieldName . ' (' . strval($jobCount) . ')';
+
             //add the job field name to the labels array
-            $labels[] = $jobFieldName;
+            $labels[] = $label;
 
             //add the job count to the data array
             $data[] = $jobCount;
@@ -483,15 +486,17 @@ class JobsByFieldReport extends Report
 
         //create an array to store the chart data
         $chartData = array(
+            'type' => $chartType,
             'labels' => $labels,
             'datasets' => array(
                 array(
+                    'label' => 'Jobs by Field',
                     'data' => $data,
                     'backgroundColor' => $colors,
                 ),
             ),
-            'type' => $chartType,
             'title' => 'Jobs by Field',
+            'colors' => $colors,
             'options' => array(
                 'responsive' => true,
                 'maintainAspectRatio' => true,
