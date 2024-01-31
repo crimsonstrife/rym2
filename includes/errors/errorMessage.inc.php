@@ -55,58 +55,58 @@ if ($errorString !== '' && $errorCode !== '') {
     //ensure the error also displays in the PHP error log, in case the panel is not visible
     error_log($errorMessage);
 ?>
-<!-- main content -->
-<div id="layout_content">
-    <main>
-        <div class="container-fluid px-4">
-            <h1 class="mt-4">Error</h1>
-            <div class="row">
-                <!-- Error Message -->
+    <!-- main content -->
+    <div id="layout_content" class="w-95 mx-auto">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">Error</h1>
                 <div class="row">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                            Look's like something went wrong...
-                        </div>
-                        <div class="card-body">
-                            <div class="alert alert-danger d-flex align-items-center" role="alert">
-                                <!-- Error Icon -->
-                                <div class="flex-shrink-0">
-                                    <i class="fa-solid fa-exclamation"></i>
-                                </div>
-                                <!-- Error Code -->
-                                <div class="ms-3">
-                                    <div class="fw-bold"><?php echo $errorCode; ?> ERROR</div>
-                                </div>
-                                <!-- Error Message -->
-                                <div class="ms-3">
-                                    <?php echo $errorString; ?>
-                                </div>
+                    <!-- Error Message -->
+                    <div class="row">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                Look's like something went wrong...
                             </div>
-                            <br>
-                            <!-- Error Guidance -->
-                            <div class="alert d-flex align-items-center" role="info">
-                                <!-- Error Icon -->
-                                <div class="flex-shrink-0">
-                                    <i class="fa-solid fa-info"></i>
+                            <div class="card-body">
+                                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                    <!-- Error Icon -->
+                                    <div class="flex-shrink-0">
+                                        <i class="fa-solid fa-exclamation"></i>
+                                    </div>
+                                    <!-- Error Code -->
+                                    <div class="ms-3">
+                                        <div class="fw-bold"><?php echo $errorCode; ?> ERROR</div>
+                                    </div>
+                                    <!-- Error Message -->
+                                    <div class="ms-3">
+                                        <?php echo $errorString; ?>
+                                    </div>
                                 </div>
+                                <br>
                                 <!-- Error Guidance -->
-                                <div class="ms-3">
-                                    <div class="fw-bold">What should I do?</div>
-                                    <ul>
-                                        <li>Try refreshing the page</li>
-                                        <li>Try again later</li>
-                                        <li>Report the error to the site administrator, providing the error code above
-                                            will help them identify the problem.</li>
-                                    </ul>
+                                <div class="alert d-flex align-items-center" role="info">
+                                    <!-- Error Icon -->
+                                    <div class="flex-shrink-0">
+                                        <i class="fa-solid fa-info"></i>
+                                    </div>
+                                    <!-- Error Guidance -->
+                                    <div class="ms-3">
+                                        <div class="fw-bold">What should I do?</div>
+                                        <ul>
+                                            <li>Try refreshing the page</li>
+                                            <li>Try again later</li>
+                                            <li>Report the error to the site administrator, providing the error code above
+                                                will help them identify the problem.</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <!-- End Error Message -->
                 </div>
-                <!-- End Error Message -->
             </div>
-        </div>
-    </main>
-</div>
+        </main>
+    </div>
 <?php } ?>
