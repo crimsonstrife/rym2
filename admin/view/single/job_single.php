@@ -74,18 +74,19 @@ if (!$hasReadPermission) {
     //if not empty, display the job information
     if (!empty($object)) {
 ?>
-        <div class="container-fluid px-4">
-            <h1 class="mt-4"><?php echo $job->getJobTitle(intval($job_id)); ?></h1>
-            <div class="row">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <i class="fa-solid fa-briefcase"></i>
-                            Job Information
-                        </div>
-                        <div class="card-buttons">
-                            <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=list'; ?>" class="btn btn-secondary">Back to Jobs</a>
-                            <?php /*confirm user has a role with update job permissions*/
+<div class="container-fluid px-4">
+    <h1 class="mt-4"><?php echo $job->getJobTitle(intval($job_id)); ?></h1>
+    <div class="row">
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fa-solid fa-briefcase"></i>
+                    Job Information
+                </div>
+                <div class="card-buttons">
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=list'; ?>"
+                        class="btn btn-secondary">Back to Jobs</a>
+                    <?php /*confirm user has a role with update job permissions*/
                             //get the update job permission id
                             $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE JOB');
 
@@ -94,9 +95,10 @@ if (!$hasReadPermission) {
 
                             //only show the edit button if the user has the update job permission
                             if ($hasUpdatePermission) { ?>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=edit&action=edit&id=' . $job_id; ?>" class="btn btn-primary">Edit Job</a>
-                            <?php } ?>
-                            <?php /*confirm user has a role with delete job permissions*/
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=edit&action=edit&id=' . $job_id; ?>"
+                        class="btn btn-primary">Edit Job</a>
+                    <?php } ?>
+                    <?php /*confirm user has a role with delete job permissions*/
                             //get the delete job permission id
                             $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE JOB');
 
@@ -105,72 +107,73 @@ if (!$hasReadPermission) {
 
                             //only show the delete button if the user has the delete job permission
                             if ($hasDeletePermission) { ?>
-                                <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteJobModal">
-                                    Delete Job
-                                </button>
-                            <?php } ?>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <!-- Single Job information -->
-                        <div class="row">
-                            <div class="col-md-6" style="height: 100%;">
-                                <h3>Job Details</h3>
-                                <div id="info" class="">
+                    <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#deleteJobModal">
+                        Delete Job
+                    </button>
+                    <?php } ?>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Single Job information -->
+                <div class="row">
+                    <div class="col-md-6" style="height: 100%;">
+                        <h3>Job Details</h3>
+                        <div id="info" class="">
+                            <div class="row">
+                                <div class="col-md-6">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <p><strong>Job Title:</strong></p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <p><?php echo $job->getJobTitle($job_id); ?></p>
-                                                </div>
+                                            <p><strong>Job Title:</strong></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><?php echo $job->getJobTitle($job_id); ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Posted By:</strong></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><?php echo $user->getUserUserName(intval($object['created_by'])); ?>
+                                                </p>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <p><strong>Posted By:</strong></p>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <p><?php echo $user->getUserUserName(intval($object['created_by'])); ?>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <p><strong>Date Posted:</strong></p>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <p><?php echo formatDate($object['created_at']); ?></p>
-                                                    </div>
-                                                </div>
+                                                <p><strong>Date Posted:</strong></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><?php echo formatDate($object['created_at']); ?></p>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p><strong>Job Summary:</strong></p>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <p><?php echo $job->getJobSummary($job_id); ?></p>
-                                            </div>
-                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p><strong>Job Summary:</strong></p>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <p><?php echo $job->getJobSummary($job_id); ?></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <p><strong>Job Type:</strong></p>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <p><?php echo $job->getJobType($job_id); ?></p>
-                                                    </div>
-                                                </div>
+                                                <p><strong>Job Type:</strong></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><?php echo $job->getJobType($job_id); ?></p>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <?php
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <?php
                                             //include the job field class
                                             $job_field = new JobField();
                                             //get the job field id
@@ -179,105 +182,110 @@ if (!$hasReadPermission) {
                                             //get the job field name
                                             $job_field_name = $job_field->getSubjectName($job_field_id);
                                             ?>
+                                    <div class="col-md-6">
+                                        <div class="row">
                                             <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <p><strong>Job Field:</strong></p>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <p><?php echo $job_field_name; ?></p>
-                                                    </div>
-                                                </div>
+                                                <p><strong>Job Field:</strong></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><?php echo $job_field_name; ?></p>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <p><strong>Job Description:</strong></p>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <p><?php echo $job->getJobDescription($job_id); ?></p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <?php
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p><strong>Job Description:</strong></p>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <p><?php echo $job->getJobDescription($job_id); ?></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <?php
                                             //get the job skills
                                             $job_skills = $job->getJobSkills($job_id);
                                             ?>
-                                            <div class="col-md-12">
-                                                <p><strong>Job Skills:</strong></p>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <ul id="jobSkillsList" name="job_skills_list" class="list-group job-skill-list">
-                                                    <?php
+                                    <div class="col-md-12">
+                                        <p><strong>Job Skills:</strong></p>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <ul id="jobSkillsList" name="job_skills_list" class="list-group job-skill-list">
+                                            <?php
                                                     //if the job skills are not empty, loop through the array and display the skills
                                                     if (!empty($job_skills)) {
                                                         foreach ($job_skills as $skill) { ?>
-                                                            <li class="list-group-item job-skill-item" style="border-top-width: 1px;">
-                                                                <?php echo $skill; ?></li>
-                                                        <?php }
+                                            <li class="list-group-item job-skill-item" style="border-top-width: 1px;">
+                                                <?php echo $skill; ?></li>
+                                            <?php }
                                                     } else { ?>
-                                                        <li style="list-style: none;">No skills listed</li>
-                                                    <?php } ?>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <?php
+                                            <li style="list-style: none;">No skills listed</li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <?php
                                             //include the degree class
                                             $degree = new Degree();
 
                                             //get the job education id
                                             $job_education_id = $job->getJobEducation($job_id);
                                             ?>
-                                            <div class="col-md-12">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <p><strong>Job Education:</strong></p>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <p><?php echo $degree->getGradeNameById($job_education_id); ?></p>
-                                                    </div>
-                                                </div>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Job Education:</strong></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><?php echo $degree->getGradeNameById($job_education_id); ?></p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer">
-                        </div>
-                        <?php if ($hasDeletePermission) { ?>
-                            <div id="info" class="">
-                                <!-- Delete Job Modal-->
-                                <!-- Modal -->
-                                <div id="deleteJobModal" class="modal fade delete" tabindex="-1" role="dialog" aria-labelledby="#jobDeleteModal" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h3 class="modal-title" id="jobDeleteModal">Delete Job -
-                                                    <?php echo $job->getJobTitle($job_id); ?></h3>
-                                                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
-                                                    <i class="fa-solid fa-times"></i>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>Are you sure you want to delete this job?</p>
-                                                <p>This action cannot be undone.</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form action="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=single&action=delete&id=' . $job_id; ?>" method="post">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-danger">Delete Job</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php } ?>
                     </div>
                 </div>
+                <?php if ($hasDeletePermission) { ?>
+                <div id="info" class="">
+                    <!-- Delete Job Modal-->
+                    <!-- Modal -->
+                    <div id="deleteJobModal" class="modal fade delete" tabindex="-1" role="dialog"
+                        aria-labelledby="#jobDeleteModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title" id="jobDeleteModal">Delete Job -
+                                        <?php echo $job->getJobTitle($job_id); ?></h3>
+                                    <button type="button" class="btn-close close" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete this job?</p>
+                                    <p>This action cannot be undone.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <form
+                                        action="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=single&action=delete&id=' . $job_id; ?>"
+                                        method="post">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-danger">Delete Job</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php } ?>
+            </div>
+            <div class="card-footer">
             </div>
         </div>
+    </div>
+</div>
 <?php }
 } ?>
