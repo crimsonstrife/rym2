@@ -433,24 +433,6 @@ if (!$hasPermission) {
                         <?php } ?>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>"
-                        class="btn btn-secondary">Back to Students</a>
-                    <?php /*confirm user has a role with delete student permissions*/
-                            //get the delete student permission id
-                            $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
-
-                            //boolean to check if the user has the delete student permission
-                            $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
-
-                            //only show the delete button if the user has the delete student permission
-                            if ($hasDeletePermission) { ?>
-                    <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
-                        data-bs-target="#deleteStudentModal">
-                        Delete Student
-                    </button>
-                    <?php } ?>
-                </div>
                 <?php if ($hasDeletePermission) { ?>
                 <div id="info" class="">
                     <!-- Delete Student Modal-->
@@ -484,6 +466,24 @@ if (!$hasPermission) {
                         </div>
                     </div>
                 </div>
+                <?php } ?>
+            </div>
+            <div class="card-footer">
+                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=list'; ?>"
+                    class="btn btn-secondary">Back to Students</a>
+                <?php /*confirm user has a role with delete student permissions*/
+                        //get the delete student permission id
+                        $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
+
+                        //boolean to check if the user has the delete student permission
+                        $hasDeletePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deletePermissionID);
+
+                        //only show the delete button if the user has the delete student permission
+                        if ($hasDeletePermission) { ?>
+                <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
+                    data-bs-target="#deleteStudentModal">
+                    Delete Student
+                </button>
                 <?php } ?>
             </div>
         </div>
