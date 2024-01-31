@@ -487,10 +487,10 @@ class MajorToFieldRatioBySchoolReport extends Report
                 ),
                 'scales' => array(
                     'x' => array(
-                        'stacked' => 'true',
+                        'stacked' => 'false',
                     ),
                     'y' => array(
-                        'stacked' => 'true',
+                        'stacked' => 'false',
                     ),
                 ),
             ),
