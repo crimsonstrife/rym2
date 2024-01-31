@@ -86,7 +86,7 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
         <div class="card mb-4">
             <div class="card-header">
                 <div class="card-title">
-                    <i class="fa-solid fa-calendar-day"></i>
+                    <i class="fa-solid fa-school"></i>
                     School Information
                 </div>
                 <div class="card-buttons">
