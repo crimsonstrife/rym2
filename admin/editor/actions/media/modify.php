@@ -83,6 +83,9 @@ if (!$hasPermission) {
             //get the current media name
             $currentMediaName = $media->getMediaFileName($media_id);
 
+            //add the file extension to the media name
+            $currentMediaName = $currentMediaName . '.' . $media->getMediaFileType($media_id);
+
             //if the current media name is different from the new media name, set the boolean to true
             if ($currentMediaName != $media_name) {
                 $fileNameChanged = true;
@@ -141,16 +144,16 @@ if (!$hasPermission) {
         }
     }
 ?>
-<!-- Completion page content -->
-<div class="container-fluid px-4">
-    <div class="row">
-        <div class="card mb-4">
-            <!-- show completion message -->
-            <div class="card-header">
-                <div class="card-title">
-                    <div>
-                        <i class="fa-solid fa-check"></i>
-                        <?php
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <div>
+                            <i class="fa-solid fa-check"></i>
+                            <?php
                             if ($action == 'edit') {
                                 if ($mediaUpdated) {
                                     echo 'Media Updated';
@@ -159,10 +162,10 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 <?php } ?>
