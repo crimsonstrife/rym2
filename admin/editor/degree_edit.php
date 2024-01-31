@@ -74,38 +74,62 @@ if (isset($_GET['action'])) {
             //if not empty, display the event information
             if (!empty($object)) {
 ?>
-                <div class="container-fluid px-4">
-                    <h1 class="mt-4"><?php echo $degree->getGradeNameById($degree_id); ?></h1>
+<div class="container-fluid px-4">
+    <h1 class="mt-4"><?php echo $degree->getGradeNameById($degree_id); ?></h1>
+    <div class="row">
+        <div class="card mb-4">
+            <!-- Edit Form -->
+            <form
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&degree=' . $_GET['degree'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>"
+                method="post" enctype="multipart/form-data">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        Edit Degree
+                    </div>
+                    <div class="card-buttons">
+                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list'; ?>"
+                            class="btn btn-secondary">Back to Degrees</a>
+                    </div>
+                </div>
+                <div class="card-body">
                     <div class="row">
-                        <div class="card mb-4">
-                            <!-- Edit Form -->
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&degree=' . $_GET['degree'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>" method="post" enctype="multipart/form-data">
-                                <div class="card-header">
-                                    <div class="card-title">
-                                        <i class="fa-solid fa-calendar-day"></i>
-                                        Edit Degree
-                                    </div>
-                                    <div class="card-buttons">
-                                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list'; ?>" class="btn btn-secondary">Back to Degrees</a>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p><strong><label for="degreeName">Degree/Grade Name:</label></strong></p>
-                                            <p><input type="text" id="degreeName" name="degree_name" class="form-control" value="<?php echo $degree->getGradeNameById($degree_id); ?>" placeholder="<?php echo $degree->getGradeNameById($degree_id); ?>" required></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class=" card-footer">
-                                    <button name="create_Button" type="submit" class="btn btn-primary">Save Changes</button>
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list'; ?>" class="btn btn-secondary">Cancel</a>
-                                </div>
-                            </form>
+                        <!-- Form Information -->
+                        <div class="col-md-6">
+                            <div class="info">
+                                <p>
+                                    <span class="info-title"><strong>Instructions:</strong> </span>
+                                    <span class="info-text">Use this form to edit the degree name, <strong><span
+                                                class="required">*</span></strong> denotes a required field.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <p><strong><label for="degreeName">Degree/Grade Name: <strong><span
+                                                    class="required">*</span></strong></label></strong></label></strong>
+                                </p>
+                                <p><input type="text" id="degreeName" name="degree_name" class="form-control"
+                                        value="<?php echo $degree->getGradeNameById($degree_id); ?>"
+                                        placeholder="<?php echo $degree->getGradeNameById($degree_id); ?>" required></p>
+                                <p><small id="degreeNameHelp" class="form-text text-muted">Enter a unique name for the
+                                        degree.</small></p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            <?php }
+                <div class=" card-footer">
+                    <button name="create_Button" type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list'; ?>"
+                        class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php }
         }
     } else if ($action == 'create') { //else if the action is create, show the degree creation form
         //get the create degree permission id
@@ -123,37 +147,60 @@ if (isset($_GET['action'])) {
             include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
         } else {
             ?>
-            <div class="container-fluid px-4">
-                <h1 class="mt-4">New Degree</h1>
-                <div class="row">
-                    <div class="card mb-4">
-                        <!-- Create Form -->
-                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&degree=' . $_GET['degree'] . '&action=' . $_GET['action']; ?>" method="post" enctype="multipart/form-data">
-                            <div class="card-header">
-                                <div class="card-title">
-                                    <i class="fa-solid fa-calendar-day"></i>
-                                    Create Degree
-                                </div>
-                                <div class="card-buttons">
-                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list'; ?>" class="btn btn-secondary">Back to Degrees</a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong><label for="degreeName">Degree/Grade Name:</label></strong></p>
-                                        <p><input type="text" id="degreeName" name="degree_name" class="form-control" placeholder="example: AA - Associates of Arts" required></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" card-footer">
-                                <button name="create_Button" type="submit" class="btn btn-primary">Save</button>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list'; ?>" class="btn btn-secondary">Cancel</a>
-                            </div>
-                        </form>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">New Degree</h1>
+    <div class="row">
+        <div class="card mb-4">
+            <!-- Create Form -->
+            <form
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&degree=' . $_GET['degree'] . '&action=' . $_GET['action']; ?>"
+                method="post" enctype="multipart/form-data">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        Create Degree
+                    </div>
+                    <div class="card-buttons">
+                        <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list'; ?>"
+                            class="btn btn-secondary">Back to Degrees</a>
                     </div>
                 </div>
-            </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Form Information -->
+                        <div class="col-md-6">
+                            <div class="info">
+                                <p>
+                                    <span class="info-title"><strong>Instructions:</strong> </span>
+                                    <span class="info-text">Use this form to add a new degree, <strong><span
+                                                class="required">*</span></strong> denotes a required field.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <p><strong><label for="degreeName">Degree/Grade Name: <strong><span
+                                                    class="required">*</span></strong></label></strong></label></strong>
+                                </p>
+                                <p><input type="text" id="degreeName" name="degree_name" class="form-control"
+                                        placeholder="example: AA - Associates of Arts" required></p>
+                                <p><small id="degreeNameHelp" class="form-text text-muted">Enter a unique name for the
+                                        degree.</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" card-footer">
+                    <button name="create_Button" type="submit" class="btn btn-primary">Save</button>
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=degrees&degree=list'; ?>"
+                        class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <?php
         }
     }
