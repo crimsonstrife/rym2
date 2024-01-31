@@ -84,7 +84,7 @@ if (isset($_GET['action'])) {
                 method="post" enctype="multipart/form-data">
                 <div class="card-header">
                     <div class="card-title">
-                        <i class="fa-solid fa-calendar-day"></i>
+                        <i class="fa-solid fa-book"></i>
                         Edit Subject
                     </div>
                     <div class="card-buttons">
@@ -94,11 +94,29 @@ if (isset($_GET['action'])) {
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <!-- Form Information -->
                         <div class="col-md-6">
-                            <p><strong><label for="subjectName">Subject/Field Name:</label></strong></p>
-                            <p><input type="text" id="subjectName" name="subject_name" class="form-control"
-                                    value="<?php echo $subject->getSubjectName($subject_id); ?>"
-                                    placeholder="<?php echo $subject->getSubjectName($subject_id); ?>" required></p>
+                            <div class="info">
+                                <p>
+                                    <span class="info-title"><strong>Instructions:</strong> </span>
+                                    <span class="info-text">Use this form to edit the subject name, <strong><span
+                                                class="required">*</span></strong> denotes a required field.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <p><strong><label for="subjectName">Subject/Field Name: <strong><span
+                                                    class="required">*</span></strong></label></strong></p>
+                                <p><input type="text" id="subjectName" name="subject_name" class="form-control"
+                                        value="<?php echo $subject->getSubjectName($subject_id); ?>"
+                                        placeholder="<?php echo $subject->getSubjectName($subject_id); ?>" required></p>
+                                <p><small id="subjectNameHelp" class="form-text text-muted">Enter a unique name for the
+                                        subject.</small>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -139,7 +157,7 @@ if (isset($_GET['action'])) {
                 method="post" enctype="multipart/form-data">
                 <div class="card-header">
                     <div class="card-title">
-                        <i class="fa-solid fa-calendar-day"></i>
+                        <i class="fa-solid fa-book"></i>
                         Create Subject
                     </div>
                     <div class="card-buttons">
@@ -149,10 +167,28 @@ if (isset($_GET['action'])) {
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <!-- Form Information -->
                         <div class="col-md-6">
-                            <p><strong><label for="subjectName">Subject/Field Name:</label></strong></p>
-                            <p><input type="text" id="subjectName" name="subject_name" class="form-control"
-                                    placeholder="example: Accounting" required></p>
+                            <div class="info">
+                                <p>
+                                    <span class="info-title"><strong>Instructions:</strong> </span>
+                                    <span class="info-text">Use this form to add a new subject, <strong><span
+                                                class="required">*</span></strong> denotes a required field.</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <p><strong><label for="subjectName">Subject/Field Name: <strong><span
+                                                    class="required">*</span></strong></label></strong></p>
+                                <p><input type="text" id="subjectName" name="subject_name" class="form-control"
+                                        placeholder="example: Accounting" required></p>
+                                <p><small id="subjectNameHelp" class="form-text text-muted">Enter a unique name for the
+                                        subject.</small>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
