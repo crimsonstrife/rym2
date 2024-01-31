@@ -158,8 +158,6 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                </div>
                 <?php if ($hasDeletePermission) { ?>
                 <div id="info" class="">
                     <!-- Delete School Modal-->
@@ -194,6 +192,8 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                     </div>
                 </div>
                 <?php } ?>
+            </div>
+            <div class="card-footer">
             </div>
         </div>
     </div>
