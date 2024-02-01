@@ -21,10 +21,12 @@ require_once(__DIR__ . '../../config/app.php');
     </head>
 
     <body class="nav-fixed">
-        <nav class="top-nav navbar navbar-expand navbar-dark bg-dark">
+        <nav class="top-nav navbar navbar-expand-lg navbar-dark bg-dark">
             <!-- Sidebar Toggle-->
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
-                <i class="icon toggleIcon"></i>
+            <button class="navbar-toggler" type="button" id="sidebarToggle" data-bs-toggle="collapse"
+                data-bs-target="#layout_nav" aria-controls="layout_nav" aria-expanded="true"
+                aria-label="Toggle Navigation">
+                <i class=" icon toggleIcon"></i>
             </button>
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="<?php echo APP_URL ?>"><?php echo htmlspecialchars(APP_NAME) ?></a>

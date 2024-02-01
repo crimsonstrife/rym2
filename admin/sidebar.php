@@ -5,8 +5,17 @@ isset($_GET['view']) ? $view = $_GET['view'] : $view = 'dashboard';
 
 ?>
 <!-- sidebar -->
-<div id="layout_nav">
+<div id="layout_nav" class="collapse navbar-collapse show">
     <nav class="side-nav accordion navbar-dark bg-dark side-nav-dark" id="sidenavAccordion">
+        <div class="side-nav-search">
+            <!-- Sidenav Search, only visible on low width screens -->
+            <form class="d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" action="<?php echo APP_URL . '/admin/dashboard.php?view=search'; ?>" method="post">
+                <div class="input-group">
+                    <input class="form-control" type="text" id="searchTerm" name="searchTerm" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                    <button title="Search" class="btn btn-primary" id="btnNavbarSearch" type="submit" value="submit" name="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
+        </div>
         <div class="side-nav-menu">
             <div class="nav">
                 <a class="nav-link <?php if ($view == 'dashboard') {

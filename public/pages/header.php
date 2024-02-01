@@ -46,7 +46,7 @@ require_once(__DIR__ . '/../../vendor/autoload.php');
     </head>
 
     <body class="nav-fixed">
-        <nav class="top-nav navbar navbar-expand navbar-dark bg-dark schoolBrandedNav">
+        <nav class="top-nav navbar navbar-expand-lg navbar-dark bg-dark schoolBrandedNav">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="<?php echo APP_URL ?>"><?php echo htmlspecialchars(APP_NAME) ?></a>
         </nav>
