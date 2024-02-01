@@ -452,6 +452,7 @@ function includeHeader(): string
     $boostrapCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'bootstrap/css/bootstrap.min.css">';
     $datatablesCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'simple-datatables/style.css">';
     $select2CSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'select2/css/select2.min.css">';
+    $select2BootstrapCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'select2/css/select2-bootstrap.min.css">';
     $fontawesomeCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'fontawesome/css/all.min.css">';
     //if style.min.css exists, load it, otherwise load the original
     if (file_exists(BASEPATH . '/public/content/assets/css/style.min.css')) {
@@ -465,7 +466,7 @@ function includeHeader(): string
     $jqueryMigrate = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery-migrate/jquery-migrate.min.js"></script>';
 
     /* Assemble the header for the application */
-    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $fontawesomeCSS . $CSS . $jQuery . $jqueryMigrate;
+    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $select2BootstrapCSS . $fontawesomeCSS . $CSS . $jQuery . $jqueryMigrate;
 
     /* Return the header for the application */
     return $header;
@@ -488,6 +489,7 @@ function includeFooter(): string
     $chartJS = '<script type="text/javascript" src="' . getLibraryPath() . 'chart.js/chart.umd.js"></script>';
     $tether = '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>';
     $select2JS = '<script type="text/javascript" src="' . getLibraryPath() . 'select2/js/select2.min.js"></script>';
+    $select2BootstrapEnabler = '<script type="text/javascript">$.fn.select2.defaults.set( "theme", "bootstrap" );</script>';
     //if scripts.min.js exists, load it, otherwise load the original
     if (file_exists(BASEPATH . '/public/content/assets/js/scripts.min.js')) {
         $JS = '<script type="text/javascript" src="' . getAssetPath() . 'js/scripts.min.js"></script>';
@@ -500,7 +502,7 @@ function includeFooter(): string
     $jqueryNoConflict = '<script>var $j = jQuery.noConflict();</script>';
 
     /* Assemble the footer for the application */
-    $footer = $datatablesJS . $tether . $select2JS . $chartJS . $dataTableJS . $dataTableJqueryJS . $boostrapJS . $fontawesomeJS . $JS;
+    $footer = $datatablesJS . $tether . $select2JS . $select2BootstrapEnabler . $chartJS . $dataTableJS . $dataTableJqueryJS . $boostrapJS . $fontawesomeJS . $JS;
 
     /* Return the footer for the application */
     return $footer;
