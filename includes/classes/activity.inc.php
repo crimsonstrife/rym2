@@ -24,7 +24,12 @@ class Activity
     //Instantiate the database connection
     public function __construct()
     {
-        $this->mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+        try {
+            $this->mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
     }
 
     //Close the database connection when the object is destroyed
@@ -171,6 +176,17 @@ class Activity
             $stmt = $this->mysqli->prepare($sql);
             $stmt->bind_param('isss', $user_id, $action_date, $action, $performed_on);
             $stmt->execute();
+        }
+
+        //close the statement
+        $stmt->close();
+
+        //log the activity
+        error_log('Activity Logged: ' . $action . ' ' . $performed_on);
+
+        //if the action is an error, throw an exception
+        if ($action == 'ERROR') {
+            throw new Exception('Error: ' . $action . ' ' . $performed_on);
         }
     }
 }

@@ -25,7 +25,12 @@ class ContactFollowUpPercentageReport extends Report
     //Instantiate the database connection
     public function __construct()
     {
-        $this->mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+        try {
+            $this->mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
     }
 
     //Close the database connection when the object is destroyed
