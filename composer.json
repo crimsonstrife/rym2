@@ -64,7 +64,6 @@
             "includes/classes/media.inc.php",
             "includes/classes/topdegreebyschool.report.inc.php",
             "includes/classes/topfieldbyschool.report.inc.php",
-            "includes/classes/majortofieldratiobyschool.report.inc.php",
             "includes/classes/jobsbyfield.report.inc.php",
             "includes/classes/contactfollowuppercentage.report.inc.php",
             "includes/classes/students.report.inc.php"
@@ -97,6 +96,8 @@
             "php -r \"copy('vendor/select2/select2/dist/css/select2.min.css', 'public/content/libs/select2/css/select2.min.css');\"",
             "php -r \"copy('vendor/select2/select2/dist/js/select2.min.js', 'public/content/libs/select2/js/select2.min.js');\"",
             "php -r \"copy('vendor/select2/select2/dist/js/select2.full.min.js', 'public/content/libs/select2/js/select2.full.min.js');\"",
+            "php -r \"copy('node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css', 'public/content/libs/select2/css/select2-bootstrap.css');\"",
+            "php -r \"copy('node_modules/select2-bootstrap-theme/dist/select2-bootstrap.min.css', 'public/content/libs/select2/css/select2-bootstrap.min.css');\"",
             "php -r \"if (!is_dir('public/content/libs/simple-datatables')) { mkdir('public/content/libs/simple-datatables', 0777, true); }\"",
             "php -r \"if (!is_dir('public/content/libs/simple-datatables/umd')) { mkdir('public/content/libs/simple-datatables/umd', 0777, true); }\"",
             "php -r \"copy('node_modules/simple-datatables/dist/style.css', 'public/content/libs/simple-datatables/style.css');\"",
