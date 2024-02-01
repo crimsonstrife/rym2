@@ -99,22 +99,25 @@ if (!$hasPermission) {
             //include the error message file
             include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
         } else { ?>
-            <div class="container-fluid px-4">
-                <h1 class="mt-4"><?php echo $reportListTitle . ' - ' . formatDate($report['created_at']) ?></h1>
-                <div class="row">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <div class="card-title">
-                                <i class="fa-solid fa-file-invoice"></i>
-                                Report
-                            </div>
-                            <div class="card-buttons">
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType); ?>" class="btn btn-secondary">Back to Report List</a>
-                                <form action="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType); ?>" method="post">
-                                    <input type="hidden" name="generate_report" value="true">
-                                    <button type="submit" class="btn btn-primary">Generate Updated Report</button>
-                                </form>
-                                <?php /*confirm user has a role with delete report permissions*/
+<div class="container-fluid px-4">
+    <h1 class="mt-4"><?php echo $reportListTitle . ' - ' . formatDate($report['created_at']) ?></h1>
+    <div class="row">
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    Report
+                </div>
+                <div class="card-buttons">
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType); ?>"
+                        class="btn btn-secondary">Back to Report List</a>
+                    <form
+                        action="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType); ?>"
+                        method="post">
+                        <input type="hidden" name="generate_report" value="true">
+                        <button type="submit" class="btn btn-primary">Generate Updated Report</button>
+                    </form>
+                    <?php /*confirm user has a role with delete report permissions*/
                                 //get the delete report permission id
                                 $deletePermissionID = $permissionsObject->getPermissionIdByName('DELETE REPORT');
 
@@ -123,45 +126,46 @@ if (!$hasPermission) {
 
                                 //only show the delete button if the user has the delete report permission
                                 if ($hasDeletePermission) { ?>
-                                    <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteReportModal">
-                                        Delete Report
-                                    </button>
-                                <?php } ?>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <!-- Single Report information -->
+                    <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#deleteReportModal">
+                        Delete Report
+                    </button>
+                    <?php } ?>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Single Report information -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Report Metadata</h3>
+                        <div id="info" class="">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h3>Report Metadata</h3>
-                                    <div id="info" class="">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <p><strong>Report ID:</strong> <?php echo $report['id']; ?></p>
-                                                <p><strong>Report Type:</strong> <?php echo $report['report_type']; ?></p>
-                                                <p><strong>Report Created:</strong> <?php echo $report['created_at']; ?>
-                                                </p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p><strong>Report Created By:</strong> <?php echo $report['created_by']; ?></p>
-                                                <p><strong>Report Updated:</strong> <?php echo $report['updated_at']; ?></p>
-                                                <p><strong>Report Updated By:</strong> <?php echo $report['updated_by']; ?></p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <p><strong>Report ID:</strong> <?php echo $report['id']; ?></p>
+                                    <p><strong>Report Type:</strong> <?php echo $report['report_type']; ?></p>
+                                    <p><strong>Report Created:</strong> <?php echo $report['created_at']; ?>
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Report Created By:</strong> <?php echo $report['created_by']; ?></p>
+                                    <p><strong>Report Updated:</strong> <?php echo $report['updated_at']; ?></p>
+                                    <p><strong>Report Updated By:</strong> <?php echo $report['updated_by']; ?></p>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h3>Report Data</h3>
-                                    <!-- display the report datatable -->
-                                    <?php $reportData = $report['data'] ?>
-                                    <div class="card-body">
-                                        <div>
-                                            <table id="dataTable" class="table table-striped table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <?php
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Report Data</h3>
+                        <!-- display the report datatable -->
+                        <?php $reportData = $report['data'] ?>
+                        <div class="card-body">
+                            <div>
+                                <table id="dataTable" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <?php
                                                         //get the report data headers
                                                         $reportDataHeaders = array_keys($reportData[0]);
 
@@ -178,10 +182,10 @@ if (!$hasPermission) {
                                                             echo '<th>' . $header . '</th>';
                                                         }
                                                         ?>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
                                                     //display the report data
                                                     foreach ($reportData as $row) {
                                                         echo '<tr>';
@@ -191,23 +195,23 @@ if (!$hasPermission) {
                                                         echo '</tr>';
                                                     }
                                                     ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <!-- display the report chart -->
-                                <div class="col-md-10">
-                                    <h3>Report Chart</h3>
-                                    <canvas id="reportChartJS" class="center"></canvas>
-                                </div>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <!-- Download CSV -->
-                            <?php
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- display the report chart -->
+                    <div class="col-md-10">
+                        <h3>Report Chart</h3>
+                        <canvas id="reportChartJS" class="center"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <!-- Download CSV -->
+                <?php
                             /*confirm user has a role with export reports permissions*/
                             //get the id of the export reports permission
                             $exportReportsPermissionID = $permissionsObject->getPermissionIdByName('EXPORT REPORT');
@@ -227,57 +231,74 @@ if (!$hasPermission) {
                                     }
                                 }
                             ?>
-                                <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=reports&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
-                                    <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
-                                </form>
-                            <?php } else { ?>
-                                <p class="text-danger">You do not have permission to download the CSV from this report.</p>
-                                <button class="btn btn-success" disabled>Export to CSV</button>
-                            <?php } ?>
-                        </div>
-                        <?php if ($hasDeletePermission) { ?>
-                            <div id="info" class="">
-                                <!-- Delete Report Modal-->
-                                <!-- Modal -->
-                                <div id="deleteReportModal" class="modal fade delete" tabindex="-1" role="dialog" aria-labelledby="#reportDeleteModal" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h3 class="modal-title" id="reportDeleteModal">Delete Report -
-                                                    <?php echo $report['report_type'] . ' With ID: ' . strval($reportId); ?></h3>
-                                                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
-                                                    <i class="fa-solid fa-times"></i>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>Are you sure you want to delete this report?</p>
-                                                <p>This action cannot be undone.</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form action="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=single&action=delete&type=' . urlencode($reportType) . '&id=' . $reportId; ?>" method="post">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-danger">Delete Report</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                <form target="_blank"
+                    action="<?php echo APP_URL . '/admin/download.php?type=reports&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
+                    method="post" enctype="multipart/form-data">
+                    <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
+                </form>
+                <?php } else { ?>
+                <p class="text-danger">You do not have permission to download the CSV from this report.</p>
+                <button class="btn btn-success" disabled>Export to CSV</button>
+                <?php } ?>
+            </div>
+            <?php if ($hasDeletePermission) { ?>
+            <div id="info" class="">
+                <!-- Delete Report Modal-->
+                <!-- Modal -->
+                <div id="deleteReportModal" class="modal fade delete" tabindex="-1" role="dialog"
+                    aria-labelledby="#reportDeleteModal" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title" id="reportDeleteModal">Delete Report -
+                                    <?php echo $report['report_type'] . ' With ID: ' . strval($reportId); ?></h3>
+                                <button type="button" class="btn-close close" data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                    <i class="fa-solid fa-times"></i>
+                                </button>
                             </div>
-                        <?php } ?>
-                        <script type="text/javascript" src="<?php echo getLibraryPath() . 'chart.js/chart.umd.js'; ?>"></script>
-                        <script type="text/javascript">
-                            //get the chart element
-                            const ctx = document.getElementById('reportChartJS');
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this report?</p>
+                                <p>This action cannot be undone.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <form
+                                    action="<?php echo APP_URL . '/admin/dashboard.php?view=reports&report=single&action=delete&type=' . urlencode($reportType) . '&id=' . $reportId; ?>"
+                                    method="post">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-danger">Delete Report</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
+            <script type="text/javascript" src="<?php echo getLibraryPath() . 'chart.js/chart.umd.js'; ?>"></script>
+            <script type="text/javascript">
+            //get the chart element
+            const ctx = document.getElementById('reportChartJS');
 
-                            <?php
+            <?php
                             //get the report's chart data
                             $chartData = $reportClass->getChartableReportData($reportId);
 
-                            //get the report's chart labels
-                            $reportChartLabels = $chartData['labels'];
-
-                            //get the report's chart data
-                            $reportChartData = $chartData['datasets'];
+                            //check how the chart data is structured
+                            if (isset($chartData['labels'])) {
+                                //get the report's chart labels
+                                $reportChartLabels = $chartData['labels'];
+                            } else {
+                                //get the report's chart labels
+                                $reportChartLabels = $chartData['data']['labels'];
+                            }
+                            if (isset($chartData['labels'])) {
+                                //get the report's chart data
+                                $reportChartData = $chartData['datasets'];
+                            } else {
+                                //get the report's chart data
+                                $reportChartData = $chartData['data']['datasets'];
+                            }
 
                             //format the report's chart data
                             $reportChartData = json_encode($reportChartData);
@@ -294,39 +315,39 @@ if (!$hasPermission) {
                             //format the report's chart options
                             $reportChartOptions = json_encode($reportChartOptions);
                             ?>
-                            //setup the chart
-                            new Chart(ctx, {
-                                type: '<?php echo $reportChartType; ?>',
-                                data: {
-                                    labels: <?php echo json_encode($reportChartLabels); ?>,
-                                    datasets: <?php echo $reportChartData; ?>
-                                },
-                                options: <?php echo $reportChartOptions; ?>
-                            });
-                        </script>
-                    </div>
-                </div>
-            </div>
-            <script type="module">
-                /** import the simple-datatables module, implementation based on the demos/documentation from @fiduswriter/simple-datatables
-                 * from https://fiduswriter.github.io/simple-datatables/documentation/
-                 **/
-                import {
-                    DataTable
-                } from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
-                const dt = new DataTable("table", {
-                    scrollY: "50vh",
-                    rowNavigation: true,
-                    perPageSelect: [5, 10, 15, 20, 25, ["All", -1]],
-                    classes: {
-                        active: "active",
-                        disabled: "disabled",
-                        selector: "form-select",
-                        paginationList: "pagination",
-                        paginationListItem: "page-item",
-                        paginationListItemLink: "page-link"
-                    },
-                    columns: [<?php
+            //setup the chart
+            new Chart(ctx, {
+                type: '<?php echo $reportChartType; ?>',
+                data: {
+                    labels: <?php echo json_encode($reportChartLabels); ?>,
+                    datasets: <?php echo $reportChartData; ?>
+                },
+                options: <?php echo $reportChartOptions; ?>
+            });
+            </script>
+        </div>
+    </div>
+</div>
+<script type="module">
+/** import the simple-datatables module, implementation based on the demos/documentation from @fiduswriter/simple-datatables
+ * from https://fiduswriter.github.io/simple-datatables/documentation/
+ **/
+import {
+    DataTable
+} from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
+const dt = new DataTable("table", {
+    scrollY: "50vh",
+    rowNavigation: true,
+    perPageSelect: [5, 10, 15, 20, 25, ["All", -1]],
+    classes: {
+        active: "active",
+        disabled: "disabled",
+        selector: "form-select",
+        paginationList: "pagination",
+        paginationListItem: "page-item",
+        paginationListItemLink: "page-link"
+    },
+    columns: [<?php
                                 //for the number of headers, add a column for each header
                                 for ($i = 0; $i < $headerCount; $i++) {
                                     echo '{select: ' . $i . ', sortSequence: ["desc", "asc"]}';
@@ -335,7 +356,7 @@ if (!$hasPermission) {
                                     }
                                 }
                                 ?>],
-                    template: options => `<div class='${options.classes.top} '>
+    template: options => `<div class='${options.classes.top} '>
     ${
     options.paging && options.perPageSelect ?
         `<div class='${options.classes.dropdown} bs-bars float-left'>
@@ -362,52 +383,52 @@ if (!$hasPermission) {
 }
     <nav class='${options.classes.pagination}'></nav>
 </div>`,
-                    tableRender: (_data, table, _type) => {
-                        const thead = table.childNodes[0]
-                        thead.childNodes[0].childNodes.forEach(th => {
-                            //if the th is not sortable, don't add the sortable class
-                            if (th.options?.sortable === false) {
-                                return
-                            } else {
-                                if (!th.attributes) {
-                                    th.attributes = {}
-                                }
-                                th.attributes.scope = "col"
-                                const innerHeader = th.childNodes[0]
-                                if (!innerHeader.attributes) {
-                                    innerHeader.attributes = {}
-                                }
-                                let innerHeaderClass = innerHeader.attributes.class ?
-                                    `${innerHeader.attributes.class} th-inner` : "th-inner"
+    tableRender: (_data, table, _type) => {
+        const thead = table.childNodes[0]
+        thead.childNodes[0].childNodes.forEach(th => {
+            //if the th is not sortable, don't add the sortable class
+            if (th.options?.sortable === false) {
+                return
+            } else {
+                if (!th.attributes) {
+                    th.attributes = {}
+                }
+                th.attributes.scope = "col"
+                const innerHeader = th.childNodes[0]
+                if (!innerHeader.attributes) {
+                    innerHeader.attributes = {}
+                }
+                let innerHeaderClass = innerHeader.attributes.class ?
+                    `${innerHeader.attributes.class} th-inner` : "th-inner"
 
-                                if (innerHeader.nodeName === "a") {
-                                    innerHeaderClass += " sortable sortable-center both"
-                                    if (th.attributes.class?.includes("desc")) {
-                                        innerHeaderClass += " desc"
-                                    } else if (th.attributes.class?.includes("asc")) {
-                                        innerHeaderClass += " asc"
-                                    }
-                                }
-                                innerHeader.attributes.class = innerHeaderClass
-                            }
-                        })
+                if (innerHeader.nodeName === "a") {
+                    innerHeaderClass += " sortable sortable-center both"
+                    if (th.attributes.class?.includes("desc")) {
+                        innerHeaderClass += " desc"
+                    } else if (th.attributes.class?.includes("asc")) {
+                        innerHeaderClass += " asc"
+                    }
+                }
+                innerHeader.attributes.class = innerHeaderClass
+            }
+        })
 
-                        return table
-                    }
-                })
-                dt.columns.add({
-                    data: dt.data.data.map((_row, index) => index),
-                    heading: "#",
-                    render: (_data, td, _index, _cIndex) => {
-                        if (!td.attributes) {
-                            td.attributes = {}
-                        }
-                        td.attributes.scope = "row"
-                        td.nodeName = "TH"
-                        return td
-                    }
-                })
-                dt.columns.order([<?php
+        return table
+    }
+})
+dt.columns.add({
+    data: dt.data.data.map((_row, index) => index),
+    heading: "#",
+    render: (_data, td, _index, _cIndex) => {
+        if (!td.attributes) {
+            td.attributes = {}
+        }
+        td.attributes.scope = "row"
+        td.nodeName = "TH"
+        return td
+    }
+})
+dt.columns.order([<?php
                                     //for the number of headers, add a column for each header
                                     for ($i = 0; $i < $headerCount; $i++) {
                                         echo $i;
@@ -416,8 +437,8 @@ if (!$hasPermission) {
                                         }
                                     }
                                     ?>])
-                window.dt = dt
-            </script>
+window.dt = dt
+</script>
 <?php }
     }
 } ?>
