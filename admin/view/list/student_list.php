@@ -303,7 +303,7 @@ if (!$hasReadPermission) {
     <nav class='${options.classes.pagination}'></nav>
 </div>`,
             tableRender: (_data, table, _type) => {
-                const thead = table.ch
+                const thead = table.childNodes[0]
                 thead.childNodes[0].childNodes.forEach(th => {
                     //if the th is not sortable, don't add the sortable class
                     if (th.options?.sortable === false) {
