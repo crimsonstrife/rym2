@@ -440,8 +440,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div id="layout">
     <!-- main content -->
     <main>
-        <div id="layout_content" class="nav-less">
-            <div class="container">
+        <div id="layout_content" class="w-95 mx-auto nav-less">
+            <div class="container-fluid px-4">
                 <div class="row">
                     <div class="col-md-12">
                         <h1>Welcome to the <?php if (!$event_location == null) {
@@ -456,7 +456,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
             </div>
-            <div class="container">
+            <div class="container-fluid px-4">
                 <div class="row">
                     <!-- List of available jobs -->
                     <div class="col-md-12">

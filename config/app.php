@@ -456,9 +456,15 @@ function includeHeader(): string
     $fontawesomeCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'fontawesome/css/all.min.css">';
     //if style.min.css exists, load it, otherwise load the original
     if (file_exists(BASEPATH . '/public/content/assets/css/style.min.css')) {
-        $CSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/style.min.css">';
+        $styleCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/style.min.css">';
     } else {
-        $CSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/style.css">';
+        $styleCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/style.css">';
+    }
+    //if responsive.min.css exists, load it, otherwise load the original
+    if (file_exists(BASEPATH . '/public/content/assets/css/responsive.min.css')) {
+        $responsiveCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/responsive.min.css">';
+    } else {
+        $responsiveCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/responsive.css">';
     }
 
     /* JS that needs to be loaded in the header */
@@ -466,7 +472,7 @@ function includeHeader(): string
     $jqueryMigrate = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery-migrate/jquery-migrate.min.js"></script>';
 
     /* Assemble the header for the application */
-    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $select2BootstrapCSS . $fontawesomeCSS . $CSS . $jQuery . $jqueryMigrate;
+    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $select2BootstrapCSS . $fontawesomeCSS . $styleCSS . $responsiveCSS . $jQuery . $jqueryMigrate;
 
     /* Return the header for the application */
     return $header;
