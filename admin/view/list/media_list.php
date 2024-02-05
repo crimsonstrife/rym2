@@ -440,21 +440,6 @@ if (!$hasReadPermission) {
         <?php } ?>
         <?php if ($hasReadPermission) { ?>
         <script>
-        //function to format the filesize, since we can't use the php function in javascript
-        function formatFilesize(filesize) {
-            if (filesize == null) {
-                return "N/A";
-            } else if (filesize < 1024) {
-                return filesize + " B";
-            } else if (filesize < 1048576) {
-                return (filesize / 1024).toFixed(2) + " KB";
-            } else if (filesize < 1073741824) {
-                return (filesize / 1048576).toFixed(2) + " MB";
-            } else {
-                return (filesize / 1073741824).toFixed(2) + " GB";
-            }
-        }
-
         //function to set the read id on the action url of the read modal based on which media is selected
         function setReadID(id) {
             //get the media name
@@ -519,13 +504,6 @@ if (!$hasReadPermission) {
             //set the action url of the read modal
             document.getElementById("readMediaForm").action = "";
         }
-
-        function fileExists(url) {
-            var http = new XMLHttpRequest();
-            http.open('HEAD', url, false);
-            http.send();
-            return http.status != 404;
-        }
         </script>
         <?php } ?>
     </div>
@@ -577,21 +555,5 @@ if (!$hasReadPermission) {
         }
     ];
     var columnOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-    </script>
-    <script>
-    //function to toggle the media view between list and gallery
-    function toggleMediaView(view) {
-        if (view == "list") {
-            document.getElementById("list-view").classList.remove("hidden");
-            document.getElementById("gallery-view").classList.add("hidden");
-            document.getElementById("listView").classList.add("active");
-            document.getElementById("galleryView").classList.remove("active");
-        } else if (view == "gallery") {
-            document.getElementById("list-view").classList.add("hidden");
-            document.getElementById("gallery-view").classList.remove("hidden");
-            document.getElementById("listView").classList.remove("active");
-            document.getElementById("galleryView").classList.add("active");
-        }
-    }
     </script>
     <?php } ?>
