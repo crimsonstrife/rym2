@@ -90,8 +90,14 @@ class Student
         $result = $this->mysqli->query($sql);
         //If the query returns a result
         if ($result) {
-            //Return the student
-            return $result->fetch_assoc();
+            //check if the result has rows
+            if ($result->num_rows > 0) {
+                //Return the student
+                return $result->fetch_assoc();
+            } else {
+                //If the query returns no results, return an empty array
+                return array();
+            }
         } else {
             //If the query fails, return an empty array
             return array();
@@ -106,14 +112,22 @@ class Student
      */
     public function getStudentByEmail(string $email): array
     {
+        //clean the email variable
+        $email = $this->mysqli->real_escape_string($email);
         //SQL statement to get a student by their email address
         $sql = "SELECT * FROM student WHERE email = '$email'";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query returns a result
         if ($result) {
-            //Return the student
-            return $result->fetch_assoc();
+            //check if the result has rows
+            if ($result->num_rows > 0) {
+                //Return the student
+                return $result->fetch_assoc();
+            } else {
+                //If the query returns no results, return an empty array
+                return array();
+            }
         } else {
             //If the query fails, return an empty array
             return array();
