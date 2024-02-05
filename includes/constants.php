@@ -14,6 +14,7 @@ define('JOBTYPES', array(
  */
 define('DATE_FORMAT', 'm/d/Y');
 define('TIME_FORMAT', 'h:i A');
+define('JS_DATE_FORMAT', 'Y-m-d');
 
 /**
  * define the States array
