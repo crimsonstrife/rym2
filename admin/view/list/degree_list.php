@@ -258,12 +258,4 @@ var columnArray = [{
 ];
 var columnOrder = [0, 1, 2, 3, 4, 5];
 </script>
-<?php
-    //if tables.min.js exists, load it, otherwise load tables.js
-    if (file_exists(BASEPATH . '/public/content/assets/js/tables.min.js')) {
-        echo '<script type="module" src="' . getAssetPath() . 'js/tables.min.js"></script>';
-    } else {
-        echo '<script type="module" src="' . getAssetPath() . 'js/tables.js"></script>';
-    }
-    ?>
 <?php } ?>

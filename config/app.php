@@ -504,11 +504,17 @@ function includeFooter(): string
     }
     $dataTableJS = '<script type="text/javascript" src="' . getLibraryPath() . 'datatable-master/js/datatable.min.js"></script>';
     $dataTableJqueryJS = '<script type="text/javascript" src="' . getLibraryPath() . 'datatable-master/js/datatable.jquery.min.js"></script>';
+    //if tables.min.js exists, load it, otherwise load tables.js
+    if (file_exists(BASEPATH . '/public/content/assets/js/tables.min.js')) {
+        $tablesJS = '<script type="module" src="' . getAssetPath() . 'js/tables.min.js"></script>';
+    } else {
+        $tablesJS = '<script type="module" src="' . getAssetPath() . 'js/tables.js"></script>';
+    }
 
     $jqueryNoConflict = '<script>var $j = jQuery.noConflict();</script>';
 
     /* Assemble the footer for the application */
-    $footer = $datatablesJS . $tether . $select2JS . $select2BootstrapEnabler . $chartJS . $dataTableJS . $dataTableJqueryJS . $boostrapJS . $fontawesomeJS . $JS;
+    $footer = $datatablesJS . $tether . $select2JS . $select2BootstrapEnabler . $chartJS . $dataTableJS . $dataTableJqueryJS . $tablesJS . $boostrapJS . $fontawesomeJS . $JS;
 
     /* Return the footer for the application */
     return $footer;

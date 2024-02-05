@@ -47,36 +47,36 @@ if (!isset($hasViewDashboardPermission)) {
             include_once(__DIR__ . '/../../includes/errors/errorMessage.inc.php');
         } else {
 ?>
-<!-- main content -->
-<div id="layout_content" class="w-95 mx-auto">
-    <main>
-        <div class="container-fluid px-4">
-            <h1 class="mt-4">Contact Log</h1>
-            <div class="row">
-                <!-- Contact Log -->
-                <div class="row">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fa-solid fa-table"></i>
-                            Student Outreach Contact Log
-                        </div>
-                        <div class="card-body">
-                            <div>
-                                <table id="dataTable" class="table table-striped table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Student Name</th>
-                                            <th>Student Email</th>
-                                            <th>School</th>
-                                            <th>Degree</th>
-                                            <th>Automatic Email?</th>
-                                            <th>Send Date</th>
-                                            <th>Sending User</th>
-                                            <th>Subject</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
+            <!-- main content -->
+            <div id="layout_content" class="w-95 mx-auto">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Contact Log</h1>
+                        <div class="row">
+                            <!-- Contact Log -->
+                            <div class="row">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fa-solid fa-table"></i>
+                                        Student Outreach Contact Log
+                                    </div>
+                                    <div class="card-body">
+                                        <div>
+                                            <table id="dataTable" class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Student Name</th>
+                                                        <th>Student Email</th>
+                                                        <th>School</th>
+                                                        <th>Degree</th>
+                                                        <th>Automatic Email?</th>
+                                                        <th>Send Date</th>
+                                                        <th>Sending User</th>
+                                                        <th>Subject</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
                                                     /* Setup datatable of students */
                                                     //include the student class
                                                     $studentsData = new Student();
@@ -131,17 +131,17 @@ if (!isset($hasViewDashboardPermission)) {
                                                             $automaticEmail = "Manual";
                                                         }
                                                     ?>
-                                        <tr>
-                                            <td><?php echo $studentName; ?></td>
-                                            <td><?php echo $studentEmail; ?></td>
-                                            <td><?php echo $schoolName; ?></td>
-                                            <td><?php echo $degreeName; ?></td>
-                                            <td><?php echo $automaticEmail; ?></td>
-                                            <td><?php echo $sendDate; ?></td>
-                                            <td><?php echo $sendingUserName; ?></td>
-                                            <td><?php echo $subject; ?></td>
-                                        </tr>
-                                        <?php
+                                                        <tr>
+                                                            <td><?php echo $studentName; ?></td>
+                                                            <td><?php echo $studentEmail; ?></td>
+                                                            <td><?php echo $schoolName; ?></td>
+                                                            <td><?php echo $degreeName; ?></td>
+                                                            <td><?php echo $automaticEmail; ?></td>
+                                                            <td><?php echo $sendDate; ?></td>
+                                                            <td><?php echo $sendingUserName; ?></td>
+                                                            <td><?php echo $subject; ?></td>
+                                                        </tr>
+                                                    <?php
                                                         //setup a download array
                                                         $studentContactArray[] = array(
                                                             'Student Name' => $studentName,
@@ -156,77 +156,67 @@ if (!isset($hasViewDashboardPermission)) {
                                                         );
                                                     }
                                                     ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <!-- Download CSV -->
-                            <?php
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <!-- Download CSV -->
+                                        <?php
                                         //prepare the user array for download
                                         $csvArray = $studentContactArray; ?>
-                            <form target="_blank"
-                                action="<?php echo APP_URL . '/admin/download.php?type=contact_log&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>"
-                                method="post" enctype="multipart/form-data">
-                                <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
-                            </form>
+                                        <form target="_blank" action="<?php echo APP_URL . '/admin/download.php?type=contact_log&payload=' . base64_encode(urlencode(json_encode($csvArray))); ?>" method="post" enctype="multipart/form-data">
+                                            <input type="submit" name="export" value="Export to CSV" class="btn btn-success" />
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </main>
             </div>
-        </div>
-    </main>
-</div>
-<script type="text/javascript">
-//variables for the datatable
-var tableHeight = "50vh";
-var rowNav = true;
-var pageSelect = [5, 10, 15, 20, 25, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, ["All", -1]];
-var columnArray = [{
-        select: 0,
-        sortSequence: ["desc", "asc"]
-    },
-    {
-        select: 1,
-        sortSequence: ["desc", "asc"]
-    },
-    {
-        select: 2,
-        sortSequence: ["desc", "asc"]
-    },
-    {
-        select: 3,
-        sortSequence: ["desc", "asc"]
-    },
-    {
-        select: 4,
-        sortSequence: ["desc", "asc"]
-    },
-    {
-        select: 5,
-        type: "date",
-        format: "MM/DD/YYYY",
-        sortSequence: ["desc", "asc"]
-    },
-    {
-        select: 6,
-        sortSequence: ["desc", "asc"]
-    },
-    {
-        select: 7,
-        sortSequence: ["desc", "asc"]
-    }
-];
-var columnOrder = [0, 1, 2, 3, 4, 5, 6, 7];
-</script>
-<?php
-            //if tables.min.js exists, load it, otherwise load tables.js
-            if (file_exists(BASEPATH . '/public/content/assets/js/tables.min.js')) {
-                echo '<script type="module" src="' . getAssetPath() . 'js/tables.min.js"></script>';
-            } else {
-                echo '<script type="module" src="' . getAssetPath() . 'js/tables.js"></script>';
-            }
-            ?>
+            <script type="text/javascript">
+                //variables for the datatable
+                var tableHeight = "50vh";
+                var rowNav = true;
+                var pageSelect = [5, 10, 15, 20, 25, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, ["All", -1]];
+                var columnArray = [{
+                        select: 0,
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 1,
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 2,
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 3,
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 4,
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 5,
+                        type: "date",
+                        format: "MM/DD/YYYY",
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 6,
+                        sortSequence: ["desc", "asc"]
+                    },
+                    {
+                        select: 7,
+                        sortSequence: ["desc", "asc"]
+                    }
+                ];
+                var columnOrder = [0, 1, 2, 3, 4, 5, 6, 7];
+            </script>
 <?php }
     }
 } ?>
