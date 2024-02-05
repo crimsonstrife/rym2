@@ -146,14 +146,21 @@ td > .td-actions > button {
 }
 
 .modal-dialog {
+	max-height: 70vh;
+	max-width: 80vw;
+	min-height: 50%;
 	min-width: 50%;
-	height: 50vh;
+	height: 100%;
 }
 
 .modal-body {
 	height: 100%;
 	width: 100%;
 	display: grid;
+}
+
+.modal-body > div > div > div > div > div > p {
+	word-wrap: break-word;
 }
 
 .modal-content {
