@@ -562,3 +562,27 @@ td > .td-actions > button {
 .required {
 	color: #dc3545;
 }
+
+form.was-validated
+	.is-invalid
+	~ span.select2.select2-container
+	span.selection
+	span.select2-selection {
+	border-color: var(--bs-form-invalid-border-color);
+	padding-right: calc(1.5em + 0.75rem);
+	background-repeat: no-repeat;
+	background-position: right calc(0.375em + 0.1875rem) center;
+	background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+form.was-validated
+	.is-valid
+	~ span.select2.select2-container
+	span.selection
+	span.select2-selection {
+	border-color: var(--bs-form-valid-border-color);
+	padding-right: calc(1.5em + 0.75rem);
+	background-repeat: no-repeat;
+	background-position: right calc(0.375em + 0.1875rem) center;
+	background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
