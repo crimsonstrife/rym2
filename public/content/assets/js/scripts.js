@@ -32,7 +32,16 @@ function formatFilesize(filesize) {
 //function to check if a file exists via javascript
 function fileExists(url) {
 	var http = new XMLHttpRequest();
-	http.open('HEAD', url, false);
+	http.open("HEAD", url, false);
 	http.send();
 	return http.status != 404;
+}
+
+//function to generate a unique id
+function uniqueId() {
+	var ui_id =
+		Date.now().toString(36) +
+		Math.random().toString(36).substring(2, 12).padStart(12, 0);
+
+	return ui_id;
 }
