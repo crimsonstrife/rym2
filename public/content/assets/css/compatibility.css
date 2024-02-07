@@ -1,0 +1,179 @@
+/** @format */
+
+/* For compatibility between Bootstrap and Select2, keeps the form fields looking similar */
+.selection,
+.select2-container.select2-container--bootstrap.select2-container--focus,
+.select2-container--bootstrap.select2-container--focus .select2-selection,
+.select2-selection--single {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	position: relative;
+	flex: 1 1 auto;
+	min-width: 0;
+	display: block;
+	width: 100%;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: var(--bs-body-color);
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	background-color: var(--bs-body-bg);
+	background-clip: padding-box;
+	border: var(--bs-border-width) solid var(--bs-border-color);
+	border-radius: var(--bs-border-radius);
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.select2-container--bootstrap .select2-selection--single {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	background-color: #fff;
+	border: 0px;
+	border-radius: 0px;
+	color: var(--bs-body-color);
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	outline: 0;
+}
+
+.form-control.is-valid,
+.was-validated .form-control:valid {
+	border-color: var(--bs-form-valid-border-color);
+	padding-right: calc(1.5em + 0.75rem);
+	background-image: none;
+	background-repeat: no-repeat;
+	background-position: right calc(0.375em + 0.1875rem) center;
+	background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.form-control.is-valid,
+.was-validated .form-control:valid + span::after {
+	content: "\f00c";
+	position: absolute;
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	top: 0.25em;
+	right: 1em;
+	color: var(--bs-form-valid-color);
+	font-size: 1.25em;
+	z-index: 5;
+}
+
+.form-control.is-invalid,
+.was-validated .form-control:invalid {
+	border-color: var(--bs-form-invalid-border-color);
+	padding-right: calc(1.5em + 0.75rem);
+	background-image: none;
+	background-repeat: no-repeat;
+	background-position: right calc(0.375em + 0.1875rem) center;
+	background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.form-control.is-invalid,
+.was-validated .form-control:invalid + span::after {
+	content: "\f00d";
+	position: absolute;
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	top: 0.25em;
+	right: 1em;
+	color: var(--bs-form-invalid-color);
+	font-size: 1.25em;
+	z-index: 5;
+}
+
+form.was-validated
+	.is-invalid
+	~ span.select2.select2-container
+	span.selection
+	span.select2-selection {
+	border-color: var(--bs-form-invalid-border-color);
+	padding-right: calc(1.5em + 0.75rem);
+	background-repeat: no-repeat;
+	background-position: right calc(0.375em + 0.1875rem) center;
+	background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+form.was-validated
+	.is-valid
+	~ span.select2.select2-container
+	span.selection
+	span.select2-selection {
+	border-color: var(--bs-form-valid-border-color);
+	padding-right: calc(1.5em + 0.75rem);
+	background-repeat: no-repeat;
+	background-position: right calc(0.375em + 0.1875rem) center;
+	background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+/* Datatable formatting to fit with Bootstrap */
+table {
+	width: 100%;
+}
+
+.table-fixedHead {
+	overflow: auto;
+	height: 100%;
+}
+
+.table-scroll {
+	overflow: scroll;
+}
+
+.caption {
+	display: inline-flex;
+	width: 100%;
+}
+
+.caption > .td-actions {
+	display: flex;
+	flex-flow: row;
+	flex-wrap: wrap;
+	width: 100%;
+}
+
+.caption > .td-actions > a,
+.caption > .td-actions > button {
+	margin: 0.5rem;
+	margin-left: auto;
+	margin-right: auto;
+	width: 70%;
+}
+
+#dataTable > tbody > tr > td {
+	word-wrap: break-word;
+	max-width: 250px;
+	width: max-content;
+}
+
+td > .td-actions {
+	display: flex;
+	flex-flow: column;
+}
+
+td > .td-actions > a,
+td > .td-actions > button {
+	margin: 0.5rem;
+}
+
+#dataTable > thead > tr > th {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+}
+
+.datatable-sorter,
+.datatable-filter {
+	width: max-content;
+	display: contents;
+}
+
+.datatable-sorter::before,
+.datatable-sorter::after {
+	margin-right: 5%;
+}
