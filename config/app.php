@@ -516,11 +516,29 @@ function includeFooter(): string
     } else {
         $tablesJS = '<script type="module" src="' . getAssetPath() . 'js/tables.js"></script>';
     }
+    //if skill-list.min.js exists, load it, otherwise load skill-list.js
+    if (file_exists(BASEPATH . '/public/content/assets/js/skill-list.min.js')) {
+        $skillListJS = '<script type="module" src="' . getAssetPath() . 'js/skill-list.min.js"></script>';
+    } else {
+        $skillListJS = '<script type="module" src="' . getAssetPath() . 'js/skill-list.js"></script>';
+    }
+    //if wysiwyg-editor.min.js exists, load it, otherwise load wysiwyg-editor.js
+    if (file_exists(BASEPATH . '/public/content/assets/js/wysiwyg-editor.min.js')) {
+        $wysiwygEditorJS = '<script type="module" src="' . getAssetPath() . 'js/wysiwyg-editor.min.js"></script>';
+    } else {
+        $wysiwygEditorJS = '<script type="module" src="' . getAssetPath() . 'js/wysiwyg-editor.js"></script>';
+    }
+    //if counter.min.js exists, load it, otherwise load counter.js
+    if (file_exists(BASEPATH . '/public/content/assets/js/counter.min.js')) {
+        $counterJS = '<script type="text/javascript" src="' . getAssetPath() . 'js/counter.min.js"></script>';
+    } else {
+        $counterJS = '<script type="text/javascript" src="' . getAssetPath() . 'js/counter.js"></script>';
+    }
 
     $jqueryNoConflict = '<script>var $j = jQuery.noConflict();</script>';
 
     /* Assemble the footer for the application */
-    $footer = $datatablesJS . $tether . $select2JS . $select2BootstrapEnabler . $chartJS . $dataTableJS . $dataTableJqueryJS . $tablesJS . $boostrapJS . $fontawesomeJS . $JS;
+    $footer = $datatablesJS . $tether . $select2JS . $select2BootstrapEnabler . $chartJS . $dataTableJS . $dataTableJqueryJS . $tablesJS . $boostrapJS . $fontawesomeJS . $JS . $skillListJS . $wysiwygEditorJS . $counterJS;
 
     /* Return the footer for the application */
     return $footer;
