@@ -460,6 +460,12 @@ function includeHeader(): string
     } else {
         $styleCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/style.css">';
     }
+    //if compatibility.min.css exists, load it, otherwise load the original
+    if (file_exists(BASEPATH . '/public/content/assets/css/compatibility.min.css')) {
+        $compatibilityCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/compatibility.min.css">';
+    } else {
+        $compatibilityCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/compatibility.css">';
+    }
     //if responsive.min.css exists, load it, otherwise load the original
     if (file_exists(BASEPATH . '/public/content/assets/css/responsive.min.css')) {
         $responsiveCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/responsive.min.css">';
@@ -472,7 +478,7 @@ function includeHeader(): string
     $jqueryMigrate = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery-migrate/jquery-migrate.min.js"></script>';
 
     /* Assemble the header for the application */
-    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $select2BootstrapCSS . $fontawesomeCSS . $styleCSS . $responsiveCSS . $jQuery . $jqueryMigrate;
+    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $select2BootstrapCSS . $fontawesomeCSS . $styleCSS . $compatibilityCSS . $responsiveCSS . $jQuery . $jqueryMigrate;
 
     /* Return the header for the application */
     return $header;
