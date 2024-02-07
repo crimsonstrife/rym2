@@ -113,6 +113,8 @@ class Application
         }
     }
 
+    //General App Settings
+
     /**
      * Get Application Name
      *
@@ -308,6 +310,723 @@ class Application
                 //log the activity
                 $activity = new Activity();
                 $activity->logActivity(intval($_SESSION['user_id']), 'Application URL Changed', 'The application URL was changed to ' . $app_url . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Get Application Logo
+     * Get the application logo from the settings table
+     *
+     * @return string //the logo string
+     */
+    public function getAppLogo()
+    {
+        //SQL statement to get the application logo
+        $sql = "SELECT app_logo FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $role_statement = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $role_statement->execute();
+
+        //Get the results
+        $result = $role_statement->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the app_logo is set or not
+            if (isset($row['app_logo'])) {
+                //Return the app_logo
+                return $row['app_logo'];
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Set Application Logo
+     *
+     * Set the application logo in the settings table
+     *
+     * @param string $app_logo //the application logo
+     * @return bool //true if the application logo was set, false if not
+     */
+    public function setAppLogo($app_logo = null)
+    {
+        //Check if the application logo is set in the settings table already
+        if ($this->getAppLogo() != '' || $this->getAppLogo() != null) {
+            //SQL statement to update the application logo
+            $sql = "UPDATE settings SET app_logo = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $app_logo);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Application Logo Changed', 'The application logo was changed.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        } else {
+            //SQL statement to update the application logo, where isSet is SET
+            $sql = "UPDATE settings SET app_logo = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $app_logo);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Application Logo Changed', 'The application logo was changed.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Get Contact Email
+     *
+     * Get the contact email from the settings table
+     *
+     * @return string //the email string
+     */
+    public function getContactEmail()
+    {
+        //SQL statement to get the contact email
+        $sql = "SELECT contact_email FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $role_statement = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $role_statement->execute();
+
+        //Get the results
+        $result = $role_statement->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the contact_email is set or not
+            if (isset($row['contact_email'])) {
+                //Return the contact_email
+                return $row['contact_email'];
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Set Contact Email
+     *
+     * Set the contact email in the settings table
+     *
+     * @param string $contact_email //the contact email
+     * @return bool //true if the contact email was set, false if not
+     */
+    public function setContactEmail($contact_email = null)
+    {
+        //Check if the contact email is set in the settings table already
+        if ($this->getContactEmail() != '' || $this->getContactEmail() != null) {
+            //SQL statement to update the contact email
+            $sql = "UPDATE settings SET contact_email = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $contact_email);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Contact Email Changed', 'The contact email was changed to ' . $contact_email . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        } else {
+            //SQL statement to update the contact email, where isSet is SET
+            $sql = "UPDATE settings SET contact_email = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $contact_email);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Contact Email Changed', 'The contact email was changed to ' . $contact_email . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        }
+    }
+
+    //Company Branding
+
+    /**
+     * Get Company Name
+     *
+     * Get the company name from the settings table
+     *
+     * @return string //the name string
+     */
+    public function getCompanyName()
+    {
+        //SQL statement to get the company name
+        $sql = "SELECT company_name FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $role_statement = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $role_statement->execute();
+
+        //Get the results
+        $result = $role_statement->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the company_name is set or not
+            if (isset($row['company_name'])) {
+                //Return the company_name
+                return $row['company_name'];
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Set Company Name
+     *
+     * Set the company name in the settings table
+     *
+     * @param string $company_name //the company name
+     * @return bool //true if the company name was set, false if not
+     */
+    public function setCompanyName($company_name = null)
+    {
+        //Check if the company name is set in the settings table already
+        if ($this->getCompanyName() != '' || $this->getCompanyName() != null) {
+            //SQL statement to update the company name
+            $sql = "UPDATE settings SET company_name = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_name);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company Name Changed', 'The company name was changed to ' . $company_name . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        } else {
+            //SQL statement to update the company name, where isSet is SET
+            $sql = "UPDATE settings SET company_name = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_name);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company Name Changed', 'The company name was changed to ' . $company_name . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Get Company Logo
+     *
+     * Get the company logo from the settings table
+     *
+     * @return string //the logo string
+     */
+    public function getCompanyLogo()
+    {
+        //SQL statement to get the company logo
+        $sql = "SELECT company_logo FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $role_statement = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $role_statement->execute();
+
+        //Get the results
+        $result = $role_statement->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the company_logo is set or not
+            if (isset($row['company_logo'])) {
+                //Return the company_logo
+                return $row['company_logo'];
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Set Company Logo
+     *
+     * Set the company logo in the settings table
+     *
+     * @param string $company_logo //the company logo
+     * @return bool //true if the company logo was set, false if not
+     */
+    public function setCompanyLogo($company_logo = null)
+    {
+        //Check if the company logo is set in the settings table already
+        if ($this->getCompanyLogo() != '' || $this->getCompanyLogo() != null) {
+            //SQL statement to update the company logo
+            $sql = "UPDATE settings SET company_logo = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_logo);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company Logo Changed', 'The company logo was changed.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        } else {
+            //SQL statement to update the company logo, where isSet is SET
+            $sql = "UPDATE settings SET company_logo = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_logo);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company Logo Changed', 'The company logo was changed.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        }
+    }
+
+    //Contact Information
+
+    /**
+     * Get Company Address
+     *
+     * Get the company address from the settings table
+     *
+     * @return string //the address string
+     */
+    public function getCompanyAddress()
+    {
+        //SQL statement to get the company address
+        $sql = "SELECT company_address FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $role_statement = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $role_statement->execute();
+
+        //Get the results
+        $result = $role_statement->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the company_address is set or not
+            if (isset($row['company_address'])) {
+                //Return the company_address
+                return $row['company_address'];
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Set Company Address
+     *
+     * Set the company address in the settings table
+     *
+     * @param string $company_address //the company address
+     * @return bool //true if the company address was set, false if not
+     */
+    public function setCompanyAddress($company_address = null)
+    {
+        //Check if the company address is set in the settings table already
+        if ($this->getCompanyAddress() != '' || $this->getCompanyAddress() != null) {
+            //SQL statement to update the company address
+            $sql = "UPDATE settings SET company_address = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_address);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company Address Changed', 'The company address was changed to ' . $company_address . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        } else {
+            //SQL statement to update the company address, where isSet is SET
+            $sql = "UPDATE settings SET company_address = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_address);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company Address Changed', 'The company address was changed to ' . $company_address . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Get Company Phone
+     *
+     * Get the company phone from the settings table
+     *
+     * @return string //the phone string
+     */
+    public function getCompanyPhone()
+    {
+        //SQL statement to get the company phone
+        $sql = "SELECT company_phone FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $role_statement = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $role_statement->execute();
+
+        //Get the results
+        $result = $role_statement->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the company_phone is set or not
+            if (isset($row['company_phone'])) {
+                //Return the company_phone
+                return $row['company_phone'];
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Set Company Phone
+     *
+     * Set the company phone in the settings table
+     *
+     * @param string $company_phone //the company phone
+     * @return bool //true if the company phone was set, false if not
+     */
+    public function setCompanyPhone($company_phone = null)
+    {
+        //Check if the company phone is set in the settings table already
+        if ($this->getCompanyPhone() != '' || $this->getCompanyPhone() != null) {
+            //SQL statement to update the company phone
+            $sql = "UPDATE settings SET company_phone = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_phone);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company Phone Changed', 'The company phone was changed to ' . $company_phone . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        } else {
+            //SQL statement to update the company phone, where isSet is SET
+            $sql = "UPDATE settings SET company_phone = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_phone);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company Phone Changed', 'The company phone was changed to ' . $company_phone . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Get Company URL
+     *
+     * Get the company URL from the settings table
+     *
+     * @return string //the URL string
+     */
+    public function getCompanyURL()
+    {
+        //SQL statement to get the company URL
+        $sql = "SELECT company_url FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $role_statement = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $role_statement->execute();
+
+        //Get the results
+        $result = $role_statement->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the company_url is set or not
+            if (isset($row['company_url'])) {
+                //Return the company_url
+                return $row['company_url'];
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Set Company URL
+     *
+     * Set the company URL in the settings table
+     *
+     * @param string $company_url //the company URL
+     * @return bool //true if the company URL was set, false if not
+     */
+    public function setCompanyURL($company_url = null)
+    {
+        //Check if the company URL is set in the settings table already
+        if ($this->getCompanyURL() != '' || $this->getCompanyURL() != null) {
+            //SQL statement to update the company URL
+            $sql = "UPDATE settings SET company_url = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_url);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company URL Changed', 'The company URL was changed to ' . $company_url . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        } else {
+            //SQL statement to update the company URL, where isSet is SET
+            $sql = "UPDATE settings SET company_url = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_url);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company URL Changed', 'The company URL was changed to ' . $company_url . '.');
                 //Return true
                 return true;
             } else {
@@ -1564,7 +2283,7 @@ class Application
     public function resetSettings()
     {
         //SQL statement to reset the settings
-        $sql = "UPDATE settings SET mail_host = null, mail_port = null, mail_username = null, mail_password = null, mail_encryption = null, mail_from_address = null, mail_from_name = null, mail_auth_req = null, privacy_policy = ?, terms_conditions = ? WHERE isSet = 'SET'";
+        $sql = "UPDATE settings SET app_name = null, app_url = null, company_name = null, company_url = null, company_logo = null, company_address = null, company_phone = null, app_logo = null, contact_email = null, mail_host = null, mail_port = null, mail_username = null, mail_password = null, mail_encryption = null, mail_from_address = null, mail_from_name = null, mail_auth_req = null, privacy_policy = ?, terms_conditions = ? WHERE isSet = 'SET'";
 
         //Prepare the SQL statement for execution
         $stmt = $this->mysqli->prepare($sql);
