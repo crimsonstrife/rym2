@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jan 29, 2024 at 03:44 PM
+-- Generation Time: Feb 08, 2024 at 04:15 PM
 -- Server version: 5.7.39
 -- PHP Version: 7.4.33
 
@@ -358,7 +358,33 @@ INSERT INTO `activity_log` (`id`, `user_id`, `action`, `performed_on`, `action_d
 (316, 1, 'OTHER', 'UPDATEDIntern', '2024-01-26 21:57:51'),
 (317, 1, 'CREATE', 'Report:  Jobs by Field - ID: 58 Date: 01/26/2024', '2024-01-26 22:17:18'),
 (318, 1, 'OTHER', 'UPDATEDIntern', '2024-01-29 19:38:56'),
-(319, 1, 'CREATE', 'Report:  Top Degree by School - ID: 59 Date: 01/29/2024', '2024-01-30 01:29:39');
+(319, 1, 'CREATE', 'Report:  Top Degree by School - ID: 59 Date: 01/29/2024', '2024-01-30 01:29:39'),
+(320, NULL, 'LOGIN', 'User admin', '2024-02-01 00:50:50'),
+(321, 1, 'CREATE', 'Report:  Top Degree by School - ID: 60 Date: 01/31/2024', '2024-02-01 00:55:48'),
+(322, 1, 'CREATE', 'Report:  Jobs by Field - ID: 61 Date: 01/31/2024', '2024-02-01 01:16:29'),
+(323, 1, 'CREATE', 'Report:  Jobs by Field - ID: 62 Date: 01/31/2024', '2024-02-01 01:18:31'),
+(324, 1, 'CREATE', 'Report:  Jobs by Field - ID: 63 Date: 01/31/2024', '2024-02-01 01:28:31'),
+(325, 1, 'CREATE', 'Report:  Major to Field Ratio by School - ID: 64 Date: 01/31/2024', '2024-02-01 01:31:12'),
+(326, 1, 'CREATE', 'Report:  Jobs by Field - ID: 65 Date: 02/01/2024', '2024-02-01 22:03:39'),
+(327, 1, 'MODIFY', 'The application name was changed to TalentFlow.', '2024-02-02 20:33:46'),
+(328, 1, 'CREATE', 'Report:  Contact Follow-Up Percentage - ID: 66 Date: 02/02/2024', '2024-02-02 20:43:58'),
+(329, NULL, 'OTHER', 'Lunar Gobson Added', '2024-02-05 09:55:42'),
+(330, NULL, 'EMAIL', 'Sent Lunar Gobson @ LunaGob92@gmail.com - Subject: Thank you Lunar, for registering! by SYSTEM', '2024-02-05 09:55:42'),
+(331, 1, 'CREATE', 'Report:  Contact Follow-Up Percentage - ID: 67 Date: 02/05/2024', '2024-02-05 10:02:59'),
+(332, 1, 'DELETE', 'Student ID: 11 Student Name: Lunar Gobson', '2024-02-05 10:09:55'),
+(333, NULL, 'OTHER', 'Patrick Barnhardt Added', '2024-02-05 23:34:43'),
+(334, NULL, 'EMAIL', 'Sent Patrick Barnhardt @ contact@patrickbarnhardt.info - Subject: Thank you Patrick, for registering! by SYSTEM', '2024-02-05 23:34:43'),
+(335, NULL, 'OTHER', 'Patrick Barnhardt Added', '2024-02-05 23:36:03'),
+(336, NULL, 'EMAIL', 'Sent Patrick Barnhardt @ thecrimsonstrife@gmail.com - Subject: Thank you Patrick, for registering! by SYSTEM', '2024-02-05 23:36:03'),
+(337, NULL, 'OTHER', 'Patrick Barnhardt Added', '2024-02-06 00:23:26'),
+(338, NULL, 'EMAIL', 'Sent Patrick Barnhardt @ thecrimsonstrife@gmail.com - Subject: Thank you Patrick, for registering! by SYSTEM', '2024-02-06 00:23:26'),
+(339, NULL, 'LOGIN', 'User admin', '2024-02-06 21:13:35'),
+(340, 1, 'DELETE', 'Student ID: 11 Student Name: Patrick Barnhardt', '2024-02-06 21:13:52'),
+(341, NULL, 'LOGIN', 'User admin', '2024-02-07 23:14:27'),
+(342, 1, 'MODIFY', 'The application name was changed to .', '2024-02-09 01:21:45'),
+(343, 1, 'OTHER', 'Media Uploaded: TalentFlow-Logo.png', '2024-02-09 01:32:52'),
+(344, 1, 'MODIFY', 'The application name was changed to TalentFlow.', '2024-02-09 01:50:40'),
+(345, 1, 'MODIFY', 'The contact email was changed to contact@talentflow.email.', '2024-02-09 01:50:40');
 
 -- --------------------------------------------------------
 
@@ -425,7 +451,9 @@ INSERT INTO `contact_log` (`id`, `student`, `auto`, `sender`, `send_date`, `subj
 (18, 5, 0, 1, '2024-01-17 21:52:02', 'test', 'test'),
 (19, 5, 0, 1, '2024-01-17 21:52:50', 'test', 'fawdadwa'),
 (20, 10, 0, 1, '2024-01-17 21:53:35', 'any of the R710 left?', 'test'),
-(22, 10, 0, 1, '2024-01-17 23:17:55', 'any of the R710 left?', 'test');
+(22, 10, 0, 1, '2024-01-17 23:17:55', 'any of the R710 left?', 'test'),
+(23, NULL, 1, NULL, '2024-02-05 23:34:43', 'Thank you Patrick, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
+(24, NULL, 1, NULL, '2024-02-05 23:36:03', 'Thank you Patrick, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.');
 
 -- --------------------------------------------------------
 
@@ -567,7 +595,8 @@ CREATE TABLE `jobs` (
 --
 
 INSERT INTO `jobs` (`id`, `name`, `description`, `summary`, `type`, `field`, `education`, `skills`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
-(4, 'Intern', '<p><strong>[Intro paragraph] </strong>The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers and set yourself apart from competing job listings.</p><p><strong>Intern Job Responsibilities:</strong></p><ul><li>Understands the overall concept of the company, including the brand, customer, product goals, and all other aspects of service.</li><li>Rotates through our divisions of responsibility and provides ideas to grow and improve the business.</li><li>Accepts designated, business-focus projects to research, propose ideas and solutions, and present final project during the internship.</li><li>Engages with customers or clients and provides service and/or sales.</li><li>Provide suggestions to management for improving customer service and internal processes.</li><li>Learns and becomes proficient on internal software systems.</li><li>Assists in creating performance reports.</li></ul><p><strong>[Work Hours &amp; Benefits]</strong> It’s always a good idea to highlight the <strong>working hours and benefits </strong>specific to your business. Potential interns want to learn things like team size, mentor-to-intern ratios, and weekly hour requirements. You can also highlight any of the benefits that set you apart, like contact with upper management or school credits.</p>', 'The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers.', 'INTERN', 2, 4, '[\"Communication\", \"Problem solving skills\", \"Analysis\", \"Adaptability\", \"Computer skills\", \"Initiative\", \"Critical thinking\", \"Time management\", \"Collaboration\", \"Planning and prioritizing\", \"Teamwork\", \"Work ethic\", \"Customer service\", \"Interpersonal\", \"Networking\", \"Passionate\", \"Punctuality\", \"Scripting\"]', '2024-01-29 14:38:56', '2024-01-29 19:38:56', 1, 1);
+(4, 'Intern', '<p><strong>[Intro paragraph] </strong>The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers and set yourself apart from competing job listings.</p><p><strong>Intern Job Responsibilities:</strong></p><ul><li>Understands the overall concept of the company, including the brand, customer, product goals, and all other aspects of service.</li><li>Rotates through our divisions of responsibility and provides ideas to grow and improve the business.</li><li>Accepts designated, business-focus projects to research, propose ideas and solutions, and present final project during the internship.</li><li>Engages with customers or clients and provides service and/or sales.</li><li>Provide suggestions to management for improving customer service and internal processes.</li><li>Learns and becomes proficient on internal software systems.</li><li>Assists in creating performance reports.</li></ul><p><strong>[Work Hours &amp; Benefits]</strong> It’s always a good idea to highlight the <strong>working hours and benefits </strong>specific to your business. Potential interns want to learn things like team size, mentor-to-intern ratios, and weekly hour requirements. You can also highlight any of the benefits that set you apart, like contact with upper management or school credits.</p>', 'The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers.', 'INTERN', 2, 4, '[\"Communication\", \"Problem solving skills\", \"Analysis\", \"Adaptability\", \"Computer skills\", \"Initiative\", \"Critical thinking\", \"Time management\", \"Collaboration\", \"Planning and prioritizing\", \"Teamwork\", \"Work ethic\", \"Customer service\", \"Interpersonal\", \"Networking\", \"Passionate\", \"Punctuality\", \"Scripting\"]', '2024-01-29 14:38:56', '2024-01-29 19:38:56', 1, 1),
+(5, 'Intern', '<p><strong>[Intro paragraph] </strong>The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers and set yourself apart from competing job listings.</p><p><strong>Intern Job Responsibilities:</strong></p><ul><li>Understands the overall concept of the company, including the brand, customer, product goals, and all other aspects of service.</li><li>Rotates through our divisions of responsibility and provides ideas to grow and improve the business.</li><li>Accepts designated, business-focus projects to research, propose ideas and solutions, and present final project during the internship.</li><li>Engages with customers or clients and provides service and/or sales.</li><li>Provide suggestions to management for improving customer service and internal processes.</li><li>Learns and becomes proficient on internal software systems.</li><li>Assists in creating performance reports.</li></ul><p><strong>[Work Hours &amp; Benefits]</strong> It’s always a good idea to highlight the <strong>working hours and benefits </strong>specific to your business. Potential interns want to learn things like team size, mentor-to-intern ratios, and weekly hour requirements. You can also highlight any of the benefits that set you apart, like contact with upper management or school credits.</p>', 'The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers.', 'INTERN', 4, 11, '[\"Communication\", \"Problem solving skills\", \"Adaptability\", \"Computer skills\", \"Initiative\", \"Critical thinking\", \"Time management\", \"Collaboration\", \"Planning and prioritizing\", \"Teamwork\", \"Work ethic\", \"Customer service\", \"Passionate\", \"Punctuality\"]', '2024-01-29 14:38:56', '2024-01-29 19:38:56', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -621,7 +650,8 @@ CREATE TABLE `media` (
 
 INSERT INTO `media` (`id`, `filename`, `filetype`, `filesize`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
 (19, 'placeholderbanner_1920x400.png', 'png', 29410, '2024-01-24 23:20:09', 1, '2024-01-24 18:50:58', 1),
-(20, 'placeholderlogo_200x200.png', 'png', 2835, '2024-01-25 01:31:24', 1, '2024-01-24 20:31:41', 1);
+(20, 'placeholderlogo_200x200.png', 'png', 2835, '2024-01-25 01:31:24', 1, '2024-01-24 20:31:41', 1),
+(21, 'TalentFlow-Logo.png', 'png', 19205, '2024-02-09 01:32:52', 1, '2024-02-09 01:32:52', 1);
 
 -- --------------------------------------------------------
 
@@ -774,7 +804,15 @@ INSERT INTO `reports` (`id`, `report_type`, `data`, `created_by`, `created_at`, 
 (56, 'Jobs by Field', '[{\"jobs\": \"Helpdesk\", \"job_count\": 1, \"job_field_name\": \"IT\"}, {\"jobs\": \"Business Analyst\", \"job_count\": 1, \"job_field_name\": \"Analytics\"}, {\"jobs\": \"Job\", \"job_count\": 1, \"job_field_name\": \"Cybersecurity\"}, {\"jobs\": \"Packaging Operator\", \"job_count\": 1, \"job_field_name\": \"Supply Chain\"}]', 1, '2024-01-17 23:48:37', 1, '2024-01-17 23:48:37'),
 (57, 'Contact Follow-Up Percentage', '[{\"total\": 21, \"percentage\": \"66.66667\", \"top_sending_user\": \"admin\"}]', 1, '2024-01-17 23:48:39', 1, '2024-01-17 23:48:39'),
 (58, 'Jobs by Field', '[{\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Programming\"}]', 1, '2024-01-26 22:17:18', 1, '2024-01-26 22:17:18'),
-(59, 'Top Degree by School', '[{\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"Duke University\", \"student_count\": 2}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1}, {\"major\": \"Electrical Engineering\", \"degree\": \"MS - Master of Science\", \"school\": \"Stanford University\", \"student_count\": 1}, {\"major\": \"Psychology\", \"degree\": \"MA - Master of Arts\", \"school\": \"Wake Forest University\", \"student_count\": 1}, {\"major\": \"Economics\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"Duke University\", \"student_count\": 1}]', 1, '2024-01-30 01:29:39', 1, '2024-01-30 01:29:39');
+(59, 'Top Degree by School', '[{\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"Duke University\", \"student_count\": 2}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1}, {\"major\": \"Electrical Engineering\", \"degree\": \"MS - Master of Science\", \"school\": \"Stanford University\", \"student_count\": 1}, {\"major\": \"Psychology\", \"degree\": \"MA - Master of Arts\", \"school\": \"Wake Forest University\", \"student_count\": 1}, {\"major\": \"Economics\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"Duke University\", \"student_count\": 1}]', 1, '2024-01-30 01:29:39', 1, '2024-01-30 01:29:39'),
+(60, 'Top Degree by School', '[{\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"Duke University\", \"student_count\": 2}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1}, {\"major\": \"Electrical Engineering\", \"degree\": \"MS - Master of Science\", \"school\": \"Stanford University\", \"student_count\": 1}, {\"major\": \"Psychology\", \"degree\": \"MA - Master of Arts\", \"school\": \"Wake Forest University\", \"student_count\": 1}, {\"major\": \"Economics\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"Duke University\", \"student_count\": 1}]', 1, '2024-02-01 00:55:48', 1, '2024-02-01 00:55:48'),
+(61, 'Jobs by Field', '[{\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Programming\"}]', 1, '2024-02-01 01:16:29', 1, '2024-02-01 01:16:29'),
+(62, 'Jobs by Field', '[{\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Programming\"}, {\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Cybersecurity\"}]', 1, '2024-02-01 01:18:31', 1, '2024-02-01 01:18:31'),
+(63, 'Jobs by Field', '[{\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Programming\"}, {\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Cybersecurity\"}]', 1, '2024-02-01 01:28:31', 1, '2024-02-01 01:28:31'),
+(64, 'Major to Field Ratio by School', '[{\"field\": \"IT\", \"major\": \"Computer Science\", \"ratio\": 1, \"school\": \"University of North Carolina at Charlotte - UNCC\"}, {\"field\": \"Cybersecurity\", \"major\": \"Electrical Engineering\", \"ratio\": 1, \"school\": \"Stanford University\"}, {\"field\": \"IT\", \"major\": \"Computer Science\", \"ratio\": 0.67, \"school\": \"Duke University\"}, {\"field\": \"Finance\", \"major\": \"Economics\", \"ratio\": 0.33, \"school\": \"Duke University\"}, {\"field\": \"Sales\", \"major\": \"Psychology\", \"ratio\": 1, \"school\": \"Wake Forest University\"}]', 1, '2024-02-01 01:31:12', 1, '2024-02-01 01:31:12'),
+(65, 'Jobs by Field', '[{\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Programming\"}, {\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Cybersecurity\"}]', 1, '2024-02-01 22:03:39', 1, '2024-02-01 22:03:39'),
+(66, 'Contact Follow-Up Percentage', '[{\"total\": 17, \"percentage\": \"64.70588\", \"top_sending_user\": \"admin\"}]', 1, '2024-02-02 20:43:58', 1, '2024-02-02 20:43:58'),
+(67, 'Contact Follow-Up Percentage', '[{\"total\": 18, \"percentage\": \"61.11111\", \"top_sending_user\": \"admin\"}]', 1, '2024-02-05 10:02:59', 1, '2024-02-05 10:02:59');
 
 -- --------------------------------------------------------
 
@@ -1064,6 +1102,16 @@ CREATE TABLE `settings` (
   `isSet` enum('SET') COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `app_name` varchar(50) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `app_url` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `company_name` varchar(50) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `company_url` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `company_logo` bigint(20) DEFAULT NULL,
+  `company_address` varchar(80) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `company_city` varchar(50) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `company_state` char(2) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `company_zip` varchar(15) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `company_phone` varchar(15) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `app_logo` bigint(20) DEFAULT NULL,
+  `contact_email` varchar(50) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `mail_from_address` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `mail_from_name` varchar(50) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `mail_mailer` enum('smtp') COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -1081,8 +1129,8 @@ CREATE TABLE `settings` (
 -- Dumping data for table `settings`
 --
 
-INSERT INTO `settings` (`isSet`, `app_name`, `app_url`, `mail_from_address`, `mail_from_name`, `mail_mailer`, `mail_host`, `mail_port`, `mail_auth_req`, `mail_username`, `mail_password`, `mail_encryption`, `privacy_policy`, `terms_conditions`) VALUES
-('SET', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>', '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>');
+INSERT INTO `settings` (`isSet`, `app_name`, `app_url`, `company_name`, `company_url`, `company_logo`, `company_address`, `company_city`, `company_state`, `company_zip`, `company_phone`, `app_logo`, `contact_email`, `mail_from_address`, `mail_from_name`, `mail_mailer`, `mail_host`, `mail_port`, `mail_auth_req`, `mail_username`, `mail_password`, `mail_encryption`, `privacy_policy`, `terms_conditions`) VALUES
+('SET', 'TalentFlow', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'contact@talentflow.email', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>', '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>');
 
 -- --------------------------------------------------------
 
@@ -1227,7 +1275,7 @@ INSERT INTO `user_token_auth` (`id`, `user_id`, `user_name`, `password_hash`, `s
 (11, 1, 'admin', '$2y$10$k73UYboDHcKBeUF2DR556Oteivl4IhdW3tSax0R3z2lEiFeKTXzUS', '$2y$10$0RGknWVv80mvF13A8J/at.ZfqK38GSBU5Cqxu911vkW0tqhGVujIy', 1, '2024-01-15 20:37:18'),
 (12, 1, 'admin', '$2y$10$LvJsCTVOYqUYO3HCNjJpDut.5rPnM7mIkO/wi59uUtEI9ttEuQVqK', '$2y$10$US85Jb1kbg5/PddUPsC4xOy2eVuDg5UeqE5JTXeCWxbBbEnYG5d7G', 1, '2024-01-16 15:57:58'),
 (13, 1, 'admin', '$2y$10$5zg9mZqQGbOIt7dmo.lmeOZuZNrwMGMW1VZEv2FrsFvXG9oLkCHBG', '$2y$10$SjvtW3coyIHg1lOW0ZConeCt/YrlCxakPt84l2zgSKpNZiynyqDx2', 1, '2024-01-17 14:30:40'),
-(14, 2, 'test', '$2y$10$VK1qmYCv5Ry1tJg6xgAZIeMBmi3qfIh2FMZWHRP1Oc7gmr3sPGC5e', '$2y$10$fHYlrz.l8.cE4xbb074REuP.arA/W.AZ7qRn8nMnSnxym1AxkB29y', 0, '2024-02-16 19:30:40');
+(14, 2, 'test', '$2y$10$VK1qmYCv5Ry1tJg6xgAZIeMBmi3qfIh2FMZWHRP1Oc7gmr3sPGC5e', '$2y$10$fHYlrz.l8.cE4xbb074REuP.arA/W.AZ7qRn8nMnSnxym1AxkB29y', 1, '2024-01-31 19:50:50');
 
 --
 -- Indexes for dumped tables
@@ -1375,14 +1423,15 @@ ALTER TABLE `school_branding`
 -- Indexes for table `settings`
 --
 ALTER TABLE `settings`
-  ADD UNIQUE KEY `IsSet` (`isSet`);
+  ADD UNIQUE KEY `IsSet` (`isSet`),
+  ADD KEY `companyLogo` (`company_logo`),
+  ADD KEY `appLogo` (`app_logo`);
 
 --
 -- Indexes for table `student`
 --
 ALTER TABLE `student`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `studentInterest` (`email`,`interest`),
   ADD KEY `areaOfInterest` (`interest`),
   ADD KEY `degree` (`degree`),
   ADD KEY `major` (`major`),
@@ -1430,7 +1479,7 @@ ALTER TABLE `user_token_auth`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=320;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=346;
 
 --
 -- AUTO_INCREMENT for table `aoi`
@@ -1442,7 +1491,7 @@ ALTER TABLE `aoi`
 -- AUTO_INCREMENT for table `contact_log`
 --
 ALTER TABLE `contact_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `degree_lvl`
@@ -1472,7 +1521,7 @@ ALTER TABLE `event_slugs`
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `major`
@@ -1484,7 +1533,7 @@ ALTER TABLE `major`
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1496,7 +1545,7 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -1658,6 +1707,13 @@ ALTER TABLE `school`
 ALTER TABLE `school_branding`
   ADD CONSTRAINT `schoolHasBranding` FOREIGN KEY (`school_id`) REFERENCES `school` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `schoolLogoFile` FOREIGN KEY (`school_logo`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `settings`
+--
+ALTER TABLE `settings`
+  ADD CONSTRAINT `appLogo` FOREIGN KEY (`app_logo`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `companyLogo` FOREIGN KEY (`company_logo`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `student`
