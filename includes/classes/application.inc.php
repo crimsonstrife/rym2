@@ -323,7 +323,7 @@ class Application
      * Get Application Logo
      * Get the application logo from the settings table
      *
-     * @return string //the logo string
+     * @return int //the logo media id
      */
     public function getAppLogo()
     {
@@ -347,14 +347,14 @@ class Application
             //check if the app_logo is set or not
             if (isset($row['app_logo'])) {
                 //Return the app_logo
-                return $row['app_logo'];
+                return intval($row['app_logo']);
             } else {
                 //Return an empty string
-                return '';
+                return intval(null);
             }
         } else {
             //Return an empty string
-            return '';
+            return intval(null);
         }
     }
 
@@ -363,10 +363,10 @@ class Application
      *
      * Set the application logo in the settings table
      *
-     * @param string $app_logo //the application logo
+     * @param int $app_logo //the application logo media id
      * @return bool //true if the application logo was set, false if not
      */
-    public function setAppLogo($app_logo = null)
+    public function setAppLogo(int $app_logo = null)
     {
         //Check if the application logo is set in the settings table already
         if ($this->getAppLogo() != '' || $this->getAppLogo() != null) {
@@ -377,7 +377,7 @@ class Application
             $role_statement = $this->mysqli->prepare($sql);
 
             //Bind the parameters
-            $role_statement->bind_param('s', $app_logo);
+            $role_statement->bind_param('i', $app_logo);
 
             //Execute the statement
             $role_statement->execute();
@@ -401,7 +401,7 @@ class Application
             $role_statement = $this->mysqli->prepare($sql);
 
             //Bind the parameters
-            $role_statement->bind_param('s', $app_logo);
+            $role_statement->bind_param('i', $app_logo);
 
             //Execute the statement
             $role_statement->execute();
@@ -631,7 +631,7 @@ class Application
      *
      * Get the company logo from the settings table
      *
-     * @return string //the logo string
+     * @return int //the logo media id
      */
     public function getCompanyLogo()
     {
@@ -655,14 +655,14 @@ class Application
             //check if the company_logo is set or not
             if (isset($row['company_logo'])) {
                 //Return the company_logo
-                return $row['company_logo'];
+                return intval($row['company_logo']);
             } else {
                 //Return an empty string
-                return '';
+                return intval(null);
             }
         } else {
             //Return an empty string
-            return '';
+            return intval(null);
         }
     }
 
@@ -671,7 +671,7 @@ class Application
      *
      * Set the company logo in the settings table
      *
-     * @param string $company_logo //the company logo
+     * @param int $company_logo //the company logo media id
      * @return bool //true if the company logo was set, false if not
      */
     public function setCompanyLogo($company_logo = null)
@@ -685,7 +685,7 @@ class Application
             $role_statement = $this->mysqli->prepare($sql);
 
             //Bind the parameters
-            $role_statement->bind_param('s', $company_logo);
+            $role_statement->bind_param('i', $company_logo);
 
             //Execute the statement
             $role_statement->execute();
@@ -709,7 +709,7 @@ class Application
             $role_statement = $this->mysqli->prepare($sql);
 
             //Bind the parameters
-            $role_statement->bind_param('s', $company_logo);
+            $role_statement->bind_param('i', $company_logo);
 
             //Execute the statement
             $role_statement->execute();
@@ -829,6 +829,342 @@ class Application
                 //Return false
                 return false;
             }
+        }
+    }
+
+    /**
+     * Get Company City
+     *
+     * Get the company city from the settings table
+     *
+     * @return string //the city string
+     */
+    public function getCompanyCity()
+    {
+        //SQL statement to get the company city
+        $sql = "SELECT company_city FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $role_statement = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $role_statement->execute();
+
+        //Get the results
+        $result = $role_statement->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the company_city is set or not
+            if (isset($row['company_city'])) {
+                //Return the company_city
+                return $row['company_city'];
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Set Company City
+     *
+     * Set the company city in the settings table
+     *
+     * @param string $company_city //the company city
+     * @return bool //true if the company city was set, false if not
+     */
+    public function setCompanyCity($company_city = null)
+    {
+        //Check if the company city is set in the settings table already
+        if ($this->getCompanyCity() != '' || $this->getCompanyCity() != null) {
+            //SQL statement to update the company city
+            $sql = "UPDATE settings SET company_city = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_city);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company City Changed', 'The company city was changed to ' . $company_city . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        } else {
+            //SQL statement to update the company city, where isSet is SET
+            $sql = "UPDATE settings SET company_city = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_city);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company City Changed', 'The company city was changed to ' . $company_city . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Get Company State
+     *
+     * Get the company state from the settings table
+     *
+     * @return string //the state string
+     */
+    public function getCompanyState()
+    {
+        //SQL statement to get the company state
+        $sql = "SELECT company_state FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $role_statement = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $role_statement->execute();
+
+        //Get the results
+        $result = $role_statement->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the company_state is set or not
+            if (isset($row['company_state'])) {
+                //Return the company_state
+                return $row['company_state'];
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Set Company State
+     *
+     * Set the company state in the settings table
+     *
+     * @param string $company_state //the company state
+     * @return bool //true if the company state was set, false if not
+     */
+    public function setCompanyState($company_state = null)
+    {
+        //Check if the company state is set in the settings table already
+        if ($this->getCompanyState() != '' || $this->getCompanyState() != null) {
+            //SQL statement to update the company state
+            $sql = "UPDATE settings SET company_state = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_state);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company State Changed', 'The company state was changed to ' . $company_state . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        } else {
+            //SQL statement to update the company state, where isSet is SET
+            $sql = "UPDATE settings SET company_state = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_state);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company State Changed', 'The company state was changed to ' . $company_state . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Get Company Zip
+     *
+     * Get the company zip from the settings table
+     *
+     * @return string //the zip string
+     */
+    public function getCompanyZip()
+    {
+        //SQL statement to get the company zip
+        $sql = "SELECT company_zip FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $role_statement = $this->mysqli->prepare($sql);
+
+        //Execute the statement
+        $role_statement->execute();
+
+        //Get the results
+        $result = $role_statement->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the company_zip is set or not
+            if (isset($row['company_zip'])) {
+                //Return the company_zip
+                return $row['company_zip'];
+            } else {
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
+
+    /**
+     * Set Company Zip
+     *
+     * Set the company zip in the settings table
+     *
+     * @param string $company_zip //the company zip
+     * @return bool //true if the company zip was set, false if not
+     */
+    public function setCompanyZip($company_zip = null)
+    {
+        //Check if the company zip is set in the settings table already
+        if ($this->getCompanyZip() != '' || $this->getCompanyZip() != null) {
+            //SQL statement to update the company zip
+            $sql = "UPDATE settings SET company_zip = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_zip);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company Zip Changed', 'The company zip was changed to ' . $company_zip . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        } else {
+            //SQL statement to update the company zip, where isSet is SET
+            $sql = "UPDATE settings SET company_zip = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $role_statement = $this->mysqli->prepare($sql);
+
+            //Bind the parameters
+            $role_statement->bind_param('s', $company_zip);
+
+            //Execute the statement
+            $role_statement->execute();
+
+            //Check if the statement was executed successfully
+            if ($role_statement->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Company Zip Changed', 'The company zip was changed to ' . $company_zip . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Get Formatted Company Address
+     * Get the formatted company address from the values in the settings table
+     *
+     * @return string //the formatted address string
+     */
+    public function getFormattedCompanyAddress()
+    {
+        //Get the company address
+        $address = $this->getCompanyAddress();
+
+        //Get the company city
+        $city = $this->getCompanyCity();
+
+        //Get the company state
+        $state = $this->getCompanyState();
+
+        //Get the company zip
+        $zip = $this->getCompanyZip();
+
+        //Check if the address, city, state, and zip are set
+        if ($address != '' && $city != '' && $state != '' && $zip != '') {
+            //Return the formatted address
+            return $address . ', ' . $city . ', ' . $state . ' ' . $zip;
+        } else {
+            //Return an empty string
+            return '';
         }
     }
 
