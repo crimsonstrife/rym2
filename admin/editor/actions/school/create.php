@@ -57,6 +57,7 @@ if (!$hasPermission) {
 
     //other variables
     $target_file_logo = null;
+    $school_logo = null;
     $imageFileType_logo = null;
     $media_id = null;
 
