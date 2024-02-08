@@ -1,5 +1,6 @@
 /** @format */
 
+//variable to hold the last selected skill
 var lastSelectedSkill = null;
 
 //add an event listener to the items of skills, for click events
@@ -118,7 +119,7 @@ function addSkill() {
 			option.className = "list-group-item job-skill-item";
 
 			//set a unique id to the list item
-			option.id = uniqid();
+			option.id = uniqueId();
 
 			//add the list item to the list
 			skillList.appendChild(option);
