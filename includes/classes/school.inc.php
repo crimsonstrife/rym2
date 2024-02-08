@@ -334,7 +334,7 @@ class School
             // Update the school branding
             $sql = "UPDATE school_branding SET school_logo = ? WHERE school_id = ?";
             $stmt = $this->mysqli->prepare($sql);
-            $stmt->bind_param("si", $logo, $school_id);
+            $stmt->bind_param("ii", $logo, $school_id);
             $stmt->execute();
             $result = true;
         } else {
