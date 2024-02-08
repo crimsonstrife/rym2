@@ -45,3 +45,13 @@ function uniqueId() {
 
 	return ui_id;
 }
+
+//function to show the loader
+function showLoader() {
+	document.getElementById("loader").classList.remove("hidden");
+}
+
+//function to hide the loader
+function hideLoader() {
+	document.getElementById("loader").classList.add("hidden");
+}
