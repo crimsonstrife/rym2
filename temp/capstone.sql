@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Feb 08, 2024 at 04:15 PM
+-- Generation Time: Feb 09, 2024 at 02:36 PM
 -- Server version: 5.7.39
 -- PHP Version: 7.4.33
 
@@ -384,7 +384,31 @@ INSERT INTO `activity_log` (`id`, `user_id`, `action`, `performed_on`, `action_d
 (342, 1, 'MODIFY', 'The application name was changed to .', '2024-02-09 01:21:45'),
 (343, 1, 'OTHER', 'Media Uploaded: TalentFlow-Logo.png', '2024-02-09 01:32:52'),
 (344, 1, 'MODIFY', 'The application name was changed to TalentFlow.', '2024-02-09 01:50:40'),
-(345, 1, 'MODIFY', 'The contact email was changed to contact@talentflow.email.', '2024-02-09 01:50:40');
+(345, 1, 'MODIFY', 'The contact email was changed to contact@talentflow.email.', '2024-02-09 01:50:40'),
+(346, 1, 'OTHER', 'Media Uploaded: company-logo.png', '2024-02-09 19:57:25'),
+(347, 1, 'OTHER', 'Media Uploaded: company-logo.svg', '2024-02-09 19:57:49'),
+(348, 1, 'OTHER', 'Media Uploaded: TalentFlow-Logo.svg', '2024-02-09 20:00:28'),
+(349, 1, 'MODIFY', 'The company name was changed to Pipe and Foundry Company.', '2024-02-09 22:01:37'),
+(350, 1, 'MODIFY', 'The company address was changed to 1234 Main St.', '2024-02-09 22:01:37'),
+(351, 1, 'MODIFY', 'The company city was changed to Anyplace.', '2024-02-09 22:01:37'),
+(352, 1, 'MODIFY', 'The company state was changed to NC.', '2024-02-09 22:01:37'),
+(353, 1, 'MODIFY', 'The company zip was changed to 123456.', '2024-02-09 22:01:37'),
+(354, 1, 'MODIFY', 'The company phone was changed to 123-456-1234.', '2024-02-09 22:01:37'),
+(355, 1, 'MODIFY', 'The company name was changed to .', '2024-02-09 22:21:00'),
+(356, 1, 'MODIFY', 'The company address was changed to .', '2024-02-09 22:21:00'),
+(357, 1, 'MODIFY', 'The company city was changed to .', '2024-02-09 22:21:00'),
+(358, 1, 'MODIFY', 'The company zip was changed to .', '2024-02-09 22:21:00'),
+(359, 1, 'MODIFY', 'The company phone was changed to .', '2024-02-09 22:21:00'),
+(360, 1, 'MODIFY', 'The company name was changed to Pipe and Foundry Company.', '2024-02-09 22:28:47'),
+(361, 1, 'MODIFY', 'The company address was changed to 1234 Main St.', '2024-02-09 22:28:47'),
+(362, 1, 'MODIFY', 'The company city was changed to Anyplace.', '2024-02-09 22:28:47'),
+(363, 1, 'MODIFY', 'The company zip was changed to 123456.', '2024-02-09 22:28:47'),
+(364, 1, 'MODIFY', 'The company phone was changed to 123-456-1234.', '2024-02-09 22:28:47'),
+(365, 1, 'MODIFY', 'The application logo was changed.', '2024-02-09 22:32:59'),
+(366, 1, 'MODIFY', 'The application logo was changed.', '2024-02-09 22:33:48'),
+(367, 1, 'MODIFY', 'The company logo was changed.', '2024-02-09 22:33:48'),
+(368, 1, 'MODIFY', 'The privacy policy was changed.', '2024-02-09 23:57:38'),
+(369, 1, 'MODIFY', 'The company URL was changed to https://www.pipecompany.example.', '2024-02-10 00:02:44');
 
 -- --------------------------------------------------------
 
@@ -651,7 +675,10 @@ CREATE TABLE `media` (
 INSERT INTO `media` (`id`, `filename`, `filetype`, `filesize`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
 (19, 'placeholderbanner_1920x400.png', 'png', 29410, '2024-01-24 23:20:09', 1, '2024-01-24 18:50:58', 1),
 (20, 'placeholderlogo_200x200.png', 'png', 2835, '2024-01-25 01:31:24', 1, '2024-01-24 20:31:41', 1),
-(21, 'TalentFlow-Logo.png', 'png', 19205, '2024-02-09 01:32:52', 1, '2024-02-09 01:32:52', 1);
+(21, 'TalentFlow-Logo.png', 'png', 19205, '2024-02-09 01:32:52', 1, '2024-02-09 01:32:52', 1),
+(22, 'company-logo.png', 'png', 13833, '2024-02-09 19:57:25', 1, '2024-02-09 19:57:25', 1),
+(23, 'company-logo.svg', 'svg', 3769, '2024-02-09 19:57:49', 1, '2024-02-09 19:57:49', 1),
+(24, 'TalentFlow-Logo.svg', 'svg', 2230, '2024-02-09 20:00:28', 1, '2024-02-09 20:00:28', 1);
 
 -- --------------------------------------------------------
 
@@ -1130,7 +1157,7 @@ CREATE TABLE `settings` (
 --
 
 INSERT INTO `settings` (`isSet`, `app_name`, `app_url`, `company_name`, `company_url`, `company_logo`, `company_address`, `company_city`, `company_state`, `company_zip`, `company_phone`, `app_logo`, `contact_email`, `mail_from_address`, `mail_from_name`, `mail_mailer`, `mail_host`, `mail_port`, `mail_auth_req`, `mail_username`, `mail_password`, `mail_encryption`, `privacy_policy`, `terms_conditions`) VALUES
-('SET', 'TalentFlow', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'contact@talentflow.email', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>', '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>');
+('SET', 'TalentFlow', NULL, 'Pipe and Foundry Company', 'https://www.pipecompany.example', 23, '1234 Main St', 'Anyplace', 'NC', '123456', '123-456-1234', 24, 'contact@talentflow.email', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>', '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>');
 
 -- --------------------------------------------------------
 
@@ -1479,7 +1506,7 @@ ALTER TABLE `user_token_auth`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=346;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=370;
 
 --
 -- AUTO_INCREMENT for table `aoi`
@@ -1533,7 +1560,7 @@ ALTER TABLE `major`
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `permissions`
