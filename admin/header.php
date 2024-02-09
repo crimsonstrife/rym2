@@ -5,6 +5,23 @@ require_once(__DIR__ . '../../vendor/autoload.php');
 /* include config */
 require_once(__DIR__ . '../../config/app.php');
 
+/* include the application class */
+$app_class = new Application();
+
+/* include the media class */
+$media_class = new Media();
+
+//placeholder variables
+$author = 'Patrick Barnhardt';
+
+// get the company name from the application settings
+$companyName = $app_class->getCompanyName();
+
+//if the company name is not set, use the default of the developer name
+if (!empty($companyName) && $companyName != null && $companyName != '') {
+    $author = $companyName;
+}
+
 /* Setup HTML for page header */
 ?>
 <!DOCTYPE html>
@@ -15,8 +32,14 @@ require_once(__DIR__ . '../../config/app.php');
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Dashboard</title>
+        <meta name="author" content="<?php echo $author; ?>" />
+        <meta name="robots" content="noindex, nofollow">
+        <title>
+            <?php
+        /* Get the APP_NAME from the constants, if not set use default */
+        echo (defined('APP_NAME') ? APP_NAME : 'TalentFlow');
+        ?> | Dashboard
+        </title>
         <!-- Favicons/Icons and Manifest -->
         <link rel="icon" href="/favicon.ico" sizes="32x32">
         <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -38,7 +61,19 @@ require_once(__DIR__ . '../../config/app.php');
                 <i class=" icon toggleIcon"></i>
             </button>
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="<?php echo APP_URL ?>"><?php echo htmlspecialchars(APP_NAME) ?></a>
+            <div class="navbar-brand brand-container">
+                <div class="brand-logo">
+                    <?php
+                // Get the app logo from the application settings, if not set use default
+                $appLogo = $app_class->getAppLogo();
+                if (!empty($appLogo) && $appLogo != null && $appLogo != '') {
+                    echo '<img src="' . getUploadPath() . $media_class->getMediaFileName(intval($appLogo)) . '" alt="' . APP_NAME . '" class="brand-logo" />';
+                }
+                ?>
+                </div>
+                <span class="brand-text"><a class="navbar-brand ps-3"
+                        href="<?php echo APP_URL ?>"><?php echo htmlspecialchars(APP_NAME) ?></a></span>
+            </div>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
                 action="<?php echo APP_URL . '/admin/dashboard.php?view=search'; ?>" method="post">
