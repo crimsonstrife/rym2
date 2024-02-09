@@ -228,6 +228,11 @@ function getImageDimensions(string $imagePath): array
     //get the image dimensions
     $imageDimensions = getimagesize($imagePath);
 
+    if ($imageDimensions === false) {
+        //if the image dimensions could not be determined, set the width and height to 0
+        $imageDimensions = array(0, 0);
+    }
+
     //return the image dimensions
     return $imageDimensions;
 }
