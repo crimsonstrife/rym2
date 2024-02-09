@@ -197,6 +197,29 @@ footer#layout_footer {
 	box-shadow: none;
 }
 
+.navbar-brand {
+	display: inline-flex;
+	flex-direction: row;
+}
+
+.navbar-brand .brand-text {
+	margin-left: 0.25em;
+	position: relative;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.navbar-brand .brand-logo {
+	max-width: 100px;
+	position: relative;
+	min-width: 2em;
+	margin-left: 0.5em;
+}
+
+.navbar-brand .brand-logo > img {
+	max-height: 2em;
+}
+
 #layout {
 	min-height: 100vh;
 }
