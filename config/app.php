@@ -63,6 +63,15 @@ if (file_exists(BASEPATH . '/.env')) {
     define('APP_DEBUG', $_ENV['APP_DEBUG']); // Define the APP_DEBUG constant, this is the debug mode of the application.
     define('OPENSSL_INSTALLED', extension_loaded('openssl')); // Define the OPENSSL_INSTALLED constant, this is whether or not the openssl extension is installed.
 
+    /* Define the company constants constants */
+    //Check if the company_name is set in the database, if not set it to the value in the .env file
+    if ($APP->getCompanyName() != null || $APP->getCompanyName() != '') {
+        //define the company_name constant
+        define('COMPANY_NAME', $APP->getCompanyName());
+    } else {
+        define('COMPANY_NAME', $_ENV['COMPANY_NAME']);
+    } // Define the COMPANY_NAME constant, this is the name of the company.
+
     /* Define the mail constants */
     //Check if the mail_mailer is set in the database, if not set it to the value in the .env file
     if ($APP->getMailerType() != null || $APP->getMailerType() != '') {
