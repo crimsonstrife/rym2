@@ -51,6 +51,7 @@ $errorIsMySQLiExtension = false;
 $errorIsDBVarMissing = false;
 $errorIsDBConnectionFailed = false;
 $errorIsDBNotEmpty = false;
+$errorIsTableNotExists = false;
 $errorIsMailEnabled = false;
 $errorIsMySQLVersion = false;
 $errorIsDBConnectionFailed = false;
@@ -118,13 +119,36 @@ if (!isset($_ENV['DB_HOST']) || !isset($_ENV['DB_PORT']) || !isset($_ENV['DB_DAT
     } else {
         /* If the connection was successful, check if the database is empty */
         $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
-        $result = $mysqli->query("SELECT * FROM users");
-        /* Check if the query returned any rows */
-        if ($result->num_rows > 0) {
-            /* If the query returned rows, throw an exception */
+
+        /* Query to check if the database is empty */
+        $sql = "SELECT * FROM users";
+
+        //try to run the query
+        try {
+            $result = $mysqli->query($sql);
+        } catch (Exception $e) {
+            // Log the error
+            error_log("Failed to run the query: " . $e->getMessage());
+            //throw an exception if the query fails
             $errorFound = true;
             $errorIsDBNotEmpty = true;
+            //return an empty result
+            $result = null;
         }
+
+        //check if the result is null
+        if ($result == null) {
+            //if the result is null, the table does not exist
+            $errorIsTableNotExists = true;
+            //so the database is empty
+            $errorIsDBNotEmpty = false;
+        } else {
+            //if the result is not null, the table exists
+            $errorIsTableNotExists = false;
+            //so the database is not empty
+            $errorIsDBNotEmpty = true;
+        }
+
         /* Check if the MySQL version is greater than or equal to 5.7.0 */
         $mysqlVersion = $mysqli->server_info;
         if (version_compare($mysqlVersion, '5.7.0', '<')) {
@@ -282,12 +306,12 @@ if (!function_exists('mail')) {
                                 <label for="db_password">Database Password:</label>
                                 <input type="password" name="db_password" id="db_password" placeholder="<?php echo $_ENV['DB_PASSWORD']; ?>" required>
                                 <br>
-                                <input type="submit" name="submit" value="Submit">
+                                <input type="submit" name="db_submit" value="Submit">
                             </form>
                             <div>
                                 <?php
                                 /* Check if the form was submitted, if errored notify the user */
-                                if (isset($_POST['submit'])) {
+                                if (isset($_POST['db_submit'])) {
                                     //try to test the connection
                                     try {
                                         $testConnection = connectToDatabase($_POST['db_host'], $_POST['db_username'], $_POST['db_password'], $_POST['db_database'], $_POST['db_port']);
@@ -340,6 +364,86 @@ if (!function_exists('mail')) {
                                             <li style="color: green;">Database Password - OK!</li>
                                         <?php } ?>
                                     </ul>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    <?php } else { ?>
+                        <!-- there were no database errors, show the form to have the user approve the table installation -->
+                        <h3>Install the database tables:</h3>
+                        <div>
+                            <form action="setup.php" method="post">
+                                <input type="submit" name="install_tables" value="Install Tables">
+                            </form>
+                            <div>
+                                <?php
+                                /* Check if the form was submitted, if errored notify the user */
+                                if (isset($_POST['install_tables'])) {
+                                    //verify the sql file exists in the temp directory
+                                    if (file_exists(BASEPATH . '/temp/capstone.sql')) {
+                                        //try to run the sql file
+                                        try {
+                                            $sql = file_get_contents(BASEPATH . '/temp/capstone.sql');
+                                            $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
+                                            $mysqli->multi_query($sql);
+                                            //close the connection
+                                            closeDatabaseConnection($mysqli);
+                                        } catch (Exception $e) {
+                                            // Log the error
+                                            error_log("Failed to install the database tables: " . $e->getMessage());
+                                            //throw an exception if the connection fails
+                                            $errorFound = true;
+                                            $errorIsDBConnectionFailed = true;
+                                            $dbErrorMessage = "Failed to install the database tables: " . $e->getMessage();
+                                        }
+                                    } else {
+                                        //if the file does not exist, throw an exception
+                                        $errorFound = true;
+                                        $errorIsDBConnectionFailed = true;
+                                        $dbErrorMessage = "The database template file does not exist";
+                                    }
+                                    //try to connect to the database
+                                    try {
+                                        $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
+                                    } catch (Exception $e) {
+                                        // Log the error
+                                        error_log("Failed to connect to the database: " . $e->getMessage());
+                                        //throw an exception if the connection fails
+                                        $errorFound = true;
+                                        $errorIsDBConnectionFailed = true;
+                                        $dbErrorMessage = "Failed to connect to the database: " . $e->getMessage();
+                                    }
+                                    if ($errorFound) { ?>
+                                        <p>There were errors found in the system configuration, please fix the following before
+                                            continuing:</p>
+                                        <?php if ($errorIsDBConnectionFailed) { ?>
+                                            <p><?php echo $dbErrorMessage; ?></p>
+                                        <?php } ?>
+                                    <?php } ?>
+                                    <ul>
+                                        <li>Database Tables</li>
+                                    </ul>
+                                    <ul>
+                                        <?php if ($errorIsDBConnectionFailed) { ?>
+                                            <li style="color: red;"><?php echo $dbErrorMessage; ?></li>
+                                        <?php } else { ?>
+                                            <li style="color: green;">Database Connection - OK!</li>
+                                            <li style="color: green;">Database Tables - OK!</li>
+                                        <?php } ?>
+                                    </ul>
+
+                                    <?php if (!$errorIsDBConnectionFailed) { ?>
+                                        <p>Setup is complete, you can now <a href="index.php">launch the application</a>.</p>
+                                        <p>The default login is: </p>
+                                        <p>Username: admin</p>
+                                        <p>Password: admin</p>
+                                        <p>It is recommended to change the default password after logging in.</p>
+                                    <?php } ?>
+                                    <!-- if the database tables were installed, create the ready file -->
+                                    <?php if (!$errorIsDBConnectionFailed) {
+                                        //create the ready file
+                                        $readyFile = fopen(BASEPATH . '/ready.php', 'w');
+                                        fclose($readyFile);
+                                    } ?>
                                 <?php } ?>
                             </div>
                         </div>
