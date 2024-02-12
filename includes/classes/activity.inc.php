@@ -164,7 +164,7 @@ class Activity
         }
 
         //check that the mysqli object is not null
-        if ($this->mysqli->connect_error) {
+        if ($this->mysqli->error) {
             print_r($this->mysqli->connect_error);
             //log the error
             error_log('Error: ' . $this->mysqli->connect_error);
