@@ -81,27 +81,37 @@ if (!isset($_ENV['DB_HOST']) || !isset($_ENV['DB_PORT']) || !isset($_ENV['DB_DAT
     $errorIsDBVarMissing = true;
 } else {
     /* If the env vars contain database information, try to connect */
-    $testConnection = testDatabaseConnection($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
-    /* Check if the connection failed */
-    if ($testConnection == false) {
-        /* If the connection failed, throw an exception */
+    try {
+        $testConnection = testDatabaseConnection($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
+    } catch (Exception $e) {
+        // Log the error
+        error_log("Failed to connect to the database: " . $e->getMessage());
+        //throw an exception if the connection fails
         $errorFound = true;
         $errorIsDBConnectionFailed = true;
-        //try to connect to the database
-        try {
-            //port is a string, need to convert to int
-            $PORT = intval($PORT);
-            $mysqli = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
-        } catch (Exception $e) {
-            // Log the error
-            error_log("Failed to connect to the database: " . $e->getMessage());
-            //throw an exception if the connection fails
-            $errorFound = true;
-            $errorIsDBConnectionFailed = true;
-            $dbErrorMessage = "Failed to connect to the database: " . $e->getMessage();
+        $dbErrorMessage = "Failed to connect to the database: " . $e->getMessage();
+        $testConnection = false;
+    }
+    /* Check if the connection failed */
+    if ($testConnection == false) {
+        //try to connect to the database if the connection failed, but only if the error is not a failed connection
+        if (!$errorIsDBConnectionFailed || !$errorFound) {
+            //try to connect to the database
+            try {
+                //port is a string, need to convert to int
+                $PORT = intval($PORT);
+                $mysqli = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
+            } catch (Exception $e) {
+                // Log the error
+                error_log("Failed to connect to the database: " . $e->getMessage());
+                //throw an exception if the connection fails
+                $errorFound = true;
+                $errorIsDBConnectionFailed = true;
+                $dbErrorMessage = "Failed to connect to the database: " . $e->getMessage();
+            }
         }
 
-        //check if the connection was successful
+        //check if the error is a failed connection, if not close the connection
         if (!$errorIsDBConnectionFailed) {
             closeDatabaseConnection($mysqli);
         }
