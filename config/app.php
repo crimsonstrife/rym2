@@ -256,7 +256,7 @@ if (file_exists(BASEPATH . '/.env')) {
 function getAssetPath(): string
 {
     /* Define the asset path for the application */
-    $assetPath = APP_URL . '/public/content/assets/';
+    $assetPath = checkSecureRequest() . '/public/content/assets/';
 
     /* Return the asset path */
     return $assetPath;
@@ -271,7 +271,7 @@ function getAssetPath(): string
 function getLibraryPath(): string
 {
     /* Define the library path for the application */
-    $libraryPath = APP_URL . '/public/content/libs/';
+    $libraryPath = checkSecureRequest() . '/public/content/libs/';
 
     /* Return the library path */
     return $libraryPath;
@@ -286,10 +286,46 @@ function getLibraryPath(): string
 function getUploadPath(): string
 {
     /* Define the media upload path for the application */
-    $uploadPath = APP_URL . '/public/content/uploads/';
+    $uploadPath = checkSecureRequest() . '/public/content/uploads/';
 
     /* Return the media upload path for the application */
     return $uploadPath;
+}
+
+/**
+ * Check if the request is secure via HTTPS or HTTP, adjust the URL accordingly
+ * returns the URL with the correct protocol, either HTTP or HTTPS, to avoid CORS issues
+ *
+ * @return string URL with the correct protocol
+ */
+function checkSecureRequest(): string
+{
+    //Check if the request is secure
+    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+        //Set the URL to HTTPS
+        $url = "https://";
+    } else {
+        //Set the URL to HTTP
+        $url = "http://";
+    }
+
+    //Get the set URL constant
+    $urlConstant = APP_URL;
+
+    //Check if the URL constant includes the protocol, if not, add it and if it does adjust as needed
+    if (strpos($urlConstant, 'http://') !== false) {
+        //Remove the protocol from the URL constant
+        $urlConstant = str_replace('http://', '', $urlConstant);
+    } else if (strpos($urlConstant, 'https://') !== false) {
+        //Remove the protocol from the URL constant
+        $urlConstant = str_replace('https://', '', $urlConstant);
+    }
+
+    //Set the URL to the correct protocol and add the URL constant
+    $url .= $urlConstant;
+
+    //Return the URL
+    return $url;
 }
 
 /**
