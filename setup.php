@@ -277,13 +277,60 @@ if (!function_exists('mail')) {
                             <div>
                                 <?php
                                 /* Check if the form was submitted, if errored notify the user */
-                                $testConnection = connectToDatabase($_POST['db_host'], $_POST['db_username'], $_POST['db_password'], $_POST['db_database'], $_POST['db_port']);
-                                if ($testConnection->connect_error) {
-                                    echo "<p>Connection failed: " . $testConnection->connect_error . "</p>";
-                                } else {
-                                    echo "<p>Connection successful!</p>";
-                                }
-                                ?>
+                                if (isset($_POST['submit'])) {
+                                    //try to test the connection
+                                    try {
+                                        $testConnection = connectToDatabase($_POST['db_host'], $_POST['db_username'], $_POST['db_password'], $_POST['db_database'], $_POST['db_port']);
+                                    } catch (Exception $e) {
+                                        // Log the error
+                                        error_log("Failed to connect to the database: " . $e->getMessage());
+                                        //throw an exception if the connection fails
+                                        $errorFound = true;
+                                        $errorIsDBConnectionFailed = true;
+                                        $dbErrorMessage = "Failed to connect to the database: " . $e->getMessage();
+                                    }
+                                    if ($errorFound) { ?>
+                                        <p>There were errors found in the system configuration, please fix the following before
+                                            continuing:</p>
+                                        <?php if ($errorIsDBConnectionFailed) { ?>
+                                            <p><?php echo $dbErrorMessage; ?></p>
+                                        <?php } ?>
+                                    <?php } ?>
+                                    <ul>
+                                        <li>Database Host</li>
+                                        <li>Database Port</li>
+                                        <li>Database Name</li>
+                                        <li>Database Username</li>
+                                        <li>Database Password</li>
+                                    </ul>
+                                    <ul>
+                                        <?php if (empty($_POST['db_host'])) { ?>
+                                            <li style="color: red;">Database Host is required</li>
+                                        <?php } else { ?>
+                                            <li style="color: green;">Database Host - OK!</li>
+                                        <?php } ?>
+                                        <?php if (empty($_POST['db_port'])) { ?>
+                                            <li style="color: red;">Database Port is required</li>
+                                        <?php } else { ?>
+                                            <li style="color: green;">Database Port - OK!</li>
+                                        <?php } ?>
+                                        <?php if (empty($_POST['db_database'])) { ?>
+                                            <li style="color: red;">Database Name is required</li>
+                                        <?php } else { ?>
+                                            <li style="color: green;">Database Name - OK!</li>
+                                        <?php } ?>
+                                        <?php if (empty($_POST['db_username'])) { ?>
+                                            <li style="color: red;">Database Username is required</li>
+                                        <?php } else { ?>
+                                            <li style="color: green;">Database Username - OK!</li>
+                                        <?php } ?>
+                                        <?php if (empty($_POST['db_password'])) { ?>
+                                            <li style="color: red;">Database Password is required</li>
+                                        <?php } else { ?>
+                                            <li style="color: green;">Database Password - OK!</li>
+                                        <?php } ?>
+                                    </ul>
+                                <?php } ?>
                             </div>
                         </div>
                     <?php } ?>
