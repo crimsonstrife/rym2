@@ -168,28 +168,43 @@ class User implements Login
         //SQL statement to get the role by ID
         $sql = "SELECT role_id FROM user_has_role WHERE user_id = ?";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
 
-        //Bind the parameters to the SQL statement
-        $role_statement->bind_param("i", $id);
+                //Bind the parameters to the SQL statement
+                $role_statement->bind_param("i", $id);
 
-        //Execute the statement
-        $role_statement->execute();
+                //Execute the statement
+                $role_statement->execute();
 
-        //Get the results
-        $result = $role_statement->get_result();
+                //Get the results
+                $result = $role_statement->get_result();
 
-        //Create an array to hold the role
-        $role_ids = array();
+                //Create an array to hold the role
+                $role_ids = array();
 
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $role_ids[] = $row;
+                //Loop through the results and add them to the array
+                while ($row = $result->fetch_assoc()) {
+                    $role_ids[] = $row;
+                }
+
+                //Return the array of roles
+                return $role_ids;
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
-
-        //Return the array of roles
-        return $role_ids;
     }
 
     //Get list of role objects using the roles class and the getRoleIdsByUserID function
@@ -223,25 +238,41 @@ class User implements Login
         //SQL statement to get all the users
         $sql = "SELECT * FROM users";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
 
-        //Execute the statement
-        $stmt->execute();
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Get the results
-        $result = $stmt->get_result();
+                //Execute the statement
+                $stmt->execute();
 
-        //Create an array to hold the users
-        $users = array();
+                //Get the results
+                $result = $stmt->get_result();
 
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $users[] = $row;
+                //Create an array to hold the users
+                $users = array();
+
+                //Loop through the results and add them to the array
+                while ($row = $result->fetch_assoc()) {
+                    $users[] = $row;
+                }
+
+                //Return the array of users
+                return $users;
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
-
-        //Return the array of users
-        return $users;
     }
 
     //Get a user by ID
@@ -250,28 +281,43 @@ class User implements Login
         //SQL statement to get the user by ID
         $sql = "SELECT * FROM users WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the ID to the statement
-        $stmt->bind_param("i", $id);
+                //Bind the ID to the statement
+                $stmt->bind_param("i", $id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //Get the results
-        $result = $stmt->get_result();
+                //Get the results
+                $result = $stmt->get_result();
 
-        //Create an array to hold the user
-        $user = array();
+                //Create an array to hold the user
+                $user = array();
 
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $user = $row;
+                //Loop through the results and add them to the array
+                while ($row = $result->fetch_assoc()) {
+                    $user = $row;
+                }
+
+                //Return the array of users
+                return $user;
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
-
-        //Return the array of users
-        return $user;
     }
 
     //Get a user's email
@@ -280,28 +326,43 @@ class User implements Login
         //SQL statement to get the user's email by ID
         $sql = "SELECT email FROM users WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the ID to the statement
-        $stmt->bind_param("i", $id);
+                //Bind the ID to the statement
+                $stmt->bind_param("i", $id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //Get the results
-        $result = $stmt->get_result();
+                //Get the results
+                $result = $stmt->get_result();
 
-        //Create a variable to hold the user's email
-        $email = "";
+                //Create a variable to hold the user's email
+                $email = "";
 
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $email = $row['email'];
+                //Loop through the results and add them to the array
+                while ($row = $result->fetch_assoc()) {
+                    $email = $row['email'];
+                }
+
+                //Return the user's email
+                return $email;
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
-
-        //Return the user's email
-        return $email;
     }
 
     //Get a user's first name
@@ -310,28 +371,43 @@ class User implements Login
         //SQL statement to get the user's first name by ID
         $sql = "SELECT first_name FROM users WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the ID to the statement
-        $stmt->bind_param("i", $id);
+                //Bind the ID to the statement
+                $stmt->bind_param("i", $id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //Get the results
-        $result = $stmt->get_result();
+                //Get the results
+                $result = $stmt->get_result();
 
-        //Create a variable to hold the user's first name
-        $first_name = "";
+                //Create a variable to hold the user's first name
+                $first_name = "";
 
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $first_name = $row['first_name'];
+                //Loop through the results and add them to the array
+                while ($row = $result->fetch_assoc()) {
+                    $first_name = $row['first_name'];
+                }
+
+                //Return the user's first name
+                return $first_name;
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
-
-        //Return the user's first name
-        return $first_name;
     }
 
     //Get a user's last name
@@ -340,28 +416,43 @@ class User implements Login
         //SQL statement to get the user's last name by ID
         $sql = "SELECT last_name FROM users WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the ID to the statement
-        $stmt->bind_param("i", $id);
+                //Bind the ID to the statement
+                $stmt->bind_param("i", $id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //Get the results
-        $result = $stmt->get_result();
+                //Get the results
+                $result = $stmt->get_result();
 
-        //Create a variable to hold the user's last name
-        $last_name = "";
+                //Create a variable to hold the user's last name
+                $last_name = "";
 
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $last_name = $row['last_name'];
+                //Loop through the results and add them to the array
+                while ($row = $result->fetch_assoc()) {
+                    $last_name = $row['last_name'];
+                }
+
+                //Return the user's last name
+                return $last_name;
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
-
-        //Return the user's last name
-        return $last_name;
     }
 
     //Get a user's full name
@@ -390,28 +481,43 @@ class User implements Login
         //SQL statement to get the user's password by ID
         $sql = "SELECT password FROM users WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the ID to the statement
-        $stmt->bind_param("i", $id);
+                //Bind the ID to the statement
+                $stmt->bind_param("i", $id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //Get the results
-        $result = $stmt->get_result();
+                //Get the results
+                $result = $stmt->get_result();
 
-        //Create a variable to hold the user's password
-        $password = "";
+                //Create a variable to hold the user's password
+                $password = "";
 
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $password = $row['password'];
+                //Loop through the results and add them to the array
+                while ($row = $result->fetch_assoc()) {
+                    $password = $row['password'];
+                }
+
+                //Return the user's password
+                return $password;
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
-
-        //Return the user's password
-        return $password;
     }
 
     //Get a user's username
@@ -420,34 +526,49 @@ class User implements Login
         //SQL statement to get the user's username by ID
         $sql = "SELECT username FROM users WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the ID to the statement
-        $stmt->bind_param("i", $id);
+                //Bind the ID to the statement
+                $stmt->bind_param("i", $id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //Get the results
-        $result = $stmt->get_result();
+                //Get the results
+                $result = $stmt->get_result();
 
-        //Create a variable to hold the user's username
-        $username = "";
+                //Create a variable to hold the user's username
+                $username = "";
 
-        //if the user id is not null, 0, or empty, get the username
-        if ($id != null && $id != 0 && !empty($id)) {
-            //Loop through the results and add them to the array
-            while ($row = $result->fetch_assoc()) {
-                $username = $row['username'];
+                //if the user id is not null, 0, or empty, get the username
+                if ($id != null && $id != 0 && !empty($id)) {
+                    //Loop through the results and add them to the array
+                    while ($row = $result->fetch_assoc()) {
+                        $username = $row['username'];
+                    }
+                } else {
+                    //if the user id is null, 0, or empty, set the username to "SYSTEM"
+                    $username = "SYSTEM";
+                }
+
+                //Return the user's username
+                return $username;
             }
         } else {
-            //if the user id is null, 0, or empty, set the username to "SYSTEM"
-            $username = "SYSTEM";
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
-
-        //Return the user's username
-        return $username;
     }
 
     //Get a user ID by username
@@ -456,28 +577,43 @@ class User implements Login
         //SQL statement to get the user's ID by username
         $sql = "SELECT id FROM users WHERE username = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the username to the statement
-        $stmt->bind_param("s", $username);
+                //Bind the username to the statement
+                $stmt->bind_param("s", $username);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //Get the results
-        $result = $stmt->get_result();
+                //Get the results
+                $result = $stmt->get_result();
 
-        //Create a variable to hold the user's ID
-        $id = 0;
+                //Create a variable to hold the user's ID
+                $id = 0;
 
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $id = $row['id'];
+                //Loop through the results and add them to the array
+                while ($row = $result->fetch_assoc()) {
+                    $id = $row['id'];
+                }
+
+                //Return the user's ID
+                return $id;
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
-
-        //Return the user's ID
-        return $id;
     }
 
     //Set a user's email
@@ -486,14 +622,33 @@ class User implements Login
         //SQL statement to set the user's email by ID
         $sql = "UPDATE users SET email = ? WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("si", $email, $id);
+                //Bind the parameters to the SQL statement
+                $stmt->bind_param("si", $email, $id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
+
+                // log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Updated User Email', 'User ID: ' . strval($id) . ' User Name: ' . $this->getUserUsername($id) . ' Email: ' . $email);
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+        }
     }
 
     //Set a user's first name
@@ -502,14 +657,33 @@ class User implements Login
         //SQL statement to set the user's first name by ID
         $sql = "UPDATE users SET first_name = ? WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("si", $first_name, $id);
+                //Bind the parameters to the SQL statement
+                $stmt->bind_param("si", $first_name, $id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
+
+                // log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Updated User First Name', 'User ID: ' . strval($id) . ' User Name: ' . $this->getUserUsername($id) . ' First Name: ' . $first_name);
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+        }
     }
 
     //Set a user's last name
@@ -518,14 +692,33 @@ class User implements Login
         //SQL statement to set the user's last name by ID
         $sql = "UPDATE users SET last_name = ? WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("si", $last_name, $id);
+                //Bind the parameters to the SQL statement
+                $stmt->bind_param("si", $last_name, $id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
+
+                // log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Updated User Last Name', 'User ID: ' . strval($id) . ' User Name: ' . $this->getUserUsername($id) . ' Last Name: ' . $last_name);
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+        }
     }
 
     //Set a user's password
@@ -537,14 +730,33 @@ class User implements Login
         //SQL statement to set the user's password by ID
         $sql = "UPDATE users SET password = ? WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("si", $password, $id);
+                //Bind the parameters to the SQL statement
+                $stmt->bind_param("si", $password, $id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
+
+                // log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Updated User Password', 'User ID: ' . strval($id) . ' User Name: ' . $this->getUserUsername($id));
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+        }
     }
 
     //Set a user's username
@@ -553,14 +765,36 @@ class User implements Login
         //SQL statement to set the user's username by ID
         $sql = "UPDATE users SET username = ? WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //old username
+        $old_username = $this->getUserUsername($id);
 
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("si", $username, $id);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Execute the statement
-        $stmt->execute();
+                //Bind the parameters to the SQL statement
+                $stmt->bind_param("si", $username, $id);
+
+                //Execute the statement
+                $stmt->execute();
+
+                // log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), 'Updated User Username', 'User ID: ' . strval($id) . ' User Name: ' . $username . ' Old Username: ' . $old_username);
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+        }
     }
 
     //Add a user
@@ -575,31 +809,47 @@ class User implements Login
         //SQL statement to add a user with current timestamp as created_at and updated_at
         $sql = "INSERT INTO users (email, password, username, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
 
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("sssssii", $email, $password, $username, $timestamp, $timestamp, $created_by, $created_by);
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Execute the statement
-        $stmt->execute();
+                //Bind the parameters to the SQL statement
+                $stmt->bind_param("sssssii", $email, $password, $username, $timestamp, $timestamp, $created_by, $created_by);
 
-        //count the number of rows affected
-        $rows = $stmt->affected_rows;
+                //Execute the statement
+                $stmt->execute();
 
-        //if the number of rows affected is greater than 0, return the user ID
-        if ($rows > 0) {
-            //get the user ID
-            $user_id = $stmt->insert_id;
+                //count the number of rows affected
+                $rows = $stmt->affected_rows;
 
-            //log the user activity
-            $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Added User', 'User Name: ' . $username . ' with User ID: ' . strval($user_id));
+                //if the number of rows affected is greater than 0, return the user ID
+                if ($rows > 0) {
+                    //get the user ID
+                    $user_id = $stmt->insert_id;
 
-            //return the user ID as an integer
-            return intval($user_id);
+                    //log the user activity
+                    $activity = new Activity();
+                    $activity->logActivity(intval($_SESSION['user_id']), 'Added User', 'User Name: ' . $username . ' with User ID: ' . strval($user_id));
+
+                    //return the user ID as an integer
+                    return intval($user_id);
+                } else {
+                    return 0;
+                }
+            }
         } else {
-            return 0;
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
     }
 
@@ -618,30 +868,45 @@ class User implements Login
         //create the sql statement
         $sql = "DELETE FROM users WHERE id = ?";
 
-        //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //prepare the statement
+                $stmt = $this->mysqli->prepare($sql);
 
-        //bind the parameters
-        $stmt->bind_param("i", $user_id);
+                //bind the parameters
+                $stmt->bind_param("i", $user_id);
 
-        //execute the statement
-        $stmt->execute();
+                //execute the statement
+                $stmt->execute();
 
-        //check the result
-        if ($stmt->affected_rows > 0) {
-            $result = true;
+                //check the result
+                if ($stmt->affected_rows > 0) {
+                    $result = true;
+                } else {
+                    $result = false;
+                }
+
+                //log the user activity if the user was deleted
+                if ($result) {
+                    $activity = new Activity();
+                    $activity->logActivity(intval($_SESSION['user_id']), 'Deleted User', 'User ID: ' . $user_id . ' User Name: ' . $user_name);
+                }
+
+                //return the result
+                return $result;
+            }
         } else {
-            $result = false;
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
-
-        //log the user activity if the user was deleted
-        if ($result) {
-            $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted User', 'User ID: ' . $user_id . ' User Name: ' . $user_name);
-        }
-
-        //return the result
-        return $result;
     }
 
     //Update a user
@@ -671,25 +936,40 @@ class User implements Login
         //SQL statement to update a user
         $sql = "UPDATE users SET email = ?, password = ?, username = ?, updated_at = ?, updated_by = ? WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("ssssii", $email, $password, $username, $date, $updated_by, $id);
+                //Bind the parameters to the SQL statement
+                $stmt->bind_param("ssssii", $email, $password, $username, $date, $updated_by, $id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //get the number of rows affected, if the number of rows affected is greater than 0, the user was updated
-        if ($stmt->affected_rows > 0) {
-            // log the activity
-            $activity = new Activity();
-            $activity->logActivity($updated_by, "User Updated.", 'User: ' . $username . ' updated by User: ' . strval($updated_by));
+                //get the number of rows affected, if the number of rows affected is greater than 0, the user was updated
+                if ($stmt->affected_rows > 0) {
+                    // log the activity
+                    $activity = new Activity();
+                    $activity->logActivity($updated_by, "User Updated.", 'User: ' . $username . ' updated by User: ' . strval($updated_by));
+                } else {
+                    //if the number of rows affected is 0, the user was not updated
+                    // log the activity
+                    $activity = new Activity();
+                    $activity->logActivity($updated_by, "User Update Failed.", 'User: ' . $username . ' failed to update by User: ' . strval($updated_by));
+                }
+            }
         } else {
-            //if the number of rows affected is 0, the user was not updated
-            // log the activity
-            $activity = new Activity();
-            $activity->logActivity($updated_by, "User Update Failed.", 'User: ' . $username . ' failed to update by User: ' . strval($updated_by));
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
     }
 
@@ -714,18 +994,33 @@ class User implements Login
             //SQL statement to add a role to a user
             $sql = "INSERT INTO user_has_role (user_id, role_id, created_at, updated_at) VALUES (?, ?, ?, ?)";
 
-            //Prepare the SQL statement for execution
-            $stmt = $this->mysqli->prepare($sql);
+            //Check that mysqli is set
+            if (isset($this->mysqli)) {
+                //check that the mysqli object is not null
+                if ($this->mysqli->connect_error) {
+                    print_r($this->mysqli->connect_error);
+                    //log the error
+                    error_log('Error: ' . $this->mysqli->connect_error);
+                    //throw an exception
+                    throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+                } else {
+                    //Prepare the SQL statement for execution
+                    $stmt = $this->mysqli->prepare($sql);
 
-            //Bind the parameters to the SQL statement
-            $stmt->bind_param("iiss", $user_id, $role_id, $date, $date);
+                    //Bind the parameters to the SQL statement
+                    $stmt->bind_param("iiss", $user_id, $role_id, $date, $date);
 
-            //Execute the statement
-            $stmt->execute();
+                    //Execute the statement
+                    $stmt->execute();
 
-            // log the activity
-            $activity = new Activity();
-            $activity->logActivity(null, "User Updated", "Role ID: " . strval($role_id) . " Role Name: " . $role_name . " added to User ID: " . strval($user_id) . " User Name: " . $this->getUserUsername($user_id) . "");
+                    // log the activity
+                    $activity = new Activity();
+                    $activity->logActivity(null, "User Updated", "Role ID: " . strval($role_id) . " Role Name: " . $role_name . " added to User ID: " . strval($user_id) . " User Name: " . $this->getUserUsername($user_id) . "");
+                }
+            } else {
+                //if the mysqli object is null, throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            }
         } else {
             //if the role does not exist, throw an exception
             throw new Exception("Role does not exist.");
@@ -738,14 +1033,33 @@ class User implements Login
         //SQL statement to remove a role from a user
         $sql = "DELETE FROM user_has_role WHERE user_id = ? AND role_id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("ii", $user_id, $role_id);
+                //Bind the parameters to the SQL statement
+                $stmt->bind_param("ii", $user_id, $role_id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
+
+                // log the activity
+                $activity = new Activity();
+                $activity->logActivity(null, "User Updated", "Role ID: " . strval($role_id) . " removed from User ID: " . strval($user_id) . " User Name: " . $this->getUserUsername($user_id) . "");
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+        }
     }
 
     //User exists by ID
@@ -754,23 +1068,38 @@ class User implements Login
         //SQL statement to validate a user exists by ID
         $sql = "SELECT id FROM users WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the ID to the statement
-        $stmt->bind_param("i", $id);
+                //Bind the ID to the statement
+                $stmt->bind_param("i", $id);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //Get the results
-        $result = $stmt->get_result();
+                //Get the results
+                $result = $stmt->get_result();
 
-        //if the user exists, return true
-        if ($result->num_rows > 0) {
-            return true;
+                //if the user exists, return true
+                if ($result->num_rows > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         } else {
-            return false;
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
     }
 
@@ -786,23 +1115,38 @@ class User implements Login
         //SQL statement to validate a user exists by username
         $sql = "SELECT id FROM users WHERE username = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the username to the statement
-        $stmt->bind_param("s", $username);
+                //Bind the username to the statement
+                $stmt->bind_param("s", $username);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //Get the results
-        $result = $stmt->get_result();
+                //Get the results
+                $result = $stmt->get_result();
 
-        //if the user exists, return true
-        if ($result->num_rows > 0) {
-            return true;
+                //if the user exists, return true
+                if ($result->num_rows > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         } else {
-            return false;
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
     }
 
@@ -812,23 +1156,38 @@ class User implements Login
         //SQL statement to validate a user exists by email
         $sql = "SELECT id FROM users WHERE email = ?";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the email to the statement
-        $stmt->bind_param("s", $email);
+                //Bind the email to the statement
+                $stmt->bind_param("s", $email);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //Get the results
-        $result = $stmt->get_result();
+                //Get the results
+                $result = $stmt->get_result();
 
-        //if the user exists, return true
-        if ($result->num_rows > 0) {
-            return true;
+                //if the user exists, return true
+                if ($result->num_rows > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         } else {
-            return false;
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
         }
     }
 
@@ -845,9 +1204,6 @@ class User implements Login
      */
     public function createUser(string $email, string $username, string $password, int $created_by = null, array $roles = array()): bool
     {
-        //get the current date and time
-        $date = date("Y-m-d H:i:s");
-
         //trim the email
         $email = trim($email);
 
@@ -932,9 +1288,6 @@ class User implements Login
      */
     public function modifyUser(int $id, string $email = null, string $username = null, string $password = null, int $updated_by = null, array $roles = array()): bool
     {
-        //get the current date and time
-        $date = date("Y-m-d H:i:s");
-
         //if the email is null, get the current email
         if ($email == null) {
             $email = $this->getUserEmail($id);
