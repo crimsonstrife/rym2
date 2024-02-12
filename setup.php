@@ -76,6 +76,8 @@ if (!isset($_ENV['DB_HOST']) || !isset($_ENV['DB_PORT']) || !isset($_ENV['DB_DAT
     $errorFound = true;
     $errorIsDBVarMissing = true;
 } else {
+    //convert port to int
+    $_ENV['DB_PORT'] = (int) $_ENV['DB_PORT'];
     /* If the env vars contain database information, try to connect */
     $testConnection = testDatabaseConnection($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $_ENV['DB_PORT']);
     /* Check if the connection failed */
