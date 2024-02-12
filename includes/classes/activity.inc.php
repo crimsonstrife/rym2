@@ -164,8 +164,10 @@ class Activity
         }
 
         //check that the mysqli object is not null
-        if ($this->mysqli == null) {
-            throw new Exception('Error: The database connection is null');
+        if ($this->mysqli->connect_error) {
+            print_r($this->mysqli->connect_error);
+            //log the error
+            error_log('Error: ' . $this->mysqli->connect_error);
         } else {
 
             //check if the user id is null
