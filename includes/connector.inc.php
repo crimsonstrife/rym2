@@ -19,19 +19,24 @@ declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do n
 if (!function_exists('connectToDatabase')) {
     function connectToDatabase(string $host, string $username, string $password, string $database, string $port): mysqli
     {
-        //convert port to int
-        $port = (int) $port;
-        /* Setup the connection to MySQL */
-        $mysqli = new mysqli($host, $username, $password, $database, $port);
+        //check that all the required fields are filled in and not empty, if not return empty mysqli object
+        if (empty($host) || empty($username) || empty($password) || empty($database) || empty($port)) {
+            return new mysqli();
+        } else {
+            //convert port to int
+            $port = (int) $port;
+            /* Setup the connection to MySQL */
+            $mysqli = new mysqli($host, $username, $password, $database, $port);
 
-        /* Attempt to connect to the MySQL database */
-        if ($mysqli->connect_errno) {
-            /* If the connection fails, throw an exception with the error */
-            throw new Exception("Failed to connect to Database: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error);
+            /* Attempt to connect to the MySQL database */
+            if ($mysqli->connect_errno) {
+                /* If the connection fails, throw an exception with the error */
+                throw new Exception("Failed to connect to Database: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error);
+            }
+
+            /* Return the connection object */
+            return $mysqli;
         }
-
-        /* Return the connection object */
-        return $mysqli;
     }
 }
 
