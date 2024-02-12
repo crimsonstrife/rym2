@@ -21,7 +21,8 @@ if (!function_exists('connectToDatabase')) {
     {
         //check that all the required fields are filled in and not empty, if not return empty mysqli object
         if (empty($host) || empty($username) || empty($password) || empty($database) || empty($port)) {
-            return new mysqli();
+            //throw an exception if the required fields are not filled in
+            throw new Exception("Failed to connect to Database: Missing required connection parameters");
         } else {
             //convert port to int
             $port = (int) $port;
