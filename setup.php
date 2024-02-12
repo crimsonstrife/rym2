@@ -83,9 +83,22 @@ if (!isset($_ENV['DB_HOST']) || !isset($_ENV['DB_PORT']) || !isset($_ENV['DB_DAT
         /* If the connection failed, throw an exception */
         $errorFound = true;
         $errorIsDBConnectionFailed = true;
-        $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $_ENV['DB_PORT']);
-        $dbErrorMessage = "Failed to connect to the database: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error;
-        closeDatabaseConnection($mysqli);
+        //try to connect to the database
+        try {
+            $mysqli = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $_ENV['DB_PORT']);
+        } catch (Exception $e) {
+            // Log the error
+            error_log("Failed to connect to the database: " . $e->getMessage());
+            //throw an exception if the connection fails
+            $errorFound = true;
+            $errorIsDBConnectionFailed = true;
+            $dbErrorMessage = "Failed to connect to the database: " . $e->getMessage();
+        }
+
+        //check if the connection was successful
+        if (!$errorIsDBConnectionFailed) {
+            closeDatabaseConnection($mysqli);
+        }
     } else {
         /* If the connection was successful, check if the database is empty */
         $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $_ENV['DB_PORT']);
