@@ -300,13 +300,16 @@ function getUploadPath(): string
  */
 function checkSecureRequest(): string
 {
+    //Set the protocol to an empty string
+    $protocol = "";
+
     //Check if the request is secure
     if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
         //Set the URL to HTTPS
-        $url = "https://";
+        $protocol = "https://";
     } else {
         //Set the URL to HTTP
-        $url = "http://";
+        $protocol = "http://";
     }
 
     //Get the set URL constant
@@ -321,8 +324,15 @@ function checkSecureRequest(): string
         $urlConstant = str_replace('https://', '', $urlConstant);
     }
 
+    //check if the hostname in the app_url is localhost, if so check if the request host is also localhost, if not, set the app_url to the request host - should help with CORS issues during install
+    if (strpos($urlConstant, 'localhost') !== false) {
+        if ($_SERVER['HTTP_HOST'] != 'localhost') {
+            $urlConstant = $_SERVER['HTTP_HOST'];
+        }
+    }
+
     //Set the URL to the correct protocol and add the URL constant
-    $url .= $urlConstant;
+    $url = $protocol . $urlConstant;
 
     //Return the URL
     return $url;
