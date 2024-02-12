@@ -149,10 +149,25 @@ if (file_exists(BASEPATH . '/.env')) {
     $dotenv->safeLoad();
 
     /* Define the application constants */
+    $app_url = null;
+    //try to get the app_url
+    try {
+        $app_url = $APP->getAppUrl();
+    } catch (Exception $e) {
+        $app_url = null;
+        //attempt to log the error
+        try {
+            //log the error
+            $activityLog->logActivity($user_id, 'ERROR', 'CODE: [APP_URL_NOT_SET]- AT: ' . $currentURL . ' - ERROR LOGGING FAILED: ' . $e->getMessage());
+        } catch (Exception $e) {
+            //error logging failed, display the error message
+            $errorMessage .= ' - ERROR LOGGING FAILED: ' . $e->getMessage();
+        }
+    }
     //Check if the app_url is set in the database, if not set it to the value in the .env file
-    if ($APP->getAppUrl() != null || $APP->getAppUrl() != '') {
+    if ($app_url != null || $app_url != '') {
         //define the app_url constant
-        define('APP_URL', $APP->getAppUrl());
+        define('APP_URL', $app_url);
     } else {
         define('APP_URL', $_ENV['APP_URL']);
     } // Define the APP_URL constant, this is the root URL of the application.
