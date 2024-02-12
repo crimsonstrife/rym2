@@ -26,10 +26,10 @@ if (!isset($_ENV['DB_HOST']) || empty($_ENV['DB_HOST'])) {
 }
 if (!isset($_ENV['DB_PORT']) || empty($_ENV['DB_PORT'])) {
     $_ENV['DB_PORT'] = '3306';
-    $port = strval($_ENV['DB_PORT']);
+    $PORT = strval($_ENV['DB_PORT']);
 } else {
     //convert port to a string
-    $port = strval($_ENV['DB_PORT']);
+    $PORT = strval($_ENV['DB_PORT']);
 }
 if (!isset($_ENV['DB_DATABASE']) || empty($_ENV['DB_DATABASE'])) {
     $_ENV['DB_DATABASE'] = 'capstone_db';
@@ -89,6 +89,8 @@ if (!isset($_ENV['DB_HOST']) || !isset($_ENV['DB_PORT']) || !isset($_ENV['DB_DAT
         $errorIsDBConnectionFailed = true;
         //try to connect to the database
         try {
+            //port is a string, need to convert to int
+            $PORT = intval($PORT);
             $mysqli = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
         } catch (Exception $e) {
             // Log the error
