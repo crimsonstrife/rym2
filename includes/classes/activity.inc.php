@@ -65,17 +65,34 @@ class Activity
     public function getAllActivityByUser(int $user_id): array
     {
         $sql = "SELECT * FROM activity_log WHERE user_id = ? ORDER BY action_date DESC";
-        $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $activity = [];
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $activity[] = $row;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                $stmt = $this->mysqli->prepare($sql);
+                $stmt->bind_param('i', $user_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $activity = [];
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $activity[] = $row;
+                    }
+                }
+                return $activity;
             }
+        } else {
+            //log the error
+            error_log('Error: The database connection is null');
+            //throw an exception
+            throw new Exception('Error: The database connection is null');
         }
-        return $activity;
     }
 
     /**
@@ -88,17 +105,34 @@ class Activity
     public function getLast30DaysByUser(int $user_id): array
     {
         $sql = "SELECT * FROM activity_log WHERE user_id = ? AND action_date >= DATE_SUB(NOW(), INTERVAL 30 DAY) ORDER BY action_date DESC";
-        $stmt = $this->mysqli->prepare($sql);
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $activity = [];
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $activity[] = $row;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                $stmt = $this->mysqli->prepare($sql);
+                $stmt->bind_param('i', $user_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $activity = [];
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $activity[] = $row;
+                    }
+                }
+                return $activity;
             }
+        } else {
+            //log the error
+            error_log('Error: The database connection is null');
+            //throw an exception
+            throw new Exception('Error: The database connection is null');
         }
-        return $activity;
     }
 
     /**
@@ -201,6 +235,8 @@ class Activity
         } else {
             //log the error
             error_log('Error: The database connection is null');
+            //throw an exception
+            throw new Exception('Error: The database connection is null');
         }
     }
 }
