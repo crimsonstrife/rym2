@@ -26,8 +26,16 @@ if (!function_exists('connectToDatabase')) {
         } else {
             //convert port to int
             $port = (int) $port;
-            /* Setup the connection to MySQL */
-            $mysqli = new mysqli($host, $username, $password, $database, $port);
+
+            //try to setup the connection to the database
+            try {
+                $mysqli = new mysqli($host, $username, $password, $database, $port);
+            } catch (Exception $e) {
+                // Log the error
+                error_log("Failed to connect to the database: " . $e->getMessage());
+                //throw an exception if the connection fails
+                throw new Exception("Failed to connect to Database: " . $e->getMessage());
+            }
 
             /* Attempt to connect to the MySQL database */
             if ($mysqli->connect_errno) {
