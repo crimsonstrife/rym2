@@ -51,25 +51,43 @@ class Application
         //SQL statement to get all the settings
         $sql = "SELECT * FROM settings";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
 
-        //Execute the statement
-        $role_statement->execute();
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
 
-        //Get the results
-        $result = $role_statement->get_result();
+                //Execute the statement
+                $role_statement->execute();
 
-        //Create an array to hold the settings
-        $settings = array();
+                //Get the results
+                $result = $role_statement->get_result();
 
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $settings[] = $row;
+                //Create an array to hold the settings
+                $settings = array();
+
+                //Loop through the results and add them to the array
+                while ($row = $result->fetch_assoc()) {
+                    $settings[] = $row;
+                }
+
+                //Return the array of settings
+                return $settings;
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
-
-        //Return the array of settings
-        return $settings;
     }
 
     /**
@@ -85,31 +103,48 @@ class Application
         //SQL statement to get the setting
         $sql = "SELECT $setting FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $setting_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $setting_statement->execute();
-
-        //Get the results
-        $result = $setting_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the setting is set or not
-            if (isset($row[$setting])) {
-                //Return the setting
-                return $row[$setting];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $setting_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $setting_statement->execute();
+
+                //Get the results
+                $result = $setting_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the setting is set or not
+                    if (isset($row[$setting])) {
+                        //Return the setting
+                        return $row[$setting];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -127,31 +162,48 @@ class Application
         //SQL statement to get the application name
         $sql = "SELECT app_name FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the app_name is set or not
-            if (isset($row['app_name'])) {
-                //Return the app_name
-                return $row['app_name'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the app_name is set or not
+                    if (isset($row['app_name'])) {
+                        //Return the app_name
+                        return $row['app_name'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -165,55 +217,72 @@ class Application
      */
     public function setAppName($app_name = null)
     {
-        //Check if the application name is set in the settings table already
-        if ($this->getAppName() != '' || $this->getAppName() != null) {
-            //SQL statement to update the application name
-            $sql = "UPDATE settings SET app_name = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $app_name);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Application Name Changed', 'The application name was changed to ' . $app_name . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the application name is set in the settings table already
+                if ($this->getAppName() != '' || $this->getAppName() != null) {
+                    //SQL statement to update the application name
+                    $sql = "UPDATE settings SET app_name = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $app_name);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Application Name Changed', 'The application name was changed to ' . $app_name . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the application name, where isSet is SET
+                    $sql = "UPDATE settings SET app_name = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $app_name);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Application Name Changed', 'The application name was changed to ' . $app_name . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the application name, where isSet is SET
-            $sql = "UPDATE settings SET app_name = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $app_name);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Application Name Changed', 'The application name was changed to ' . $app_name . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -229,31 +298,49 @@ class Application
         //SQL statement to get the application URL
         $sql = "SELECT app_url FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the app_url is set or not
-            if (isset($row['app_url'])) {
-                //Return the app_url
-                return $row['app_url'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the app_url is set or not
+                    if (isset($row['app_url'])) {
+                        //Return the app_url
+                        return $row['app_url'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -267,55 +354,72 @@ class Application
      */
     public function setAppURL($app_url = null)
     {
-        //Check if the application URL is set in the settings table already
-        if ($this->getAppURL() != '' || $this->getAppURL() != null) {
-            //SQL statement to update the application URL
-            $sql = "UPDATE settings SET app_url = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $app_url);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Application URL Changed', 'The application URL was changed to ' . $app_url . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the application URL is set in the settings table already
+                if ($this->getAppURL() != '' || $this->getAppURL() != null) {
+                    //SQL statement to update the application URL
+                    $sql = "UPDATE settings SET app_url = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $app_url);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Application URL Changed', 'The application URL was changed to ' . $app_url . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the application URL, where isSet is SET
+                    $sql = "UPDATE settings SET app_url = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $app_url);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Application URL Changed', 'The application URL was changed to ' . $app_url . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the application URL, where isSet is SET
-            $sql = "UPDATE settings SET app_url = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $app_url);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Application URL Changed', 'The application URL was changed to ' . $app_url . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -330,31 +434,48 @@ class Application
         //SQL statement to get the application logo
         $sql = "SELECT app_logo FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the app_logo is set or not
-            if (isset($row['app_logo'])) {
-                //Return the app_logo
-                return intval($row['app_logo']);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return intval(null);
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the app_logo is set or not
+                    if (isset($row['app_logo'])) {
+                        //Return the app_logo
+                        return intval($row['app_logo']);
+                    } else {
+                        //Return an empty string
+                        return intval(null);
+                    }
+                } else {
+                    //Return an empty string
+                    return intval(null);
+                }
             }
         } else {
-            //Return an empty string
-            return intval(null);
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -368,55 +489,72 @@ class Application
      */
     public function setAppLogo(int $app_logo = null)
     {
-        //Check if the application logo is set in the settings table already
-        if ($this->getAppLogo() != '' || $this->getAppLogo() != null) {
-            //SQL statement to update the application logo
-            $sql = "UPDATE settings SET app_logo = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('i', $app_logo);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Application Logo Changed', 'The application logo was changed.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the application logo is set in the settings table already
+                if ($this->getAppLogo() != '' || $this->getAppLogo() != null) {
+                    //SQL statement to update the application logo
+                    $sql = "UPDATE settings SET app_logo = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $app_logo);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Application Logo Changed', 'The application logo was changed.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the application logo, where isSet is SET
+                    $sql = "UPDATE settings SET app_logo = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $app_logo);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Application Logo Changed', 'The application logo was changed.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the application logo, where isSet is SET
-            $sql = "UPDATE settings SET app_logo = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('i', $app_logo);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Application Logo Changed', 'The application logo was changed.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -432,31 +570,48 @@ class Application
         //SQL statement to get the contact email
         $sql = "SELECT contact_email FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the contact_email is set or not
-            if (isset($row['contact_email'])) {
-                //Return the contact_email
-                return $row['contact_email'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the contact_email is set or not
+                    if (isset($row['contact_email'])) {
+                        //Return the contact_email
+                        return $row['contact_email'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -470,55 +625,72 @@ class Application
      */
     public function setContactEmail($contact_email = null)
     {
-        //Check if the contact email is set in the settings table already
-        if ($this->getContactEmail() != '' || $this->getContactEmail() != null) {
-            //SQL statement to update the contact email
-            $sql = "UPDATE settings SET contact_email = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $contact_email);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Contact Email Changed', 'The contact email was changed to ' . $contact_email . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the contact email is set in the settings table already
+                if ($this->getContactEmail() != '' || $this->getContactEmail() != null) {
+                    //SQL statement to update the contact email
+                    $sql = "UPDATE settings SET contact_email = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $contact_email);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Contact Email Changed', 'The contact email was changed to ' . $contact_email . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the contact email, where isSet is SET
+                    $sql = "UPDATE settings SET contact_email = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $contact_email);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Contact Email Changed', 'The contact email was changed to ' . $contact_email . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the contact email, where isSet is SET
-            $sql = "UPDATE settings SET contact_email = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $contact_email);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Contact Email Changed', 'The contact email was changed to ' . $contact_email . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -536,31 +708,48 @@ class Application
         //SQL statement to get the company name
         $sql = "SELECT company_name FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the company_name is set or not
-            if (isset($row['company_name'])) {
-                //Return the company_name
-                return $row['company_name'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the company_name is set or not
+                    if (isset($row['company_name'])) {
+                        //Return the company_name
+                        return $row['company_name'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -574,55 +763,72 @@ class Application
      */
     public function setCompanyName($company_name = null)
     {
-        //Check if the company name is set in the settings table already
-        if ($this->getCompanyName() != '' || $this->getCompanyName() != null) {
-            //SQL statement to update the company name
-            $sql = "UPDATE settings SET company_name = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_name);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company Name Changed', 'The company name was changed to ' . $company_name . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the company name is set in the settings table already
+                if ($this->getCompanyName() != '' || $this->getCompanyName() != null) {
+                    //SQL statement to update the company name
+                    $sql = "UPDATE settings SET company_name = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_name);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Name Changed', 'The company name was changed to ' . $company_name . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the company name, where isSet is SET
+                    $sql = "UPDATE settings SET company_name = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_name);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Name Changed', 'The company name was changed to ' . $company_name . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the company name, where isSet is SET
-            $sql = "UPDATE settings SET company_name = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_name);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company Name Changed', 'The company name was changed to ' . $company_name . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -638,31 +844,48 @@ class Application
         //SQL statement to get the company logo
         $sql = "SELECT company_logo FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the company_logo is set or not
-            if (isset($row['company_logo'])) {
-                //Return the company_logo
-                return intval($row['company_logo']);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return intval(null);
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the company_logo is set or not
+                    if (isset($row['company_logo'])) {
+                        //Return the company_logo
+                        return intval($row['company_logo']);
+                    } else {
+                        //Return an empty string
+                        return intval(null);
+                    }
+                } else {
+                    //Return an empty string
+                    return intval(null);
+                }
             }
         } else {
-            //Return an empty string
-            return intval(null);
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -676,55 +899,72 @@ class Application
      */
     public function setCompanyLogo($company_logo = null)
     {
-        //Check if the company logo is set in the settings table already
-        if ($this->getCompanyLogo() != '' || $this->getCompanyLogo() != null) {
-            //SQL statement to update the company logo
-            $sql = "UPDATE settings SET company_logo = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('i', $company_logo);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company Logo Changed', 'The company logo was changed.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the company logo is set in the settings table already
+                if ($this->getCompanyLogo() != '' || $this->getCompanyLogo() != null) {
+                    //SQL statement to update the company logo
+                    $sql = "UPDATE settings SET company_logo = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $company_logo);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Logo Changed', 'The company logo was changed.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the company logo, where isSet is SET
+                    $sql = "UPDATE settings SET company_logo = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $company_logo);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Logo Changed', 'The company logo was changed.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the company logo, where isSet is SET
-            $sql = "UPDATE settings SET company_logo = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('i', $company_logo);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company Logo Changed', 'The company logo was changed.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -742,31 +982,48 @@ class Application
         //SQL statement to get the company address
         $sql = "SELECT company_address FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the company_address is set or not
-            if (isset($row['company_address'])) {
-                //Return the company_address
-                return $row['company_address'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the company_address is set or not
+                    if (isset($row['company_address'])) {
+                        //Return the company_address
+                        return $row['company_address'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -780,55 +1037,72 @@ class Application
      */
     public function setCompanyAddress($company_address = null)
     {
-        //Check if the company address is set in the settings table already
-        if ($this->getCompanyAddress() != '' || $this->getCompanyAddress() != null) {
-            //SQL statement to update the company address
-            $sql = "UPDATE settings SET company_address = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_address);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company Address Changed', 'The company address was changed to ' . $company_address . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the company address is set in the settings table already
+                if ($this->getCompanyAddress() != '' || $this->getCompanyAddress() != null) {
+                    //SQL statement to update the company address
+                    $sql = "UPDATE settings SET company_address = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_address);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Address Changed', 'The company address was changed to ' . $company_address . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the company address, where isSet is SET
+                    $sql = "UPDATE settings SET company_address = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_address);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Address Changed', 'The company address was changed to ' . $company_address . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the company address, where isSet is SET
-            $sql = "UPDATE settings SET company_address = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_address);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company Address Changed', 'The company address was changed to ' . $company_address . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -844,31 +1118,48 @@ class Application
         //SQL statement to get the company city
         $sql = "SELECT company_city FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the company_city is set or not
-            if (isset($row['company_city'])) {
-                //Return the company_city
-                return $row['company_city'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the company_city is set or not
+                    if (isset($row['company_city'])) {
+                        //Return the company_city
+                        return $row['company_city'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -882,55 +1173,72 @@ class Application
      */
     public function setCompanyCity($company_city = null)
     {
-        //Check if the company city is set in the settings table already
-        if ($this->getCompanyCity() != '' || $this->getCompanyCity() != null) {
-            //SQL statement to update the company city
-            $sql = "UPDATE settings SET company_city = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_city);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company City Changed', 'The company city was changed to ' . $company_city . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the company city is set in the settings table already
+                if ($this->getCompanyCity() != '' || $this->getCompanyCity() != null) {
+                    //SQL statement to update the company city
+                    $sql = "UPDATE settings SET company_city = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_city);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company City Changed', 'The company city was changed to ' . $company_city . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the company city, where isSet is SET
+                    $sql = "UPDATE settings SET company_city = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_city);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company City Changed', 'The company city was changed to ' . $company_city . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the company city, where isSet is SET
-            $sql = "UPDATE settings SET company_city = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_city);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company City Changed', 'The company city was changed to ' . $company_city . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -946,31 +1254,48 @@ class Application
         //SQL statement to get the company state
         $sql = "SELECT company_state FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the company_state is set or not
-            if (isset($row['company_state'])) {
-                //Return the company_state
-                return $row['company_state'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the company_state is set or not
+                    if (isset($row['company_state'])) {
+                        //Return the company_state
+                        return $row['company_state'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -984,55 +1309,72 @@ class Application
      */
     public function setCompanyState($company_state = null)
     {
-        //Check if the company state is set in the settings table already
-        if ($this->getCompanyState() != '' || $this->getCompanyState() != null) {
-            //SQL statement to update the company state
-            $sql = "UPDATE settings SET company_state = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_state);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company State Changed', 'The company state was changed to ' . $company_state . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the company state is set in the settings table already
+                if ($this->getCompanyState() != '' || $this->getCompanyState() != null) {
+                    //SQL statement to update the company state
+                    $sql = "UPDATE settings SET company_state = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_state);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company State Changed', 'The company state was changed to ' . $company_state . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the company state, where isSet is SET
+                    $sql = "UPDATE settings SET company_state = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_state);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company State Changed', 'The company state was changed to ' . $company_state . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the company state, where isSet is SET
-            $sql = "UPDATE settings SET company_state = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_state);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company State Changed', 'The company state was changed to ' . $company_state . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1048,31 +1390,48 @@ class Application
         //SQL statement to get the company zip
         $sql = "SELECT company_zip FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the company_zip is set or not
-            if (isset($row['company_zip'])) {
-                //Return the company_zip
-                return $row['company_zip'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the company_zip is set or not
+                    if (isset($row['company_zip'])) {
+                        //Return the company_zip
+                        return $row['company_zip'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1086,55 +1445,72 @@ class Application
      */
     public function setCompanyZip($company_zip = null)
     {
-        //Check if the company zip is set in the settings table already
-        if ($this->getCompanyZip() != '' || $this->getCompanyZip() != null) {
-            //SQL statement to update the company zip
-            $sql = "UPDATE settings SET company_zip = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_zip);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company Zip Changed', 'The company zip was changed to ' . $company_zip . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the company zip is set in the settings table already
+                if ($this->getCompanyZip() != '' || $this->getCompanyZip() != null) {
+                    //SQL statement to update the company zip
+                    $sql = "UPDATE settings SET company_zip = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_zip);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Zip Changed', 'The company zip was changed to ' . $company_zip . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the company zip, where isSet is SET
+                    $sql = "UPDATE settings SET company_zip = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_zip);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Zip Changed', 'The company zip was changed to ' . $company_zip . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the company zip, where isSet is SET
-            $sql = "UPDATE settings SET company_zip = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_zip);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company Zip Changed', 'The company zip was changed to ' . $company_zip . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1180,31 +1556,48 @@ class Application
         //SQL statement to get the company phone
         $sql = "SELECT company_phone FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the company_phone is set or not
-            if (isset($row['company_phone'])) {
-                //Return the company_phone
-                return $row['company_phone'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the company_phone is set or not
+                    if (isset($row['company_phone'])) {
+                        //Return the company_phone
+                        return $row['company_phone'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1218,55 +1611,72 @@ class Application
      */
     public function setCompanyPhone($company_phone = null)
     {
-        //Check if the company phone is set in the settings table already
-        if ($this->getCompanyPhone() != '' || $this->getCompanyPhone() != null) {
-            //SQL statement to update the company phone
-            $sql = "UPDATE settings SET company_phone = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_phone);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company Phone Changed', 'The company phone was changed to ' . $company_phone . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the company phone is set in the settings table already
+                if ($this->getCompanyPhone() != '' || $this->getCompanyPhone() != null) {
+                    //SQL statement to update the company phone
+                    $sql = "UPDATE settings SET company_phone = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_phone);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Phone Changed', 'The company phone was changed to ' . $company_phone . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the company phone, where isSet is SET
+                    $sql = "UPDATE settings SET company_phone = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_phone);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Phone Changed', 'The company phone was changed to ' . $company_phone . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the company phone, where isSet is SET
-            $sql = "UPDATE settings SET company_phone = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_phone);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company Phone Changed', 'The company phone was changed to ' . $company_phone . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1282,31 +1692,48 @@ class Application
         //SQL statement to get the company URL
         $sql = "SELECT company_url FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the company_url is set or not
-            if (isset($row['company_url'])) {
-                //Return the company_url
-                return $row['company_url'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the company_url is set or not
+                    if (isset($row['company_url'])) {
+                        //Return the company_url
+                        return $row['company_url'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1320,55 +1747,72 @@ class Application
      */
     public function setCompanyURL($company_url = null)
     {
-        //Check if the company URL is set in the settings table already
-        if ($this->getCompanyURL() != '' || $this->getCompanyURL() != null) {
-            //SQL statement to update the company URL
-            $sql = "UPDATE settings SET company_url = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_url);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company URL Changed', 'The company URL was changed to ' . $company_url . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the company URL is set in the settings table already
+                if ($this->getCompanyURL() != '' || $this->getCompanyURL() != null) {
+                    //SQL statement to update the company URL
+                    $sql = "UPDATE settings SET company_url = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_url);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company URL Changed', 'The company URL was changed to ' . $company_url . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the company URL, where isSet is SET
+                    $sql = "UPDATE settings SET company_url = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $company_url);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Company URL Changed', 'The company URL was changed to ' . $company_url . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the company URL, where isSet is SET
-            $sql = "UPDATE settings SET company_url = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $company_url);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Company URL Changed', 'The company URL was changed to ' . $company_url . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1386,31 +1830,48 @@ class Application
         //SQL statement to get the mailer type
         $sql = "SELECT mail_mailer FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the mailer_type is set or not
-            if (isset($row['mail_mailer'])) {
-                //Return the mailer_type
-                return $row['mail_mailer'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the mailer_type is set or not
+                    if (isset($row['mail_mailer'])) {
+                        //Return the mailer_type
+                        return $row['mail_mailer'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1424,55 +1885,72 @@ class Application
      */
     public function setMailerType($mailer_type = null)
     {
-        //Check if the mailer type is set in the settings table already
-        if ($this->getMailerType() != '' || $this->getMailerType() != null) {
-            //SQL statement to update the mailer type
-            $sql = "UPDATE settings SET mail_mailer = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $mailer_type);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Type Changed', 'The mailer type was changed to ' . $mailer_type . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the mailer type is set in the settings table already
+                if ($this->getMailerType() != '' || $this->getMailerType() != null) {
+                    //SQL statement to update the mailer type
+                    $sql = "UPDATE settings SET mail_mailer = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $mailer_type);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Type Changed', 'The mailer type was changed to ' . $mailer_type . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the mailer type, where isSet is SET
+                    $sql = "UPDATE settings SET mail_mailer = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $mailer_type);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Type Changed', 'The mailer type was changed to ' . $mailer_type . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the mailer type, where isSet is SET
-            $sql = "UPDATE settings SET mail_mailer = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $mailer_type);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Type Changed', 'The mailer type was changed to ' . $mailer_type . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1488,31 +1966,48 @@ class Application
         //SQL statement to get the mailer host
         $sql = "SELECT mail_host FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the mailer_host is set or not
-            if (isset($row['mail_host'])) {
-                //Return the mailer_host
-                return $row['mail_host'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the mailer_host is set or not
+                    if (isset($row['mail_host'])) {
+                        //Return the mailer_host
+                        return $row['mail_host'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1526,55 +2021,72 @@ class Application
      */
     public function setMailerHost($mailer_host = null)
     {
-        //Check if the mailer host is set in the settings table already
-        if ($this->getMailerHost() != '' || $this->getMailerHost() != null) {
-            //SQL statement to update the mailer host
-            $sql = "UPDATE settings SET mail_host = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $mailer_host);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Host Changed', 'The mailer host was changed to ' . $mailer_host . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the mailer host is set in the settings table already
+                if ($this->getMailerHost() != '' || $this->getMailerHost() != null) {
+                    //SQL statement to update the mailer host
+                    $sql = "UPDATE settings SET mail_host = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $mailer_host);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Host Changed', 'The mailer host was changed to ' . $mailer_host . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the mailer host, where isSet is SET
+                    $sql = "UPDATE settings SET mail_host = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $mailer_host);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Host Changed', 'The mailer host was changed to ' . $mailer_host . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the mailer host, where isSet is SET
-            $sql = "UPDATE settings SET mail_host = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $mailer_host);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Host Changed', 'The mailer host was changed to ' . $mailer_host . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1590,31 +2102,48 @@ class Application
         //SQL statement to get the mailer port
         $sql = "SELECT mail_port FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the mailer_port is set or not
-            if (isset($row['mail_port'])) {
-                //Return the mailer_port
-                return $row['mail_port'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the mailer_port is set or not
+                    if (isset($row['mail_port'])) {
+                        //Return the mailer_port
+                        return $row['mail_port'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1628,55 +2157,72 @@ class Application
      */
     public function setMailerPort($mailer_port = null)
     {
-        //Check if the mailer port is set in the settings table already
-        if ($this->getMailerPort() != '' || $this->getMailerPort() != null) {
-            //SQL statement to update the mailer port
-            $sql = "UPDATE settings SET mail_port = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('i', $mailer_port);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Port Changed', 'The mailer port was changed to ' . $mailer_port . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the mailer port is set in the settings table already
+                if ($this->getMailerPort() != '' || $this->getMailerPort() != null) {
+                    //SQL statement to update the mailer port
+                    $sql = "UPDATE settings SET mail_port = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $mailer_port);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Port Changed', 'The mailer port was changed to ' . $mailer_port . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the mailer port, where isSet is SET
+                    $sql = "UPDATE settings SET mail_port = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $mailer_port);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Port Changed', 'The mailer port was changed to ' . $mailer_port . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the mailer port, where isSet is SET
-            $sql = "UPDATE settings SET mail_port = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('i', $mailer_port);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Port Changed', 'The mailer port was changed to ' . $mailer_port . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1692,31 +2238,48 @@ class Application
         //SQL statement to get the mailer username
         $sql = "SELECT mail_username FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the mailer_username is set or not
-            if (isset($row['mail_username'])) {
-                //Return the mailer_username
-                return $row['mail_username'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the mailer_username is set or not
+                    if (isset($row['mail_username'])) {
+                        //Return the mailer_username
+                        return $row['mail_username'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1730,55 +2293,72 @@ class Application
      */
     public function setMailerUsername($mailer_username = null)
     {
-        //Check if the mailer username is set in the settings table already
-        if ($this->getMailerUsername() != '' || $this->getMailerUsername() != null) {
-            //SQL statement to update the mailer username
-            $sql = "UPDATE settings SET mail_username = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $mailer_username);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Username Changed', 'The mailer username was changed to ' . $mailer_username . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the mailer username is set in the settings table already
+                if ($this->getMailerUsername() != '' || $this->getMailerUsername() != null) {
+                    //SQL statement to update the mailer username
+                    $sql = "UPDATE settings SET mail_username = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $mailer_username);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Username Changed', 'The mailer username was changed to ' . $mailer_username . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the mailer username, where isSet is SET
+                    $sql = "UPDATE settings SET mail_username = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $mailer_username);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Username Changed', 'The mailer username was changed to ' . $mailer_username . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the mailer username, where isSet is SET
-            $sql = "UPDATE settings SET mail_username = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $mailer_username);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Username Changed', 'The mailer username was changed to ' . $mailer_username . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1794,39 +2374,56 @@ class Application
         //SQL statement to get the mailer password
         $sql = "SELECT mail_password FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the mailer_password is set or not
-            if (isset($row['mail_password'])) {
-                //if OPENSSL is installed, decrypt the password
-                if (OPENSSL_INSTALLED) {
-                    //Decrypt the password
-                    $decrypted_password = openssl_decrypt($row['mail_password'], 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
-                } else {
-                    //store the password as plain text
-                    $decrypted_password = $row['mail_password'];
-                }
-                //Return the mailer_password
-                return $decrypted_password;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the mailer_password is set or not
+                    if (isset($row['mail_password'])) {
+                        //if OPENSSL is installed, decrypt the password
+                        if (OPENSSL_INSTALLED) {
+                            //Decrypt the password
+                            $decrypted_password = openssl_decrypt($row['mail_password'], 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+                        } else {
+                            //store the password as plain text
+                            $decrypted_password = $row['mail_password'];
+                        }
+                        //Return the mailer_password
+                        return $decrypted_password;
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1840,79 +2437,96 @@ class Application
      */
     public function setMailerPassword($mailer_password = null)
     {
-        //Check if the mailer password is set in the settings table already
-        if ($this->getMailerPassword() != '' || $this->getMailerPassword() != null) {
-            //SQL statement to update the mailer password
-            $sql = "UPDATE settings SET mail_password = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //if OPENSSL is installed, encrypt the password
-            if (OPENSSL_INSTALLED) {
-                //Encrypt the password
-                $encrypted_password = openssl_encrypt($mailer_password, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //store the password as plain text
-                $encrypted_password = $mailer_password;
-            }
+                //Check if the mailer password is set in the settings table already
+                if ($this->getMailerPassword() != '' || $this->getMailerPassword() != null) {
+                    //SQL statement to update the mailer password
+                    $sql = "UPDATE settings SET mail_password = ? WHERE isSet = 'SET'";
 
-            //set the password
-            $password = $encrypted_password;
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
 
-            //Bind the parameters
-            $role_statement->bind_param('s', $password);
+                    //if OPENSSL is installed, encrypt the password
+                    if (OPENSSL_INSTALLED) {
+                        //Encrypt the password
+                        $encrypted_password = openssl_encrypt($mailer_password, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+                    } else {
+                        //store the password as plain text
+                        $encrypted_password = $mailer_password;
+                    }
 
-            //Execute the statement
-            $role_statement->execute();
+                    //set the password
+                    $password = $encrypted_password;
 
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Password Changed', 'The mailer password was changed.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $password);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Password Changed', 'The mailer password was changed.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //if OPENSSL is installed, encrypt the password
+                    if (OPENSSL_INSTALLED) {
+                        //Encrypt the password
+                        $encrypted_password = openssl_encrypt($mailer_password, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+                    } else {
+                        //store the password as plain text
+                        $encrypted_password = $mailer_password;
+                    }
+
+                    //set the password
+                    $password = $encrypted_password;
+
+                    //SQL statement to update the mailer password, where isSet is SET
+                    $sql = "UPDATE settings SET mail_password = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $password);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Password Changed', 'The mailer password was changed.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //if OPENSSL is installed, encrypt the password
-            if (OPENSSL_INSTALLED) {
-                //Encrypt the password
-                $encrypted_password = openssl_encrypt($mailer_password, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
-            } else {
-                //store the password as plain text
-                $encrypted_password = $mailer_password;
-            }
-
-            //set the password
-            $password = $encrypted_password;
-
-            //SQL statement to update the mailer password, where isSet is SET
-            $sql = "UPDATE settings SET mail_password = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $password);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Password Changed', 'The mailer password was changed.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1928,31 +2542,48 @@ class Application
         //SQL statement to get the mailer encryption
         $sql = "SELECT mail_encryption FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the mailer_encryption is set or not
-            if (isset($row['mail_encryption'])) {
-                //Return the mailer_encryption
-                return $row['mail_encryption'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the mailer_encryption is set or not
+                    if (isset($row['mail_encryption'])) {
+                        //Return the mailer_encryption
+                        return $row['mail_encryption'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -1966,55 +2597,72 @@ class Application
      */
     public function setMailerEncryption($mailer_encryption = null)
     {
-        //Check if the mailer encryption is set in the settings table already
-        if ($this->getMailerEncryption() != '' || $this->getMailerEncryption() != null) {
-            //SQL statement to update the mailer encryption
-            $sql = "UPDATE settings SET mail_encryption = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $mailer_encryption);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Encryption Changed', 'The mailer encryption was changed to ' . $mailer_encryption . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the mailer encryption is set in the settings table already
+                if ($this->getMailerEncryption() != '' || $this->getMailerEncryption() != null) {
+                    //SQL statement to update the mailer encryption
+                    $sql = "UPDATE settings SET mail_encryption = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $mailer_encryption);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Encryption Changed', 'The mailer encryption was changed to ' . $mailer_encryption . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the mailer encryption, where isSet is SET
+                    $sql = "UPDATE settings SET mail_encryption = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $mailer_encryption);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Encryption Changed', 'The mailer encryption was changed to ' . $mailer_encryption . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the mailer encryption, where isSet is SET
-            $sql = "UPDATE settings SET mail_encryption = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $mailer_encryption);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Encryption Changed', 'The mailer encryption was changed to ' . $mailer_encryption . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -2030,31 +2678,48 @@ class Application
         //SQL statement to get the mailer from address
         $sql = "SELECT mail_from_address FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the mailer_from_address is set or not
-            if (isset($row['mail_from_address'])) {
-                //Return the mailer_from_address
-                return $row['mail_from_address'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the mailer_from_address is set or not
+                    if (isset($row['mail_from_address'])) {
+                        //Return the mailer_from_address
+                        return $row['mail_from_address'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -2068,55 +2733,72 @@ class Application
      */
     public function setMailerFromAddress($mailer_from_address = null)
     {
-        //Check if the mailer from address is set in the settings table already
-        if ($this->getMailerFromAddress() != '' || $this->getMailerFromAddress() != null) {
-            //SQL statement to update the mailer from address
-            $sql = "UPDATE settings SET mail_from_address = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $mailer_from_address);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Address Changed', 'The mailer from address was changed to ' . $mailer_from_address . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the mailer from address is set in the settings table already
+                if ($this->getMailerFromAddress() != '' || $this->getMailerFromAddress() != null) {
+                    //SQL statement to update the mailer from address
+                    $sql = "UPDATE settings SET mail_from_address = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $mailer_from_address);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Address Changed', 'The mailer from address was changed to ' . $mailer_from_address . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the mailer from address, where isSet is SET
+                    $sql = "UPDATE settings SET mail_from_address = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $mailer_from_address);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Address Changed', 'The mailer from address was changed to ' . $mailer_from_address . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the mailer from address, where isSet is SET
-            $sql = "UPDATE settings SET mail_from_address = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $mailer_from_address);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Address Changed', 'The mailer from address was changed to ' . $mailer_from_address . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -2132,31 +2814,48 @@ class Application
         //SQL statement to get the mailer from name
         $sql = "SELECT mail_from_name FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $role_statement->execute();
-
-        //Get the results
-        $result = $role_statement->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the mailer_from_name is set or not
-            if (isset($row['mail_from_name'])) {
-                //Return the mailer_from_name
-                return $row['mail_from_name'];
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return an empty string
-                return '';
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the mailer_from_name is set or not
+                    if (isset($row['mail_from_name'])) {
+                        //Return the mailer_from_name
+                        return $row['mail_from_name'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -2170,55 +2869,72 @@ class Application
      */
     public function setMailerFromName($mailer_from_name = null)
     {
-        //Check if the mailer from name is set in the settings table already
-        if ($this->getMailerFromName() != '' || $this->getMailerFromName() != null) {
-            //SQL statement to update the mailer from name
-            $sql = "UPDATE settings SET mail_from_name = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $mailer_from_name);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Name Changed', 'The mailer from name was changed to ' . $mailer_from_name . '.');
-                //Return true
-                return true;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Return false
-                return false;
+                //Check if the mailer from name is set in the settings table already
+                if ($this->getMailerFromName() != '' || $this->getMailerFromName() != null) {
+                    //SQL statement to update the mailer from name
+                    $sql = "UPDATE settings SET mail_from_name = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $mailer_from_name);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Name Changed', 'The mailer from name was changed to ' . $mailer_from_name . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the mailer from name, where isSet is SET
+                    $sql = "UPDATE settings SET mail_from_name = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $mailer_from_name);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Name Changed', 'The mailer from name was changed to ' . $mailer_from_name . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
             }
         } else {
-            //SQL statement to update the mailer from name, where isSet is SET
-            $sql = "UPDATE settings SET mail_from_name = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            //Bind the parameters
-            $role_statement->bind_param('s', $mailer_from_name);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Name Changed', 'The mailer from name was changed to ' . $mailer_from_name . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -2234,36 +2950,53 @@ class Application
         //SQL statement to get the mailer authentication required status
         $sql = "SELECT mail_auth_req FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
 
-        //Execute the statement
-        $role_statement->execute();
+                //Execute the statement
+                $role_statement->execute();
 
-        //Get the results
-        $result = $role_statement->get_result();
+                //Get the results
+                $result = $role_statement->get_result();
 
-        //Get the row
-        $row = $result->fetch_assoc();
+                //Get the row
+                $row = $result->fetch_assoc();
 
-        //Check if the row exists
-        if ($row) {
-            //check if the mailer_auth_required is set or not
-            if (isset($row['mail_auth_required'])) {
-                if ($row['mail_auth_required'] == 1) {
-                    //Return true
-                    return true;
+                //Check if the row exists
+                if ($row) {
+                    //check if the mailer_auth_required is set or not
+                    if (isset($row['mail_auth_required'])) {
+                        if ($row['mail_auth_required'] == 1) {
+                            //Return true
+                            return true;
+                        } else {
+                            //Return false
+                            return false;
+                        }
+                    } else {
+                        //Return false
+                        return false;
+                    }
                 } else {
                     //Return false
                     return false;
                 }
-            } else {
-                //Return false
-                return false;
             }
         } else {
-            //Return false
-            return false;
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -2277,76 +3010,93 @@ class Application
      */
     public function setMailerAuthRequired($mailer_auth_required = null)
     {
-        //Check if the mailer authentication required status is set in the settings table already
-        if ($this->getMailerAuthRequired() != '' || $this->getMailerAuthRequired() != null) {
-            //SQL statement to update the mailer authentication required status
-            $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            if ($mailer_auth_required) {
-                //set the status to 1
-                $status = 1;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //set the status to 0
-                $status = 0;
-            }
+                //Check if the mailer authentication required status is set in the settings table already
+                if ($this->getMailerAuthRequired() != '' || $this->getMailerAuthRequired() != null) {
+                    //SQL statement to update the mailer authentication required status
+                    $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
 
-            //Bind the parameters
-            $role_statement->bind_param('i', $status);
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
 
-            //Execute the statement
-            $role_statement->execute();
+                    if ($mailer_auth_required) {
+                        //set the status to 1
+                        $status = 1;
+                    } else {
+                        //set the status to 0
+                        $status = 0;
+                    }
 
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0) {
-                if ($mailer_auth_required) {
-                    //log the activity
-                    $activity = new Activity();
-                    $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
-                    //Return true
-                    return true;
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $status);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        if ($mailer_auth_required) {
+                            //log the activity
+                            $activity = new Activity();
+                            $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
+                            //Return true
+                            return true;
+                        } else {
+                            //Return false
+                            return false;
+                        }
+                    } else {
+                        //Return false
+                        return false;
+                    }
                 } else {
-                    //Return false
-                    return false;
+                    //SQL statement to update the mailer authentication required status, where isSet is SET
+                    $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    if ($mailer_auth_required) {
+                        //set the status to 1
+                        $status = 1;
+                    } else {
+                        //set the status to 0
+                        $status = 0;
+                    }
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $status);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0 && $mailer_auth_required) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
                 }
-            } else {
-                //Return false
-                return false;
             }
         } else {
-            //SQL statement to update the mailer authentication required status, where isSet is SET
-            $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
-
-            //Prepare the SQL statement for execution
-            $role_statement = $this->mysqli->prepare($sql);
-
-            if ($mailer_auth_required) {
-                //set the status to 1
-                $status = 1;
-            } else {
-                //set the status to 0
-                $status = 0;
-            }
-
-            //Bind the parameters
-            $role_statement->bind_param('i', $status);
-
-            //Execute the statement
-            $role_statement->execute();
-
-            //Check if the statement was executed successfully
-            if ($role_statement->affected_rows > 0 && $mailer_auth_required) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -2463,37 +3213,54 @@ class Application
         //SQL statement to get the privacy policy content
         $sql = "SELECT privacy_policy FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $stmt->execute();
-
-        //Get the results
-        $result = $stmt->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the privacy_policy is set or not
-            if (isset($row['privacy_policy'])) {
-                //set the privacy policy
-                $privacy_policy = $row['privacy_policy'];
-
-                //Return the privacy_policy
-                return $privacy_policy;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //get the default privacy policy
-                $privacy_policy = strval(PRIVACY_POLICY);
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-                //Return the privacy_policy
-                return $privacy_policy;
+                //Execute the statement
+                $stmt->execute();
+
+                //Get the results
+                $result = $stmt->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the privacy_policy is set or not
+                    if (isset($row['privacy_policy'])) {
+                        //set the privacy policy
+                        $privacy_policy = $row['privacy_policy'];
+
+                        //Return the privacy_policy
+                        return $privacy_policy;
+                    } else {
+                        //get the default privacy policy
+                        $privacy_policy = strval(PRIVACY_POLICY);
+
+                        //Return the privacy_policy
+                        return $privacy_policy;
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -2543,37 +3310,54 @@ class Application
         //SQL statement to get the terms and conditions content
         $sql = "SELECT terms_conditions FROM settings WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
-
-        //Execute the statement
-        $stmt->execute();
-
-        //Get the results
-        $result = $stmt->get_result();
-
-        //Get the row
-        $row = $result->fetch_assoc();
-
-        //Check if the row exists
-        if ($row) {
-            //check if the terms_conditions is set or not
-            if (isset($row['terms_conditions'])) {
-                //set the terms
-                $terms = $row['terms_conditions'];
-
-                //Return the terms
-                return $terms;
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //get the default terms and conditions
-                $terms = strval(TERMS_CONDITIONS);
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-                //Return the terms
-                return $terms;
+                //Execute the statement
+                $stmt->execute();
+
+                //Get the results
+                $result = $stmt->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the terms_conditions is set or not
+                    if (isset($row['terms_conditions'])) {
+                        //set the terms
+                        $terms = $row['terms_conditions'];
+
+                        //Return the terms
+                        return $terms;
+                    } else {
+                        //get the default terms and conditions
+                        $terms = strval(TERMS_CONDITIONS);
+
+                        //Return the terms
+                        return $terms;
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
             }
         } else {
-            //Return an empty string
-            return '';
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -2589,25 +3373,42 @@ class Application
         //SQL statement to update the terms and conditions content
         $sql = "UPDATE settings SET terms_conditions = ? WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //Bind the parameters
-        $stmt->bind_param('s', $terms);
+                //Bind the parameters
+                $stmt->bind_param('s', $terms);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //Check if the statement was executed successfully
-        if ($stmt->affected_rows > 0) {
-            //log the activity
-            $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Terms and Conditions Updated', 'The terms and conditions were changed.');
-            //Return true
-            return true;
+                //Check if the statement was executed successfully
+                if ($stmt->affected_rows > 0) {
+                    //log the activity
+                    $activity = new Activity();
+                    $activity->logActivity(intval($_SESSION['user_id']), 'Terms and Conditions Updated', 'The terms and conditions were changed.');
+                    //Return true
+                    return true;
+                } else {
+                    //Return false
+                    return false;
+                }
+            }
         } else {
-            //Return false
-            return false;
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 
@@ -2621,29 +3422,46 @@ class Application
         //SQL statement to reset the settings
         $sql = "UPDATE settings SET app_name = null, app_url = null, company_name = null, company_url = null, company_logo = null, company_address = null, company_phone = null, app_logo = null, contact_email = null, mail_host = null, mail_port = null, mail_username = null, mail_password = null, mail_encryption = null, mail_from_address = null, mail_from_name = null, mail_auth_req = null, privacy_policy = ?, terms_conditions = ? WHERE isSet = 'SET'";
 
-        //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
 
-        //set the privacy policy and terms and conditions to their default values
-        $terms_conditions = strval(TERMS_CONDITIONS);
-        $privacy_policy = strval(PRIVACY_POLICY);
+                //set the privacy policy and terms and conditions to their default values
+                $terms_conditions = strval(TERMS_CONDITIONS);
+                $privacy_policy = strval(PRIVACY_POLICY);
 
-        //Bind the parameters
-        $stmt->bind_param('ss', $privacy_policy, $terms_conditions);
+                //Bind the parameters
+                $stmt->bind_param('ss', $privacy_policy, $terms_conditions);
 
-        //Execute the statement
-        $stmt->execute();
+                //Execute the statement
+                $stmt->execute();
 
-        //Check if the statement was executed successfully
-        if ($stmt->affected_rows > 0) {
-            //log the activity
-            $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Settings Reset', 'The settings were reset to their default values.');
-            //Return true
-            return true;
+                //Check if the statement was executed successfully
+                if ($stmt->affected_rows > 0) {
+                    //log the activity
+                    $activity = new Activity();
+                    $activity->logActivity(intval($_SESSION['user_id']), 'Settings Reset', 'The settings were reset to their default values.');
+                    //Return true
+                    return true;
+                } else {
+                    //Return false
+                    return false;
+                }
+            }
         } else {
-            //Return false
-            return false;
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
         }
     }
 }
