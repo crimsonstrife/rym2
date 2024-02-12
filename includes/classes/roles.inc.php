@@ -59,8 +59,18 @@ class Roles
         //SQL statement to get all the roles
         $sql = "SELECT * FROM roles";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+            }
+        }
 
         //Execute the statement
         $role_statement->execute();
@@ -86,8 +96,18 @@ class Roles
         //SQL statement to get the role by ID
         $sql = "SELECT * FROM roles WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+            }
+        }
 
         //Bind the parameters to the SQL statement
         $role_statement->bind_param("i", $id);
@@ -116,8 +136,18 @@ class Roles
         //SQL statement to get the role by ID
         $sql = "SELECT name FROM roles WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+            }
+        }
 
         //Bind the parameters to the SQL statement
         $role_statement->bind_param("i", $id);
@@ -200,8 +230,18 @@ class Roles
         //SQL statement to get the role by ID
         $sql = "SELECT * FROM roles WHERE id = ?";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+            }
+        }
 
         //Bind the parameters to the SQL statement
         $role_statement->bind_param("i", $id);
@@ -319,8 +359,18 @@ class Roles
         //SQL statement to remove a permission from a role
         $sql = "DELETE FROM role_has_permission WHERE role_id = ? AND permission_id = ?";
 
-        //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+            }
+        }
 
         //Bind the parameters to the SQL statement
         $role_statement->bind_param("ii", $roleId, $permissionId);
