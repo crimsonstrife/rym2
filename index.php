@@ -20,14 +20,9 @@ declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do n
 /* include the base application config file */
 require_once(__DIR__ . '/config/app.php');
 
-//check the url for an event slug
-if (isset($_GET['event'])) {
-    $event_slug = $_GET['event'];
-}
-
 /* Check if the ready.php file exists */
 if (!file_exists(BASEPATH . '/ready.php')) {
-    /* If the ready.php file exists, launch the installation process */
+    /* If the ready.php file doesn't exist, launch the installation process */
     //check that setup.php exists
     if (file_exists(BASEPATH . '/setup.php')) {
         //include the setup file
@@ -40,6 +35,11 @@ if (!file_exists(BASEPATH . '/ready.php')) {
         include_once(BASEPATH . '/includes/errors/errorMessage.inc.php');
     }
 } else {
+    //check the url for an event slug
+    if (isset($_GET['event'])) {
+        $event_slug = $_GET['event'];
+    }
+
     /* If the ready.php file does not exist, launch the application */
     require_once(BASEPATH . '/public/index.php');
 }
