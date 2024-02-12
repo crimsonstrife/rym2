@@ -44,104 +44,197 @@ if (file_exists(BASEPATH . '/.env')) {
     $dotenv->required(['APP_URL'])->allowedRegexValues('/(?i)\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|(([^\s()<>]+|(([^\s()<>]+)))*))+(?:(([^\s()<>]+|(([^\s()<>]+)))*)|[^\s`!()[]{};:\'\".,<>?«»“”‘’]))/');  // Regex to validate URL format, https://stackoverflow.com/questions/206059/php-validation-regex-for-url
 
     /* Define the application constants */
+    $app_url = null;
+    //try to get the app_url
+    try {
+        $app_url = $APP->getAppUrl();
+    } catch (Exception $e) {
+        $app_url = null;
+    }
     //Check if the app_url is set in the database, if not set it to the value in the .env file
-    if ($APP->getAppUrl() != null || $APP->getAppUrl() != '') {
+    if ($app_url != null || $app_url != '') {
         //define the app_url constant
-        define('APP_URL', $APP->getAppUrl());
+        define('APP_URL', $app_url);
     } else {
         define('APP_URL', $_ENV['APP_URL']);
-    } // Define the APP_URL constant, this is the root URL of the application.
+    }
+
+    $app_name = null;
+    //try to get the app_name
+    try {
+        $app_name = $APP->getAppName();
+    } catch (Exception $e) {
+        $app_name = null;
+    }
     //Check if the app_name is set in the database, if not set it to the value in the .env file
-    if ($APP->getAppName() != null || $APP->getAppName() != '') {
+    if ($app_name != null || $app_name != '') {
         //define the app_name constant
-        define('APP_NAME', $APP->getAppName());
+        define('APP_NAME', $app_name);
     } else {
         define('APP_NAME', $_ENV['APP_NAME']);
-    } // Define the APP_NAME constant, this is the name of the application.
+    }
     define('APP_VERSION', "1.0.0"); // Define the APP_VERSION constant, this is the version of the application.
     define('APP_ENV', $_ENV['APP_ENV']); // Define the APP_ENV constant, this is the environment the application is running in i.e LOCAL, PRODUCTION, TEST.
     define('APP_DEBUG', $_ENV['APP_DEBUG']); // Define the APP_DEBUG constant, this is the debug mode of the application.
     define('OPENSSL_INSTALLED', extension_loaded('openssl')); // Define the OPENSSL_INSTALLED constant, this is whether or not the openssl extension is installed.
 
     /* Define the company constants constants */
+    $company_name = null;
+    //try to get the company_name
+    try {
+        $company_name = $APP->getCompanyName();
+    } catch (Exception $e) {
+        $company_name = null;
+    }
     //Check if the company_name is set in the database, if not set it to the value in the .env file
-    if ($APP->getCompanyName() != null || $APP->getCompanyName() != '') {
+    if ($company_name != null || $company_name != '') {
         //define the company_name constant
-        define('COMPANY_NAME', $APP->getCompanyName());
+        define('COMPANY_NAME', $company_name);
     } else {
         define('COMPANY_NAME', $_ENV['COMPANY_NAME']);
     } // Define the COMPANY_NAME constant, this is the name of the company.
 
     /* Define the mail constants */
+    $mailer_type = null;
+    //try to get the mailer_type
+    try {
+        $mailer_type = $APP->getMailerType();
+    } catch (Exception $e) {
+        $mailer_type = null;
+    }
     //Check if the mail_mailer is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerType() != null || $APP->getMailerType() != '') {
+    if ($mailer_type != null || $mailer_type != '') {
         //define the mail_mailer constant
-        define('MAIL_MAILER', $APP->getMailerType());
+        define('MAIL_MAILER', $mailer_type);
     } else {
         define('MAIL_MAILER', $_ENV['MAIL_MAILER']);
-    } // Define the MAIL_MAILER constant, this is the mail protocol to use.
+    }
+
+    $mailer_host = null;
+    //try to get the mailer_host
+    try {
+        $mailer_host = $APP->getMailerHost();
+    } catch (Exception $e) {
+        $mailer_host = null;
+    }
     //Check if the mail_host is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerHost() != null || $APP->getMailerHost() != '') {
+    if ($mailer_host != null || $mailer_host != '') {
         //define the mail_host constant
-        define('MAIL_HOST', $APP->getMailerHost());
+        define('MAIL_HOST', $mailer_host);
     } else {
         define('MAIL_HOST', $_ENV['MAIL_HOST']);
-    } // Define the MAIL_HOST constant, this is the hostname of the mail server.
+    }
+
+    $mailer_port = null;
+    //try to get the mailer_port
+    try {
+        $mailer_port = $APP->getMailerPort();
+    } catch (Exception $e) {
+        $mailer_port = null;
+    }
     //Check if the mail_port is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerPort() != null || $APP->getMailerPort() != '') {
+    if ($mailer_port != null || $mailer_port != '') {
         //define the mail_port constant
-        define('MAIL_PORT', $APP->getMailerPort());
+        define('MAIL_PORT', $mailer_port);
     } else {
         define('MAIL_PORT', $_ENV['MAIL_PORT']);
-    } // Define the MAIL_PORT constant, this is the port number of the mail server.
+    }
+
+    $mailer_auth_required = null;
+    //try to get the mailer_auth_required
+    try {
+        $mailer_auth_required = $APP->getMailerAuthRequired();
+    } catch (Exception $e) {
+        $mailer_auth_required = null;
+    }
     //Check if the mail_auth_req is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerAuthRequired() != null || $APP->getMailerAuthRequired() != '') {
+    if ($mailer_auth_required != null || $mailer_auth_required != '') {
         //if true, set to string true, if false, set to string false
-        if ($APP->getMailerAuthRequired() == true) {
+        if ($mailer_auth_required == true) {
             $required = 'true';
-        } else if ($APP->getMailerAuthRequired() == false) {
+        } else if ($mailer_auth_required == false) {
             $required = 'false';
         }
         //define the mail_auth_req constant
         define('MAIL_AUTH_REQ', $required);
     } else {
         define('MAIL_AUTH_REQ', $_ENV['MAIL_AUTH_REQ']);
-    } // Define the MAIL_AUTH_REQ constant, this is whether or not authentication is required.
+    }
+
+    $mailer_encryption = null;
+    //try to get the mailer_encryption
+    try {
+        $mailer_encryption = $APP->getMailerEncryption();
+    } catch (Exception $e) {
+        $mailer_encryption = null;
+    }
     //Check if the mail_encryption is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerEncryption() != null || $APP->getMailerEncryption() != '') {
+    if ($mailer_encryption != null || $mailer_encryption != '') {
         //define the mail_encryption constant
-        define('MAIL_ENCRYPTION', $APP->getMailerEncryption());
+        define('MAIL_ENCRYPTION', $mailer_encryption);
     } else {
         define('MAIL_ENCRYPTION', $_ENV['MAIL_ENCRYPTION']);
-    } // Define the MAIL_ENCRYPTION constant, this is the encryption to use.
+    }
+
+    $mailer_username = null;
+    //try to get the mailer_username
+    try {
+        $mailer_username = $APP->getMailerUsername();
+    } catch (Exception $e) {
+        $mailer_username = null;
+    }
     //Check if the mail_username is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerUsername() != null || $APP->getMailerUsername() != '') {
+    if ($mailer_username != null || $mailer_username != '') {
         //define the mail_username constant
-        define('MAIL_USERNAME', $APP->getMailerUsername());
+        define('MAIL_USERNAME', $mailer_username);
     } else {
         define('MAIL_USERNAME', $_ENV['MAIL_USERNAME']);
-    } // Define the MAIL_USERNAME constant, this is the username to use for authentication.
+    }
+
+    $mailer_password = null;
+    //try to get the mailer_password
+    try {
+        $mailer_password = $APP->getMailerPassword();
+    } catch (Exception $e) {
+        $mailer_password = null;
+    }
     //Check if the mail_password is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerPassword() != null || $APP->getMailerPassword() != '') {
+    if ($mailer_password != null || $mailer_password != '') {
         //define the mail_password constant
-        define('MAIL_PASSWORD', $APP->getMailerPassword());
+        define('MAIL_PASSWORD', $mailer_password);
     } else {
         define('MAIL_PASSWORD', $_ENV['MAIL_PASSWORD']);
-    } // Define the MAIL_PASSWORD constant, this is the password to use for authentication.
+    }
+
+    $mailer_from_address = null;
+    //try to get the mailer_from_address
+    try {
+        $mailer_from_address = $APP->getMailerFromAddress();
+    } catch (Exception $e) {
+        $mailer_from_address = null;
+    }
     //Check if the mail_from_address is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerFromAddress() != null || $APP->getMailerFromAddress() != '') {
+    if ($mailer_from_address != null || $mailer_from_address != '') {
         //define the mail_from_address constant
-        define('MAIL_FROM_ADDRESS', $APP->getMailerFromAddress());
+        define('MAIL_FROM_ADDRESS', $mailer_from_address);
     } else {
         define('MAIL_FROM_ADDRESS', $_ENV['MAIL_FROM_ADDRESS']);
-    } // Define the MAIL_FROM_ADDRESS constant, this is the email address to send the email from.
+    }
+
+    $mailer_from_name = null;
+    //try to get the mailer_from_name
+    try {
+        $mailer_from_name = $APP->getMailerFromName();
+    } catch (Exception $e) {
+        $mailer_from_name = null;
+    }
     //Check if the mail_from_name is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerFromName() != null || $APP->getMailerFromName() != '') {
+    if ($mailer_from_name != null || $mailer_from_name != '') {
         //define the mail_from_name constant
-        define('MAIL_FROM_NAME', $APP->getMailerFromName());
+        define('MAIL_FROM_NAME', $mailer_from_name);
     } else {
         define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME']);
-    } // Define the MAIL_FROM_NAME constant, this is the name to send the email from.
+    }
     define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
 } elseif (file_exists(BASEPATH . '/.env.example')) {
     /*load the .env.example file if the .env file does not exist */
@@ -155,14 +248,6 @@ if (file_exists(BASEPATH . '/.env')) {
         $app_url = $APP->getAppUrl();
     } catch (Exception $e) {
         $app_url = null;
-        //attempt to log the error
-        try {
-            //log the error
-            $activityLog->logActivity($user_id, 'ERROR', 'CODE: [APP_URL_NOT_SET]- AT: ' . $currentURL . ' - ERROR LOGGING FAILED: ' . $e->getMessage());
-        } catch (Exception $e) {
-            //error logging failed, display the error message
-            $errorMessage .= ' - ERROR LOGGING FAILED: ' . $e->getMessage();
-        }
     }
     //Check if the app_url is set in the database, if not set it to the value in the .env file
     if ($app_url != null || $app_url != '') {
@@ -170,89 +255,168 @@ if (file_exists(BASEPATH . '/.env')) {
         define('APP_URL', $app_url);
     } else {
         define('APP_URL', $_ENV['APP_URL']);
-    } // Define the APP_URL constant, this is the root URL of the application.
+    }
+
+    $app_name = null;
+    //try to get the app_name
+    try {
+        $app_name = $APP->getAppName();
+    } catch (Exception $e) {
+        $app_name = null;
+    }
     //Check if the app_name is set in the database, if not set it to the value in the .env file
-    if ($APP->getAppName() != null || $APP->getAppName() != '') {
+    if ($app_name != null || $app_name != '') {
         //define the app_name constant
-        define('APP_NAME', $APP->getAppName());
+        define('APP_NAME', $app_name);
     } else {
         define('APP_NAME', $_ENV['APP_NAME']);
-    } // Define the APP_NAME constant, this is the name of the application.
+    }
     define('APP_VERSION', "1.0.0"); // Define the APP_VERSION constant, this is the version of the application.
     define('APP_ENV', $_ENV['APP_ENV']); // Define the APP_ENV constant, this is the environment the application is running in i.e LOCAL, PRODUCTION, TEST.
     define('APP_DEBUG', $_ENV['APP_DEBUG']); // Define the APP_DEBUG constant, this is the debug mode of the application.
     define('OPENSSL_INSTALLED', extension_loaded('openssl')); // Define the OPENSSL_INSTALLED constant, this is whether or not the openssl extension is installed.
 
     /* Define the mail constants */
+    $mailer_type = null;
+    //try to get the mailer_type
+    try {
+        $mailer_type = $APP->getMailerType();
+    } catch (Exception $e) {
+        $mailer_type = null;
+    }
     //Check if the mail_mailer is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerType() != null || $APP->getMailerType() != '') {
+    if ($mailer_type != null || $mailer_type != '') {
         //define the mail_mailer constant
-        define('MAIL_MAILER', $APP->getMailerType());
+        define('MAIL_MAILER', $mailer_type);
     } else {
         define('MAIL_MAILER', $_ENV['MAIL_MAILER']);
-    } // Define the MAIL_MAILER constant, this is the mail protocol to use.
+    }
+
+    $mailer_host = null;
+    //try to get the mailer_host
+    try {
+        $mailer_host = $APP->getMailerHost();
+    } catch (Exception $e) {
+        $mailer_host = null;
+    }
     //Check if the mail_host is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerHost() != null || $APP->getMailerHost() != '') {
+    if ($mailer_host != null || $mailer_host != '') {
         //define the mail_host constant
-        define('MAIL_HOST', $APP->getMailerHost());
+        define('MAIL_HOST', $mailer_host);
     } else {
         define('MAIL_HOST', $_ENV['MAIL_HOST']);
-    } // Define the MAIL_HOST constant, this is the hostname of the mail server.
+    }
+
+    $mailer_port = null;
+    //try to get the mailer_port
+    try {
+        $mailer_port = $APP->getMailerPort();
+    } catch (Exception $e) {
+        $mailer_port = null;
+    }
     //Check if the mail_port is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerPort() != null || $APP->getMailerPort() != '') {
+    if ($mailer_port != null || $mailer_port != '') {
         //define the mail_port constant
-        define('MAIL_PORT', $APP->getMailerPort());
+        define('MAIL_PORT', $mailer_port);
     } else {
         define('MAIL_PORT', $_ENV['MAIL_PORT']);
-    } // Define the MAIL_PORT constant, this is the port number of the mail server.
+    }
+
+    $mailer_auth_required = null;
+    //try to get the mailer_auth_required
+    try {
+        $mailer_auth_required = $APP->getMailerAuthRequired();
+    } catch (Exception $e) {
+        $mailer_auth_required = null;
+    }
     //Check if the mail_auth_req is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerAuthRequired() != null || $APP->getMailerAuthRequired() != '') {
+    if ($mailer_auth_required != null || $mailer_auth_required != '') {
         //if true, set to string true, if false, set to string false
-        if ($APP->getMailerAuthRequired() == true) {
+        if ($mailer_auth_required == true) {
             $required = 'true';
-        } else if ($APP->getMailerAuthRequired() == false) {
+        } else if ($mailer_auth_required == false) {
             $required = 'false';
         }
         //define the mail_auth_req constant
         define('MAIL_AUTH_REQ', $required);
     } else {
         define('MAIL_AUTH_REQ', $_ENV['MAIL_AUTH_REQ']);
-    } // Define the MAIL_AUTH_REQ constant, this is whether or not authentication is required.
+    }
+
+    $mailer_encryption = null;
+    //try to get the mailer_encryption
+    try {
+        $mailer_encryption = $APP->getMailerEncryption();
+    } catch (Exception $e) {
+        $mailer_encryption = null;
+    }
     //Check if the mail_encryption is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerEncryption() != null || $APP->getMailerEncryption() != '') {
+    if ($mailer_encryption != null || $mailer_encryption != '') {
         //define the mail_encryption constant
-        define('MAIL_ENCRYPTION', $APP->getMailerEncryption());
+        define('MAIL_ENCRYPTION', $mailer_encryption);
     } else {
         define('MAIL_ENCRYPTION', $_ENV['MAIL_ENCRYPTION']);
-    } // Define the MAIL_ENCRYPTION constant, this is the encryption to use.
+    }
+
+    $mailer_username = null;
+    //try to get the mailer_username
+    try {
+        $mailer_username = $APP->getMailerUsername();
+    } catch (Exception $e) {
+        $mailer_username = null;
+    }
     //Check if the mail_username is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerUsername() != null || $APP->getMailerUsername() != '') {
+    if ($mailer_username != null || $mailer_username != '') {
         //define the mail_username constant
-        define('MAIL_USERNAME', $APP->getMailerUsername());
+        define('MAIL_USERNAME', $mailer_username);
     } else {
         define('MAIL_USERNAME', $_ENV['MAIL_USERNAME']);
-    } // Define the MAIL_USERNAME constant, this is the username to use for authentication.
+    }
+
+    $mailer_password = null;
+    //try to get the mailer_password
+    try {
+        $mailer_password = $APP->getMailerPassword();
+    } catch (Exception $e) {
+        $mailer_password = null;
+    }
     //Check if the mail_password is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerPassword() != null || $APP->getMailerPassword() != '') {
+    if ($mailer_password != null || $mailer_password != '') {
         //define the mail_password constant
-        define('MAIL_PASSWORD', $APP->getMailerPassword());
+        define('MAIL_PASSWORD', $mailer_password);
     } else {
         define('MAIL_PASSWORD', $_ENV['MAIL_PASSWORD']);
-    } // Define the MAIL_PASSWORD constant, this is the password to use for authentication.
+    }
+
+    $mailer_from_address = null;
+    //try to get the mailer_from_address
+    try {
+        $mailer_from_address = $APP->getMailerFromAddress();
+    } catch (Exception $e) {
+        $mailer_from_address = null;
+    }
     //Check if the mail_from_address is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerFromAddress() != null || $APP->getMailerFromAddress() != '') {
+    if ($mailer_from_address != null || $mailer_from_address != '') {
         //define the mail_from_address constant
-        define('MAIL_FROM_ADDRESS', $APP->getMailerFromAddress());
+        define('MAIL_FROM_ADDRESS', $mailer_from_address);
     } else {
         define('MAIL_FROM_ADDRESS', $_ENV['MAIL_FROM_ADDRESS']);
-    } // Define the MAIL_FROM_ADDRESS constant, this is the email address to send the email from.
+    }
+
+    $mailer_from_name = null;
+    //try to get the mailer_from_name
+    try {
+        $mailer_from_name = $APP->getMailerFromName();
+    } catch (Exception $e) {
+        $mailer_from_name = null;
+    }
     //Check if the mail_from_name is set in the database, if not set it to the value in the .env file
-    if ($APP->getMailerFromName() != null || $APP->getMailerFromName() != '') {
+    if ($mailer_from_name != null || $mailer_from_name != '') {
         //define the mail_from_name constant
-        define('MAIL_FROM_NAME', $APP->getMailerFromName());
+        define('MAIL_FROM_NAME', $mailer_from_name);
     } else {
         define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME']);
-    } // Define the MAIL_FROM_NAME constant, this is the name to send the email from.
+    }
     define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
 } else {
     //set the error message
