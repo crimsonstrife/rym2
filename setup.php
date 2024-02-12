@@ -41,6 +41,16 @@ if (!isset($_ENV['DB_PASSWORD']) || empty($_ENV['DB_PASSWORD'])) {
 /* Include the database connector file */
 include(BASEPATH . '/includes/connector.inc.php');
 
+/* Placeholders for error variables */
+$errorIsPHPVersion = false;
+$errorIsMySQLiExtension = false;
+$errorIsDBVarMissing = false;
+$errorIsDBConnectionFailed = false;
+$errorIsDBNotEmpty = false;
+$errorIsMailEnabled = false;
+$errorIsMySQLVersion = false;
+$errorIsDBConnectionFailed = false;
+
 /**
  * Check system requirements
  */
@@ -128,8 +138,7 @@ if (!function_exists('mail')) {
     <nav class="top-nav navbar navbar-expand-lg navbar-dark bg-dark schoolBrandedNav">
         <!-- Navbar Brand-->
         <div class="navbar-brand brand-container">
-            <span class="brand-text"><a class="navbar-brand ps-3"
-                    href="<?php echo APP_URL ?>"><?php echo htmlspecialchars(APP_NAME) ?></a></span>
+            <span class="brand-text"><a class="navbar-brand ps-3" href="<?php echo APP_URL ?>"><?php echo htmlspecialchars(APP_NAME) ?></a></span>
         </div>
     </nav>
     <main>
@@ -150,109 +159,104 @@ if (!function_exists('mail')) {
                     <div class="container">
                         <?php /* Check if setup has already been run */
                         if (file_exists('ready.php')) { ?>
-                        <div class="text-center">
-                            <!-- Setup has already been run, notify the user -->
-                            <h2>Setup has already been run.</h2>
-                            <p>You do not need to load this file directly.</p>
-                            <p>If you need to run setup again, please delete the ready.php file and refresh this page.
-                            </p>
-                            <p>Return to the <a href="index.php">application</a>.</p>
-                        </div>
+                            <div class="text-center">
+                                <!-- Setup has already been run, notify the user -->
+                                <h2>Setup has already been run.</h2>
+                                <p>You do not need to load this file directly.</p>
+                                <p>If you need to run setup again, please delete the ready.php file and refresh this page.
+                                </p>
+                                <p>Return to the <a href="index.php">application</a>.</p>
+                            </div>
                         <?php } else { ?>
-                        <div class="text-center">
-                            <!-- Setup has not been run, run the setup process -->
-                            <h2><?php echo htmlspecialchars(APP_NAME) ?> Installation</h2>
-                            <p>Welcome to <?php echo htmlspecialchars(APP_NAME) ?>.</p>
-                            <p>Before you can use the application, you must configure the database and create a user.
-                            </p>
-                            <h3>Checking the system configuration:</h3>
-                        </div>
-                        <?php
+                            <div class="text-center">
+                                <!-- Setup has not been run, run the setup process -->
+                                <h2><?php echo htmlspecialchars(APP_NAME) ?> Installation</h2>
+                                <p>Welcome to <?php echo htmlspecialchars(APP_NAME) ?>.</p>
+                                <p>Before you can use the application, you must configure the database and create a user.
+                                </p>
+                                <h3>Checking the system configuration:</h3>
+                            </div>
+                            <?php
                             /* Check if there are any errors in the system configuration, show list of pass and fail for each feature*/
                             if ($errorFound) { ?>
-                        <p>There were errors found in the system configuration, please fix the following errors
-                            before
-                            continuing:</p>
-                        <?php } ?>
-                        <ul>
-                            <li>PHP Version: (Must be version 7.2.5 or newer)</li>
-                            <li>MySQLi Extension: (Must be enabled)</li>
-                            <li>MySQL Version: (Must be version 5.7.0 or newer, only checked if variables are set)
-                            </li>
-                            <li>PHP Mail: (Must be enabled)</li>
-                        </ul>
-                        <ul>
-                            <?php if ($errorIsPHPVersion) { ?>
-                            <li style="color: red;"><?php echo $phpErrorMessage; ?></li>
-                            <?php } else { ?>
-                            <li style="color: green;">PHP Version: <?php echo $phpVersion; ?> - OK!</li>
+                                <p>There were errors found in the system configuration, please fix the following errors
+                                    before
+                                    continuing:</p>
                             <?php } ?>
-                            <?php if ($errorIsMySQLiExtension) { ?>
-                            <li style="color: red;"><?php echo $mysqliErrorMessage; ?></li>
-                            <?php } else { ?>
-                            <li style="color: green;">MySQLi Extension - OK!</li>
-                            <?php } ?>
-                            <?php if ($errorIsDBVarMissing) { ?>
-                            <li style="color: red;">Database variables are missing from the .env file, will attempt
-                                to
-                                configure them
-                                below.</li>
-                            <?php } else {
+                            <ul>
+                                <li>PHP Version: (Must be version 7.2.5 or newer)</li>
+                                <li>MySQLi Extension: (Must be enabled)</li>
+                                <li>MySQL Version: (Must be version 5.7.0 or newer, only checked if variables are set)
+                                </li>
+                                <li>PHP Mail: (Must be enabled)</li>
+                            </ul>
+                            <ul>
+                                <?php if ($errorIsPHPVersion) { ?>
+                                    <li style="color: red;"><?php echo $phpErrorMessage; ?></li>
+                                <?php } else { ?>
+                                    <li style="color: green;">PHP Version: <?php echo $phpVersion; ?> - OK!</li>
+                                <?php } ?>
+                                <?php if ($errorIsMySQLiExtension) { ?>
+                                    <li style="color: red;"><?php echo $mysqliErrorMessage; ?></li>
+                                <?php } else { ?>
+                                    <li style="color: green;">MySQLi Extension - OK!</li>
+                                <?php } ?>
+                                <?php if ($errorIsDBVarMissing) { ?>
+                                    <li style="color: red;">Database variables are missing from the .env file, will attempt
+                                        to
+                                        configure them
+                                        below.</li>
+                                    <?php } else {
                                     /* if the database variables are set, was the connection successful? */
                                     if ($errorIsDBConnectionFailed) { ?>
-                            <li style="color: red;"><?php echo $dbErrorMessage; ?></li>
-                            <?php } else {
+                                        <li style="color: red;"><?php echo $dbErrorMessage; ?></li>
+                                        <?php } else {
                                         /* If the connection was successful, was the database empty? */
                                         if ($errorIsDBNotEmpty) { ?>
-                            <li style="color: red;">The database is not empty, please empty the database and try
-                                again.
-                            </li>
-                            <?php } else {
+                                            <li style="color: red;">The database is not empty, please empty the database and try
+                                                again.
+                                            </li>
+                                            <?php } else {
                                             /* If the database is empty, was the MySQL version greater than or equal to 5.7.0? */
                                             if ($errorIsMySQLVersion) { ?>
-                            <li style="color: red;"><?php echo $mysqlErrorMessage; ?></li>
-                            <?php } else { ?>
-                            <li style="color: green;">MySQL Version: <?php echo $mysqlVersion; ?> - OK!</li>
-                            <?php }
+                                                <li style="color: red;"><?php echo $mysqlErrorMessage; ?></li>
+                                            <?php } else { ?>
+                                                <li style="color: green;">MySQL Version: <?php echo $mysqlVersion; ?> - OK!</li>
+                                <?php }
                                         }
                                     }
                                 } ?>
-                            <?php if ($errorIsMailEnabled) { ?>
-                            <li style="color: red;"><?php echo $mailErrorMessage; ?></li>
-                            <?php } else { ?>
-                            <li style="color: green;">PHP Mail - OK!</li>
-                            <?php } ?>
-                        </ul>
+                                <?php if ($errorIsMailEnabled) { ?>
+                                    <li style="color: red;"><?php echo $mailErrorMessage; ?></li>
+                                <?php } else { ?>
+                                    <li style="color: green;">PHP Mail - OK!</li>
+                                <?php } ?>
+                            </ul>
                     </div>
                     <!-- there were database errors of any kind, show the form to configure the database -->
                     <?php if ($errorFound && $errorIsDBVarMissing || $errorIsMySQLVersion || $errorIsDBConnectionFailed) { ?>
-                    <h3>Configure the database:</h3>
-                    <div>
-                        <form action="setup.php" method="post">
-                            <label for="db_host">Database Host:</label>
-                            <input type="text" name="db_host" id="db_host" placeholder="<?php echo $_ENV['DB_HOST']; ?>"
-                                required>
-                            <br>
-                            <label for="db_port">Database Port:</label>
-                            <input type="number" name="db_port" id="db_port"
-                                placeholder="<?php echo $_ENV['DB_PORT']; ?>" required>
-                            <br>
-                            <label for="db_database">Database Name:</label>
-                            <input type="text" name="db_database" id="db_database"
-                                placeholder="<?php echo $_ENV['DB_DATABASE']; ?>" required>
-                            <br>
-                            <label for="db_username">Database Username:</label>
-                            <input type="text" name="db_username" id="db_username"
-                                placeholder="<?php echo $_ENV['DB_USERNAME']; ?>" required>
-                            <br>
-                            <label for="db_password">Database Password:</label>
-                            <input type="password" name="db_password" id="db_password"
-                                placeholder="<?php echo $_ENV['DB_PASSWORD']; ?>" required>
-                            <br>
-                            <input type="submit" name="submit" value="Submit">
-                        </form>
+                        <h3>Configure the database:</h3>
                         <div>
-                            <?php
+                            <form action="setup.php" method="post">
+                                <label for="db_host">Database Host:</label>
+                                <input type="text" name="db_host" id="db_host" placeholder="<?php echo $_ENV['DB_HOST']; ?>" required>
+                                <br>
+                                <label for="db_port">Database Port:</label>
+                                <input type="number" name="db_port" id="db_port" placeholder="<?php echo $_ENV['DB_PORT']; ?>" required>
+                                <br>
+                                <label for="db_database">Database Name:</label>
+                                <input type="text" name="db_database" id="db_database" placeholder="<?php echo $_ENV['DB_DATABASE']; ?>" required>
+                                <br>
+                                <label for="db_username">Database Username:</label>
+                                <input type="text" name="db_username" id="db_username" placeholder="<?php echo $_ENV['DB_USERNAME']; ?>" required>
+                                <br>
+                                <label for="db_password">Database Password:</label>
+                                <input type="password" name="db_password" id="db_password" placeholder="<?php echo $_ENV['DB_PASSWORD']; ?>" required>
+                                <br>
+                                <input type="submit" name="submit" value="Submit">
+                            </form>
+                            <div>
+                                <?php
                                 /* Check if the form was submitted, if errored notify the user */
                                 $testConnection = connectToDatabase($_POST['db_host'], $_POST['db_username'], $_POST['db_password'], $_POST['db_database'], $_POST['db_port']);
                                 if ($testConnection->connect_error) {
@@ -261,10 +265,10 @@ if (!function_exists('mail')) {
                                     echo "<p>Connection successful!</p>";
                                 }
                                 ?>
+                            </div>
                         </div>
-                    </div>
                     <?php } ?>
-                    <?php } ?>
+                <?php } ?>
                 </div>
             </div>
         </div>
