@@ -37,10 +37,12 @@ if (!function_exists('connectToDatabase')) {
 
 /* This function will close the connection to the MySQL database */
 if (!function_exists('closeDatabaseConnection')) {
-    function closeDatabaseConnection(mysqli $mysqli): void
+    function closeDatabaseConnection(mysqli $mysqli = null): void
     {
-        /* Close the connection to the database */
-        $mysqli->close();
+        // If the connection is not null, close the connection
+        if ($mysqli != null) {
+            $mysqli->close();
+        }
     }
 }
 
@@ -48,25 +50,30 @@ if (!function_exists('closeDatabaseConnection')) {
 if (!function_exists('testDatabaseConnection')) {
     function testDatabaseConnection(string $host, string $username, string $password, string $database, string $port): bool
     {
-        // convert port to int
-        $port = (int) $port;
+        //check that all the required fields are filled in and not empty, if not return false
+        if (empty($host) || empty($username) || empty($password) || empty($database) || empty($port)) {
+            return false;
+        } else {
+            // convert port to int
+            $port = (int) $port;
 
-        /* Try to connect to the database */
-        try {
-            $mysqli = new mysqli($host, $username, $password, $database, $port);
-            //catch any errors and return false
-        } catch (Exception $e) {
-            // Log the error
-            error_log("Failed to connect to the database: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error);
-            // if the database is unknown, return false
-            if ($mysqli->connect_errno == 1049) {
+            /* Try to connect to the database */
+            try {
+                $mysqli = new mysqli($host, $username, $password, $database, $port);
+                //catch any errors and return false
+            } catch (Exception $e) {
+                // Log the error
+                error_log("Failed to connect to the database: (" . $mysqli->connect_errno . ")" . $mysqli->connect_error);
+                // if the database is unknown, return false
+                if ($mysqli->connect_errno == 1049) {
+                    return false;
+                }
                 return false;
             }
-            return false;
-        }
 
-        /* Close the connection to the database */
-        $mysqli->close();
-        return true;
+            /* Close the connection to the database */
+            $mysqli->close();
+            return true;
+        }
     }
 }
