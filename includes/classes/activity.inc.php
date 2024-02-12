@@ -163,38 +163,44 @@ class Activity
             $performed_on = substr($performed_on, 0, 535);
         }
 
-        //check that the mysqli object is not null
-        if ($this->mysqli->error) {
-            print_r($this->mysqli->connect_error);
-            //log the error
-            error_log('Error: ' . $this->mysqli->connect_error);
-        } else {
+        if (isset($this->mysqli)) {
 
-            //check if the user id is null
-            if ($user_id == null) {
-                //prepare the sql statement
-                $sql = "INSERT INTO activity_log (action_date, action, performed_on) VALUES (?, ?, ?)";
-                $stmt = $this->mysqli->prepare($sql);
-                $stmt->bind_param('sss', $action_date, $action, $performed_on);
-                $stmt->execute();
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
             } else {
-                //prepare the sql statement
-                $sql = "INSERT INTO activity_log (user_id, action_date, action, performed_on) VALUES (?, ?, ?, ?)";
-                $stmt = $this->mysqli->prepare($sql);
-                $stmt->bind_param('isss', $user_id, $action_date, $action, $performed_on);
-                $stmt->execute();
+
+                //check if the user id is null
+                if ($user_id == null) {
+                    //prepare the sql statement
+                    $sql = "INSERT INTO activity_log (action_date, action, performed_on) VALUES (?, ?, ?)";
+                    $stmt = $this->mysqli->prepare($sql);
+                    $stmt->bind_param('sss', $action_date, $action, $performed_on);
+                    $stmt->execute();
+                } else {
+                    //prepare the sql statement
+                    $sql = "INSERT INTO activity_log (user_id, action_date, action, performed_on) VALUES (?, ?, ?, ?)";
+                    $stmt = $this->mysqli->prepare($sql);
+                    $stmt->bind_param('isss', $user_id, $action_date, $action, $performed_on);
+                    $stmt->execute();
+                }
+
+                //close the statement
+                $stmt->close();
+
+                //log the activity
+                error_log('Activity Logged: ' . $action . ' ' . $performed_on);
+
+                //if the action is an error, throw an exception
+                if ($action == 'ERROR') {
+                    throw new Exception('Error: ' . $action . ' ' . $performed_on);
+                }
             }
-
-            //close the statement
-            $stmt->close();
-
-            //log the activity
-            error_log('Activity Logged: ' . $action . ' ' . $performed_on);
-
-            //if the action is an error, throw an exception
-            if ($action == 'ERROR') {
-                throw new Exception('Error: ' . $action . ' ' . $performed_on);
-            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is null');
         }
     }
 }
