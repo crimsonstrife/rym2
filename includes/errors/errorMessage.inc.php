@@ -49,8 +49,14 @@ if ($errorString !== '' && $errorCode !== '') {
     //format the error message
     $errorMessage = 'CODE: [' . $errorCode . ']- AT: ' . $currentURL . '';
 
-    //log the error
-    $activityLog->logActivity($user_id, 'ERROR', $errorMessage);
+    //attempt to log the error
+    try {
+        //log the error
+        $activityLog->logActivity($user_id, 'ERROR', $errorMessage);
+    } catch (Exception $e) {
+        //error logging failed, display the error message
+        $errorMessage .= ' - ERROR LOGGING FAILED: ' . $e->getMessage();
+    }
 
     //ensure the error also displays in the PHP error log, in case the panel is not visible
     error_log($errorMessage);
