@@ -70,12 +70,6 @@ if (!function_exists('testDatabaseConnection')) {
             } catch (Exception $e) {
                 // Log the error
                 error_log("Failed to connect to the database: " . $e->getMessage());
-                // if the database is unknown, return false
-                if ($mysqli->connect_errno == 1049) {
-                    //log the error
-                    error_log("Database not found: " . $mysqli->connect_error);
-                    return false;
-                }
                 return false;
             }
 
