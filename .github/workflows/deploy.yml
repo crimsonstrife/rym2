@@ -1,0 +1,67 @@
+name: Build & Deploy
+on:
+  push:
+    branches: [prod]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy TalentFlow
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          # Hostname or IP address of the server.
+          host: ${{secrets.SSH_HOST}}
+          # Username for authentication.
+          username: ${{secrets.SSH_USERNAME}}
+          # private key for either key-based or hostbased user authentication (OpenSSH format)
+          key: ${{secrets.SSH_KEY}}
+          # Command to execute on the remote server.
+          script: |
+            # Change to the domain directory
+            cd /var/www/capstone.hostedprojects.net
+            # Make the deployment folder
+            mkdir public
+            # Enter the folder
+            cd public
+            # Clone the repository
+            git@github.com:crimsonstrife/rym2.git
+            # Clone Success Message
+            echo 'Deployment Successful'
+      - name: Pull LFS Files
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          # Hostname or IP address of the server.
+          host: ${{secrets.SSH_HOST}}
+          # Username for authentication.
+          username: ${{secrets.SSH_USERNAME}}
+          # private key for either key-based or hostbased user authentication (OpenSSH format)
+          key: ${{secrets.SSH_KEY}}
+          # Command to execute on the remote server.
+          script: |
+            # Enter the application directory
+            cd /var/www/capstone.hostedprojects.net/public/rym2
+            # Initialize LFS (in case it isn't already)
+            git lfs install
+            # Pull current LFS files
+            git lfs pull
+            # Success Message
+            echo 'LFS Files Updated'
+      - name: Configure Environment
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          INPUT_APPNAME : ${{ vars.APP_NAME }}
+          INPUT_APPENV : ${{ vars.APP_ENV }}
+        with:
+          # Hostname or IP address of the server.
+          host: ${{secrets.SSH_HOST}}
+          # Username for authentication.
+          username: ${{secrets.SSH_USERNAME}}
+          # private key for either key-based or hostbased user authentication (OpenSSH format)
+          key: ${{secrets.SSH_KEY}}
+          # Export all Env Vars
+          allenvs: true
+          # Command to execute on the remote server.
+          script: |
+    
+          
