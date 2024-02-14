@@ -31,6 +31,10 @@ jobs:
             cd public
             # Clone the repository
             git clone git@github.com:crimsonstrife/rym2.git
+            # Update repo in the event it is already there
+            git update
+            # Pull changes
+            git pull
             # Switch to the Prod branch
             git checkout prod
             # Clone Success Message
@@ -48,6 +52,10 @@ jobs:
           script: |
             # Enter the application directory
             cd /var/www/capstone.hostedprojects.net/public/rym2
+            # Update repo
+            git update
+            # Pull changes
+            git pull
             # Initialize LFS (in case it isn't already)
             git lfs install
             # Pull current LFS files
