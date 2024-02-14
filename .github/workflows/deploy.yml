@@ -1,0 +1,145 @@
+# @format
+
+name: Build & Deploy
+on:
+  push:
+    branches: [prod]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy TalentFlow
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          # Hostname or IP address of the server.
+          host: ${{secrets.SSH_HOST}}
+          # Username for authentication.
+          username: ${{secrets.SSH_USERNAME}}
+          # private key for either key-based or hostbased user authentication (OpenSSH format)
+          key: ${{secrets.SSH_KEY}}
+          # Command to execute on the remote server.
+          script: |
+            # Change to the domain directory
+            cd /var/www/capstone.hostedprojects.net
+            # Make the deployment folder
+            mkdir public
+            # Enter the folder
+            cd public
+            # Clone the repository
+            git@github.com:crimsonstrife/rym2.git
+            # Clone Success Message
+            echo 'Deployment Successful'
+      - name: Pull LFS Files
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          # Hostname or IP address of the server.
+          host: ${{secrets.SSH_HOST}}
+          # Username for authentication.
+          username: ${{secrets.SSH_USERNAME}}
+          # private key for either key-based or hostbased user authentication (OpenSSH format)
+          key: ${{secrets.SSH_KEY}}
+          # Command to execute on the remote server.
+          script: |
+            # Enter the application directory
+            cd /var/www/capstone.hostedprojects.net/public/rym2
+            # Initialize LFS (in case it isn't already)
+            git lfs install
+            # Pull current LFS files
+            git lfs pull
+            # Success Message
+            echo 'LFS Files Updated'
+      - name: Configure Environment
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          INPUT_APPNAME: ${{ vars.APP_NAME }}
+          INPUT_APPENV: ${{ vars.APP_ENV }}
+          INPUT_APPDEBUG: ${{ vars.APP_DEBUG }}
+          INPUT_APPURL: ${{ vars.APP_URL }}
+          INPUT_COMPANY: ${{ vars.COMPANY_NAME }}
+          INPUT_DBCONNECTION: ${{ vars.DB_CONNECTION }}
+          INPUT_DBHOST: ${{ secrets.DB_HOST }}
+          INPUT_DBPORT: ${{ secrets.DB_PORT }}
+          INPUT_DBNAME: ${{ secrets.DB_DATABASE }}
+          INPUT_DBUSER: ${{ secrets.DB_USERNAME }}
+          INPUT_DBPASS: ${{ secrets.DB_PASSWORD }}
+        with:
+          # Hostname or IP address of the server.
+          host: ${{secrets.SSH_HOST}}
+          # Username for authentication.
+          username: ${{secrets.SSH_USERNAME}}
+          # private key for either key-based or hostbased user authentication (OpenSSH format)
+          key: ${{secrets.SSH_KEY}}
+          # Export all Env Vars
+          allenvs: true
+          # Command to execute on the remote server.
+          script: |
+            # Enter the application directory
+            cd /var/www/capstone.hostedprojects.net/public/rym2
+            # Copy the .env.example file to .env
+            cp .env.example .env
+            # Replace the .env file with the new values
+            sed -i "s/APP_NAME=.*$/APP_NAME=${{ env.INPUT_APPNAME }}/g" .env
+            sed -i "s/APP_ENV=.*$/APP_ENV=${{ env.INPUT_APPENV }}/g" .env
+            sed -i "s/APP_DEBUG=.*$/APP_DEBUG=${{ env.INPUT_APPDEBUG }}/g" .env
+            sed -i "s/APP_URL=.*$/APP_URL=${{ env.INPUT_APPURL }}/g" .env
+            sed -i "s/COMPANY_NAME=.*$/COMPANY_NAME=${{ env.INPUT_COMPANY }}/g" .env
+            sed -i "s/DB_CONNECTION=.*$/DB_CONNECTION=${{ env.INPUT_DBCONNECTION }}/g" .env
+            sed -i "s/DB_HOST=.*$/DB_HOST=${{ env.INPUT_DBHOST }}/g" .env
+            sed -i "s/DB_PORT=.*$/DB_PORT=${{ env.INPUT_DBPORT }}/g" .env
+            sed -i "s/DB_DATABASE=.*$/DB_DATABASE=${{ env.INPUT_DBNAME }}/g" .env
+            sed -i "s/DB_USERNAME=.*$/DB_USERNAME=${{ env.INPUT_DBUSER }}/g" .env
+            sed -i "s/DB_PASSWORD=.*$/DB_PASSWORD=${{ env.INPUT_DBPASS }}/g" .env
+            # Success Message
+            echo 'Environment Configured'
+      - name: Install Composer Dependencies
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          # Hostname or IP address of the server.
+          host: ${{secrets.SSH_HOST}}
+          # Username for authentication.
+          username: ${{secrets.SSH_USERNAME}}
+          # private key for either key-based or hostbased user authentication (OpenSSH format)
+          key: ${{secrets.SSH_KEY}}
+          # Command to execute on the remote server.
+          script: |
+            # Enter the application directory
+            cd /var/www/capstone.hostedprojects.net/public/rym2
+            # Install Composer Dependencies
+            composer install
+            # Success Message
+            echo 'Composer Dependencies Installed'
+      - name: Install NPM Dependencies
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          # Hostname or IP address of the server.
+          host: ${{secrets.SSH_HOST}}
+          # Username for authentication.
+          username: ${{secrets.SSH_USERNAME}}
+          # private key for either key-based or hostbased user authentication (OpenSSH format)
+          key: ${{secrets.SSH_KEY}}
+          # Command to execute on the remote server.
+          script: |
+            # Enter the application directory
+            cd /var/www/capstone.hostedprojects.net/public/rym2
+            # Install NPM Dependencies
+            npm install
+            # Success Message
+            echo 'NPM Dependencies Installed'
+      - name: Update Dependencies
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          # Hostname or IP address of the server.
+          host: ${{secrets.SSH_HOST}}
+          # Username for authentication.
+          username: ${{secrets.SSH_USERNAME}}
+          # private key for either key-based or hostbased user authentication (OpenSSH format)
+          key: ${{secrets.SSH_KEY}}
+          # Command to execute on the remote server.
+          script: |
+            # Enter the application directory
+            cd /var/www/capstone.hostedprojects.net/public/rym2
+            # Update Dependencies
+            composer update
+            # Success Message
+            echo 'Dependencies Updated'
