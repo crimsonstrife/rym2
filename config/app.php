@@ -56,7 +56,14 @@ if (file_exists(BASEPATH . '/.env')) {
         //define the app_url constant
         define('APP_URL', $app_url);
     } else {
-        define('APP_URL', $_ENV['APP_URL']);
+        //get the app_url from the .env file
+        $app_url_var = $_ENV['APP_URL'];
+        //format the app_url to include the protocol if it is not included
+        if (strpos($app_url_var, 'http://') !== false || strpos($app_url_var, 'https://') !== false) {
+            define('APP_URL', $app_url_var);
+        } else {
+            define('APP_URL', 'https://' . $app_url_var);
+        }
     }
 
     $app_name = null;
