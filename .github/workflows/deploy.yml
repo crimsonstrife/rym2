@@ -27,10 +27,6 @@ jobs:
           echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> $GITHUB_ENV
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-      - name: Escape Urls
-        run: |
-          echo "APP_URL=$(echo ${{ vars.APP_URL }} | sed 's/\//\\\//g')" >> $GITHUB_ENV
-          echo "COMPANY_URL=$(echo ${{ vars.COMPANY_URL }} | sed 's/\//\\\//g')" >> $GITHUB_ENV
       - name: Deploy TalentFlow
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -114,19 +110,19 @@ jobs:
             # Copy the .env.example file to .env
             cp .env.example .env
             # Replace the .env file with the new values
-            sed -i "s/APP_NAME=.*$/APP_NAME=\${{ env.INPUT_APPNAME }}/g" .env
-            sed -i "s/APP_ENV=.*$/APP_ENV=\${{ env.INPUT_APPENV }}/g" .env
-            sed -i "s/APP_DEBUG=.*$/APP_DEBUG=\${{ env.INPUT_APPDEBUG }}/g" .env
-            sed -i "s/APP_URL=.*$/APP_URL=\${{ env.INPUT_APPURL }}/g" .env
-            sed -i "s/COMPANY_NAME=.*$/COMPANY_NAME=\${{ env.INPUT_COMPANY }}/g" .env
-            sed -i "s/COMPANY_URL=.*$/COMPANY_URL=\${{ env.INPUT_COMPANYURL }}/g" .env
-            sed -i "s/CONTACT_EMAIL=.*$/CONTACT_EMAIL=\${{ env.INPUT_CONTACT }}/g" .env
-            sed -i "s/DB_CONNECTION=.*$/DB_CONNECTION=\${{ env.INPUT_DBCONNECTION }}/g" .env
-            sed -i "s/DB_HOST=.*$/DB_HOST=\${{ env.INPUT_DBHOST }}/g" .env
-            sed -i "s/DB_PORT=.*$/DB_PORT=\${{ env.INPUT_DBPORT }}/g" .env
-            sed -i "s/DB_DATABASE=.*$/DB_DATABASE=\${{ env.INPUT_DBNAME }}/g" .env
-            sed -i "s/DB_USERNAME=.*$/DB_USERNAME=\${{ env.INPUT_DBUSER }}/g" .env
-            sed -i "s/DB_PASSWORD=.*$/DB_PASSWORD=\${{ env.INPUT_DBPASS }}/g" .env
+            sed -i "s|APP_NAME=.*|APP_NAME=$${{ env.INPUT_APPNAME }}|g" .env
+            sed -i "s|APP_ENV=.*|APP_ENV=$${{ env.INPUT_APPENV }}|g" .env
+            sed -i "s|APP_DEBUG=.*|APP_DEBUG=$${{ env.INPUT_APPDEBUG }}|g" .env
+            sed -i "s|APP_URL=.*|APP_URL=$${{ env.INPUT_APPURL }}|g" .env
+            sed -i "s|COMPANY_NAME=.*|COMPANY_NAME=$${{ env.INPUT_COMPANY }}|g" .env
+            sed -i "s|COMPANY_URL=.*|COMPANY_URL=$${{ env.INPUT_COMPANYURL }}|g" .env
+            sed -i "s|CONTACT_EMAIL=.*|CONTACT_EMAIL=$${{ env.INPUT_CONTACT }}|g" .env
+            sed -i "s|DB_CONNECTION=.*|DB_CONNECTION=$${{ env.INPUT_DBCONNECTION }}|g" .env
+            sed -i "s|DB_HOST=.*|DB_HOST=$${{ env.INPUT_DBHOST }}|g" .env
+            sed -i "s|DB_PORT=.*|DB_PORT=$${{ env.INPUT_DBPORT }}|g" .env
+            sed -i "s|DB_DATABASE=.*|DB_DATABASE=$${{ env.INPUT_DBNAME }}|g" .env
+            sed -i "s|DB_USERNAME=.*|DB_USERNAME=$${{ env.INPUT_DBUSER }}|g" .env
+            sed -i "s|DB_PASSWORD=.*|DB_PASSWORD=$${{ env.INPUT_DBPASS }}|g" .env
             # Success Message
             echo 'Environment Configured'
       - name: Install Composer Dependencies
