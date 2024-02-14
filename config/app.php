@@ -41,7 +41,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $dotenv->required(['APP_ENV', 'APP_URL', 'APP_NAME', 'APP_DEBUG'])->notEmpty();
     $dotenv->required(['APP_ENV'])->allowedValues(['LOCAL', 'PRODUCTION', 'TEST']);
     $dotenv->required(['APP_DEBUG'])->allowedValues(['true', 'false', '1', '0', 'TRUE', 'FALSE']);
-    $dotenv->required(['APP_URL'])->allowedRegexValues('/(?i)\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|(([^\s()<>]+|(([^\s()<>]+)))*))+(?:(([^\s()<>]+|(([^\s()<>]+)))*)|[^\s`!()[]{};:\'\".,<>?«»“”‘’]))/');  // Regex to validate URL format, https://stackoverflow.com/questions/206059/php-validation-regex-for-url
+    $dotenv->required(['APP_URL']); // removed the regex validation for the app_url, as it was causing issues with the automated deployment and special characters
 
     /* Define the application constants */
     $app_url = null;
