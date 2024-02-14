@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: 
+    environment:
       name: capstone-app
       url: ${{ vars.APP_URL }}
     steps:
@@ -70,7 +70,7 @@ jobs:
           INPUT_APPDEBUG: ${{ vars.APP_DEBUG }}
           INPUT_APPURL: ${{ vars.APP_URL }}
           INPUT_COMPANY: ${{ vars.COMPANY_NAME }}
-          INPUT_COMPANYURL: ${{ vars.COMPANY_URL }} 
+          INPUT_COMPANYURL: ${{ vars.COMPANY_URL }}
           INPUT_CONTACT: ${{ vars.CONTACT_EMAIL }}
           INPUT_DBCONNECTION: ${{ vars.DB_CONNECTION }}
           INPUT_DBHOST: ${{ secrets.DB_HOST }}
@@ -94,19 +94,19 @@ jobs:
             # Copy the .env.example file to .env
             cp .env.example .env
             # Replace the .env file with the new values
-            sed -i "s/APP_NAME=.*$/APP_NAME=${{ env.INPUT_APPNAME }}/g" .env
-            sed -i "s/APP_ENV=.*$/APP_ENV=${{ env.INPUT_APPENV }}/g" .env
-            sed -i "s/APP_DEBUG=.*$/APP_DEBUG=${{ env.INPUT_APPDEBUG }}/g" .env
-            sed -i "s@APP_URL=.*$@APP_URL=${{ env.INPUT_APPURL }}@g" .env
-            sed -i "s/COMPANY_NAME=.*$/COMPANY_NAME=${{ env.INPUT_COMPANY }}/g" .env
-            sed -i "s@COMPANY_URL=.*$@COMPANY_URL=${{ env.INPUT_COMPANYURL }}@g" .env
+            sed -i "s/APP_NAME=.*$/APP_NAME=\${{ env.INPUT_APPNAME }}/g" .env
+            sed -i "s/APP_ENV=.*$/APP_ENV=\${{ env.INPUT_APPENV }}/g" .env
+            sed -i "s/APP_DEBUG=.*$/APP_DEBUG=\${{ env.INPUT_APPDEBUG }}/g" .env
+            sed -i "s/APP_URL=.*$/APP_URL=\${{ env.INPUT_APPURL }}/g" .env
+            sed -i "s/COMPANY_NAME=.*$/COMPANY_NAME=\${{ env.INPUT_COMPANY }}/g" .env
+            sed -i "s/COMPANY_URL=.*$/COMPANY_URL=${{ env.INPUT_COMPANYURL }}/g" .env
             sed -i "s/CONTACT_EMAIL=.*$/CONTACT_EMAIL=${{ env.INPUT_CONTACT }}/g" .env
-            sed -i "s/DB_CONNECTION=.*$/DB_CONNECTION=${{ env.INPUT_DBCONNECTION }}/g" .env
-            sed -i "s/DB_HOST=.*$/DB_HOST=${{ env.INPUT_DBHOST }}/g" .env
-            sed -i "s/DB_PORT=.*$/DB_PORT=${{ env.INPUT_DBPORT }}/g" .env
-            sed -i "s/DB_DATABASE=.*$/DB_DATABASE=${{ env.INPUT_DBNAME }}/g" .env
-            sed -i "s/DB_USERNAME=.*$/DB_USERNAME=${{ env.INPUT_DBUSER }}/g" .env
-            sed -i "s/DB_PASSWORD=.*$/DB_PASSWORD=${{ env.INPUT_DBPASS }}/g" .env
+            sed -i "s/DB_CONNECTION=.*$/DB_CONNECTION=\${{ env.INPUT_DBCONNECTION }}/g" .env
+            sed -i "s/DB_HOST=.*$/DB_HOST=\${{ env.INPUT_DBHOST }}/g" .env
+            sed -i "s/DB_PORT=.*$/DB_PORT=\${{ env.INPUT_DBPORT }}/g" .env
+            sed -i "s/DB_DATABASE=.*$/DB_DATABASE=\${{ env.INPUT_DBNAME }}/g" .env
+            sed -i "s/DB_USERNAME=.*$/DB_USERNAME=\${{ env.INPUT_DBUSER }}/g" .env
+            sed -i "s/DB_PASSWORD=.*$/DB_PASSWORD=\${{ env.INPUT_DBPASS }}/g" .env
             # Success Message
             echo 'Environment Configured'
       - name: Install Composer Dependencies
