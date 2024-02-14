@@ -30,7 +30,7 @@ jobs:
             # Enter the folder
             cd public
             # Clone the repository
-            git@github.com:crimsonstrife/rym2.git
+            git clone git@github.com:crimsonstrife/rym2.git
             # Clone Success Message
             echo 'Deployment Successful'
       - name: Pull LFS Files
