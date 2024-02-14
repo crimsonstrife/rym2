@@ -70,6 +70,8 @@ jobs:
           INPUT_APPDEBUG: ${{ vars.APP_DEBUG }}
           INPUT_APPURL: ${{ vars.APP_URL }}
           INPUT_COMPANY: ${{ vars.COMPANY_NAME }}
+          INPUT_COMPANYURL: ${{ vars.COMPANY_URL }} 
+          INPUT_CONTACT: ${{ vars.CONTACT_EMAIL }}
           INPUT_DBCONNECTION: ${{ vars.DB_CONNECTION }}
           INPUT_DBHOST: ${{ secrets.DB_HOST }}
           INPUT_DBPORT: ${{ secrets.DB_PORT }}
@@ -97,6 +99,8 @@ jobs:
             sed -i "s/APP_DEBUG=.*$/APP_DEBUG=${{ env.INPUT_APPDEBUG }}/g" .env
             sed -i "s/APP_URL=.*$/APP_URL=${{ env.INPUT_APPURL }}/g" .env
             sed -i "s/COMPANY_NAME=.*$/COMPANY_NAME=${{ env.INPUT_COMPANY }}/g" .env
+            sed -i "s/COMPANY_URL=.*$/COMPANY_NAME=${{ env.INPUT_COMPANYURL }}/g" .env
+            sed -i "s/CONTACT_EMAIL=.*$/COMPANY_NAME=${{ env.INPUT_CONTACT }}/g" .env
             sed -i "s/DB_CONNECTION=.*$/DB_CONNECTION=${{ env.INPUT_DBCONNECTION }}/g" .env
             sed -i "s/DB_HOST=.*$/DB_HOST=${{ env.INPUT_DBHOST }}/g" .env
             sed -i "s/DB_PORT=.*$/DB_PORT=${{ env.INPUT_DBPORT }}/g" .env
