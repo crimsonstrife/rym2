@@ -83,6 +83,21 @@ jobs:
             echo 'LFS Files Updated'
       - name: Configure Environment
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          # set the environment variables from the $github_env
+          INPUT_APPNAME: ${{ env.APP_NAME }}
+          INPUT_APPENV: ${{ env.APP_ENV }}
+          INPUT_APPDEBUG: ${{ env.APP_DEBUG }}
+          INPUT_APPURL: ${{ env.APP_URL }}
+          INPUT_COMPANY: ${{ env.COMPANY_NAME }}
+          INPUT_COMPANYURL: ${{ env.COMPANY_URL }}
+          INPUT_CONTACT: ${{ env.CONTACT_EMAIL }}
+          INPUT_DBCONNECTION: ${{ env.DB_CONNECTION }}
+          INPUT_DBHOST: ${{ secrets.DB_HOST }}
+          INPUT_DBPORT: ${{ secrets.DB_PORT }}
+          INPUT_DBNAME: ${{ secrets.DB_DATABASE }}
+          INPUT_DBUSER: ${{ secrets.DB_USERNAME }}
+          INPUT_DBPASS: ${{ secrets.DB_PASSWORD }}
         with:
           # Hostname or IP address of the server.
           host: ${{secrets.SSH_HOST}}
