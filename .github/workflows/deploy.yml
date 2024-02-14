@@ -51,9 +51,9 @@ jobs:
             # Clone the repository
             git clone git@github.com:crimsonstrife/rym2.git
             # Update repo in the event it is already there
-            git update
+            git fetch
             # Pull changes
-            git pull
+            git pull --force
             # Switch to the Prod branch
             git checkout prod
             # Clone Success Message
