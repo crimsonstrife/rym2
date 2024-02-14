@@ -31,6 +31,8 @@ jobs:
             cd public
             # Clone the repository
             git clone git@github.com:crimsonstrife/rym2.git
+            # Switch to the Prod branch
+            git checkout prod
             # Clone Success Message
             echo 'Deployment Complete'
       - name: Pull LFS Files
