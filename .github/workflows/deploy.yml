@@ -8,6 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: 
+      name: capstone-app
+      url: ${{ vars.APP_URL }}
     steps:
       - name: Deploy TalentFlow
         uses: appleboy/ssh-action@v1.0.3
