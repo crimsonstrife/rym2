@@ -47,7 +47,7 @@ jobs:
             # Clone the repository
             git clone git@github.com:crimsonstrife/rym2.git
             # Update repo in the event it is already there
-            git fetch
+            git fetch --all --force
             # Pull changes
             git pull --force
             # Switch to the Prod branch
@@ -68,13 +68,13 @@ jobs:
             # Enter the application directory
             cd /var/www/capstone.hostedprojects.net/public/rym2
             # Update repo
-            git update
+            git fetch
             # Pull changes
-            git pull
+            git fetch --all --force
             # Initialize LFS (in case it isn't already)
             git lfs install
             # Pull current LFS files
-            git lfs pull
+            git pull --force
             # Success Message
             echo 'LFS Files Updated'
       - name: Configure Environment
