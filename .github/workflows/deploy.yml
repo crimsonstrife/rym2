@@ -75,6 +75,8 @@ jobs:
             git lfs install
             # Pull current LFS files
             git lfs fetch --all
+            # Checkout LFS Files
+            git lfs checkout
             # Success Message
             echo 'LFS Files Updated'
       - name: Configure Environment
