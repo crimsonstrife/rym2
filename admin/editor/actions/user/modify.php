@@ -39,6 +39,7 @@ $usernameTaken = false;
 $roleIssue = false;
 
 //placeholders for values
+$userUpdated = false;
 $username = "";
 $email = "";
 $password = "";
@@ -97,6 +98,7 @@ if (!$hasPermission) {
                     //if the username is the same as the current user's username, set the usernameTaken to false
                     if ($username == $currentUsername) {
                         $usernameTaken = false;
+                        $username = $currentUsername;
                     }
                 }
             } else {
@@ -204,9 +206,12 @@ if (!$hasPermission) {
                 foreach ($rolesArray as $roleObject) {
                     //see if the role has the is super admin permission
                     $rolePermissions = $role->getRolePermissions($roleObject);
-                    foreach ($rolePermissions as $permission) {
-                        if (intval($permission['permission_id']) == $isSuperAdminPermissionID) {
-                            $roleIsSuperAdmin = true;
+                    foreach ($rolePermissions as $permissionsKey) {
+                        foreach ($permissionsKey as $permission) {
+                            //check if the role has the is super admin permission
+                            if (intval($permission) == $isSuperAdminPermissionID) {
+                                $roleIsSuperAdmin = true;
+                            }
                         }
                     }
                 }
@@ -234,7 +239,36 @@ if (!$hasPermission) {
             if ($action == 'edit') {
                 //if the password is empty, update the user without updating the password
                 if ($password == "" && $passwordConfirm == "") {
+                    $userUpdated = $user->modifyUser($userId, $email, $username, null, intval($_SESSION['user_id']), $rolesArray);
+                } else {
                     $userUpdated = $user->modifyUser($userId, $email, $username, $password, intval($_SESSION['user_id']), $rolesArray);
+                }
+            }
+        } else if ($usernameTaken || $emailTaken || $passwordError || $roleIssue) {
+            $userUpdated = false;
+        } else if (!$usernameTaken && !$emailTaken && !$passwordError && $roleIssue) {
+            $arrayHasSuperAdmin = false;
+            //if the action is edit, see if the super admin role is being removed
+            if ($action == 'edit') {
+                //check the roles array, check if the super admin role is missing
+                foreach ($rolesArray as $roleObject) {
+                    //see if the role has the is super admin permission
+                    $rolePermissions = $role->getRolePermissions($roleObject);
+                    foreach ($rolePermissions as $permissionsKey) {
+                        foreach ($permissionsKey as $permission) {
+                            //check if the role has the is super admin permission
+                            if (intval($permission) == $isSuperAdminPermissionID) {
+                                $arrayHasSuperAdmin = true;
+                            }
+                        }
+                    }
+                }
+                //if the array still has the super admin role, update the user
+                if ($arrayHasSuperAdmin) {
+                    $roleIssue = false;
+                    $userUpdated = $user->modifyUser($userId, $email, $username, $password, intval($_SESSION['user_id']), $rolesArray);
+                } else {
+                    $userUpdated = false;
                 }
             }
         }

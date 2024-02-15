@@ -1289,7 +1289,7 @@ class User implements Login
     public function modifyUser(int $id, string $email = null, string $username = null, string $password = null, int $updated_by = null, array $roles = array()): bool
     {
         //if the email is null, get the current email
-        if ($email == null) {
+        if ($email == null || empty($email) || $email == "") {
             $email = $this->getUserEmail($id);
         } else {
             //trim the email
@@ -1297,7 +1297,7 @@ class User implements Login
         }
 
         //if the username is null, get the current username
-        if ($username == null) {
+        if ($username == null || empty($username) || $username == "") {
             $username = $this->getUserUsername($id);
         } else {
             //trim the username
@@ -1305,7 +1305,7 @@ class User implements Login
         }
 
         //if the password is null, get the current password
-        if ($password == null) {
+        if ($password == null || empty($password) || $password == "") {
             $password = $this->getUserPassword($id);
         }
 
