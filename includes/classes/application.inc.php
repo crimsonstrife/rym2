@@ -3100,6 +3100,437 @@ class Application
         }
     }
 
+    //Hotjar Settings
+
+    /**
+     * Get Hotjar Enabled Status
+     * Get the hotjar enabled status from the settings table
+     *
+     * @return bool //the hotjar enabled status bool
+     */
+    public function getHotjarEnabled()
+    {
+        //SQL statement to get the hotjar enabled status
+        $sql = "SELECT hotjar_enable FROM settings WHERE isSet = 'SET'";
+
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the hotjar_enabled is set or not
+                    if (isset($row['hotjar_enable'])) {
+                        if ($row['hotjar_enable'] == 1) {
+                            //Return true
+                            return true;
+                        } else {
+                            //Return false
+                            return false;
+                        }
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //Return false
+                    return false;
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Set Hotjar Enabled Status
+     * Set the hotjar enabled status in the settings table
+     *
+     * @param bool $hotjar_enabled //the hotjar enabled status
+     * @return bool //true if the hotjar enabled status was set, false if not
+     */
+    public function setHotjarEnabled($hotjar_enabled = null)
+    {
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Check if the hotjar enabled status is set in the settings table already
+                if ($this->getHotjarEnabled() != '' || $this->getHotjarEnabled() != null) {
+                    //SQL statement to update the hotjar enabled status
+                    $sql = "UPDATE settings SET hotjar_enable = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    if ($hotjar_enabled) {
+                        //set the status to 1
+                        $status = 1;
+                    } else {
+                        //set the status to 0
+                        $status = 0;
+                    }
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $status);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        if ($hotjar_enabled) {
+                            //log the activity
+                            $activity = new Activity();
+                            $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Enabled Status Changed', 'The hotjar enabled status was changed to' . $hotjar_enabled . '.');
+                            //Return true
+                            return true;
+                        } else {
+                            //Return false
+                            return false;
+                        }
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the hotjar enabled status, where isSet is SET
+                    $sql = "UPDATE settings SET hotjar_enable = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    if ($hotjar_enabled) {
+                        //set the status to 1
+                        $status = 1;
+                    } else {
+                        //set the status to 0
+                        $status = 0;
+                    }
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $status);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0 && $hotjar_enabled) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Enabled Status Changed', 'The hotjar enabled status was changed to' . $hotjar_enabled . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Get Hotjar Site ID
+     * Get the hotjar site ID from the settings table
+     *
+     * @return string //the hotjar site ID
+     */
+    public function getHotjarSiteID()
+    {
+        //SQL statement to get the hotjar site ID
+        $sql = "SELECT hotjar_siteid FROM settings WHERE isSet = 'SET'";
+
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the hotjar_site_id is set or not
+                    if (isset($row['hotjar_siteid'])) {
+                        //Return the hotjar_site_id
+                        return $row['hotjar_siteid'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Set Hotjar Site ID
+     * Set the hotjar site ID in the settings table
+     *
+     * @param string $hotjar_site_id //the hotjar site ID
+     * @return bool //true if the hotjar site ID was set, false if not
+     */
+    public function setHotjarSiteID($hotjar_site_id = null)
+    {
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Check if the hotjar site ID is set in the settings table already
+                if ($this->getHotjarSiteID() != '' || $this->getHotjarSiteID() != null) {
+                    //SQL statement to update the hotjar site ID
+                    $sql = "UPDATE settings SET hotjar_siteid = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $hotjar_site_id);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Site ID Changed', 'The hotjar site ID was changed to ' . $hotjar_site_id . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the hotjar site ID, where isSet is SET
+                    $sql = "UPDATE settings SET hotjar_siteid = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $hotjar_site_id);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Site ID Changed', 'The hotjar site ID was changed to ' . $hotjar_site_id . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Get Hotjar Version
+     * Get the hotjar version from the settings table
+     *
+     * @return int|null //the hotjar version
+     */
+    public function getHotjarVersion(): ?int
+    {
+        //SQL statement to get the hotjar version
+        $sql = "SELECT hotjar_version FROM settings WHERE isSet = 'SET'";
+
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the hotjar_version is set or not
+                    if (isset($row['hotjar_version'])) {
+                        //Return the hotjar_version
+                        return intval($row['hotjar_version']);
+                    } else {
+                        //Return null
+                        return null;
+                    }
+                } else {
+                    //Return null
+                    return null;
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Set Hotjar Version
+     * Set the hotjar version in the settings table
+     *
+     * @param int $hotjar_version //the hotjar version
+     * @return bool //true if the hotjar version was set, false if not
+     */
+    public function setHotjarVersion($hotjar_version = null)
+    {
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Check if the hotjar version is set in the settings table already
+                if ($this->getHotjarVersion() != '' || $this->getHotjarVersion() != null) {
+                    //SQL statement to update the hotjar version
+                    $sql = "UPDATE settings SET hotjar_version = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $hotjar_version);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Version Changed', 'The hotjar version was changed to ' . $hotjar_version . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the hotjar version, where isSet is SET
+                    $sql = "UPDATE settings SET hotjar_version = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $hotjar_version);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Version Changed', 'The hotjar version was changed to ' . $hotjar_version . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+
     /**
      * Search the database with a given search term or string
      *

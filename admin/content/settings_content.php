@@ -45,7 +45,7 @@ if (!isset($hasViewDashboardPermission)) {
 
         //placeholder variables for the settings
         $entry_error = false; //boolean value for if there is an error with the form entry for server-side validation.
-        $app_name = $app_url = $app_logo = $contact_email = $company_name = $company_logo = $company_address = $company_city = $company_state = $company_zip = $company_url = $company_phone = $mail_mailer = $mail_host = $mail_port = $mail_auth_req = $mail_username = $mail_password = $mail_encryption = $mail_from_address = $mail_from_name = $privacy_policy = $terms_conditions = null;
+        $app_name = $app_url = $app_logo = $contact_email = $company_name = $company_logo = $company_address = $company_city = $company_state = $company_zip = $company_url = $company_phone = $mail_mailer = $mail_host = $mail_port = $mail_auth_req = $mail_username = $mail_password = $mail_encryption = $mail_from_address = $mail_from_name = $privacy_policy = $terms_conditions = $enableHotjar = $hotjarSiteId = $hotjarVersion = null;
         //other variables
         $target_file_appLogo = null;
         $target_file_companyLogo = null;
@@ -524,25 +524,25 @@ if (!isset($hasViewDashboardPermission)) {
                 }
             }
 ?>
-            <script src="<?php echo getLibraryPath() . 'ckeditor/ckeditor.js'; ?>"></script>
-            <!-- main content -->
-            <div id="layout_content" class="w-95 mx-auto">
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Settings</h1>
-                        <div class="row">
-                            <!-- Settings Notice -->
-                            <div class="col-md-12">
-                                <div class="alert alert-warning fade show" role="alert">
-                                    <strong>Notice:</strong> Settings here may override settings in the config file, preference is
-                                    given on a case by case basis.
-                                </div>
-                                <div class="alert alert-warning fade show" role="alert">
-                                    <strong>Caution:</strong> You should store any passwords, such as the mailer password,
-                                    in the config .env file, the settings here are for users who do not know how to edit a .env
-                                    file.
-                                </div>
-                                <?php
+<script src="<?php echo getLibraryPath() . 'ckeditor/ckeditor.js'; ?>"></script>
+<!-- main content -->
+<div id="layout_content" class="w-95 mx-auto">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Settings</h1>
+            <div class="row">
+                <!-- Settings Notice -->
+                <div class="col-md-12">
+                    <div class="alert alert-warning fade show" role="alert">
+                        <strong>Notice:</strong> Settings here may override settings in the config file, preference is
+                        given on a case by case basis.
+                    </div>
+                    <div class="alert alert-warning fade show" role="alert">
+                        <strong>Caution:</strong> You should store any passwords, such as the mailer password,
+                        in the config .env file, the settings here are for users who do not know how to edit a .env
+                        file.
+                    </div>
+                    <?php
                                 //check if openssl is enabled
                                 if (OPENSSL_INSTALLED) {
                                     echo '<div class="alert alert-success fade show" role="alert">
@@ -552,72 +552,78 @@ if (!isset($hasViewDashboardPermission)) {
                         <strong>Warning:</strong> OpenSSL is not enabled. Passwords will not be encrypted and will be stored as plain text. </div>';
                                 }
                                 ?>
-                            </div>
-                            <div class="row">
-                                <!-- Main Settings Form -->
-                                <form class="form-inline" <?php if ($hasUpdateSettingsPermission) {
+                </div>
+                <div class="row">
+                    <!-- Main Settings Form -->
+                    <form class="form-inline" <?php if ($hasUpdateSettingsPermission) {
                                                                 echo 'method="post"' . ' action="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '"';
                                                             } ?> class="needs-validation <?php if ($entry_error) {
                                                                                                 echo 'was-validated';
                                                                                             } ?>">
-                                    <div class="form-group">
-                                        <div class="form-row">
-                                            <label for="main-app-settings">
-                                                <h3>Application</h3>
-                                            </label>
-                                            <div id="main-app-settings">
-                                                <?php
+                        <div class="form-group">
+                            <div class="form-row">
+                                <label for="main-app-settings">
+                                    <h3>Application</h3>
+                                </label>
+                                <div id="main-app-settings">
+                                    <?php
                                                 //get the general application settings from the database
                                                 $app_name = $APP->getAppName();
                                                 $app_url = $APP->getAppURL();
                                                 $app_logo = $APP->getAppLogo();
                                                 $contact_email = $APP->getContactEmail();
                                                 ?>
-                                                <div class="form-group">
-                                                    <div class="form-row">
-                                                        <label for="app-name">Application Name</label>
-                                                        <input type="text" class="form-control" id="app-name" name="app_name" placeholder="<?php
+                                    <div class="form-group">
+                                        <div class="form-row">
+                                            <label for="app-name">Application Name</label>
+                                            <input type="text" class="form-control" id="app-name" name="app_name"
+                                                placeholder="<?php
                                                                                                                                             //if app_name is set and not blank
                                                                                                                                             if (isset($app_name) && $app_name != '') {
                                                                                                                                                 echo $app_name;
                                                                                                                                             } else {
                                                                                                                                                 echo 'Application Name';
-                                                                                                                                            } ?>" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                            } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                         echo 'disabled';
-                                                                                                                                                    } ?> value="<?php
+                                                                                                                                                    } ?>
+                                                value="<?php
                                                                                                                                                                 //if app_name is set and not blank
                                                                                                                                                                 if (isset($app_name) && $app_name != '') {
                                                                                                                                                                     echo $app_name;
                                                                                                                                                                 } else {
                                                                                                                                                                     echo '';
                                                                                                                                                                 } ?>">
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <label for="app-url">Application URL</label>
-                                                        <input type="text" class="form-control" id="app-url" name="app_url" placeholder="<?php
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="app-url">Application URL</label>
+                                            <input type="text" class="form-control" id="app-url" name="app_url"
+                                                placeholder="<?php
                                                                                                                                             //if app_url is set and not blank
                                                                                                                                             if (isset($app_url) && $app_url != '') {
                                                                                                                                                 echo $app_url;
                                                                                                                                             } else {
                                                                                                                                                 echo 'Application URL';
-                                                                                                                                            } ?>" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                            } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                         echo 'disabled';
-                                                                                                                                                    } ?> value="<?php
+                                                                                                                                                    } ?>
+                                                value="<?php
                                                                                                                                                                 //if app_url is set and not blank
                                                                                                                                                                 if (isset($app_url) && $app_url != '') {
                                                                                                                                                                     echo $app_url;
                                                                                                                                                                 } else {
                                                                                                                                                                     echo '';
                                                                                                                                                                 } ?>">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label for="app-logo">Application Logo</label>
-                                                            <br />
-                                                            <!-- if there is an existing logo, show the file -->
-                                                            <?php
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="app-logo">Application Logo</label>
+                                                <br />
+                                                <!-- if there is an existing logo, show the file -->
+                                                <?php
                                                             if (!empty($APP->getAppLogo())) {
                                                                 //render the file as an image
                                                                 echo '<div><img src="' . getUploadPath() . $media->getMediaFileName(intval($app_logo)) . '" alt="Application Logo" style="max-width: 200px; max-height: auto;"></div>';
@@ -625,87 +631,96 @@ if (!isset($hasViewDashboardPermission)) {
                                                                 echo '<div> ' . $media->getMediaFileName(intval($app_logo)) . '</div>';
                                                             }
                                                             ?>
-                                                            <?php //allow the user to either select a file from the mediaArray or upload a new file if they have upload permissions
+                                                <?php //allow the user to either select a file from the mediaArray or upload a new file if they have upload permissions
                                                             if (!empty($mediaArray)) { ?>
-                                                                <br />
-                                                                <label for="appLogoSelect">Select a New Logo:</label>
-                                                                <select id="appLogoSelect" name="app_logoSelect" class="form-control" <?php if (!$hasUpdateSettingsPermission) {
+                                                <br />
+                                                <label for="appLogoSelect">Select a New Logo:</label>
+                                                <select id="appLogoSelect" name="app_logoSelect" class="form-control"
+                                                    <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                             echo 'disabled';
                                                                                                                                         } ?>>
-                                                                    <option value="">Select a Logo</option>
-                                                                    <?php /* check if the user has permission to upload media */
+                                                    <option value="">Select a Logo</option>
+                                                    <?php /* check if the user has permission to upload media */
                                                                     if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissions->getPermissionIdByName('CREATE MEDIA'))) { ?>
-                                                                        <option value="0">Upload a New Logo</option>
-                                                                    <?php } ?>
-                                                                    <?php foreach ($mediaArray as $key => $value) { ?>
-                                                                        <option value="<?php echo $value['id'] ?>">
-                                                                            <?php echo $value['filename']; ?>
-                                                                        </option>
-                                                                    <?php } ?>
-                                                                </select>
-                                                                <br />
-                                                                <!-- if the user selects to upload a new file, show the file upload input -->
-                                                                <input type="file" id="appLogoUpload" name="app_logoUpload" class="form-control" disabled hidden>
-                                                                <small id="appLogoHelp" class="form-text text-muted">To upload a new
-                                                                    file, select
-                                                                    "Upload
-                                                                    a New Logo" from the dropdown. To use an existing file, select the
-                                                                    filename.</small>
-                                                                <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
+                                                    <option value="0">Upload a New Logo</option>
+                                                    <?php } ?>
+                                                    <?php foreach ($mediaArray as $key => $value) { ?>
+                                                    <option value="<?php echo $value['id'] ?>">
+                                                        <?php echo $value['filename']; ?>
+                                                    </option>
+                                                    <?php } ?>
+                                                </select>
+                                                <br />
+                                                <!-- if the user selects to upload a new file, show the file upload input -->
+                                                <input type="file" id="appLogoUpload" name="app_logoUpload"
+                                                    class="form-control" disabled hidden>
+                                                <small id="appLogoHelp" class="form-text text-muted">To upload a new
+                                                    file, select
+                                                    "Upload
+                                                    a New Logo" from the dropdown. To use an existing file, select the
+                                                    filename.</small>
+                                                <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
                                                                 if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissions->getPermissionIdByName('CREATE MEDIA'))) { ?>
-                                                                    <label for="app-logo-upload">Upload a New Logo:</label>
-                                                                    <input type="file" id="app-logo-upload" name="app_logoUpload" class="form-control" <?php if (!$hasUpdateSettingsPermission) {
+                                                <label for="app-logo-upload">Upload a New Logo:</label>
+                                                <input type="file" id="app-logo-upload" name="app_logoUpload"
+                                                    class="form-control"
+                                                    <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                             echo 'disabled';
                                                                                                                                                         } ?>>
-                                                                    <small id="appLogoHelp" class="form-text text-muted">To upload a new
-                                                                        file, select
-                                                                        "Upload
-                                                                        a New Logo" from the dropdown. To use an existing file, select the
-                                                                        filename.</small>
-                                                                    <div class="alert alert-warning" role="alert"><span class="note-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
-                                                                        <span class="note-text">If the upload option is not available,
-                                                                            contact the
-                                                                            administrator
-                                                                            for assistance.</span>
-                                                                    </div>
-                                                                <?php } else { ?>
-                                                                    <p><strong><label for="appLogo">No Media Available</label></strong></p>
-                                                                    <p>You lack permissions to upload new media files and none currently
-                                                                        exist, contact the
-                                                                        administrator.</p>
-                                                            <?php }
+                                                <small id="appLogoHelp" class="form-text text-muted">To upload a new
+                                                    file, select
+                                                    "Upload
+                                                    a New Logo" from the dropdown. To use an existing file, select the
+                                                    filename.</small>
+                                                <div class="alert alert-warning" role="alert"><span class="note-icon"><i
+                                                            class="fa-solid fa-circle-exclamation"></i></span>
+                                                    <span class="note-text">If the upload option is not available,
+                                                        contact the
+                                                        administrator
+                                                        for assistance.</span>
+                                                </div>
+                                                <?php } else { ?>
+                                                <p><strong><label for="appLogo">No Media Available</label></strong></p>
+                                                <p>You lack permissions to upload new media files and none currently
+                                                    exist, contact the
+                                                    administrator.</p>
+                                                <?php }
                                                             } ?>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <label for="contact-email">Contact Email</label>
-                                                        <input type="email" class="form-control" id="contact-email" name="contact_email" placeholder="<?php
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="contact-email">Contact Email</label>
+                                            <input type="email" class="form-control" id="contact-email"
+                                                name="contact_email"
+                                                placeholder="<?php
                                                                                                                                                         //if contact_email is set and not blank
                                                                                                                                                         if (isset($contact_email) && $contact_email != '') {
                                                                                                                                                             echo $contact_email;
                                                                                                                                                         } else {
                                                                                                                                                             echo 'Contact Email';
-                                                                                                                                                        } ?>" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                        } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                     echo 'disabled';
-                                                                                                                                                                } ?> value="<?php
+                                                                                                                                                                } ?>
+                                                value="<?php
                                                                                                                                                                             //if contact_email is set and not blank
                                                                                                                                                                             if (isset($contact_email) && $contact_email != '') {
                                                                                                                                                                                 echo $contact_email;
                                                                                                                                                                             } else {
                                                                                                                                                                                 echo '';
                                                                                                                                                                             } ?>">
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-row">
-                                            <label for="company-settings">
-                                                <h3>Company</h3>
-                                            </label>
-                                            <div id="company-settings">
-                                                <?php
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <label for="company-settings">
+                                    <h3>Company</h3>
+                                </label>
+                                <div id="company-settings">
+                                    <?php
                                                 //get the company settings from the database
                                                 $company_name = $APP->getCompanyName();
                                                 $company_logo = $APP->getCompanyLogo();
@@ -717,31 +732,35 @@ if (!isset($hasViewDashboardPermission)) {
                                                 $company_url = $APP->getCompanyURL();
                                                 $company_phone = $APP->getCompanyPhone();
                                                 ?>
-                                                <div class="form-group">
-                                                    <div class="form-row">
-                                                        <label for="company-name">Company Name</label>
-                                                        <input type="text" class="form-control" id="company-name" name="company_name" placeholder="<?php
+                                    <div class="form-group">
+                                        <div class="form-row">
+                                            <label for="company-name">Company Name</label>
+                                            <input type="text" class="form-control" id="company-name"
+                                                name="company_name"
+                                                placeholder="<?php
                                                                                                                                                     //if company_name is set and not blank
                                                                                                                                                     if (isset($company_name) && $company_name != '') {
                                                                                                                                                         echo $company_name;
                                                                                                                                                     } else {
                                                                                                                                                         echo 'Company Name';
-                                                                                                                                                    } ?>" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                    } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                 echo 'disabled';
-                                                                                                                                                            } ?> value="<?php
+                                                                                                                                                            } ?>
+                                                value="<?php
                                                                                                                                                                         //if company_name is set and not blank
                                                                                                                                                                         if (isset($company_name) && $company_name != '') {
                                                                                                                                                                             echo $company_name;
                                                                                                                                                                         } else {
                                                                                                                                                                             echo '';
                                                                                                                                                                         } ?>">
-                                                    </div>
-                                                    <div class=" form-row">
-                                                        <div class="form-group">
-                                                            <label for="company-logo">Company Logo</label>
-                                                            <br />
-                                                            <!-- if there is an existing logo, show the file -->
-                                                            <?php
+                                        </div>
+                                        <div class=" form-row">
+                                            <div class="form-group">
+                                                <label for="company-logo">Company Logo</label>
+                                                <br />
+                                                <!-- if there is an existing logo, show the file -->
+                                                <?php
                                                             if (!empty($APP->getCompanyLogo())) {
                                                                 //render the file as an image
                                                                 echo '<div><img src="' . getUploadPath() . $media->getMediaFileName(intval($company_logo)) . '" alt="Company Logo" style="max-width: 200px; max-height: auto;"></div>';
@@ -749,110 +768,125 @@ if (!isset($hasViewDashboardPermission)) {
                                                                 echo '<div> ' . $media->getMediaFileName(intval($company_logo)) . '</div>';
                                                             }
                                                             ?>
-                                                            <?php //allow the user to either select a file from the mediaArray or upload a new file if they have upload permissions
+                                                <?php //allow the user to either select a file from the mediaArray or upload a new file if they have upload permissions
                                                             if (!empty($mediaArray)) { ?>
-                                                                <br />
-                                                                <label for="companyLogoSelect">Select a New Logo:</label>
-                                                                <select id="companyLogoSelect" name="company_logoSelect" class="form-control" <?php if (!$hasUpdateSettingsPermission) {
+                                                <br />
+                                                <label for="companyLogoSelect">Select a New Logo:</label>
+                                                <select id="companyLogoSelect" name="company_logoSelect"
+                                                    class="form-control"
+                                                    <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                     echo 'disabled';
                                                                                                                                                 } ?>>
-                                                                    <option value="">Select a Logo</option>
-                                                                    <?php /* check if the user has permission to upload media */
+                                                    <option value="">Select a Logo</option>
+                                                    <?php /* check if the user has permission to upload media */
                                                                     if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissions->getPermissionIdByName('CREATE MEDIA'))) { ?>
-                                                                        <option value="0">Upload a New Logo</option>
-                                                                    <?php } ?>
-                                                                    <?php foreach ($mediaArray as $key => $value) { ?>
-                                                                        <option value="<?php echo $value['id'] ?>">
-                                                                            <?php echo $value['filename']; ?>
-                                                                        </option>
-                                                                    <?php } ?>
-                                                                </select>
-                                                                <br />
-                                                                <!-- if the user selects to upload a new file, show the file upload input -->
-                                                                <input type="file" id="companyLogoUpload" name="company_logoUpload" class="form-control" disabled hidden>
-                                                                <small id="companyLogoHelp" class="form-text text-muted">To upload a
-                                                                    new
-                                                                    file, select
-                                                                    "Upload
-                                                                    a New Logo" from the dropdown. To use an existing file, select
-                                                                    the
-                                                                    filename.</small>
-                                                                <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
+                                                    <option value="0">Upload a New Logo</option>
+                                                    <?php } ?>
+                                                    <?php foreach ($mediaArray as $key => $value) { ?>
+                                                    <option value="<?php echo $value['id'] ?>">
+                                                        <?php echo $value['filename']; ?>
+                                                    </option>
+                                                    <?php } ?>
+                                                </select>
+                                                <br />
+                                                <!-- if the user selects to upload a new file, show the file upload input -->
+                                                <input type="file" id="companyLogoUpload" name="company_logoUpload"
+                                                    class="form-control" disabled hidden>
+                                                <small id="companyLogoHelp" class="form-text text-muted">To upload a
+                                                    new
+                                                    file, select
+                                                    "Upload
+                                                    a New Logo" from the dropdown. To use an existing file, select
+                                                    the
+                                                    filename.</small>
+                                                <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
                                                                 if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissions->getPermissionIdByName('CREATE MEDIA'))) { ?>
-                                                                    <label for="company-logo-upload">Upload a New Logo:</label>
-                                                                    <input type="file" id="company-logo-upload" name="company_logoUpload" class="form-control" <?php if (!$hasUpdateSettingsPermission) {
+                                                <label for="company-logo-upload">Upload a New Logo:</label>
+                                                <input type="file" id="company-logo-upload" name="company_logoUpload"
+                                                    class="form-control"
+                                                    <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                     echo 'disabled';
                                                                                                                                                                 } ?>>
-                                                                    <small id="companyLogoHelp" class="form-text text-muted">To upload a
-                                                                        new
-                                                                        file,
-                                                                        select
-                                                                        "Upload
-                                                                        a New Logo" from the dropdown. To use an existing file, select
-                                                                        the
-                                                                        filename.</small>
-                                                                    <div class="alert alert-warning" role="alert"><span class="note-icon"><i class="fa-solid fa-circle-exclamation"></i></span>
-                                                                        <span class="note-text">If the upload option is not available,
-                                                                            contact the
-                                                                            administrator
-                                                                            for assistance.</span>
-                                                                    </div>
-                                                                <?php } else { ?>
-                                                                    <p><strong><label for="companyLogo">No Media
-                                                                                Available</label></strong>
-                                                                    </p>
-                                                                    <p>You lack permissions to upload new media files and none currently
-                                                                        exist, contact the
-                                                                        administrator.</p>
-                                                            <?php }
-                                                            } ?>
-                                                        </div>
-                                                    </div>
+                                                <small id="companyLogoHelp" class="form-text text-muted">To upload a
+                                                    new
+                                                    file,
+                                                    select
+                                                    "Upload
+                                                    a New Logo" from the dropdown. To use an existing file, select
+                                                    the
+                                                    filename.</small>
+                                                <div class="alert alert-warning" role="alert"><span class="note-icon"><i
+                                                            class="fa-solid fa-circle-exclamation"></i></span>
+                                                    <span class="note-text">If the upload option is not available,
+                                                        contact the
+                                                        administrator
+                                                        for assistance.</span>
                                                 </div>
-                                                <div class="form-group">
-                                                    <div class="form-row">
-                                                        <label for="company-address">Company Address</label>
-                                                        <input type="text" class="form-control" id="company-address" name="company_address" placeholder="<?php
+                                                <?php } else { ?>
+                                                <p><strong><label for="companyLogo">No Media
+                                                            Available</label></strong>
+                                                </p>
+                                                <p>You lack permissions to upload new media files and none currently
+                                                    exist, contact the
+                                                    administrator.</p>
+                                                <?php }
+                                                            } ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-row">
+                                            <label for="company-address">Company Address</label>
+                                            <input type="text" class="form-control" id="company-address"
+                                                name="company_address"
+                                                placeholder="<?php
                                                                                                                                                             //if company_address is set and not blank
                                                                                                                                                             if (isset($company_address) && $company_address != '') {
                                                                                                                                                                 echo $company_address;
                                                                                                                                                             } else {
                                                                                                                                                                 echo 'Street Address';
-                                                                                                                                                            } ?>" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                            } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                         echo 'disabled';
-                                                                                                                                                                    } ?> value="<?php
+                                                                                                                                                                    } ?>
+                                                value="<?php
                                                                                                                                                                                 //if company_address is set and not blank
                                                                                                                                                                                 if (isset($company_address) && $company_address != '') {
                                                                                                                                                                                     echo $company_address;
                                                                                                                                                                                 } else {
                                                                                                                                                                                     echo '';
                                                                                                                                                                                 } ?>">
-                                                    </div>
-                                                    <div class=" form-row">
-                                                        <label for="company-city">City</label>
-                                                        <input type="text" class="form-control" id="company-city" name="company_city" placeholder="<?php
+                                        </div>
+                                        <div class=" form-row">
+                                            <label for="company-city">City</label>
+                                            <input type="text" class="form-control" id="company-city"
+                                                name="company_city"
+                                                placeholder="<?php
                                                                                                                                                     //if company_city is set and not blank
                                                                                                                                                     if (isset($company_city) && $company_city != '') {
                                                                                                                                                         echo $company_city;
                                                                                                                                                     } else {
                                                                                                                                                         echo 'City';
-                                                                                                                                                    } ?>" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                    } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                 echo 'disabled';
-                                                                                                                                                            } ?> value="<?php
+                                                                                                                                                            } ?>
+                                                value="<?php
                                                                                                                                                                         //if company_city is set and not blank
                                                                                                                                                                         if (isset($company_city) && $company_city != '') {
                                                                                                                                                                             echo $company_city;
                                                                                                                                                                         } else {
                                                                                                                                                                             echo '';
                                                                                                                                                                         } ?>">
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <label for="company-state">State</label>
-                                                        <select class="form-control" id="company-state" name="company_state" <?php if (!$hasUpdateSettingsPermission) {
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="company-state">State</label>
+                                            <select class="form-control" id="company-state" name="company_state"
+                                                <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                     echo 'disabled';
                                                                                                                                 } ?>>
 
-                                                            <?php
+                                                <?php
                                                             //blank first option to default to
                                                             echo '<option value="">Select a State</option>';
                                                             //loop through the state array
@@ -865,449 +899,551 @@ if (!isset($hasViewDashboardPermission)) {
                                                                 }
                                                             }
                                                             ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <label for="company-zip">Zip</label>
-                                                        <input type="text" class="form-control" id="company-zip" name="company_zip" placeholder="<?php
+                                            </select>
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="company-zip">Zip</label>
+                                            <input type="text" class="form-control" id="company-zip" name="company_zip"
+                                                placeholder="<?php
                                                                                                                                                     //if company_zip is set and not blank
                                                                                                                                                     if (isset($company_zip) && $company_zip != '') {
                                                                                                                                                         echo $company_zip;
                                                                                                                                                     } else {
                                                                                                                                                         echo 'Zip';
-                                                                                                                                                    } ?>" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                    } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                 echo 'disabled';
-                                                                                                                                                            } ?> value="<?php
+                                                                                                                                                            } ?>
+                                                value="<?php
                                                                                                                                                                         //if company_zip is set and not blank
                                                                                                                                                                         if (isset($company_zip) && $company_zip != '') {
                                                                                                                                                                             echo $company_zip;
                                                                                                                                                                         } else {
                                                                                                                                                                             echo '';
                                                                                                                                                                         } ?>">
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <label for="company-url">Company URL</label>
-                                                        <input type="text" class="form-control" id="company-url" name="company_url" placeholder="<?php
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="company-url">Company URL</label>
+                                            <input type="text" class="form-control" id="company-url" name="company_url"
+                                                placeholder="<?php
                                                                                                                                                     //if company_url is set and not blank
                                                                                                                                                     if (isset($company_url) && $company_url != '') {
                                                                                                                                                         echo $company_url;
                                                                                                                                                     } else {
                                                                                                                                                         echo 'Company URL';
-                                                                                                                                                    } ?>" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                    } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                 echo 'disabled';
-                                                                                                                                                            } ?> value="<?php
+                                                                                                                                                            } ?>
+                                                value="<?php
                                                                                                                                                                         //if company_url is set and not blank
                                                                                                                                                                         if (isset($company_url) && $company_url != '') {
                                                                                                                                                                             echo $company_url;
                                                                                                                                                                         } else {
                                                                                                                                                                             echo '';
                                                                                                                                                                         } ?>">
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <label for="company-phone">Company Phone</label>
-                                                        <input type="tel" class="form-control" id="company-phone" name="company_phone" placeholder="<?php
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="company-phone">Company Phone</label>
+                                            <input type="tel" class="form-control" id="company-phone"
+                                                name="company_phone"
+                                                placeholder="<?php
                                                                                                                                                     //if company_phone is set and not blank
                                                                                                                                                     if (isset($company_phone) && $company_phone != '') {
                                                                                                                                                         echo $company_phone;
                                                                                                                                                     } else {
                                                                                                                                                         echo 'Company Phone Number';
-                                                                                                                                                    } ?>" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                    } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                 echo 'disabled';
-                                                                                                                                                            } ?> value="<?php
+                                                                                                                                                            } ?>
+                                                value="<?php
                                                                                                                                                                         //if company_phone is set and not blank
                                                                                                                                                                         if (isset($company_phone) && $company_phone != '') {
                                                                                                                                                                             echo $company_phone;
                                                                                                                                                                         } else {
                                                                                                                                                                             echo '';
                                                                                                                                                                         } ?>">
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <label for="mailer-settings">
-                                                    <h3>Mailer</h3>
-                                                </label>
-                                                <div id="mailer-settings">
-                                                    <?php
-                                                    //get the mailer settings from the database
-                                                    $mail_host = $APP->getMailerHost();
-                                                    $mail_port = $APP->getMailerPort();
-                                                    $mail_username = $APP->getMailerUsername();
-                                                    $mail_password = $APP->getMailerPassword();
-                                                    $mail_encryption = $APP->getMailerEncryption();
-                                                    $mail_from_address = $APP->getMailerFromAddress();
-                                                    $mail_from_name = $APP->getMailerFromName();
-                                                    $mail_auth_req = $APP->getMailerAuthRequired();
-                                                    $mail_mailer = $APP->getMailerType();
-                                                    //the mailer options are defined in includes/constants.php
-                                                    //setup the mailer options array
-                                                    $mailer_options = MAILER;
-                                                    ?>
-                                                    <div class="form-group">
-                                                        <div id="mail-mailer-row" class="form-row">
-                                                            <label for="mail-mailer">Mailer</label>
-                                                            <select class="form-control" id="mail-mailer" name="mail_mailer" <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                    echo 'disabled';
-                                                                                                                                } ?>>
-                                                                <?php
-                                                                //output a blank option for null, this is the default unless the mail_mailer is set
-                                                                if (!isset($mail_mailer) || $mail_mailer == '') {
-                                                                    echo '<option value="" selected>None</option>';
-                                                                } else {
-                                                                    echo '<option value="">None</option>';
-                                                                }
-                                                                //loop through the mailer options
-                                                                foreach ($mailer_options as $mailer_option) {
-                                                                    //if the mailer option is set and not blank
-                                                                    if (isset($mail_mailer) && $mail_mailer != '') {
-                                                                        //if the mailer option is the same as the mailer option in the database
-                                                                        if ($mail_mailer == $mailer_option['value']) {
-                                                                            //set the option to selected
-                                                                            echo '<option value="' . $mailer_option['value'] . '" selected>' . $mailer_option['label'] . '</option>';
-                                                                        } else {
-                                                                            //set the option to not selected
-                                                                            echo '<option value="' . $mailer_option['value'] . '">' . $mailer_option['label'] . '</option>';
-                                                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <label for="mailer-settings">
+                                    <h3>Mailer</h3>
+                                </label>
+                                <div id="mailer-settings">
+                                    <?php
+                                                //get the mailer settings from the database
+                                                $mail_host = $APP->getMailerHost();
+                                                $mail_port = $APP->getMailerPort();
+                                                $mail_username = $APP->getMailerUsername();
+                                                $mail_password = $APP->getMailerPassword();
+                                                $mail_encryption = $APP->getMailerEncryption();
+                                                $mail_from_address = $APP->getMailerFromAddress();
+                                                $mail_from_name = $APP->getMailerFromName();
+                                                $mail_auth_req = $APP->getMailerAuthRequired();
+                                                $mail_mailer = $APP->getMailerType();
+                                                //the mailer options are defined in includes/constants.php
+                                                //setup the mailer options array
+                                                $mailer_options = MAILER;
+                                                ?>
+                                    <div class="form-group">
+                                        <div id="mail-mailer-row" class="form-row">
+                                            <label for="mail-mailer">Mailer</label>
+                                            <select class="form-control" id="mail-mailer" name="mail_mailer"
+                                                <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                echo 'disabled';
+                                                                                                                            } ?>>
+                                                <?php
+                                                            //output a blank option for null, this is the default unless the mail_mailer is set
+                                                            if (!isset($mail_mailer) || $mail_mailer == '') {
+                                                                echo '<option value="" selected>None</option>';
+                                                            } else {
+                                                                echo '<option value="">None</option>';
+                                                            }
+                                                            //loop through the mailer options
+                                                            foreach ($mailer_options as $mailer_option) {
+                                                                //if the mailer option is set and not blank
+                                                                if (isset($mail_mailer) && $mail_mailer != '') {
+                                                                    //if the mailer option is the same as the mailer option in the database
+                                                                    if ($mail_mailer == $mailer_option['value']) {
+                                                                        //set the option to selected
+                                                                        echo '<option value="' . $mailer_option['value'] . '" selected>' . $mailer_option['label'] . '</option>';
                                                                     } else {
                                                                         //set the option to not selected
                                                                         echo '<option value="' . $mailer_option['value'] . '">' . $mailer_option['label'] . '</option>';
                                                                     }
+                                                                } else {
+                                                                    //set the option to not selected
+                                                                    echo '<option value="' . $mailer_option['value'] . '">' . $mailer_option['label'] . '</option>';
                                                                 }
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                        <div id="mail-host-row" class="form-row">
-                                                            <label for="mail-host">Host</label>
-                                                            <input type="text" class="form-control" id="mail-host" name="mail_host" autocomplete="smtp host" placeholder="<?php
-                                                                                                                                                                            //if mail_host is set and not blank
-                                                                                                                                                                            if (isset($mail_host) && $mail_host != '') {
-                                                                                                                                                                                echo $mail_host;
-                                                                                                                                                                            } else {
-                                                                                                                                                                                echo '127.0.0.1';
-                                                                                                                                                                            } ?>" <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                                                                        echo 'disabled';
-                                                                                                                                                                                    } ?> value="<?php
-                                                                                                                                                                                                //if mail_host is set and not blank
-                                                                                                                                                                                                if (isset($mail_host) && $mail_host != '') {
-                                                                                                                                                                                                    echo $mail_host;
-                                                                                                                                                                                                } else {
-                                                                                                                                                                                                    echo '';
-                                                                                                                                                                                                } ?>">
-                                                        </div>
-                                                        <div id="mail-port-row" class="form-row">
-                                                            <label for="mail-port">Port</label>
-                                                            <input type="text" class="form-control" id="mail-port" name="mail_port" autocomplete="smtp port" placeholder="<?php
-                                                                                                                                                                            //if mail_port is set and not blank
-                                                                                                                                                                            if (isset($mail_port) && $mail_port != '') {
-                                                                                                                                                                                echo $mail_port;
-                                                                                                                                                                            } else {
-                                                                                                                                                                                echo '25';
-                                                                                                                                                                            } ?>" <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                                                                        echo 'disabled';
-                                                                                                                                                                                    } ?> value="<?php
-                                                                                                                                                                                                //if mail_port is set and not blank
-                                                                                                                                                                                                if (isset($mail_port) && $mail_port != '') {
-                                                                                                                                                                                                    echo $mail_port;
-                                                                                                                                                                                                } else {
-                                                                                                                                                                                                    echo '';
-                                                                                                                                                                                                } ?>">
-                                                        </div>
-                                                        <div id="mail-auth-req-row" class="form-row">
-                                                            <label for="mail-auth-req">Authentication Required</label>
-                                                            <div class="form-check" id="mail-auth-req-container">
-                                                                <input class="form-check-input" type="checkbox" value="" id="mail-auth-req" name="mail_auth_req" <?php if (isset($mail_auth_req) && $mail_auth_req != '') {
-                                                                                                                                                                        if ($mail_auth_req = 'true') {
-                                                                                                                                                                            echo 'checked';
-                                                                                                                                                                        }
-                                                                                                                                                                    } ?> <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                                                                echo ' disabled';
-                                                                                                                                                                            } ?>>
-                                                            </div>
-                                                        </div>
-                                                        <div id="mail-username-row" class="form-row">
-                                                            <label for="mail-username">Username</label>
-                                                            <input type="text" class="form-control" id="mail-username" name="mail_username" autocomplete="username" placeholder="<?php
-                                                                                                                                                                                    //if mail_username is set and not blank
-                                                                                                                                                                                    if (isset($mail_username) && $mail_username != '') {
-                                                                                                                                                                                        echo $mail_username;
+                                                            }
+                                                            ?>
+                                            </select>
+                                        </div>
+                                        <div id="mail-host-row" class="form-row">
+                                            <label for="mail-host">Host</label>
+                                            <input type="text" class="form-control" id="mail-host" name="mail_host"
+                                                autocomplete="smtp host"
+                                                placeholder="<?php
+                                                                                                                                                                        //if mail_host is set and not blank
+                                                                                                                                                                        if (isset($mail_host) && $mail_host != '') {
+                                                                                                                                                                            echo $mail_host;
+                                                                                                                                                                        } else {
+                                                                                                                                                                            echo '127.0.0.1';
+                                                                                                                                                                        } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                                    echo 'disabled';
+                                                                                                                                                                                } ?>
+                                                value="<?php
+                                                                                                                                                                                            //if mail_host is set and not blank
+                                                                                                                                                                                            if (isset($mail_host) && $mail_host != '') {
+                                                                                                                                                                                                echo $mail_host;
+                                                                                                                                                                                            } else {
+                                                                                                                                                                                                echo '';
+                                                                                                                                                                                            } ?>">
+                                        </div>
+                                        <div id="mail-port-row" class="form-row">
+                                            <label for="mail-port">Port</label>
+                                            <input type="text" class="form-control" id="mail-port" name="mail_port"
+                                                autocomplete="smtp port"
+                                                placeholder="<?php
+                                                                                                                                                                        //if mail_port is set and not blank
+                                                                                                                                                                        if (isset($mail_port) && $mail_port != '') {
+                                                                                                                                                                            echo $mail_port;
+                                                                                                                                                                        } else {
+                                                                                                                                                                            echo '25';
+                                                                                                                                                                        } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                                    echo 'disabled';
+                                                                                                                                                                                } ?>
+                                                value="<?php
+                                                                                                                                                                                            //if mail_port is set and not blank
+                                                                                                                                                                                            if (isset($mail_port) && $mail_port != '') {
+                                                                                                                                                                                                echo $mail_port;
+                                                                                                                                                                                            } else {
+                                                                                                                                                                                                echo '';
+                                                                                                                                                                                            } ?>">
+                                        </div>
+                                        <div id="mail-auth-req-row" class="form-row">
+                                            <label for="mail-auth-req">Authentication Required</label>
+                                            <div class="form-check" id="mail-auth-req-container">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                    id="mail-auth-req" name="mail_auth_req"
+                                                    <?php if (isset($mail_auth_req) && $mail_auth_req != '') {
+                                                                                                                                                                    if ($mail_auth_req = 'true') {
+                                                                                                                                                                        echo 'checked';
+                                                                                                                                                                    }
+                                                                                                                                                                } ?>
+                                                    <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                            echo ' disabled';
+                                                                                                                                                                        } ?>>
+                                            </div>
+                                        </div>
+                                        <div id="mail-username-row" class="form-row">
+                                            <label for="mail-username">Username</label>
+                                            <input type="text" class="form-control" id="mail-username"
+                                                name="mail_username" autocomplete="username"
+                                                placeholder="<?php
+                                                                                                                                                                                //if mail_username is set and not blank
+                                                                                                                                                                                if (isset($mail_username) && $mail_username != '') {
+                                                                                                                                                                                    echo $mail_username;
+                                                                                                                                                                                } else {
+                                                                                                                                                                                    echo 'username';
+                                                                                                                                                                                } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                                            echo 'disabled';
+                                                                                                                                                                                        } ?>
+                                                value="<?php
+                                                                                                                                                                                                    //if mail_username is set and not blank
+                                                                                                                                                                                                    if (isset($mail_username) && $mail_username != '') {
+                                                                                                                                                                                                        echo $mail_username;
+                                                                                                                                                                                                    } else {
+                                                                                                                                                                                                        echo '';
+                                                                                                                                                                                                    } ?>">
+                                        </div>
+                                        <div id="mail-password-row" class="form-row">
+                                            <label for="mail-password">Password</label>
+                                            <input type="password" class="form-control" id="mail-password"
+                                                name="mail_password" autocomplete="password"
+                                                placeholder="<?php
+                                                                                                                                                                                    //if mail_password is set and not blank
+                                                                                                                                                                                    if (isset($mail_password) && $mail_password != '') {
+                                                                                                                                                                                        //mask the password with asterisks
+                                                                                                                                                                                        echo str_repeat('*', strlen($APP->getMailerPassword()));
                                                                                                                                                                                     } else {
-                                                                                                                                                                                        echo 'username';
-                                                                                                                                                                                    } ?>" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                                        echo 'password';
+                                                                                                                                                                                    } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                                                 echo 'disabled';
-                                                                                                                                                                                            } ?> value="<?php
-                                                                                                                                                                                                        //if mail_username is set and not blank
-                                                                                                                                                                                                        if (isset($mail_username) && $mail_username != '') {
-                                                                                                                                                                                                            echo $mail_username;
+                                                                                                                                                                                            } ?>
+                                                value="<?php
+                                                                                                                                                                                                        //if mail_password is set and not blank
+                                                                                                                                                                                                        if (isset($mail_password) && $mail_password != '') {
+                                                                                                                                                                                                            //mask the password with asterisks
+                                                                                                                                                                                                            echo str_repeat('*', strlen($APP->getMailerPassword()));
                                                                                                                                                                                                         } else {
                                                                                                                                                                                                             echo '';
                                                                                                                                                                                                         } ?>">
-                                                        </div>
-                                                        <div id="mail-password-row" class="form-row">
-                                                            <label for="mail-password">Password</label>
-                                                            <input type="password" class="form-control" id="mail-password" name="mail_password" autocomplete="password" placeholder="<?php
-                                                                                                                                                                                        //if mail_password is set and not blank
-                                                                                                                                                                                        if (isset($mail_password) && $mail_password != '') {
-                                                                                                                                                                                            //mask the password with asterisks
-                                                                                                                                                                                            echo str_repeat('*', strlen($APP->getMailerPassword()));
-                                                                                                                                                                                        } else {
-                                                                                                                                                                                            echo 'password';
-                                                                                                                                                                                        } ?>" <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                                                                                    echo 'disabled';
-                                                                                                                                                                                                } ?> value="<?php
-                                                                                                                                                                                                            //if mail_password is set and not blank
-                                                                                                                                                                                                            if (isset($mail_password) && $mail_password != '') {
-                                                                                                                                                                                                                //mask the password with asterisks
-                                                                                                                                                                                                                echo str_repeat('*', strlen($APP->getMailerPassword()));
-                                                                                                                                                                                                            } else {
-                                                                                                                                                                                                                echo '';
-                                                                                                                                                                                                            } ?>">
-                                                        </div>
-                                                        <div id="mail-encryption-row" class="form-row">
-                                                            <label for="mail-encryption">Encryption</label>
-                                                            <select class="form-control" id="mail-encryption" name="mail_encryption" <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                            echo 'disabled';
-                                                                                                                                        } ?>>
-                                                                <?php
-                                                                //the mailer encryption options are defined in includes/constants.php
-                                                                //setup the mailer encryption options array
-                                                                $mailer_encryption_options = MAILER_ENCRYPTION;
-                                                                //output a blank option for null, this is the default unless the mail_encryption is set
-                                                                if (!isset($mail_encryption) || $mail_encryption == '') {
-                                                                    echo '<option value="" selected>None</option>';
-                                                                } else {
-                                                                    echo '<option value="">None</option>';
-                                                                }
-                                                                //loop through the mailer encryption options
-                                                                foreach ($mailer_encryption_options as $mailer_encryption_option) {
-                                                                    //if the mailer encryption option is set and not blank
-                                                                    if (isset($mail_encryption) && $mail_encryption != '') {
-                                                                        //if the mailer encryption option is the same as the mailer encryption option in the database
-                                                                        if ($mail_encryption == $mailer_encryption_option['value']) {
-                                                                            //set the option to selected
-                                                                            echo '<option value="' . $mailer_encryption_option['value'] . '" selected>' . $mailer_encryption_option['label'] . '</option>';
-                                                                        } else {
-                                                                            //set the option to not selected
-                                                                            echo '<option value="' . $mailer_encryption_option['value'] . '">' . $mailer_encryption_option['label'] . '</option>';
-                                                                        }
+                                        </div>
+                                        <div id="mail-encryption-row" class="form-row">
+                                            <label for="mail-encryption">Encryption</label>
+                                            <select class="form-control" id="mail-encryption" name="mail_encryption"
+                                                <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                        echo 'disabled';
+                                                                                                                                    } ?>>
+                                                <?php
+                                                            //the mailer encryption options are defined in includes/constants.php
+                                                            //setup the mailer encryption options array
+                                                            $mailer_encryption_options = MAILER_ENCRYPTION;
+                                                            //output a blank option for null, this is the default unless the mail_encryption is set
+                                                            if (!isset($mail_encryption) || $mail_encryption == '') {
+                                                                echo '<option value="" selected>None</option>';
+                                                            } else {
+                                                                echo '<option value="">None</option>';
+                                                            }
+                                                            //loop through the mailer encryption options
+                                                            foreach ($mailer_encryption_options as $mailer_encryption_option) {
+                                                                //if the mailer encryption option is set and not blank
+                                                                if (isset($mail_encryption) && $mail_encryption != '') {
+                                                                    //if the mailer encryption option is the same as the mailer encryption option in the database
+                                                                    if ($mail_encryption == $mailer_encryption_option['value']) {
+                                                                        //set the option to selected
+                                                                        echo '<option value="' . $mailer_encryption_option['value'] . '" selected>' . $mailer_encryption_option['label'] . '</option>';
                                                                     } else {
                                                                         //set the option to not selected
                                                                         echo '<option value="' . $mailer_encryption_option['value'] . '">' . $mailer_encryption_option['label'] . '</option>';
                                                                     }
+                                                                } else {
+                                                                    //set the option to not selected
+                                                                    echo '<option value="' . $mailer_encryption_option['value'] . '">' . $mailer_encryption_option['label'] . '</option>';
                                                                 }
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                        <div id="mail-from-address-row" class="form-row">
-                                                            <label for="mail-from-address">From Address</label>
-                                                            <input type="text" class="form-control" id="mail-from-address" name="mail_from_address" autocomplete="email" placeholder="<?php
-                                                                                                                                                                                        //if mail_from_address is set and not blank
-                                                                                                                                                                                        if (isset($mail_from_address) && $mail_from_address != '') {
-                                                                                                                                                                                            echo $mail_from_address;
-                                                                                                                                                                                        } else {
-                                                                                                                                                                                            echo 'user@example.com';
-                                                                                                                                                                                        } ?>" <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                                                                                    echo 'disabled';
-                                                                                                                                                                                                } ?> value="<?php
-                                                                                                                                                                                                            //if mail_from_address is set and not blank
-                                                                                                                                                                                                            if (isset($mail_from_address) && $mail_from_address != '') {
-                                                                                                                                                                                                                echo $mail_from_address;
-                                                                                                                                                                                                            } else {
-                                                                                                                                                                                                                echo '';
-                                                                                                                                                                                                            } ?>">
-                                                        </div>
-                                                        <div id="mail-from-name-row" class="form-row">
-                                                            <label for="mail-from-name">From Name</label>
-                                                            <input type="text" class="form-control" id="mail-from-name" name="mail_from_name" autocomplete="name" placeholder="<?php
-                                                                                                                                                                                //if mail_from_name is set and not blank
-                                                                                                                                                                                if (isset($mail_from_name) && $mail_from_name != '') {
-                                                                                                                                                                                    echo $mail_from_name;
-                                                                                                                                                                                } else {
-                                                                                                                                                                                    echo 'Example User';
-                                                                                                                                                                                } ?>" <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                                                                            echo 'disabled';
-                                                                                                                                                                                        } ?> value="<?php
-                                                                                                                                                                                                    //if mail_from_name is set and not blank
-                                                                                                                                                                                                    if (isset($mail_from_name) && $mail_from_name != '') {
-                                                                                                                                                                                                        echo $mail_from_name;
-                                                                                                                                                                                                    } else {
-                                                                                                                                                                                                        echo '';
-                                                                                                                                                                                                    } ?>">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                            }
+                                                            ?>
+                                            </select>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <label for="privacy_policy">
-                                                    <h3>Privacy Policy</h3>
-                                                </label>
-                                                <div id="privacy_policy">
-                                                    <?php //get the privacy policy from the database
-                                                    $privacy_policy = $APP->getSetting('privacy_policy');
-                                                    ?>
-                                                    <div class="form-group">
-                                                        <div class="form-row">
-                                                            <label for="privacy-policy">Privacy Policy Page Content</label>
-                                                            <textarea class="form-control wysiwyg-editor" id="privacy-policy" name="privacy_policy" rows="15" placeholder='<?php
-                                                                                                                                                                            //if privacy_policy is set and not blank
-                                                                                                                                                                            if (isset($privacy_policy) && $privacy_policy != '') {
-                                                                                                                                                                                echo $privacy_policy;
+                                        <div id="mail-from-address-row" class="form-row">
+                                            <label for="mail-from-address">From Address</label>
+                                            <input type="text" class="form-control" id="mail-from-address"
+                                                name="mail_from_address" autocomplete="email"
+                                                placeholder="<?php
+                                                                                                                                                                                    //if mail_from_address is set and not blank
+                                                                                                                                                                                    if (isset($mail_from_address) && $mail_from_address != '') {
+                                                                                                                                                                                        echo $mail_from_address;
+                                                                                                                                                                                    } else {
+                                                                                                                                                                                        echo 'user@example.com';
+                                                                                                                                                                                    } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                                                echo 'disabled';
+                                                                                                                                                                                            } ?>
+                                                value="<?php
+                                                                                                                                                                                                        //if mail_from_address is set and not blank
+                                                                                                                                                                                                        if (isset($mail_from_address) && $mail_from_address != '') {
+                                                                                                                                                                                                            echo $mail_from_address;
+                                                                                                                                                                                                        } else {
+                                                                                                                                                                                                            echo '';
+                                                                                                                                                                                                        } ?>">
+                                        </div>
+                                        <div id="mail-from-name-row" class="form-row">
+                                            <label for="mail-from-name">From Name</label>
+                                            <input type="text" class="form-control" id="mail-from-name"
+                                                name="mail_from_name" autocomplete="name"
+                                                placeholder="<?php
+                                                                                                                                                                            //if mail_from_name is set and not blank
+                                                                                                                                                                            if (isset($mail_from_name) && $mail_from_name != '') {
+                                                                                                                                                                                echo $mail_from_name;
                                                                                                                                                                             } else {
-                                                                                                                                                                                echo strval(PRIVACY_POLICY);
-                                                                                                                                                                            } ?>' <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                                echo 'Example User';
+                                                                                                                                                                            } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                                         echo 'disabled';
-                                                                                                                                                                                    } ?>><?php
-                                                                                                                                                                                            //if privacy_policy is set and not blank
-                                                                                                                                                                                            if (isset($privacy_policy) && $privacy_policy != '') {
-                                                                                                                                                                                                echo $privacy_policy;
-                                                                                                                                                                                            } ?></textarea>
-                                                            <small id="privacy-policy-help" class="form-text text-muted">Create the
-                                                                Privacy
-                                                                Policy style, using the WYSIWYG Editor</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <label for="terms_conditions">
-                                                    <h3>Terms and Conditions</h3>
-                                                </label>
-                                                <div id="terms_conditions">
-                                                    <?php //get the terms and conditions from the database
-                                                    $terms_conditions = $APP->getSetting('terms_conditions');
-                                                    ?>
-                                                    <div class="form-group">
-                                                        <div class="form-row">
-                                                            <label for="terms-conditions">Terms and Conditions Page Content</label>
-                                                            <textarea class="form-control wysiwyg-editor" id="terms-conditions" name="terms_conditions" rows="15" placeholder='<?php
-                                                                                                                                                                                //if terms_conditions is set and not blank
-                                                                                                                                                                                if (isset($terms_conditions) && $terms_conditions != '') {
-                                                                                                                                                                                    echo $terms_conditions;
-                                                                                                                                                                                } else {
-                                                                                                                                                                                    echo strval(TERMS_CONDITIONS);
-                                                                                                                                                                                } ?>' <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                                                                            echo 'disabled';
-                                                                                                                                                                                        } ?>><?php
-                                                                                                                                                                                                //if terms_conditions is set and not blank
-                                                                                                                                                                                                if (isset($terms_conditions) && $terms_conditions != '') {
-                                                                                                                                                                                                    echo $terms_conditions;
-                                                                                                                                                                                                } ?></textarea>
-                                                            <small id="terms-conditions-help" class="form-text text-muted">Create
-                                                                the
-                                                                Terms
-                                                                and Conditions style, using the WYSIWYG Editor</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                                                                                                                                                    } ?>
+                                                value="<?php
+                                                                                                                                                                                                //if mail_from_name is set and not blank
+                                                                                                                                                                                                if (isset($mail_from_name) && $mail_from_name != '') {
+                                                                                                                                                                                                    echo $mail_from_name;
+                                                                                                                                                                                                } else {
+                                                                                                                                                                                                    echo '';
+                                                                                                                                                                                                } ?>">
                                         </div>
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <button id="submit-btn" name="btnSubmit" type="submit" class="btn btn-primary" <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                    echo 'disabled';
-                                                                                                                                } ?>>Save</button>
-                                                <button id="reset-btn" name="btnReset" type="reset" class="btn btn-secondary" <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                    echo 'disabled';
-                                                                                                                                } ?>>Reset</button>
-                                            </div>
-                                        </div>
-                                </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                </main>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <label for="privacy_policy">
+                                    <h3>Privacy Policy</h3>
+                                </label>
+                                <div id="privacy_policy">
+                                    <?php //get the privacy policy from the database
+                                                $privacy_policy = $APP->getSetting('privacy_policy');
+                                                ?>
+                                    <div class="form-group">
+                                        <div class="form-row">
+                                            <label for="privacy-policy">Privacy Policy Page Content</label>
+                                            <textarea class="form-control wysiwyg-editor" id="privacy-policy"
+                                                name="privacy_policy" rows="15"
+                                                placeholder='<?php
+                                                                                                                                                                        //if privacy_policy is set and not blank
+                                                                                                                                                                        if (isset($privacy_policy) && $privacy_policy != '') {
+                                                                                                                                                                            echo $privacy_policy;
+                                                                                                                                                                        } else {
+                                                                                                                                                                            echo strval(PRIVACY_POLICY);
+                                                                                                                                                                        } ?>'
+                                                <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                                    echo 'disabled';
+                                                                                                                                                                                } ?>><?php
+                                                                                                                                                                                        //if privacy_policy is set and not blank
+                                                                                                                                                                                        if (isset($privacy_policy) && $privacy_policy != '') {
+                                                                                                                                                                                            echo $privacy_policy;
+                                                                                                                                                                                        } ?></textarea>
+                                            <small id="privacy-policy-help" class="form-text text-muted">Create the
+                                                Privacy
+                                                Policy style, using the WYSIWYG Editor</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <label for="terms_conditions">
+                                    <h3>Terms and Conditions</h3>
+                                </label>
+                                <div id="terms_conditions">
+                                    <?php //get the terms and conditions from the database
+                                                $terms_conditions = $APP->getSetting('terms_conditions');
+                                                ?>
+                                    <div class="form-group">
+                                        <div class="form-row">
+                                            <label for="terms-conditions">Terms and Conditions Page Content</label>
+                                            <textarea class="form-control wysiwyg-editor" id="terms-conditions"
+                                                name="terms_conditions" rows="15"
+                                                placeholder='<?php
+                                                                                                                                                                            //if terms_conditions is set and not blank
+                                                                                                                                                                            if (isset($terms_conditions) && $terms_conditions != '') {
+                                                                                                                                                                                echo $terms_conditions;
+                                                                                                                                                                            } else {
+                                                                                                                                                                                echo strval(TERMS_CONDITIONS);
+                                                                                                                                                                            } ?>'
+                                                <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                                        echo 'disabled';
+                                                                                                                                                                                    } ?>><?php
+                                                                                                                                                                                            //if terms_conditions is set and not blank
+                                                                                                                                                                                            if (isset($terms_conditions) && $terms_conditions != '') {
+                                                                                                                                                                                                echo $terms_conditions;
+                                                                                                                                                                                            } ?></textarea>
+                                            <small id="terms-conditions-help" class="form-text text-muted">Create
+                                                the
+                                                Terms
+                                                and Conditions style, using the WYSIWYG Editor</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <label for="hotjar_settings">
+                                    <h3>Hotjar Tracking</h3>
+                                </label>
+                                <div id="hotjar_settings">
+                                    <?php //get the hotjar tracking settings
+                                                $enableHotjar = $APP->getSetting('hotjar_enable');
+                                                $hotjarSiteId = $APP->getSetting('hotjar_siteid');
+                                                $hotjarVersion = $APP->getSetting('hotjar_version');
+                                                ?>
+                                    <div class="form-group">
+                                        <div class="form-row">
+                                            <label for="hotjar-enable">Enable Hotjar Tracking</label>
+                                            <div class="form-check" id="hotjar-enable-container">
+                                                <input class="form-check" type="checkbox" value="" id="hotjar-enable"
+                                                    name="hotjar_enable"
+                                                    <?php if (isset($enableHotjar) && $enableHotjar != '') {
+                                                                                                                                                                                    if ($enableHotjar = 'true') {
+                                                                                                                                                                                        echo 'checked';
+                                                                                                                                                                                    }
+                                                                                                                                                                                } ?>
+                                                    <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                                            echo ' disabled';
+                                                                                                                                                                                        } ?>>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label for="hotjar-siteid">Hotjar Site ID</label>
+                                            <input type="text" class="form-control" id="hotjar-siteid" name="hotjar_siteid"
+                                                placeholder="<?php
+                                                                                                                                                                                    //if hotjarSiteId is set and not blank
+                                                                                                                                                                                    if (isset($hotjarSiteId) && $hotjarSiteId != '') {
+                                                                                                                                                                                        echo $hotjarSiteId;
+                                                                                                                                                                                    } else {
+                                                                                                                                                                                        echo 'Hotjar Site ID';
+                                                                                                                                                                                    } ?>"
+                                                <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                                            echo 'disabled';
+                                                                                                                                                                                        } ?>
+                                                value="<?php
+                                                                                                                                                                                        //if hotjarSiteId is set and not blank
+                                                                                                                                                                                        if (isset($hotjarSiteId) && $hotjarSiteId != '') {
+                                                                                                                                                                                            echo $hotjarSiteId;
+                                                                                                                                                                                        } else {
+                                                                                                                                                                                            echo '';
+                                                                                                                                                                                        } ?>">
+                                                                                                                                                                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <button id="submit-btn" name="btnSubmit" type="submit" class="btn btn-primary"
+                                        <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                echo 'disabled';
+                                                                                                                            } ?>>Save</button>
+                                    <button id="reset-btn" name="btnReset" type="reset" class="btn btn-secondary"
+                                        <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                echo 'disabled';
+                                                                                                                            } ?>>Reset</button>
+                                </div>
+                            </div>
+                    </form>
+                </div>
             </div>
-            <script>
-                //hide or show the file upload input based on the user selection
-                $(document).ready(function() {
-                    $('#appLogoSelect').change(function() {
-                        if ($(this).val() == '0') {
-                            $('#appLogoUpload').prop('disabled', false).show();
-                            $('#appLogoUpload').prop('hidden', false).show();
-                        } else {
-                            $('#appLogoUpload').prop('disabled', true).hide();
-                            $('#appLogoUpload').prop('hidden', true).hide();
-                        }
-                    });
-                    $('#companyLogoSelect').change(function() {
-                        if ($(this).val() == '0') {
-                            $('#companyLogoUpload').prop('disabled', false).show();
-                            $('#companyLogoUpload').prop('hidden', false).show();
-                        } else {
-                            $('#companyLogoUpload').prop('disabled', true).hide();
-                            $('#companyLogoUpload').prop('hidden', true).hide();
-                        }
-                    });
-                });
+        </div>
+    </main>
+</div>
+<script>
+//hide or show the file upload input based on the user selection
+$(document).ready(function() {
+    $('#appLogoSelect').change(function() {
+        if ($(this).val() == '0') {
+            $('#appLogoUpload').prop('disabled', false).show();
+            $('#appLogoUpload').prop('hidden', false).show();
+        } else {
+            $('#appLogoUpload').prop('disabled', true).hide();
+            $('#appLogoUpload').prop('hidden', true).hide();
+        }
+    });
+    $('#companyLogoSelect').change(function() {
+        if ($(this).val() == '0') {
+            $('#companyLogoUpload').prop('disabled', false).show();
+            $('#companyLogoUpload').prop('hidden', false).show();
+        } else {
+            $('#companyLogoUpload').prop('disabled', true).hide();
+            $('#companyLogoUpload').prop('hidden', true).hide();
+        }
+    });
+});
 
-                //add an event listener to show/hide the smtp settings
-                document.addEventListener("DOMContentLoaded", function() {
-                    //get the mailer type
-                    var mailerType = document.getElementById('mail-mailer').value;
+//add an event listener to show/hide the smtp settings
+document.addEventListener("DOMContentLoaded", function() {
+    //get the mailer type
+    var mailerType = document.getElementById('mail-mailer').value;
 
-                    //if the mailer type is not smtp
-                    if (mailerType != 'smtp') {
-                        //hide the smtp settings
-                        document.getElementById('mail-host-row').style.display = 'none';
-                        document.getElementById('mail-port-row').style.display = 'none';
-                        document.getElementById('mail-auth-req-row').style.display = 'none';
-                        document.getElementById('mail-from-address-row').style.display = 'none';
-                        document.getElementById('mail-from-name-row').style.display = 'none';
-                    }
-                    //add an event listener to the mailer type select
-                    document.getElementById('mail-mailer').addEventListener('change', function() {
-                        //get the mailer type
-                        var mailerType = document.getElementById('mail-mailer').value;
-                        //if the mailer type is not smtp
-                        if (mailerType != 'smtp') {
-                            //hide the smtp settings
-                            document.getElementById('mail-host-row').style.display = 'none';
-                            document.getElementById('mail-port-row').style.display = 'none';
-                            document.getElementById('mail-auth-req-row').style.display = 'none';
-                            document.getElementById('mail-from-address-row').style.display = 'none';
-                            document.getElementById('mail-from-name-row').style.display = 'none';
-                        } else {
-                            //show the smtp settings
-                            document.getElementById('mail-host-row').style.display = 'block';
-                            document.getElementById('mail-port-row').style.display = 'block';
-                            document.getElementById('mail-auth-req-row').style.display = 'block';
-                            document.getElementById('mail-from-address-row').style.display = 'block';
-                            document.getElementById('mail-from-name-row').style.display = 'block';
-                        }
-                    });
+    //if the mailer type is not smtp
+    if (mailerType != 'smtp') {
+        //hide the smtp settings
+        document.getElementById('mail-host-row').style.display = 'none';
+        document.getElementById('mail-port-row').style.display = 'none';
+        document.getElementById('mail-auth-req-row').style.display = 'none';
+        document.getElementById('mail-from-address-row').style.display = 'none';
+        document.getElementById('mail-from-name-row').style.display = 'none';
+    }
+    //add an event listener to the mailer type select
+    document.getElementById('mail-mailer').addEventListener('change', function() {
+        //get the mailer type
+        var mailerType = document.getElementById('mail-mailer').value;
+        //if the mailer type is not smtp
+        if (mailerType != 'smtp') {
+            //hide the smtp settings
+            document.getElementById('mail-host-row').style.display = 'none';
+            document.getElementById('mail-port-row').style.display = 'none';
+            document.getElementById('mail-auth-req-row').style.display = 'none';
+            document.getElementById('mail-from-address-row').style.display = 'none';
+            document.getElementById('mail-from-name-row').style.display = 'none';
+        } else {
+            //show the smtp settings
+            document.getElementById('mail-host-row').style.display = 'block';
+            document.getElementById('mail-port-row').style.display = 'block';
+            document.getElementById('mail-auth-req-row').style.display = 'block';
+            document.getElementById('mail-from-address-row').style.display = 'block';
+            document.getElementById('mail-from-name-row').style.display = 'block';
+        }
+    });
 
-                    //get the mailer auth req
-                    var mailerAuthReq = document.getElementById('mail-auth-req').checked;
+    //get the mailer auth req
+    var mailerAuthReq = document.getElementById('mail-auth-req').checked;
 
-                    //if the mailer auth req is not checked
-                    if (!mailerAuthReq) {
-                        //hide the mailer username and password
-                        document.getElementById('mail-username-row').style.display = 'none';
-                        document.getElementById('mail-password-row').style.display = 'none';
-                        document.getElementById('mail-encryption-row').style.display = 'none';
-                    }
+    //if the mailer auth req is not checked
+    if (!mailerAuthReq) {
+        //hide the mailer username and password
+        document.getElementById('mail-username-row').style.display = 'none';
+        document.getElementById('mail-password-row').style.display = 'none';
+        document.getElementById('mail-encryption-row').style.display = 'none';
+    }
 
-                    //add an event listener to the mailer auth req checkbox
-                    document.getElementById('mail-auth-req').addEventListener('change', function() {
-                        //get the mailer auth req
-                        var mailerAuthReq = document.getElementById('mail-auth-req').checked;
-                        //if the mailer auth req is not checked
-                        if (!mailerAuthReq) {
-                            //hide the mailer username and password
-                            document.getElementById('mail-username-row').style.display = 'none';
-                            document.getElementById('mail-password-row').style.display = 'none';
-                            document.getElementById('mail-encryption-row').style.display = 'none';
-                        } else {
-                            //show the mailer username and password
-                            document.getElementById('mail-username-row').style.display = 'block';
-                            document.getElementById('mail-password-row').style.display = 'block';
-                            document.getElementById('mail-encryption-row').style.display = 'block';
-                        }
-                    });
-                });
-            </script>
+    //add an event listener to the mailer auth req checkbox
+    document.getElementById('mail-auth-req').addEventListener('change', function() {
+        //get the mailer auth req
+        var mailerAuthReq = document.getElementById('mail-auth-req').checked;
+        //if the mailer auth req is not checked
+        if (!mailerAuthReq) {
+            //hide the mailer username and password
+            document.getElementById('mail-username-row').style.display = 'none';
+            document.getElementById('mail-password-row').style.display = 'none';
+            document.getElementById('mail-encryption-row').style.display = 'none';
+        } else {
+            //show the mailer username and password
+            document.getElementById('mail-username-row').style.display = 'block';
+            document.getElementById('mail-password-row').style.display = 'block';
+            document.getElementById('mail-encryption-row').style.display = 'block';
+        }
+    });
+});
+</script>
 <?php }
     }
 } ?>

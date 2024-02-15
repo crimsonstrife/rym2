@@ -128,7 +128,10 @@
             "php -r \"copy('node_modules/@jaames/iro/dist/iro.min.js', 'public/content/libs/irojs/iro.min.js');\"",
             "php -r \"if (!is_dir('public/content/libs/ckeditor')) { mkdir('public/content/libs/ckeditor', 0777, true); }\"",
             "php -r \"copy('node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js', 'public/content/libs/ckeditor/ckeditor.js');\"",
-            "php -r \"copy('node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js.map', 'public/content/libs/ckeditor/ckeditor.js.map');\""
+            "php -r \"copy('node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js.map', 'public/content/libs/ckeditor/ckeditor.js.map');\"",
+            "php -r \"if (!is_dir('public/content/libs/hotjar-js')) { mkdir('public/content/libs/hotjar-js', 0777, true); }\"",
+            "php -r \"copy('node_modules/@hotjar/browser/dist/index.js', 'public/content/libs/hotjar-js/index.js');\"",
+            "php -r \"copy('node_modules/@hotjar/browser/dist/index.js.map', 'public/content/libs/hotjar-js/index.js.map');\""
         ],
         "post-install-cmd": [
             "@post-update-cmd"
