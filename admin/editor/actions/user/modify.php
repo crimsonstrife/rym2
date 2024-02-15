@@ -201,9 +201,9 @@ if (!$hasPermission) {
 
             if ($userIsSuperAdmin) {
                 //loop through the roles array, if none of the roles are the super admin role, set the error
-                foreach ($rolesArray as $role) {
+                foreach ($rolesArray as $roleObject) {
                     //see if the role has the is super admin permission
-                    $rolePermissions = $role->getRolePermissions($role);
+                    $rolePermissions = $role->getRolePermissions($roleObject);
                     foreach ($rolePermissions as $permission) {
                         if (intval($permission['permission_id']) == $isSuperAdminPermissionID) {
                             $roleIsSuperAdmin = true;
