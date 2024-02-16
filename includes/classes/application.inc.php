@@ -3142,6 +3142,9 @@ class Application
                         if ($row['hotjar_enable'] == 1) {
                             //Return true
                             return true;
+                        } elseif ($row['hotjar_enable'] == 0) {
+                            //Return false
+                            return false;
                         } else {
                             //Return false
                             return false;
