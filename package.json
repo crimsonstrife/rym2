@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^41.0.0",
-    "@hotjar/browser": "^1.0.9",
     "@jaames/iro": "^5.5.2",
     "@popperjs/core": "^2.11.8",
     "chart.js": "^4.4.0",

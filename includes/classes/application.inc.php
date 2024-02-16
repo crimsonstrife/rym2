@@ -3345,8 +3345,11 @@ class Application
                     //Prepare the SQL statement for execution
                     $role_statement = $this->mysqli->prepare($sql);
 
+                    //convert the site ID to an integer
+                    $hotjar_site_id = intval($hotjar_site_id);
+
                     //Bind the parameters
-                    $role_statement->bind_param('s', $hotjar_site_id);
+                    $role_statement->bind_param('i', $hotjar_site_id);
 
                     //Execute the statement
                     $role_statement->execute();
@@ -3851,7 +3854,7 @@ class Application
     public function resetSettings()
     {
         //SQL statement to reset the settings
-        $sql = "UPDATE settings SET app_name = null, app_url = null, company_name = null, company_url = null, company_logo = null, company_address = null, company_phone = null, app_logo = null, contact_email = null, mail_host = null, mail_port = null, mail_username = null, mail_password = null, mail_encryption = null, mail_from_address = null, mail_from_name = null, mail_auth_req = null, privacy_policy = ?, terms_conditions = ? WHERE isSet = 'SET'";
+        $sql = "UPDATE settings SET app_name = null, app_url = null, company_name = null, company_url = null, company_logo = null, company_address = null, company_phone = null, app_logo = null, contact_email = null, mail_host = null, mail_port = null, mail_username = null, mail_password = null, mail_encryption = null, mail_from_address = null, mail_from_name = null, mail_auth_req = null, privacy_policy = ?, terms_conditions = ?, hotjar_enable = null, hotjar_siteid = null, hotjar_version = null, WHERE isSet = 'SET'";
 
         //Check that mysqli is set
         if (isset($this->mysqli)) {
