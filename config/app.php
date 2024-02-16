@@ -456,6 +456,52 @@ if (file_exists(BASEPATH . '/.env')) {
     include_once(__DIR__ . '/../includes/errors/errorMessage.inc.php');
 }
 
+/* Get the Hotjar settings and set the constants */
+$hotjar_enabled = null;
+//try to get the hotjar_enabled setting
+try {
+    $hotjar_enabled = $APP->getHotjarEnabled();
+} catch (Exception $e) {
+    $hotjar_enabled = null;
+}
+
+//Check if the hotjar_enabled is set in the database, if not set it to null
+if ($hotjar_enabled != null || $hotjar_enabled != '') {
+    //define the hotjar_enabled constant
+    define('HOTJAR_ENABLED', $hotjar_enabled);
+} else {
+    define('HOTJAR_ENABLED', null);
+}
+
+$hotjar_id = null;
+$hotjar_version = null;
+//if hotjar is enabled, try to get the hotjar_id and hotjar_version
+if (HOTJAR_ENABLED == true) {
+    try {
+        $hotjar_id = $APP->getHotjarSiteID();
+        $hotjar_version = $APP->getHotjarVersion();
+    } catch (Exception $e) {
+        $hotjar_id = null;
+        $hotjar_version = null;
+    }
+}
+
+//Check if the hotjar_id is set in the database, if not set it to null
+if ($hotjar_id != null || $hotjar_id != '') {
+    //define the hotjar_id constant
+    define('HOTJAR_ID', $hotjar_id);
+} else {
+    define('HOTJAR_ID', null);
+}
+
+//Check if the hotjar_version is set in the database, if not set it to null
+if ($hotjar_version != null || $hotjar_version != '') {
+    //define the hotjar_version constant
+    define('HOTJAR_VERSION', $hotjar_version);
+} else {
+    define('HOTJAR_VERSION', null);
+}
+
 /**
  * Get the asset path for the application
  * Returns the asset path for the application with trailing slash
@@ -740,9 +786,25 @@ function includeHeader(): string
     /* JS that needs to be loaded in the header */
     $jQuery = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery/jquery.min.js"></script>';
     $jqueryMigrate = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery-migrate/jquery-migrate.min.js"></script>';
+    $hotjar_activation = null;
+    //check if hotjar is enabled
+    if (HOTJAR_ENABLED == true) {
+        //setup the hotjar activation script
+        $hotjar_activation = "<!-- Hotjar Tracking Code as documented on hotjar.com -->
+        <script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:" . HOTJAR_ID .",hjsv:" . HOTJAR_VERSION ."};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>";
+    }
 
     /* Assemble the header for the application */
-    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $select2BootstrapCSS . $fontawesomeCSS . $styleCSS . $compatibilityCSS . $responsiveCSS . $jQuery . $jqueryMigrate;
+    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $select2BootstrapCSS . $fontawesomeCSS . $styleCSS . $compatibilityCSS . $responsiveCSS . $jQuery . $jqueryMigrate . $hotjar_activation;
 
     /* Return the header for the application */
     return $header;
