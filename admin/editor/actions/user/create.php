@@ -61,7 +61,7 @@ if (!$hasPermission) {
             $username = prepareData($username);
 
             //check if the username is already taken
-            $usernameTaken = $user->validateUserByUsername($username);
+            $usernameTaken = $auth->validateUserByUsername($username);
         }
 
         //get the email from the form
@@ -71,7 +71,7 @@ if (!$hasPermission) {
             $email = prepareData($email);
 
             //check if the email is already taken
-            $emailTaken = $user->validateUserByEmail($email);
+            $emailTaken = $auth->validateUserByEmail($email);
         }
 
         //get the password from the form
