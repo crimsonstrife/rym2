@@ -67,8 +67,6 @@ class UserLogin extends User implements Login
                 // Redirect user to welcome page
                 redirectUser(APP_URL . "/index.php");
             } else {
-                // Log the error
-                error_log("Failed to log the user in: Invalid password.");
                 // log the activity
                 $activity = new Activity();
                 $activity->logActivity(null, "Login Error Invalid Password", 'User ID: ' . strval($user_id) . ' Username: ' . $username . ' failed to log in with invalid password.');
@@ -76,8 +74,6 @@ class UserLogin extends User implements Login
                 throw new Exception("Invalid username or password.");
             }
         } catch (Exception $e) {
-            // Log the error
-            error_log("Failed to log the user in: " . $e->getMessage());
             // log the activity
             $activity = new Activity();
             $activity->logActivity(null, "Login Error " . $e->getMessage(), 'User ID: ' . strval($user_id) . ' Username: ' . $this->getUserUsername($user_id) . ' failed to log in with error message: ' . $e->getMessage());
@@ -118,7 +114,7 @@ class UserLogin extends User implements Login
         $user_password = $this->getUserPassword($user_id);
 
         //hash the password to compare
-        $attempted_password = $this->hashPassword($password);
+        $attempted_password = $password; //removed the hash function, it is not needed here as the native password_verify function will handle the hashing
 
         //verify the password
         if ($this->verifyPassword($attempted_password, $user_password)) {
