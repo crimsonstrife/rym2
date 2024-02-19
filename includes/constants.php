@@ -427,3 +427,103 @@ define('ALLOWED_FILE_TYPES', array(
     "image/webp",
     "image/svg+xml"
 ));
+
+/**
+ * Define the action types for logging, used in the activity class
+ * An array of arrays, each containing a key which is the action, and a list of possible strings that would match that action
+ */
+define('LOGGING_ACTIONS_ARRAY', array(
+    array(
+        "action" => "CREATE",
+        "strings" => array(
+            "created",
+            "generated"
+        )
+    ),
+    array(
+        "action" => "MODIFY",
+        "strings" => array(
+            "permission",
+            "updated",
+            "added to",
+            "modified",
+            "removed from",
+            "assigned",
+            "unassigned",
+            "changed"
+        )
+    ),
+    array(
+        "action" => "DELETE",
+        "strings" => array(
+            "deleted",
+            "removed"
+        )
+    ),
+    array(
+        "action" => "LOGIN",
+        "strings" => array(
+            "logged in"
+        )
+    ),
+    array(
+        "action" => "LOGIN FAILED",
+        "strings" => array(
+            "failed to log the user in",
+            "login failed"
+        )
+    ),
+    array(
+        "action" => "LOGOUT",
+        "strings" => array(
+            "logged out"
+        )
+        ),
+    array(
+        "action" => "ERROR",
+        "strings" => array(
+            "error"
+        )
+        ),
+    array(
+        "action" => "VIEW",
+        "strings" => array(
+            "viewed"
+        )
+        ),
+    array(
+        "action" => "DOWNLOAD",
+        "strings" => array(
+            "downloaded",
+            "exported"
+        )
+        ),
+    array(
+        "action" => "UPLOAD",
+        "strings" => array(
+            "uploaded",
+            "imported"
+        )
+        ),
+    array(
+        "action" => "EMAIL",
+        "strings" => array(
+            "email",
+            "sent",
+            "emailed"
+        )
+        ),
+    array(
+        "action" => "RESET",
+        "strings" => array(
+            "reset"
+        )
+        ),
+    array(
+        "action" => "OTHER",
+        "strings" => array(
+            "other"
+        )
+        )
+));
+
