@@ -204,30 +204,18 @@ class Activity
      */
     private function simplifyActionEnum(string $action): string {
         $action = strtolower($action); //convert the action to lowercase for easier comparison
-        if (stripos($action, 'created') !== false || stripos($action, 'generated') !== false) {
-            return 'CREATE';
-        } elseif (stripos($action, 'permission') !== false || stripos($action, 'updated') !== false || stripos($action, 'added to') !== false || stripos($action, 'modified') !== false || stripos($action, 'removed from') !== false || stripos($action, 'assigned') !== false || stripos($action, 'unassigned') !== false || stripos($action, 'changed') !== false) {
-            return 'MODIFY';
-        } elseif (stripos($action, 'deleted') !== false) {
-            return 'DELETE';
-        } elseif (stripos($action, 'logged in') !== false) {
-            return 'LOGIN';
-        } elseif (stripos($action, 'logged out') !== false) {
-            return 'LOGOUT';
-        } elseif (stripos($action, 'failed to log the user in') !== false) {
-            return 'LOGIN FAILED';
-        } elseif (stripos($action, 'reset') !== false) {
-            return 'RESET';
-        } elseif (stripos($action, 'uploaded') !== false || stripos($action, 'exported') !== false) {
-            return 'UPLOAD';
-        } elseif (stripos($action, 'downloaded') !== false) {
-            return 'DOWNLOAD';
-        } elseif (stripos($action, 'error') !== false) {
-            return 'ERROR';
-        } elseif (stripos($action, 'email') !== false) {
-            return 'EMAIL';
-        } else {
-            return 'OTHER';
+        $enum = 'OTHER'; //default enum
+        $actionArray = LOGGING_ACTIONS_ARRAY; //get the array of logging actions from the config file
+
+        //loop through the array of logging actions, comparing the provided action to strings in the array
+        //each sub array contains an action key and a strings key that contains an array of strings to compare to
+        foreach ($actionArray as $actionItem) {
+            if (in_array($action, $actionItem['strings'])) {
+                $enum = $actionItem['action'];
+                break;
+            }
         }
+
+        return $enum;
     }
 }
