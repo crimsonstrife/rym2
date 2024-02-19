@@ -153,6 +153,7 @@ class User
     {
         //new roles array
         $roles = array();
+
         //get the role IDs by user ID
         $roles = $this->getRoleIDsByUserID($id);
 
@@ -164,7 +165,7 @@ class User
 
         //loop through the roles array and get the role objects
         foreach ($roles as $roleId) {
-            $roleObject = $role->getRoleById($roleId['role_id']);
+            $roleObject = $role->getRoleById(intval($roleId));
             //add the role object to the array
             $userRoles[] = $roleObject;
         }
