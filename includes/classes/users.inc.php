@@ -798,7 +798,7 @@ class User implements Login
     }
 
     //Add a user
-    public function addUser(string $email, string $password, string $username, int $created_by = null): int
+    private function addUser(string $email, string $password, string $username, int $created_by = null): int
     {
         //hash the password
         $password = $this->hashPassword($password);
@@ -974,7 +974,7 @@ class User implements Login
     }
 
     //Add a role to a user
-    public function giveRoleToUser(int $user_id, int $role_id): void
+    private function giveRoleToUser(int $user_id, int $role_id): void
     {
         //get current date and time
         $date = date("Y-m-d H:i:s");
@@ -1028,7 +1028,7 @@ class User implements Login
     }
 
     //Remove a role from a user
-    public function removeRoleFromUser(int $user_id, int $role_id): void
+    private function removeRoleFromUser(int $user_id, int $role_id): void
     {
         //SQL statement to remove a role from a user
         $sql = "DELETE FROM user_has_role WHERE user_id = ? AND role_id = ?";
@@ -1252,7 +1252,7 @@ class User implements Login
      *
      * @return bool True if the email was sent, false if not
      */
-    public function notifyUserCreated(string $email, string $username, string $password): bool
+    private function notifyUserCreated(string $email, string $username, string $password): bool
     {
         //include the contact class
         $contact = new Contact();
