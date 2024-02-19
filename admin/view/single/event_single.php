@@ -79,12 +79,19 @@ if (!$hasPermission) {
 
     //if not empty, display the event information
     if (!empty($object)) {
+
+        //get the event location information
+        $location = $event->getEventLocation($event_id);
+        $streetAddress = $school->getSchoolAddress(intval($event->getEventLocationId($event_id)));
+        $city = $school->getSchoolCity(intval($event->getEventLocationId($event_id)));
+        $state = $school->getSchoolState(intval($event->getEventLocationId($event_id)));
+        $zip = $school->getSchoolZip(intval($event->getEventLocationId($event_id)));
 ?>
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet/leaflet.css'; ?>">
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.css'; ?>">
 <script>
-var mapLocationTitle = "<?php echo $event->getEventLocation($event_id); ?>";
-var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?>";
+var mapLocationTitle = "<?php echo $location; ?>";
+var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>";
 </script>
 <div class="container-fluid px-4">
     <h1 class="mt-4"><?php echo $event->getEventName($event_id); ?></h1>
@@ -140,17 +147,17 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                                             class="fa-solid fa-arrow-up-right-from-square"></i></a></span>
                             </p>
                             <p><strong>Event Date:</strong> <?php echo $event->getEventDate($event_id); ?></p>
-                            <p><strong>Event Location:</strong> <?php echo $event->getEventLocation($event_id); ?></p>
+                            <p><strong>Event Location:</strong> <?php echo $location; ?></p>
                             <!-- Formatted School address -->
                             <div>
                                 <p><strong>Event Address:</strong>
                                     <?php
                                             //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
-                                            $address = $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id)));
-                                            $address = urlencode($address);
+                                            $formattedAddress = formatAddress($streetAddress, $city, $state, $zip);
+                                            $address = urlencode($formattedAddress);
                                             ?>
                                     <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
-                                        target="_blank"><?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?></a>
+                                        target="_blank"><?php echo $address; ?></a>
                                 </p>
                             </div>
                             <div id="map"></div>

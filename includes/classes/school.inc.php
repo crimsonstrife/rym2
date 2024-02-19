@@ -184,24 +184,6 @@ class School
     }
 
     /**
-     * Get a formatted address of a school
-     *
-     * @param int $school_id
-     * @return string $school_address
-     */
-    public function getFormattedSchoolAddress(int $school_id): string
-    {
-        $formatted_address = "";
-        $school_address = $this->getSchoolAddress($school_id);
-        $school_city = $this->getSchoolCity($school_id);
-        $school_state = $this->getSchoolState($school_id);
-        $school_zip = $this->getSchoolZip($school_id);
-        // Format the address
-        $formatted_address = $school_address . ", " . $school_city . ", " . $school_state . " " . $school_zip;
-        return $formatted_address;
-    }
-
-    /**
      * Get the created date of a school
      *
      * @param int $school_id

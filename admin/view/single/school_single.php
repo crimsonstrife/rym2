@@ -73,12 +73,17 @@ if (!$hasPermission) {
 
     //if not empty, display the event information
     if (!empty($schoolData)) {
+        //get the school address information
+        $schoolAddress = $school->getSchoolAddress(intval($school_id));
+        $schoolCity = $school->getSchoolCity(intval($school_id));
+        $schoolState = $school->getSchoolState(intval($school_id));
+        $schoolZip = $school->getSchoolZip(intval($school_id));
 ?>
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet/leaflet.css'; ?>">
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.css'; ?>">
 <script>
 var mapLocationTitle = "<?php echo $school->getSchoolName(intval($school_id)); ?>";
-var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id)); ?>";
+var address = "<?php echo formatAddress($schoolAddress, $schoolCity, $schoolState, $schoolZip); ?>";
 </script>
 <div class="container-fluid px-4">
     <h1 class="mt-4"><?php echo $school->getSchoolName(intval($school_id)); ?></h1>
@@ -133,11 +138,11 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($school_id))
                                 <p><strong>School Address:</strong>
                                     <?php
                                             //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
-                                            $address = $school->getFormattedSchoolAddress(intval($school_id));
+                                            $address = formatAddress($schoolAddress, $schoolCity, $schoolState, $schoolZip);
                                             $address = urlencode($address);
                                             ?>
                                     <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
-                                        target="_blank"><?php echo $school->getFormattedSchoolAddress(intval($school_id)); ?></a>
+                                        target="_blank"><?php echo formatAddress($schoolAddress, $schoolCity, $schoolState, $schoolZip); ?></a>
                                 </p>
                             </div>
                             <div id="map"></div>

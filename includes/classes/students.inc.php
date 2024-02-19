@@ -54,8 +54,16 @@ class Student
     {
         //SQL statement to get all students
         $sql = "SELECT * FROM student";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Loop through the result and add each row to the students array
@@ -86,8 +94,16 @@ class Student
     {
         //SQL statement to get a student by their ID
         $sql = "SELECT * FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //check if the result has rows
@@ -114,10 +130,19 @@ class Student
     {
         //clean the email variable
         $email = $this->mysqli->real_escape_string($email);
+
         //SQL statement to get a student by their email address
         $sql = "SELECT * FROM student WHERE email = '$email'";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //check if the result has rows
@@ -144,8 +169,16 @@ class Student
     {
         //SQL statement to get a student first name
         $sql = "SELECT first_name FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the student first name
@@ -166,8 +199,16 @@ class Student
     {
         //SQL statement to get a student last name
         $sql = "SELECT last_name FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the student last name
@@ -206,8 +247,16 @@ class Student
     {
         //SQL statement to get a student email
         $sql = "SELECT email FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the student email
@@ -228,8 +277,16 @@ class Student
     {
         //SQL statement to get a student phone number
         $sql = "SELECT phone FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         $phone = "";
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -238,22 +295,6 @@ class Student
         }
         //Return the student phone number
         return $phone;
-    }
-
-    /**
-     * Get a formatted student phone number
-     *
-     * @param int $id
-     * @return string
-     */
-    public function getStudentFormattedPhone(int $id): string
-    {
-        //get the student phone number
-        $phone = $this->getStudentPhone($id);
-        //format the student phone number
-        $formatted_phone = "(" . substr($phone, 0, 3) . ") " . substr($phone, 3, 3) . "-" . substr($phone, 6, 4);
-        //return the student phone number
-        return $formatted_phone;
     }
 
     /**
@@ -342,28 +383,6 @@ class Student
         }
         //Return the student zip code
         return $zip;
-    }
-
-    /**
-     * Get a formatted student address
-     *
-     * @param int $id
-     * @return string
-     */
-    public function getStudentFormattedAddress(int $id): string
-    {
-        //get the student address
-        $address = $this->getStudentAddress($id);
-        //get the student city
-        $city = $this->getStudentCity($id);
-        //get the student state
-        $state = $this->getStudentState($id);
-        //get the student zip code
-        $zip = $this->getStudentZip($id);
-        //format the student address
-        $formatted_address = $address . " " . $city . ", " . $state . " " . $zip;
-        //return the student address
-        return $formatted_address;
     }
 
     /**
@@ -562,8 +581,16 @@ class Student
     {
         //SQL statement to get a student graduation year
         $sql = "SELECT graduation FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the student graduation year
@@ -584,14 +611,26 @@ class Student
     {
         //SQL statement to get a student school id
         $sql = "SELECT school FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //create a variable to hold the school id
         $school = 0;
+
+        //If the query returns a result
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $school = $row['school'];
             }
         }
+
         //Return the student school id
         return intval($school);
     }
@@ -1052,46 +1091,6 @@ class Student
             //log the activity
             $activity = new Activity();
             $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Student Contact History', 'Student ID: ' . $student_id . ' Student Name: ' . $student_name);
-        }
-
-        //return the result
-        return $result;
-    }
-
-    /**
-     * Add Student Contact History
-     * Add a new contact log entry for a student
-     *
-     * @param int $student_id
-     * @param string $dateTime
-     * @param int $isAuto is the email automated or manual, 1 = automated, 0 = manual
-     * @param int $sender_id is the id of the user that sent the email, will be null if automated
-     * @param string $subject
-     * @param string $message
-     * @return bool
-     */
-    public function logContactHistory(int $student_id, string $dateTime, int $isAuto, int $sender_id = NULL, string $subject, string $message): bool
-    {
-        //include the contact class, so we can log the contact
-        $contactObject = new Contact();
-
-        //convert the isAuto value to a boolean
-        if ($isAuto == 1) {
-            $isAuto = true;
-        } else {
-            $isAuto = false;
-        }
-
-        //placeholder for the result
-        $result = false;
-
-        //if the sender id is null, do not include it in the query
-        if ($sender_id == NULL) {
-            //use the contact class to log the contact
-            $result = $contactObject->logContact($student_id, $isAuto, NULL, $dateTime, $subject, $message);
-        } else {
-            //use the contact class to log the contact
-            $result = $contactObject->logContact($student_id, $isAuto, $sender_id, $dateTime, $subject, $message);
         }
 
         //return the result
