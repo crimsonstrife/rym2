@@ -44,7 +44,7 @@ if (!isset($hasViewDashboardPermission)) {
 
         // placeholder variables for the settings
         $entry_error = false;  // boolean value for if there is an error with the form entry for server-side validation.
-        $app_name = $app_url = $app_logo = $contact_email = $company_name = $company_logo = $company_address = $company_city = $company_state = $company_zip = $company_url = $company_phone = $mail_mailer = $mail_host = $mail_port = $mail_auth_req = $mail_username = $mail_password = $mail_encryption = $mail_from_address = $mail_from_name = $privacy_policy = $terms_conditions = $enableHotjar = $hotjarSiteId = $hotjarVersion = null;
+        $app_name = $app_url = $app_logo = $contact_email = $company_name = $company_logo = $company_address = $company_city = $company_state = $company_zip = $company_url = $company_phone = $mail_mailer = $mail_host = $mail_port = $mail_auth_req = $mail_username = $mail_password = $mail_encryption = $mail_from_address = $mail_from_name = $privacy_policy = $terms_conditions = $enableHotjar = $hotjarSiteId = $hotjarVersion = $enableGoogleAnalytics = $googleAnalyticsTag = null;
         // other variables
         $target_file_appLogo = null;
         $target_file_companyLogo = null;
@@ -454,6 +454,25 @@ if (!isset($hasViewDashboardPermission)) {
                         $APP->setHotjarEnabled(false);
                     }
 
+                    // check if  enable google analytics is set
+                    if (isset($_POST['ga_enable'])) {
+                        // set the enable google analytics
+                        $APP->setGoogleAnalyticsEnabled(true);
+
+                        // check if the google analytics tag is set
+                        if (isset($_POST['ga_tracking_tag']) && $_POST['ga_tracking_tag'] != '') {
+                            // prevent XSS attacks by removing html tags
+                            $_POST['ga_tracking_tag'] = strip_tags($_POST['ga_tracking_tag']);
+                            // trim whitespace from the google analytics tag
+                            $_POST['ga_tracking_tag'] = trim($_POST['ga_tracking_tag']);
+                            // set the google analytics tag
+                            $APP->setGoogleAnalyticsTag($_POST['ga_tracking_tag']);
+                        }
+                    } else {
+                        // set the enable google analytics to false
+                        $APP->setGoogleAnalyticsEnabled(false);
+                    }
+
                     // if there are files to upload for the app, upload them
                     if (!empty($app_logo) && ($uploaded_appLogoFile != null || $uploaded_appLogoFile != '')) {
                         // check if the app logo is an array
@@ -584,8 +603,8 @@ if (!isset($hasViewDashboardPermission)) {
                                 <form class="form-inline" <?php if ($hasUpdateSettingsPermission) {
                                                                 echo 'method="post"' . ' action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '?view=' . $_GET['view'] . '"';
                                                             } ?> class="needs-validation <?php if ($entry_error) {
-                                                echo 'was-validated';
-                                            } ?>">
+                                                                                                echo 'was-validated';
+                                                                                            } ?>">
                                     <div class="form-group">
                                         <div class="form-row">
                                             <label for="main-app-settings">
@@ -610,15 +629,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                 echo 'Application Name';
                                                                                                                                             }
                                                                                                                                             ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if app_name is set and not blank
-                                                            if (isset($app_name) && $app_name != '') {
-                                                                echo $app_name;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                    echo 'disabled';
+                                                                                                                                                } ?> value="<?php
+                        // if app_name is set and not blank
+                        if (isset($app_name) && $app_name != '') {
+                            echo $app_name;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                     <div class="form-row">
                                                         <label for="app-url">Application URL</label>
@@ -630,15 +649,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                 echo 'Application URL';
                                                                                                                                             }
                                                                                                                                             ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if app_url is set and not blank
-                                                            if (isset($app_url) && $app_url != '') {
-                                                                echo $app_url;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                    echo 'disabled';
+                                                                                                                                                } ?> value="<?php
+                        // if app_url is set and not blank
+                        if (isset($app_url) && $app_url != '') {
+                            echo $app_url;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -719,15 +738,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                             echo 'Contact Email';
                                                                                                                                                         }
                                                                                                                                                         ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if contact_email is set and not blank
-                                                            if (isset($contact_email) && $contact_email != '') {
-                                                                echo $contact_email;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                                echo 'disabled';
+                                                                                                                                                            } ?> value="<?php
+                        // if contact_email is set and not blank
+                        if (isset($contact_email) && $contact_email != '') {
+                            echo $contact_email;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -762,15 +781,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                         echo 'Company Name';
                                                                                                                                                     }
                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if company_name is set and not blank
-                                                            if (isset($company_name) && $company_name != '') {
-                                                                echo $company_name;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                            echo 'disabled';
+                                                                                                                                                        } ?> value="<?php
+                        // if company_name is set and not blank
+                        if (isset($company_name) && $company_name != '') {
+                            echo $company_name;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                     <div class=" form-row">
                                                         <div class="form-group">
@@ -858,15 +877,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                 echo 'Street Address';
                                                                                                                                                             }
                                                                                                                                                             ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if company_address is set and not blank
-                                                            if (isset($company_address) && $company_address != '') {
-                                                                echo $company_address;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                                    echo 'disabled';
+                                                                                                                                                                } ?> value="<?php
+                        // if company_address is set and not blank
+                        if (isset($company_address) && $company_address != '') {
+                            echo $company_address;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                     <div class=" form-row">
                                                         <label for="company-city">City</label>
@@ -878,15 +897,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                         echo 'City';
                                                                                                                                                     }
                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if company_city is set and not blank
-                                                            if (isset($company_city) && $company_city != '') {
-                                                                echo $company_city;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                            echo 'disabled';
+                                                                                                                                                        } ?> value="<?php
+                        // if company_city is set and not blank
+                        if (isset($company_city) && $company_city != '') {
+                            echo $company_city;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                     <div class="form-row">
                                                         <label for="company-state">State</label>
@@ -919,15 +938,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                         echo 'Zip';
                                                                                                                                                     }
                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if company_zip is set and not blank
-                                                            if (isset($company_zip) && $company_zip != '') {
-                                                                echo $company_zip;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                            echo 'disabled';
+                                                                                                                                                        } ?> value="<?php
+                        // if company_zip is set and not blank
+                        if (isset($company_zip) && $company_zip != '') {
+                            echo $company_zip;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                     <div class="form-row">
                                                         <label for="company-url">Company URL</label>
@@ -939,15 +958,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                         echo 'Company URL';
                                                                                                                                                     }
                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if company_url is set and not blank
-                                                            if (isset($company_url) && $company_url != '') {
-                                                                echo $company_url;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                            echo 'disabled';
+                                                                                                                                                        } ?> value="<?php
+                        // if company_url is set and not blank
+                        if (isset($company_url) && $company_url != '') {
+                            echo $company_url;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                     <div class="form-row">
                                                         <label for="company-phone">Company Phone</label>
@@ -959,15 +978,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                         echo 'Company Phone Number';
                                                                                                                                                     }
                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if company_phone is set and not blank
-                                                            if (isset($company_phone) && $company_phone != '') {
-                                                                echo $company_phone;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                            echo 'disabled';
+                                                                                                                                                        } ?> value="<?php
+                        // if company_phone is set and not blank
+                        if (isset($company_phone) && $company_phone != '') {
+                            echo $company_phone;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1037,15 +1056,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                             echo '127.0.0.1';
                                                                                                                                                                         }
                                                                                                                                                                         ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if mail_host is set and not blank
-                                                            if (isset($mail_host) && $mail_host != '') {
-                                                                echo $mail_host;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                                                echo 'disabled';
+                                                                                                                                                                            } ?> value="<?php
+                        // if mail_host is set and not blank
+                        if (isset($mail_host) && $mail_host != '') {
+                            echo $mail_host;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                     <div id="mail-port-row" class="form-row">
                                                         <label for="mail-port">Port</label>
@@ -1057,15 +1076,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                             echo '25';
                                                                                                                                                                         }
                                                                                                                                                                         ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if mail_port is set and not blank
-                                                            if (isset($mail_port) && $mail_port != '') {
-                                                                echo $mail_port;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                                                echo 'disabled';
+                                                                                                                                                                            } ?> value="<?php
+                        // if mail_port is set and not blank
+                        if (isset($mail_port) && $mail_port != '') {
+                            echo $mail_port;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                     <div id="mail-auth-req-row" class="form-row">
                                                         <label for="mail-auth-req">Authentication Required</label>
@@ -1075,8 +1094,8 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                         echo 'checked';
                                                                                                                                                                     }
                                                                                                                                                                 } ?> <?php if (!$hasUpdateSettingsPermission) {
-                                                                echo ' disabled';
-                                                            } ?>>
+                                                                                                                                                                            echo ' disabled';
+                                                                                                                                                                        } ?>>
                                                         </div>
                                                     </div>
                                                     <div id="mail-username-row" class="form-row">
@@ -1089,15 +1108,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                                     echo 'username';
                                                                                                                                                                                 }
                                                                                                                                                                                 ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if mail_username is set and not blank
-                                                            if (isset($mail_username) && $mail_username != '') {
-                                                                echo $mail_username;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                                                        echo 'disabled';
+                                                                                                                                                                                    } ?> value="<?php
+                        // if mail_username is set and not blank
+                        if (isset($mail_username) && $mail_username != '') {
+                            echo $mail_username;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                     <div id="mail-password-row" class="form-row">
                                                         <label for="mail-password">Password</label>
@@ -1110,16 +1129,16 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                                         echo 'password';
                                                                                                                                                                                     }
                                                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if mail_password is set and not blank
-                                                            if (isset($mail_password) && $mail_password != '') {
-                                                                // mask the password with asterisks
-                                                                echo str_repeat('*', strlen($APP->getMailerPassword()));
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                                                            echo 'disabled';
+                                                                                                                                                                                        } ?> value="<?php
+                        // if mail_password is set and not blank
+                        if (isset($mail_password) && $mail_password != '') {
+                            // mask the password with asterisks
+                            echo str_repeat('*', strlen($APP->getMailerPassword()));
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                     <div id="mail-encryption-row" class="form-row">
                                                         <label for="mail-encryption">Encryption</label>
@@ -1166,15 +1185,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                                         echo 'user@example.com';
                                                                                                                                                                                     }
                                                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if mail_from_address is set and not blank
-                                                            if (isset($mail_from_address) && $mail_from_address != '') {
-                                                                echo $mail_from_address;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                                                            echo 'disabled';
+                                                                                                                                                                                        } ?> value="<?php
+                        // if mail_from_address is set and not blank
+                        if (isset($mail_from_address) && $mail_from_address != '') {
+                            echo $mail_from_address;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                     <div id="mail-from-name-row" class="form-row">
                                                         <label for="mail-from-name">From Name</label>
@@ -1186,15 +1205,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                                 echo 'Example User';
                                                                                                                                                                             }
                                                                                                                                                                             ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if mail_from_name is set and not blank
-                                                            if (isset($mail_from_name) && $mail_from_name != '') {
-                                                                echo $mail_from_name;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                                                    echo 'disabled';
+                                                                                                                                                                                } ?> value="<?php
+                        // if mail_from_name is set and not blank
+                        if (isset($mail_from_name) && $mail_from_name != '') {
+                            echo $mail_from_name;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1220,13 +1239,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                             echo strval(PRIVACY_POLICY);
                                                                                                                                                                         }
                                                                                                                                                                         ?>' <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?>><?php
-                                                        // if privacy_policy is set and not blank
-                                                        if (isset($privacy_policy) && $privacy_policy != '') {
-                                                            echo $privacy_policy;
-                                                        }
-                                                        ?></textarea>
+                                                                                                                                                                                echo 'disabled';
+                                                                                                                                                                            } ?>><?php
+                    // if privacy_policy is set and not blank
+                    if (isset($privacy_policy) && $privacy_policy != '') {
+                        echo $privacy_policy;
+                    }
+                    ?></textarea>
                                                         <small id="privacy-policy-help" class="form-text text-muted">Create the
                                                             Privacy
                                                             Policy style, using the WYSIWYG Editor</small>
@@ -1255,13 +1274,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                                 echo strval(TERMS_CONDITIONS);
                                                                                                                                                                             }
                                                                                                                                                                             ?>' <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?>><?php
-                                                        // if terms_conditions is set and not blank
-                                                        if (isset($terms_conditions) && $terms_conditions != '') {
-                                                            echo $terms_conditions;
-                                                        }
-                                                        ?></textarea>
+                                                                                                                                                                                    echo 'disabled';
+                                                                                                                                                                                } ?>><?php
+                    // if terms_conditions is set and not blank
+                    if (isset($terms_conditions) && $terms_conditions != '') {
+                        echo $terms_conditions;
+                    }
+                    ?></textarea>
                                                         <small id="terms-conditions-help" class="form-text text-muted">Create
                                                             the
                                                             Terms
@@ -1293,12 +1312,12 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                         echo '';
                                                                                                                     }
                                                                                                                 } ?>" id="hotjar-enable" name="hotjar_enable" <?php if (isset($enableHotjar) && $enableHotjar != '') {
-                                                                                                        if ($enableHotjar = true) {
-                                                                                                            echo 'checked';
-                                                                                                        }
-                                                                                                    } ?> <?php if (!$hasUpdateSettingsPermission) {
-                                                                echo ' disabled';
-                                                            } ?>>
+                                                                                                                                                                    if ($enableHotjar = true) {
+                                                                                                                                                                        echo 'checked';
+                                                                                                                                                                    }
+                                                                                                                                                                } ?> <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                echo ' disabled';
+                                                                                                            } ?>>
                                                         </div>
                                                     </div>
                                                     <div id="hotjar-siteid-row" class="form-row">
@@ -1311,15 +1330,15 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                             echo 'Hotjar Site ID';
                                                                                                                                                         }
                                                                                                                                                         ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if hotjarSiteId is set and not blank
-                                                            if (isset($hotjarSiteId) && $hotjarSiteId != '') {
-                                                                echo $hotjarSiteId;
-                                                            } else {
-                                                                echo '';
-                                                            }
-                                                            ?>">
+                                                                                                                                                                echo 'disabled';
+                                                                                                                                                            } ?> value="<?php
+                        // if hotjarSiteId is set and not blank
+                        if (isset($hotjarSiteId) && $hotjarSiteId != '') {
+                            echo $hotjarSiteId;
+                        } else {
+                            echo '';
+                        }
+                        ?>">
                                                     </div>
                                                     <div id="hotjar-version-row" class="form-row">
                                                         <label for="hotjar-version">Hotjar Version</label>
@@ -1331,19 +1350,70 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                             echo '6';
                                                                                                                                                         }
                                                                                                                                                         ?>" <?php if (!$hasUpdateSettingsPermission) {
-                echo 'disabled';
-            } ?> value="<?php
-                                                            // if hotjarVersion is set and not blank
-                                                            if (isset($hotjarVersion) && $hotjarVersion != '') {
-                                                                echo $hotjarVersion;
-                                                            } else {
-                                                                echo '6';
-                                                            }
-                                                            ?>">
+                                                                                                                                                                echo 'disabled';
+                                                                                                                                                            } ?> value="<?php
+                        // if hotjarVersion is set and not blank
+                        if (isset($hotjarVersion) && $hotjarVersion != '') {
+                            echo $hotjarVersion;
+                        } else {
+                            echo '6';
+                        }
+                        ?>">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-row">
+                                            <label for="google_analytics">
+                                                <h3>Google Analytics</h3>
+                                            </label>
+                                            <div id="google_analytics">
+                                                <?php  // get the google analytics tracking settings
+                                                $enableGA = $APP->getGoogleAnalyticsEnabled();
+                                                $gaTrackingTag = $APP->getGoogleAnalyticsTag();
+                                                ?>
+                                                <div class="form-group">
+                                                    <div class="form-row">
+                                                        <label for="ga-enable">Enable Google Analytics Tracking</label>
+                                                        <div class="form-check" id="ga-enable-container">
+                                                            <input class="form-check" type="checkbox" value="<?php if (isset($enableGA) && $enableGA != '') {
+                                                                                                                    if ($enableGA = true) {
+                                                                                                                        echo 'true';
+                                                                                                                    } else {
+                                                                                                                        echo '';
+                                                                                                                    }
+                                                                                                                } ?>" id="ga-enable" name="ga_enable" <?php if (isset($enableGA) && $enableGA != '') {
+                                                                                                                                                                if ($enableGA = true) {
+                                                                                                                                                                    echo 'checked';
+                                                                                                                                                                }
+                                                                                                                                                            } ?> <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                            echo ' disabled';
+                                                                                                        } ?>>
+                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div id="ga_tracking_tag-row" class="form-row">
+                                                                                                        <label for="ga_tracking_tag">Google Analytics Tracking Tag</label>
+                                                                                                        <input type="text" class="form-control" id="ga_tracking_tag" name="ga_tracking_tag" placeholder="<?php
+                                                                                                                                                                                        // if gaTrackingTag is set and not blank
+                                                                                                                                                                                        if (isset($gaTrackingTag) && $gaTrackingTag != '') {
+                                                                                                                                                                                            echo $gaTrackingTag;
+                                                                                                                                                                                        } else {
+                                                                                                                                                                                            echo 'G-XXXXXXXXXX';
+                                                                                                                                                                                        }
+                                                                                                                                                                                        ?>" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                                                echo 'disabled';
+                                                                                                                                                                                            } ?> value="<?php if (isset($gaTrackingTag) && $gaTrackingTag != '') {
+                                                                                                                                                                                                                echo $gaTrackingTag;
+                                                                                                                                                                                                            } ?>">
+                                                                                                                                                                                                            </div>
+                                                                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
                                         <div class="form-group">
                                             <div class="form-row">
                                                 <button id="submit-btn" name="btnSubmit" type="submit" class="btn btn-primary" <?php if (!$hasUpdateSettingsPermission) {
@@ -1354,6 +1424,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                 } ?>>Reset</button>
                                             </div>
                                         </div>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -1474,6 +1545,32 @@ if (!isset($hasViewDashboardPermission)) {
                             //show the hotjar site id and version
                             document.getElementById('hotjar-siteid-row').style.display = 'block';
                             document.getElementById('hotjar-version-row').style.display = 'block';
+                        }
+                    });
+                });
+
+                //add an event listener to show/hide the google analytics settings
+                document.addEventListener("DOMContentLoaded", function() {
+                    //get the ga enable
+                    var gaEnable = document.getElementById('ga-enable').checked;
+
+                    //if the ga enable is not checked
+                    if (!gaEnable) {
+                        //hide the ga tracking tag
+                        document.getElementById('ga_tracking_tag-row').style.display = 'none';
+                    }
+
+                    //add an event listener to the ga enable checkbox
+                    document.getElementById('ga-enable').addEventListener('change', function() {
+                        //get the ga enable
+                        var gaEnable = document.getElementById('ga-enable').checked;
+                        //if the ga enable is not checked
+                        if (!gaEnable) {
+                            //hide the ga tracking tag
+                            document.getElementById('ga_tracking_tag-row').style.display = 'none';
+                        } else {
+                            //show the ga tracking tag
+                            document.getElementById('ga_tracking_tag-row').style.display = 'block';
                         }
                     });
                 });
