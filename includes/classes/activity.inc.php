@@ -203,54 +203,31 @@ class Activity
      * @return string $enum
      */
     private function simplifyActionEnum(string $action): string {
-        switch (true) {
-            case stripos($action, 'created') !== false:
-            case stripos($action, 'generated') !== false:
-                $action = 'CREATE';
-                break;
-            case stripos($action, 'permission') !== false:
-            case stripos($action, 'updated') !== false:
-            case stripos($action, 'added to') !== false:
-            case stripos($action, 'modified') !== false:
-            case stripos($action, 'removed from') !== false:
-            case stripos($action, 'assigned') !== false:
-            case stripos($action, 'unassigned') !== false:
-            case stripos($action, 'changed') !== false:
-                $action = 'MODIFY';
-                break;
-            case stripos($action, 'deleted') !== false:
-                $action = 'DELETE';
-                break;
-            case stripos($action, 'logged in') !== false:
-                $action = 'LOGIN';
-                break;
-            case stripos($action, 'logged out') !== false:
-                $action = 'LOGOUT';
-                break;
-            case stripos($action, 'Failed to log the user in') !== false:
-                $action = 'LOGIN FAILED';
-                break;
-            case stripos($action, 'reset') !== false:
-                $action = 'RESET';
-                break;
-            case stripos($action, 'uploaded') !== false:
-            case stripos($action, 'exported') !== false:
-                $action = 'UPLOAD';
-                break;
-            case stripos($action, 'downloaded') !== false:
-                $action = 'DOWNLOAD';
-                break;
-            case stripos($action, 'error') !== false:
-                $action = 'ERROR';
-                break;
-            case stripos($action, 'email') !== false:
-                $action = 'EMAIL';
-                break;
-            default:
-                $action = 'OTHER';
-                break;
+        $action = strtolower($action); //convert the action to lowercase for easier comparison
+        if (stripos($action, 'created') !== false || stripos($action, 'generated') !== false) {
+            return 'CREATE';
+        } elseif (stripos($action, 'permission') !== false || stripos($action, 'updated') !== false || stripos($action, 'added to') !== false || stripos($action, 'modified') !== false || stripos($action, 'removed from') !== false || stripos($action, 'assigned') !== false || stripos($action, 'unassigned') !== false || stripos($action, 'changed') !== false) {
+            return 'MODIFY';
+        } elseif (stripos($action, 'deleted') !== false) {
+            return 'DELETE';
+        } elseif (stripos($action, 'logged in') !== false) {
+            return 'LOGIN';
+        } elseif (stripos($action, 'logged out') !== false) {
+            return 'LOGOUT';
+        } elseif (stripos($action, 'failed to log the user in') !== false) {
+            return 'LOGIN FAILED';
+        } elseif (stripos($action, 'reset') !== false) {
+            return 'RESET';
+        } elseif (stripos($action, 'uploaded') !== false || stripos($action, 'exported') !== false) {
+            return 'UPLOAD';
+        } elseif (stripos($action, 'downloaded') !== false) {
+            return 'DOWNLOAD';
+        } elseif (stripos($action, 'error') !== false) {
+            return 'ERROR';
+        } elseif (stripos($action, 'email') !== false) {
+            return 'EMAIL';
+        } else {
+            return 'OTHER';
         }
-
-        return $action;
     }
 }
