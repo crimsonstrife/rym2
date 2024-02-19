@@ -46,6 +46,7 @@
         "classmap": [
             "includes/classes/application.inc.php",
             "includes/classes/users.inc.php",
+            "includes/classes/userlogin.inc.php",
             "includes/classes/auth.inc.php",
             "includes/classes/roles.inc.php",
             "includes/classes/permissions.inc.php",
