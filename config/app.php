@@ -502,6 +502,41 @@ if ($hotjar_version != null || $hotjar_version != '') {
     define('HOTJAR_VERSION', null);
 }
 
+/* Get the Google Analytics settings and set the constants */
+$google_analytics_enabled = null;
+//try to get the google_analytics_enabled setting
+try {
+    $google_analytics_enabled = $APP->getGoogleAnalyticsEnabled();
+} catch (Exception $e) {
+    $google_analytics_enabled = null;
+}
+
+//Check if the google_analytics_enabled is set in the database, if not set it to null
+if ($google_analytics_enabled != null || $google_analytics_enabled != '') {
+    //define the google_analytics_enabled constant
+    define('GOOGLE_ANALYTICS_ENABLED', $google_analytics_enabled);
+} else {
+    define('GOOGLE_ANALYTICS_ENABLED', null);
+}
+
+$google_analytics_tag = null;
+//if google analytics is enabled, try to get the google_analytics_tag
+if (GOOGLE_ANALYTICS_ENABLED == true) {
+    try {
+        $google_analytics_tag = $APP->getGoogleAnalyticsTag();
+    } catch (Exception $e) {
+        $google_analytics_tag = null;
+    }
+}
+
+//Check if the google_analytics_tag is set in the database, if not set it to null
+if ($google_analytics_tag != null || $google_analytics_tag != '') {
+    //define the google_analytics_tag constant
+    define('GOOGLE_ANALYTICS_ID', $google_analytics_tag);
+} else {
+    define('GOOGLE_ANALYTICS_ID', null);
+}
+
 /**
  * Get the asset path for the application
  * Returns the asset path for the application with trailing slash
@@ -802,9 +837,22 @@ function includeHeader(): string
     })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
 </script>";
     }
+    $google_analytics_activation = null;
+    //check if google analytics is enabled
+    if (GOOGLE_ANALYTICS_ENABLED == true) {
+        //setup the google analytics activation script
+        $google_analytics_activation = "<!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src='https://www.googletagmanager.com/gtag/js?id=" . GOOGLE_ANALYTICS_ID . "'></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '" . GOOGLE_ANALYTICS_ID . "');
+        </script>";
+    }
 
     /* Assemble the header for the application */
-    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $select2BootstrapCSS . $fontawesomeCSS . $styleCSS . $compatibilityCSS . $responsiveCSS . $jQuery . $jqueryMigrate . $hotjar_activation;
+    $header = $boostrapCSS . $datatablesCSS . $select2CSS . $select2BootstrapCSS . $fontawesomeCSS . $styleCSS . $compatibilityCSS . $responsiveCSS . $jQuery . $jqueryMigrate . $hotjar_activation . $google_analytics_activation;
 
     /* Return the header for the application */
     return $header;

@@ -3536,6 +3536,302 @@ class Application
         }
     }
 
+    // Google Analytics Settings
+
+    /**
+     * Get Google Analytics Enabled Status
+     * Get the google analytics enabled status from the settings table
+     *
+     * @return bool //the google analytics enabled status bool
+     */
+    public function getGoogleAnalyticsEnabled()
+    {
+        //SQL statement to get the google analytics enabled status
+        $sql = "SELECT ga_enable FROM settings WHERE isSet = 'SET'";
+
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the ga_enabled is set or not
+                    if (isset($row['ga_enable'])) {
+                        if ($row['ga_enable'] == 1) {
+                            //Return true
+                            return true;
+                        } elseif ($row['ga_enable'] == 0) {
+                            //Return false
+                            return false;
+                        } else {
+                            //Return false
+                            return false;
+                        }
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //Return false
+                    return false;
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Set Google Analytics Enabled Status
+     * Set the google analytics enabled status in the settings table
+     *
+     * @param bool $ga_enabled //the google analytics enabled status
+     * @return bool //true if the google analytics enabled status was set, false if not
+     */
+    public function setGoogleAnalyticsEnabled($ga_enabled = null)
+    {
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Check if the google analytics enabled status is set in the settings table already
+                if ($this->getGoogleAnalyticsEnabled() != '' || $this->getGoogleAnalyticsEnabled() != null) {
+                    //SQL statement to update the google analytics enabled status
+                    $sql = "UPDATE settings SET ga_enable = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    if ($ga_enabled) {
+                        //set the status to 1
+                        $status = 1;
+                    } else {
+                        //set the status to 0
+                        $status = 0;
+                    }
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $status);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        if ($ga_enabled) {
+                            //log the activity
+                            $activity = new Activity();
+                            $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Enabled Status Changed', 'The google analytics enabled status was changed to' . $ga_enabled . '.');
+                            //Return true
+                            return true;
+                        } else {
+                            //Return false
+                            return false;
+                        }
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the google analytics enabled status, where isSet is SET
+                    $sql = "UPDATE settings SET ga_enable = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    if ($ga_enabled) {
+                        //set the status to 1
+                        $status = 1;
+                    } else {
+                        //set the status to 0
+                        $status = 0;
+                    }
+
+                    //Bind the parameters
+                    $role_statement->bind_param('i', $status);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0 && $ga_enabled) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Enabled Status Changed', 'The google analytics enabled status was changed to' . $ga_enabled . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Get Google Analytics Tag
+     * Get the Google Analytics tag from the settings table
+     *
+     * @return string //the Google Analytics tag
+     */
+    public function getGoogleAnalyticsTag() {
+        //SQL statement to get the Google Analytics tag
+        $sql = "SELECT google_analytics FROM settings WHERE isSet = 'SET'";
+
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
+
+                //Execute the statement
+                $role_statement->execute();
+
+                //Get the results
+                $result = $role_statement->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the google_analytics is set or not
+                    if (isset($row['google_analytics'])) {
+                        //Return the google_analytics
+                        return $row['google_analytics'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Set Google Analytics Tag
+     * Set the Google Analytics tag in the settings table
+     *
+     * @param string $google_analytics //the Google Analytics tag
+     * @return bool //true if the Google Analytics tag was set, false if not
+     */
+    public function setGoogleAnalyticsTag($google_analytics = null) {
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Check if the Google Analytics tag is set in the settings table already
+                if ($this->getGoogleAnalyticsTag() != '' || $this->getGoogleAnalyticsTag() != null) {
+                    //SQL statement to update the Google Analytics tag
+                    $sql = "UPDATE settings SET google_analytics = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $google_analytics);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Tag Changed', 'The Google Analytics tag was changed to ' . $google_analytics . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the Google Analytics tag, where isSet is SET
+                    $sql = "UPDATE settings SET google_analytics = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $role_statement = $this->mysqli->prepare($sql);
+
+                    //Bind the parameters
+                    $role_statement->bind_param('s', $google_analytics);
+
+                    //Execute the statement
+                    $role_statement->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($role_statement->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Tag Changed', 'The Google Analytics tag was changed to ' . $google_analytics . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
 
     /**
      * Search the database with a given search term or string
@@ -3857,7 +4153,7 @@ class Application
     public function resetSettings()
     {
         //SQL statement to reset the settings
-        $sql = "UPDATE settings SET app_name = null, app_url = null, company_name = null, company_url = null, company_logo = null, company_address = null, company_phone = null, app_logo = null, contact_email = null, mail_host = null, mail_port = null, mail_username = null, mail_password = null, mail_encryption = null, mail_from_address = null, mail_from_name = null, mail_auth_req = null, privacy_policy = ?, terms_conditions = ?, hotjar_enable = null, hotjar_siteid = null, hotjar_version = null, WHERE isSet = 'SET'";
+        $sql = "UPDATE settings SET app_name = null, app_url = null, company_name = null, company_url = null, company_logo = null, company_address = null, company_phone = null, app_logo = null, contact_email = null, mail_host = null, mail_port = null, mail_username = null, mail_password = null, mail_encryption = null, mail_from_address = null, mail_from_name = null, mail_auth_req = null, privacy_policy = ?, terms_conditions = ?, ga_enable = null, hotjar_siteid = null, hotjar_version = null, WHERE isSet = 'SET'";
 
         //Check that mysqli is set
         if (isset($this->mysqli)) {
