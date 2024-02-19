@@ -978,7 +978,7 @@ class Student
      * @param int $student_id
      * @return bool
      */
-    public function removeStudentFromEvent(int $event_id, int $student_id): bool
+    private function removeStudentFromEvent(int $event_id, int $student_id): bool
     {
         //SQL statement to remove a student from an event
         $sql = "DELETE FROM student_at_event WHERE event_id = $event_id AND student_id = $student_id";
@@ -1075,7 +1075,7 @@ class Student
      * @param int $student_id
      * @return bool
      */
-    public function deleteStudentContactHistory(int $student_id): bool
+    private function deleteStudentContactHistory(int $student_id): bool
     {
         //include the contact class, so we can delete the contact history
         $contactObject = new Contact();
@@ -1206,12 +1206,7 @@ class Student
 
         //if the student has any contact history
         if (!empty($contactHistory)) {
-            //loop through the contact history
-            foreach ($contactHistory as $contact) {
-                //delete the contact history
-                $contactObject = new Contact();
-                $contactObject->removeContact(intval($contact['id']));
-            }
+            $this->deleteStudentContactHistory($student_id);
         }
 
         //create the sql statement
