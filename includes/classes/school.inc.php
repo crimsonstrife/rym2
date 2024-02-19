@@ -73,7 +73,7 @@ class School
     {
         $school = array();
         $sql = "SELECT * FROM school WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -93,7 +93,7 @@ class School
     {
         $school_name = "";
         $sql = "SELECT name FROM school WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -113,7 +113,7 @@ class School
     {
         $school_address = "";
         $sql = "SELECT address FROM school WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -133,7 +133,7 @@ class School
     {
         $school_city = "";
         $sql = "SELECT city FROM school WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -153,7 +153,7 @@ class School
     {
         $school_state = "";
         $sql = "SELECT state FROM school WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -173,7 +173,7 @@ class School
     {
         $school_zip = "";
         $sql = "SELECT zipcode FROM school WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -211,7 +211,7 @@ class School
     {
         $created_at = "";
         $sql = "SELECT created_at FROM school WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -231,7 +231,7 @@ class School
     {
         $updated_at = "";
         $sql = "SELECT updated_at FROM school WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -251,7 +251,7 @@ class School
     {
         $created_by = new User();
         $sql = "SELECT created_by FROM school WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -277,7 +277,7 @@ class School
     {
         $updated_by = new User();
         $sql = "SELECT updated_by FROM school WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -303,7 +303,7 @@ class School
     {
         $school_logo = "";
         $sql = "SELECT school_logo FROM school_branding WHERE school_id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -327,20 +327,20 @@ class School
         $defaultColor = "#000000";
         // Check if the school branding exists
         $sql = "SELECT * FROM school_branding WHERE school_id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         if ($stmt->get_result()->num_rows > 0) {
             // Update the school branding
             $sql = "UPDATE school_branding SET school_logo = ? WHERE school_id = ?";
-            $stmt = $this->mysqli->prepare($sql);
+            $stmt = prepareStatement($this->mysqli, $sql);
             $stmt->bind_param("ii", $logo, $school_id);
             $stmt->execute();
             $result = true;
         } else {
             // Create the school branding
             $sql = "INSERT INTO school_branding (school_id, school_logo, school_color) VALUES (?, ?, ?)";
-            $stmt = $this->mysqli->prepare($sql);
+            $stmt = prepareStatement($this->mysqli, $sql);
             $stmt->bind_param("iis", $school_id, $logo, $defaultColor);
             $stmt->execute();
             $result = true;
@@ -358,7 +358,7 @@ class School
     {
         $school_color = "";
         $sql = "SELECT school_color FROM school_branding WHERE school_id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -381,20 +381,20 @@ class School
         $defaultLogo = NULL;
         // Check if the school branding exists
         $sql = "SELECT * FROM school_branding WHERE school_id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $school_id);
         $stmt->execute();
         if ($stmt->get_result()->num_rows > 0) {
             // Update the school branding
             $sql = "UPDATE school_branding SET school_color = ? WHERE school_id = ?";
-            $stmt = $this->mysqli->prepare($sql);
+            $stmt = prepareStatement($this->mysqli, $sql);
             $stmt->bind_param("si", $color, $school_id);
             $stmt->execute();
             $result = true;
         } else {
             // Create the school branding
             $sql = "INSERT INTO school_branding (school_id, school_logo, school_color) VALUES (?, ?, ?)";
-            $stmt = $this->mysqli->prepare($sql);
+            $stmt = prepareStatement($this->mysqli, $sql);
             $stmt->bind_param("iis", $school_id, $defaultLogo, $color);
             $stmt->execute();
             $result = true;
@@ -420,7 +420,7 @@ class School
         $updated_at = date("Y-m-d H:i:s");
         $result = false;
         $sql = "UPDATE school SET name = ?, address = ?, city = ?, state = ?, zipcode = ?, updated_at = ?, updated_by = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ssssssii", $school_name, $school_address, $school_city, $school_state, $school_zip, $updated_at, $updated_by, $school_id);
         $stmt->execute();
         $result = true;
@@ -448,7 +448,7 @@ class School
         $created_at = date("Y-m-d H:i:s");
         $result = false;
         $sql = "INSERT INTO school (name, address, city, state, zipcode, created_at, created_by, updated_at, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ssssssisi", $school_name, $school_address, $school_city, $school_state, $school_zip, $created_at, $created_by, $created_at, $created_by);
         $stmt->execute();
         $result = true;
@@ -469,7 +469,7 @@ class School
     {
         $school_id = 0;
         $sql = "SELECT id FROM school WHERE name = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("s", $school_name);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -492,7 +492,7 @@ class School
         //SQL statement to search for a school name, address, city, state, or zip code using a search term
         $sql = "SELECT * FROM school WHERE name LIKE ? OR address LIKE ? OR city LIKE ? OR state LIKE ? OR zipcode LIKE ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //setup the search term
         $searchTerm = "%" . $searchTerm . "%";
         //bind the parameters
@@ -537,7 +537,7 @@ class School
         $sql = "DELETE FROM school WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $school_id);
@@ -575,7 +575,7 @@ class School
         $sql = "SELECT school_id FROM school_branding WHERE school_logo = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $media_id);

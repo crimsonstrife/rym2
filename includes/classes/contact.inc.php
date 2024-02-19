@@ -49,7 +49,7 @@ class Contact
         $sql = "SELECT * FROM contact_log";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //execute the statement
         $stmt->execute();
@@ -88,7 +88,7 @@ class Contact
         $sql = "INSERT INTO contact_log (student, auto, sender, send_date, subject, message) VALUES (?, ?, ?, ?, ?, ?)";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param('iiisss', $studentId, $auto, $senderId, $date, $subject, $message);
@@ -130,7 +130,7 @@ class Contact
         $sql = "SELECT * FROM contact_log WHERE student = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param('i', $studentId);
@@ -167,7 +167,7 @@ class Contact
         $sql = "DELETE FROM contact_log WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param('i', $contactId);
@@ -219,7 +219,7 @@ class Contact
         }
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param('i', $sender);

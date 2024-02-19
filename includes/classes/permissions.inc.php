@@ -60,7 +60,7 @@ class Permission
         $sql = "SELECT * FROM permissions";
 
         //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //Execute the statement
         $stmt->execute();
@@ -87,7 +87,7 @@ class Permission
         $sql = "SELECT * FROM permissions WHERE id = ?";
 
         //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the ID to the statement
         $stmt->bind_param("i", $id);
@@ -117,7 +117,7 @@ class Permission
         $sql = "SELECT name FROM permissions WHERE id = ?";
 
         //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the ID to the statement
         $stmt->bind_param("i", $id);
@@ -153,7 +153,7 @@ class Permission
         $sql = "SELECT id FROM permissions WHERE name = ?";
 
         //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the name to the statement
         $stmt->bind_param("s", $name);

@@ -466,7 +466,7 @@ class Student
         $sql = "SELECT * FROM student WHERE major = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $major_id);
@@ -525,7 +525,7 @@ class Student
         $sql = "SELECT * FROM student WHERE degree = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $degree_id);
@@ -609,7 +609,7 @@ class Student
         $sql = "SELECT * FROM student WHERE school = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $school_id);
@@ -1110,7 +1110,7 @@ class Student
         //SQL statement to search for students by their first name, last name, email, or phone number using a search term
         $sql = "SELECT * FROM student WHERE first_name LIKE ? OR last_name LIKE ? OR email LIKE ? OR phone LIKE ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //setup the search term
         $searchTerm = "%" . $searchTerm . "%";
         //bind the parameters
@@ -1148,7 +1148,7 @@ class Student
         //SQL statement to get students by interest
         $sql = "SELECT * FROM student WHERE interest = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameters
         $stmt->bind_param("i", $interest_id);
         //execute the statement
@@ -1219,7 +1219,7 @@ class Student
         $sql = "DELETE FROM student WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $student_id);

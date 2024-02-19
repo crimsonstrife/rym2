@@ -68,7 +68,7 @@ class Roles
                 error_log('Error: ' . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
             }
         }
 
@@ -105,7 +105,7 @@ class Roles
                 error_log('Error: ' . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
             }
         }
 
@@ -145,7 +145,7 @@ class Roles
                 error_log('Error: ' . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
             }
         }
 
@@ -177,7 +177,7 @@ class Roles
         $sql = "SELECT permission_id FROM role_has_permission WHERE role_id = ?";
 
         //Prepare the SQL statement for execution
-        $permission_statement = $this->mysqli->prepare($sql);
+        $permission_statement = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters to the SQL statement
         $permission_statement->bind_param("i", $id);
@@ -239,7 +239,7 @@ class Roles
                 error_log('Error: ' . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
             }
         }
 
@@ -314,7 +314,7 @@ class Roles
                 $sql = "INSERT INTO role_has_permission (role_id, permission_id, created_at, created_by, updated_at, updated_by) VALUES (?, ?, ?, ?, ?, ?)";
 
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Bind the parameters to the SQL statement
                 $role_statement->bind_param("iisisi", $roleId, $permissionId, $date, $userId, $date, $userId);
@@ -368,7 +368,7 @@ class Roles
                 error_log('Error: ' . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
             }
         }
 
@@ -409,7 +409,7 @@ class Roles
         $sql = "SELECT * FROM user_has_role WHERE role_id = ?";
 
         //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters to the SQL statement
         $stmt->bind_param("i", $roleId);
@@ -446,7 +446,7 @@ class Roles
         $sql = "SELECT created_at FROM user_has_role WHERE user_id = ? AND role_id = ?";
 
         //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters to the SQL statement
         $stmt->bind_param("ii", $userId, $roleId);
@@ -483,7 +483,7 @@ class Roles
         $sql = "SELECT updated_at FROM user_has_role WHERE user_id = ? AND role_id = ?";
 
         //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters to the SQL statement
         $stmt->bind_param("ii", $userId, $roleId);
@@ -529,7 +529,7 @@ class Roles
             $sql = "INSERT INTO roles (name, created_by, created_at, updated_by, updated_at) VALUES (?, ?, ?, ?, ?)";
 
             //Prepare the SQL statement for execution
-            $stmt = $this->mysqli->prepare($sql);
+            $stmt = prepareStatement($this->mysqli, $sql);
 
             //Bind the parameters to the SQL statement
             $stmt->bind_param("sisis", $roleName, $createdBy, $date, $createdBy, $date);
@@ -590,7 +590,7 @@ class Roles
         $sql = "UPDATE roles SET name = ?, updated_at = ?, updated_by = ? WHERE id = ?";
 
         //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters to the SQL statement
         $stmt->bind_param("ssii", $roleName, $date, $roleId, $userId);
@@ -758,7 +758,7 @@ class Roles
         $sql = "SELECT id FROM roles WHERE name = ?";
 
         //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters to the SQL statement
         $stmt->bind_param("s", $roleName);
@@ -795,7 +795,7 @@ class Roles
         $sql = "SELECT created_at, updated_at FROM role_has_permission WHERE role_id = ? AND permission_id = ?";
 
         //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters to the SQL statement
         $stmt->bind_param("ii", $roleId, $permissionId);
@@ -884,7 +884,7 @@ class Roles
                 $sql = "DELETE FROM roles WHERE id = ?";
 
                 //Prepare the SQL statement for execution
-                $stmt = $this->mysqli->prepare($sql);
+                $stmt = prepareStatement($this->mysqli, $sql);
 
                 //Bind the parameters to the SQL statement
                 $stmt->bind_param("i", $roleId);
@@ -910,7 +910,7 @@ class Roles
                 $sql = "DELETE FROM roles WHERE id = ?";
 
                 //Prepare the SQL statement for execution
-                $stmt = $this->mysqli->prepare($sql);
+                $stmt = prepareStatement($this->mysqli, $sql);
 
                 //Bind the parameters to the SQL statement
                 $stmt->bind_param("i", $roleId);

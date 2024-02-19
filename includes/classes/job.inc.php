@@ -256,7 +256,7 @@ class Job
     {
         //get the created by user id from the job table
         $sql = "SELECT created_by FROM jobs WHERE id = $id";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -287,7 +287,7 @@ class Job
     {
         //get the last updated by user id from the job table
         $sql = "SELECT updated_by FROM jobs WHERE id = $id";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -339,7 +339,7 @@ class Job
 
         //prepare the sql statement
         $sql = "INSERT INTO jobs (name, description, summary, type, field, education, skills, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ssssiisssii", $name, $description, $summary, $type, $field, $education, $skillsString, $date, $date, $created_by, $created_by);
         $stmt->execute();
 
@@ -386,7 +386,7 @@ class Job
 
         //prepare the sql statement
         $sql = "UPDATE jobs SET name = ?, description = ?, summary = ?, type = ?, field = ?, education = ?, skills = ?, updated_at = ?, updated_by = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ssssiissii", $name, $description, $summary, $type, $field, $education, $skillsString, $date, $updated_by, $id);
         $stmt->execute();
 
@@ -440,7 +440,7 @@ class Job
         $sql = "DELETE FROM jobs WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $job_id);
@@ -511,7 +511,7 @@ class Job
         $date = date('Y-m-d H:i:s');
         //prepare the sql statement
         $sql = "UPDATE jobs SET skills = ?, updated_at = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ssi", $skillsString, $date, $id);
         $stmt->execute();
 
@@ -605,7 +605,7 @@ class Job
         $date = date('Y-m-d H:i:s');
         //prepare the sql statement
         $sql = "UPDATE jobs SET education = ?, updated_at = ?, updated_by = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("isii", $education, $date, $updated_by, $id);
         $stmt->execute();
 

@@ -330,7 +330,7 @@ class Degree extends Grade implements Major
         $sql = "DELETE FROM degree_lvl WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $lvl_id);
@@ -375,7 +375,7 @@ class Degree extends Grade implements Major
         $sql = "DELETE FROM major WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $major_id);
@@ -573,7 +573,7 @@ class Degree extends Grade implements Major
         $user = new User();
 
         $sql = "SELECT updated_by FROM degree_lvl WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $lvl_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -603,7 +603,7 @@ class Degree extends Grade implements Major
         $user = new User();
 
         $sql = "SELECT updated_by FROM major WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $major_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -633,7 +633,7 @@ class Degree extends Grade implements Major
         $user = new User();
 
         $sql = "SELECT updated_by FROM degree_lvl WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $lvl_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -663,7 +663,7 @@ class Degree extends Grade implements Major
         $user = new User();
 
         $sql = "SELECT updated_by FROM major WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $major_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -691,7 +691,7 @@ class Degree extends Grade implements Major
     public function setGradeCreatedBy(int $lvl_id, int $user_id): bool
     {
         $sql = "UPDATE degree_lvl SET created_by = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ii", $user_id, $lvl_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -711,7 +711,7 @@ class Degree extends Grade implements Major
     public function setMajorCreatedBy(int $major_id, int $user_id): bool
     {
         $sql = "UPDATE major SET created_by = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ii", $user_id, $major_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -731,7 +731,7 @@ class Degree extends Grade implements Major
     public function setGradeUpdatedBy(int $lvl_id, int $user_id): bool
     {
         $sql = "UPDATE degree_lvl SET updated_by = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ii", $user_id, $lvl_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -751,7 +751,7 @@ class Degree extends Grade implements Major
     public function setMajorUpdatedBy(int $major_id, int $user_id): bool
     {
         $sql = "UPDATE major SET updated_by = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ii", $user_id, $major_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -821,7 +821,7 @@ class Degree extends Grade implements Major
         //prepare sql statement
         $sql = "SELECT * FROM degree_lvl WHERE id = ?";
         //prepare the query
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameters
         $stmt->bind_param('i', $lvl_id);
         //execute the query
@@ -850,7 +850,7 @@ class Degree extends Grade implements Major
         //prepare the query
         $sql = "UPDATE major SET created_at = ? WHERE id = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameters
         $stmt->bind_param('si', $created_at, $major_id);
         //execute the query
@@ -879,7 +879,7 @@ class Degree extends Grade implements Major
         //prepare the query
         $sql = "UPDATE major SET updated_at = ? WHERE id = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameters
         $stmt->bind_param('si', $updated_at, $major_id);
         //execute the query
@@ -908,7 +908,7 @@ class Degree extends Grade implements Major
         //prepare the query
         $sql = "UPDATE degree_lvl SET created_at = ? WHERE id = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameters
         $stmt->bind_param('si', $created_at, $lvl_id);
         //execute the query
@@ -937,7 +937,7 @@ class Degree extends Grade implements Major
         //prepare the query
         $sql = "UPDATE degree_lvl SET updated_at = ? WHERE id = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameters
         $stmt->bind_param('si', $updated_at, $lvl_id);
         //execute the query

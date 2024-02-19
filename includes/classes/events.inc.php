@@ -207,7 +207,7 @@ class Event
         $sql = "SELECT * FROM event WHERE location = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $locationId);
@@ -290,7 +290,7 @@ class Event
     {
         //SQL statement to get a single event by ID
         $sql = "SELECT created_by FROM event WHERE id = $id";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -321,7 +321,7 @@ class Event
     {
         //SQL statement to get a single event by ID
         $sql = "SELECT updated_by FROM event WHERE id = $id";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -473,7 +473,7 @@ class Event
         //SQL statement to check if the event slug already exists
         $sql = "SELECT * FROM event_slugs WHERE event_id = ? AND slug = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameters
         $stmt->bind_param("is", $id, $slug);
         //execute the statement
@@ -501,7 +501,7 @@ class Event
         //SQL statement to check if the event slug already exists
         $sql = "SELECT * FROM event_slugs WHERE slug = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameters
         $stmt->bind_param("s", $slug);
         //execute the statement
@@ -528,7 +528,7 @@ class Event
         //SQL statement to get the event id by slug
         $sql = "SELECT event_id FROM event_slugs WHERE slug = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameter
         $stmt->bind_param("s", $slug);
         //execute the statement
@@ -564,7 +564,7 @@ class Event
                 //SQL statement to update the event slug
                 $sql = "UPDATE event_slugs SET slug = ? WHERE event_id = ?";
                 //prepare the statement
-                $stmt = $this->mysqli->prepare($sql);
+                $stmt = prepareStatement($this->mysqli, $sql);
                 //bind the parameters
                 $stmt->bind_param("si", $slug, $id);
                 //execute the statement
@@ -590,7 +590,7 @@ class Event
             //SQL statement to update the event slug
             $sql = "UPDATE event_slugs SET slug = ? WHERE event_id = ?";
             //prepare the statement
-            $stmt = $this->mysqli->prepare($sql);
+            $stmt = prepareStatement($this->mysqli, $sql);
             //bind the parameters
             $stmt->bind_param("si", $slug, $id);
             //execute the statement
@@ -655,7 +655,7 @@ class Event
         //SQL statement to get the event slug
         $sql = "SELECT slug FROM event_slugs WHERE event_id = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameters
         $stmt->bind_param("i", $id);
         //execute the statement
@@ -682,7 +682,7 @@ class Event
         //SQL statement to create the event slug
         $sql = "INSERT INTO event_slugs (event_id, slug) VALUES (?, ?)";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //get the event name
         $name = $this->getEventName($id);
         //slugify the name
@@ -737,7 +737,7 @@ class Event
         $sql = "SELECT * FROM event_slugs WHERE slug = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("s", $slug);
@@ -779,7 +779,7 @@ class Event
         $sql = "SELECT * FROM event_branding WHERE event_id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $id);
@@ -813,7 +813,7 @@ class Event
         $sql = "SELECT * FROM event_branding WHERE event_id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $id);
@@ -846,7 +846,7 @@ class Event
         $sql = "INSERT INTO event_branding (event_id, event_logo) VALUES (?, ?)";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("ii", $id, $logo);
@@ -874,7 +874,7 @@ class Event
         $sql = "INSERT INTO event_branding (event_id, event_banner) VALUES (?, ?)";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("ii", $id, $banner);
@@ -905,7 +905,7 @@ class Event
         $sql = "INSERT INTO event_branding (event_id, event_logo, event_banner) VALUES (?, ?, ?)";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("iii", $id, $logo, $banner);
@@ -926,7 +926,7 @@ class Event
         $sql = "UPDATE event_branding SET event_logo = ? WHERE event_id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("ii", $logo, $id);
@@ -947,7 +947,7 @@ class Event
         $sql = "UPDATE event_branding SET event_banner = ? WHERE event_id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("ii", $banner, $id);
@@ -970,7 +970,7 @@ class Event
         $sql = "UPDATE event_branding SET event_logo = ?, event_banner = ? WHERE event_id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("iii", $logo, $banner, $id);
@@ -994,7 +994,7 @@ class Event
         //SQL statement to update the event
         $sql = "UPDATE event SET name = ?, event_date = ?, location = ?, updated_by = ? WHERE id = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameters
         $stmt->bind_param("ssiii", $name, $date, $location, $updated_by, $id);
         //execute the statement
@@ -1038,7 +1038,7 @@ class Event
         //SQL statement to create the event
         $sql = "INSERT INTO event (name, event_date, location, created_at, created_by, updated_at, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?)";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameters
         $stmt->bind_param("ssisiss", $name, $date, $location, $created_at, $created_by, $created_at, $created_by);
         //execute the statement
@@ -1076,7 +1076,7 @@ class Event
         //SQL statement to get the event id by name
         $sql = "SELECT id FROM event WHERE name = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameter
         $stmt->bind_param("s", $name);
         //execute the statement
@@ -1102,7 +1102,7 @@ class Event
         //SQL statement to get the number of students attending an event
         $sql = "SELECT COUNT(*) FROM student_at_event WHERE event_id = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameter
         $stmt->bind_param("i", $id);
         //execute the statement
@@ -1129,7 +1129,7 @@ class Event
         //SQL statement to get the number of events held at a school
         $sql = "SELECT COUNT(*) FROM event WHERE location = ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //bind the parameter
         $stmt->bind_param("i", $id);
         //execute the statement
@@ -1158,7 +1158,7 @@ class Event
         //SQL statement to search events, cross referencing the location with the school database id
         $sql = "SELECT event.id, event.name, event.event_date, school.name AS location FROM event INNER JOIN school ON event.location = school.id WHERE event.name LIKE ? OR event.event_date LIKE ? OR school.name LIKE ?";
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         //setup the search term
         $searchTerm = "%" . $searchTerm . "%";
         //bind the parameters
@@ -1204,7 +1204,7 @@ class Event
         $sql = "DELETE FROM event WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $event_id);
@@ -1242,7 +1242,7 @@ class Event
         $sql = "SELECT event_id FROM event_branding WHERE event_logo = ? OR event_banner = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("ii", $media_id, $media_id);

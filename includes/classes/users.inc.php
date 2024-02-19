@@ -156,7 +156,7 @@ class User implements Login
      * Logout the user
      * @return never
      */
-    public function logout()
+    public function logout(): void
     {
         //initialize the session
         session_start();
@@ -191,7 +191,7 @@ class User implements Login
         }
 
         //Prepare the SQL statement for execution
-        $role_statement = $this->mysqli->prepare($sql);
+        $role_statement = prepareStatement($this->mysqli, $sql);
 
         //Bind the user ID to the statement
         $role_statement->bind_param("i", $id);

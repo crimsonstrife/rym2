@@ -75,7 +75,7 @@ class AreaOfInterest extends Subject
     public function getSubject(int $aoi_id): array
     {
         $sql = "SELECT * FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -100,7 +100,7 @@ class AreaOfInterest extends Subject
         //get current date and time
         $currentDateTime = date('Y-m-d H:i:s');
         $sql = "INSERT INTO aoi (name, created_at, created_by, updated_at, updated_by) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ssisi", $aoi_name, $currentDateTime, $user_id, $currentDateTime, $user_id);
         $stmt->execute();
 
@@ -128,7 +128,7 @@ class AreaOfInterest extends Subject
         //get current date and time
         $currentDateTime = date('Y-m-d H:i:s');
         $sql = "UPDATE aoi SET name = ?, updated_at = ?, updated_by = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ssii", $aoi_name, $currentDateTime, $user_id, $aoi_id);
         $stmt->execute();
 
@@ -164,7 +164,7 @@ class AreaOfInterest extends Subject
         $sql = "DELETE FROM aoi WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $subject_id);
@@ -198,7 +198,7 @@ class AreaOfInterest extends Subject
     public function getSubjectName(int $aoi_id): string
     {
         $sql = "SELECT name FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -220,7 +220,7 @@ class AreaOfInterest extends Subject
     public function getSubjectCreatedDate(int $aoi_id): string
     {
         $sql = "SELECT created_at FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -242,7 +242,7 @@ class AreaOfInterest extends Subject
     public function getSubjectLastUpdatedDate(int $aoi_id): string
     {
         $sql = "SELECT updated_at FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -264,7 +264,7 @@ class AreaOfInterest extends Subject
     public function getSubjectCreatedBy(int $aoi_id): User
     {
         $sql = "SELECT created_by FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -293,7 +293,7 @@ class AreaOfInterest extends Subject
     public function getSubjectLastUpdatedBy(int $aoi_id): User
     {
         $sql = "SELECT updated_by FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -341,7 +341,7 @@ class AreaOfInterest extends Subject
     public function setSubjectLastUpdatedBy(int $aoi_id, int $user_id): bool
     {
         $sql = "UPDATE aoi SET updated_by = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ii", $user_id, $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -362,7 +362,7 @@ class AreaOfInterest extends Subject
     public function setSubjectCreatedBy(int $aoi_id, int $user_id): bool
     {
         $sql = "UPDATE aoi SET created_by = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ii", $user_id, $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -382,7 +382,7 @@ class AreaOfInterest extends Subject
     public function subjectExists(int $aoi_id): bool
     {
         $sql = "SELECT * FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();

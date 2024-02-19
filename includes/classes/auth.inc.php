@@ -80,7 +80,7 @@ class Authenticator extends User
         $sql = "SELECT * FROM user_token_auth WHERE user_id = ? AND user_name = ? AND is_expired = ?";
 
         //prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters to the SQL statement
         $stmt->bind_param("isi", $user_id, $username, $expired);
@@ -105,7 +105,7 @@ class Authenticator extends User
         $sql = "UPDATE user_token_auth SET is_expired = 1 WHERE id = ?";
 
         //prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters to the SQL statement
         $stmt->bind_param("i", $token_id);
@@ -127,7 +127,7 @@ class Authenticator extends User
         $sql = "INSERT INTO user_token_auth (user_id, user_name, password_hash, selector_hash, expiry_date) VALUES (?, ?, ?, ?, ?)";
 
         //prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters to the SQL statement
         $stmt->bind_param("issss", $user_id, $username, $password_hash, $selector_hash, $expire_date);

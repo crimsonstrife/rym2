@@ -75,7 +75,7 @@ class Activity
                 //throw an exception
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                $stmt = $this->mysqli->prepare($sql);
+                $stmt = prepareStatement($this->mysqli, $sql);
                 $stmt->bind_param('i', $user_id);
                 $stmt->execute();
                 $result = $stmt->get_result();
@@ -115,7 +115,7 @@ class Activity
                 //throw an exception
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                $stmt = $this->mysqli->prepare($sql);
+                $stmt = prepareStatement($this->mysqli, $sql);
                 $stmt->bind_param('i', $user_id);
                 $stmt->execute();
                 $result = $stmt->get_result();
@@ -166,13 +166,13 @@ class Activity
                 if ($user_id == null) {
                     //prepare the sql statement
                     $sql = "INSERT INTO activity_log (action_date, action, performed_on) VALUES (?, ?, ?)";
-                    $stmt = $this->mysqli->prepare($sql);
+                    $stmt = prepareStatement($this->mysqli, $sql);
                     $stmt->bind_param('sss', $action_date, $action, $performed_on);
                     $stmt->execute();
                 } else {
                     //prepare the sql statement
                     $sql = "INSERT INTO activity_log (user_id, action_date, action, performed_on) VALUES (?, ?, ?, ?)";
-                    $stmt = $this->mysqli->prepare($sql);
+                    $stmt = prepareStatement($this->mysqli, $sql);
                     $stmt->bind_param('isss', $user_id, $action_date, $action, $performed_on);
                     $stmt->execute();
                 }
