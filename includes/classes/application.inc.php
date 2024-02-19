@@ -3611,92 +3611,47 @@ class Application
      */
     public function setGoogleAnalyticsEnabled($ga_enabled = null)
     {
-        //Check that mysqli is set
+        // Check that mysqli is set
         if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
+            // Check that the mysqli object is not null
             if ($this->mysqli->connect_error) {
                 print_r($this->mysqli->connect_error);
-                //log the error
+                // Log the error
                 error_log('Error: ' . $this->mysqli->connect_error);
-                //throw an exception
+                // Throw an exception
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Check if the google analytics enabled status is set in the settings table already
-                if ($this->getGoogleAnalyticsEnabled() != '' || $this->getGoogleAnalyticsEnabled() != null) {
-                    //SQL statement to update the google analytics enabled status
-                    $sql = "UPDATE settings SET ga_enable = ? WHERE isSet = 'SET'";
+                // SQL statement to update the google analytics enabled status
+                $sql = "UPDATE settings SET ga_enable = ? WHERE isSet = 'SET'";
 
-                    //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                // Prepare the SQL statement for execution
+                $role_statement = $this->mysqli->prepare($sql);
 
-                    if ($ga_enabled) {
-                        //set the status to 1
-                        $status = 1;
-                    } else {
-                        //set the status to 0
-                        $status = 0;
-                    }
+                // Set the status based on the provided $ga_enabled value
+                $status = $ga_enabled ? 1 : 0;
 
-                    //Bind the parameters
-                    $role_statement->bind_param('i', $status);
+                // Bind the parameters
+                $role_statement->bind_param('i', $status);
 
-                    //Execute the statement
-                    $role_statement->execute();
+                // Execute the statement
+                $role_statement->execute();
 
-                    //Check if the statement was executed successfully
-                    if ($role_statement->affected_rows > 0) {
-                        if ($ga_enabled) {
-                            //log the activity
-                            $activity = new Activity();
-                            $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Enabled Status Changed', 'The google analytics enabled status was changed to' . $ga_enabled . '.');
-                            //Return true
-                            return true;
-                        } else {
-                            //Return false
-                            return false;
-                        }
-                    } else {
-                        //Return false
-                        return false;
-                    }
+                // Check if the statement was executed successfully
+                if ($role_statement->affected_rows > 0 && $ga_enabled) {
+                    // Log the activity
+                    $activity = new Activity();
+                    $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Enabled Status Changed', 'The google analytics enabled status was changed to' . $ga_enabled . '.');
+                    // Return true
+                    return true;
                 } else {
-                    //SQL statement to update the google analytics enabled status, where isSet is SET
-                    $sql = "UPDATE settings SET ga_enable = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
-
-                    if ($ga_enabled) {
-                        //set the status to 1
-                        $status = 1;
-                    } else {
-                        //set the status to 0
-                        $status = 0;
-                    }
-
-                    //Bind the parameters
-                    $role_statement->bind_param('i', $status);
-
-                    //Execute the statement
-                    $role_statement->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($role_statement->affected_rows > 0 && $ga_enabled) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Enabled Status Changed', 'The google analytics enabled status was changed to' . $ga_enabled . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
+                    // Return false
+                    return false;
                 }
             }
         } else {
-            //log the error
+            // Log the error
             error_log('Error: The database connection is not set.');
-            //throw an exception
+            // Throw an exception
             throw new Exception("The database connection is not set.");
         }
     }
