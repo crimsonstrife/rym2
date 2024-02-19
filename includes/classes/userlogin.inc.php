@@ -104,4 +104,27 @@ class UserLogin extends User implements Login
         // Redirect to login page
         redirectUser(APP_URL . "/login.php");
     }
+
+    /**
+     * Validate the user's password using the user's ID and the password hash
+     * This is a public function that can be called from outside the class
+     * @param int $user_id
+     * @param string $password
+     * @return bool
+     */
+    public function validateUserPassword(int $user_id, string $password): bool
+    {
+        //get the user's hashed password
+        $user_password = $this->getUserPassword($user_id);
+
+        //hash the password to compare
+        $attempted_password = $this->hashPassword($password);
+
+        //verify the password
+        if ($this->verifyPassword($attempted_password, $user_password)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
