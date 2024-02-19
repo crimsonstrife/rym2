@@ -1288,70 +1288,158 @@ class User implements Login
      */
     public function modifyUser(int $id, string $email = null, string $username = null, string $password = null, int $updated_by = null, array $roles = array()): bool
     {
-        //if the email is null, get the current email
-        if ($email == null || empty($email) || $email == "") {
-            $email = $this->getUserEmail($id);
-        } else {
-            //trim the email
-            $email = trim($email);
-        }
+        $email = $this->getEmailIfNull($email, $id);
+        $username = $this->getUsernameIfNull($username, $id);
+        $password = $this->getPasswordIfNull($password, $id);
 
-        //if the username is null, get the current username
-        if ($username == null || empty($username) || $username == "") {
-            $username = $this->getUserUsername($id);
-        } else {
-            //trim the username
-            $username = trim($username);
-        }
-
-        //if the password is null, get the current password
-        if ($password == null || empty($password) || $password == "") {
-            $password = $this->getUserPassword($id);
-        }
-
-        //update the user
         $this->updateUser($id, $email, $password, $username, $updated_by);
+        $this->assignOrRemoveRoles($id, $roles);
 
-        //get the user's current roles
+        $this->logUpdateActivity($updated_by, $username);
+
+        return true;
+    }
+
+    /**
+     * Get a user's email
+     *
+     * @param int $id The user ID of the user to get the email for
+     *
+     * @return string The user's email
+     */
+    private function getEmailIfNull(?string $email, int $id): string
+    {
+        if ($email === null || empty($email) || $email === "") {
+            return $this->getUserEmail($id);
+        }
+
+        return trim($email);
+    }
+
+    /**
+     * Get a user's username
+     *
+     * @param int $id The user ID of the user to get the username for
+     *
+     * @return string The user's username
+     */
+    private function getUsernameIfNull(?string $username, int $id): string
+    {
+        if ($username === null || empty($username) || $username === "") {
+            return $this->getUserUsername($id);
+        }
+
+        return trim($username);
+    }
+
+    /**
+     * Get a user's password
+     *
+     * @param int $id The user ID of the user to get the password for
+     *
+     * @return string The user's password
+     */
+    private function getPasswordIfNull(?string $password, int $id): string
+    {
+        if ($password === null || empty($password) || $password === "") {
+            return $this->getUserPassword($id);
+        }
+
+        return $password;
+    }
+
+    /**
+     * Assign or remove roles from a user
+     *
+     * @param int $id The user ID of the user to assign or remove roles from
+     * @param array $roles The roles to assign to the user
+     */
+    private function assignOrRemoveRoles(int $id, array $roles): void
+    {
+        $currentRoleIDs = $this->getCurrentRoleIDs($id);
+
+        if (!empty($roles)) {
+            $this->assignRoles($id, $roles, $currentRoleIDs);
+            $this->removeRoles($id, $roles, $currentRoleIDs);
+        } else {
+            $this->removeAllRoles($id, $currentRoleIDs);
+        }
+    }
+
+    /**
+     * Get the current roles for a user
+     *
+     * @param int $id The user ID of the user to get the roles for
+     *
+     * @return array The current roles for the user
+     */
+    private function getCurrentRoleIDs(int $id): array
+    {
         $currentRoles = $this->getUserRoles($id);
+        $currentRoleIDs = [];
 
-        //get just the role IDs from the current roles
-        $currentRoleIDs = array();
-
-        //loop through the current roles and get the role IDs
         foreach ($currentRoles as $role) {
             $currentRoleIDs[] = $role['id'];
         }
 
-        //if the roles array is not empty, compare the roles to the id of the current roles and assign or remove roles as needed
-        if (!empty($roles)) {
-            //loop through the roles array and assign the roles
-            foreach ($roles as $role) {
-                //if the role is not in the current roles, assign the role
-                if (!in_array($role, $currentRoleIDs)) {
-                    $this->giveRoleToUser($id, intval($role));
-                }
-            }
+        return $currentRoleIDs;
+    }
 
-            //loop through the current roles and remove the roles that are not in the roles array
-            foreach ($currentRoleIDs as $currentRole) {
-                //if the current role is not in the roles array, remove the role
-                if (!in_array($currentRole, $roles)) {
-                    $this->removeRoleFromUser($id, intval($currentRole));
-                }
+    /**
+     * Assign roles to a user
+     *
+     * @param int $id The user ID of the user to assign roles to
+     * @param array $roles The roles to assign to the user
+     * @param array $currentRoleIDs The current roles for the user
+     */
+    private function assignRoles(int $id, array $roles, array $currentRoleIDs): void
+    {
+        foreach ($roles as $role) {
+            if (!in_array($role, $currentRoleIDs)) {
+                $this->giveRoleToUser($id, intval($role));
             }
-        } else {
-            //if the roles array is empty, remove all the roles from the user
-            foreach ($currentRoleIDs as $currentRole) {
+        }
+    }
+
+    /**
+     * Remove roles from a user
+     *
+     * @param int $id The user ID of the user to remove roles from
+     * @param array $roles The roles to remove from the user
+     * @param array $currentRoleIDs The current roles for the user
+     */
+    private function removeRoles(int $id, array $roles, array $currentRoleIDs): void
+    {
+        foreach ($currentRoleIDs as $currentRole) {
+            if (!in_array($currentRole, $roles)) {
                 $this->removeRoleFromUser($id, intval($currentRole));
             }
         }
+    }
 
-        // log the activity
+    /**
+     * Remove all roles from a user
+     *
+     * @param int $id The user ID of the user to remove all roles from
+     * @param array $currentRoleIDs The current roles for the user
+     */
+    private function removeAllRoles(int $id, array $currentRoleIDs): void
+    {
+        foreach ($currentRoleIDs as $currentRole) {
+            $this->removeRoleFromUser($id, intval($currentRole));
+        }
+    }
+
+    /**
+     * Log the user update activity
+     *
+     * @param int $updated_by The user ID of the user who updated the user
+     * @param string $username The username of the user who was updated
+     */
+    private function logUpdateActivity(?int $updated_by, string $username): void
+    {
         $activity = new Activity();
         $activity->logActivity($updated_by, "User Updated.", 'User: ' . $username . ' updated by User: ' . strval($updated_by));
-
-        //if the user was modified, return true
-        return true;
     }
+
 }
