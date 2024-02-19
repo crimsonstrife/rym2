@@ -236,3 +236,10 @@ function getImageDimensions(string $imagePath): array
     //return the image dimensions
     return $imageDimensions;
 }
+
+ //redirect user
+function redirectUser($location)
+{
+    header("location: " . $location);
+    exit;
+}

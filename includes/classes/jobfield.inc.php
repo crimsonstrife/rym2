@@ -75,7 +75,7 @@ class JobField extends Subject
     public function getSubject(int $aoi_id): array
     {
         $sql = "SELECT * FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -98,7 +98,7 @@ class JobField extends Subject
     public function addSubject(string $aoi_name, int $user_id): bool
     {
         $sql = "INSERT INTO aoi (name) VALUES (?)";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("s", $aoi_name);
         $stmt->execute();
         if ($stmt->affected_rows > 0) {
@@ -122,7 +122,7 @@ class JobField extends Subject
     public function updateSubject(int $aoi_id, string $aoi_name, int $user_id): bool
     {
         $sql = "UPDATE aoi SET name = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("si", $aoi_name, $aoi_id);
         $stmt->execute();
         if ($stmt->affected_rows > 0) {
@@ -156,7 +156,7 @@ class JobField extends Subject
         $sql = "DELETE FROM aoi WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param("i", $field_id);
@@ -190,7 +190,7 @@ class JobField extends Subject
     public function getSubjectName(int $aoi_id): string
     {
         $sql = "SELECT name FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -212,7 +212,7 @@ class JobField extends Subject
     public function getSubjectCreatedDate(int $aoi_id): string
     {
         $sql = "SELECT created_at FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -234,7 +234,7 @@ class JobField extends Subject
     public function getSubjectLastUpdatedDate(int $aoi_id): string
     {
         $sql = "SELECT updated_at FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -256,7 +256,7 @@ class JobField extends Subject
     public function getSubjectCreatedBy(int $aoi_id): User
     {
         $sql = "SELECT created_by FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -285,7 +285,7 @@ class JobField extends Subject
     public function getSubjectLastUpdatedBy(int $aoi_id): User
     {
         $sql = "SELECT updated_by FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -333,7 +333,7 @@ class JobField extends Subject
     public function setSubjectLastUpdatedBy(int $aoi_id, int $user_id): bool
     {
         $sql = "UPDATE aoi SET updated_by = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ii", $user_id, $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -354,7 +354,7 @@ class JobField extends Subject
     public function setSubjectCreatedBy(int $aoi_id, int $user_id): bool
     {
         $sql = "UPDATE aoi SET created_by = ? WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("ii", $user_id, $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -374,7 +374,7 @@ class JobField extends Subject
     public function subjectExists(int $aoi_id): bool
     {
         $sql = "SELECT * FROM aoi WHERE id = ?";
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
         $stmt->bind_param("i", $aoi_id);
         $stmt->execute();
         $result = $stmt->get_result();

@@ -52,7 +52,7 @@ class JobsByFieldReport extends Report
         $sql = "SELECT * FROM reports WHERE report_type = 'Jobs by Field'";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //execute the statement
         $stmt->execute();
@@ -116,7 +116,7 @@ class JobsByFieldReport extends Report
         $sql = "SELECT * FROM reports WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param('i', $id);
@@ -180,7 +180,7 @@ class JobsByFieldReport extends Report
         $sql = "SELECT * FROM reports WHERE report_type = 'Jobs by Field' AND (data LIKE ? OR created_at LIKE ? OR updated_at LIKE ?)";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $search = '%' . $search . '%';
@@ -249,7 +249,7 @@ class JobsByFieldReport extends Report
         $sql = "INSERT INTO reports (report_type, data, created_by, created_at, updated_by, updated_at) VALUES ('Jobs by Field', ?, ?, ?, ?, ?)";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param('sisis', $report, $created_by, $date, $created_by, $date);
@@ -289,7 +289,7 @@ class JobsByFieldReport extends Report
         $sql = "SELECT COUNT(*) AS count, field FROM jobs GROUP BY field";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //execute the statement
         $stmt->execute();
@@ -411,7 +411,7 @@ class JobsByFieldReport extends Report
         $sql = "DELETE FROM reports WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param('i', $id);

@@ -4,10 +4,10 @@ require_once(__DIR__ . '/config/app.php');
 // Include the user class
 require_once(BASEPATH . '/includes/classes/users.inc.php');
 
-// Instantiate the user class
-$user = new User();
+// Instantiate the user login class
+$login = new UserLogin();
 
 // Log the user out
-$user->logout();
+$login->logout();
 
 exit;

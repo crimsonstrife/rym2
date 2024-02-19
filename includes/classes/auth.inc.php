@@ -31,6 +31,17 @@ class Authenticator extends User
         closeDatabaseConnection($this->mysqli);
     }
 
+    //Check if the user is logged in
+    public function isLoggedIn(): bool
+    {
+        // Check if the user is logged in, if not then redirect them to the login page
+        if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] !== true) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     //Get user by username
     function getUserByUsername(string $username)
     {
@@ -69,7 +80,7 @@ class Authenticator extends User
         $sql = "SELECT * FROM user_token_auth WHERE user_id = ? AND user_name = ? AND is_expired = ?";
 
         //prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters to the SQL statement
         $stmt->bind_param("isi", $user_id, $username, $expired);
@@ -94,7 +105,7 @@ class Authenticator extends User
         $sql = "UPDATE user_token_auth SET is_expired = 1 WHERE id = ?";
 
         //prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters to the SQL statement
         $stmt->bind_param("i", $token_id);
@@ -116,7 +127,7 @@ class Authenticator extends User
         $sql = "INSERT INTO user_token_auth (user_id, user_name, password_hash, selector_hash, expiry_date) VALUES (?, ?, ?, ?, ?)";
 
         //prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters to the SQL statement
         $stmt->bind_param("issss", $user_id, $username, $password_hash, $selector_hash, $expire_date);
@@ -180,5 +191,68 @@ class Authenticator extends User
 
         //return the hasPermission boolean
         return $hasPermission;
+    }
+
+    //User exists by ID
+    public function validateUserById(int $id): bool
+    {
+        //try to get the user object (array) by ID
+        try {
+            $user = $this->getUserById($id);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+
+        //if the user exists (ie the array is not empty), return true
+        if ($user && !empty($user)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * User exists by username
+     *
+     * @param string $username The username to check
+     *
+     * @return bool True if the user exists, false if not
+     */
+    public function validateUserByUsername(string $username): bool
+    {
+        //try to get the user ID by username
+        try {
+            $user_id = $this->getUserIdByUsername($username);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+
+        //if the user ID exists, and is not null, or 0, return true
+        if ($user_id && $user_id != null && $user_id != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //User exists by email
+    public function validateUserByEmail(string $email): bool
+    {
+        //try to get the user ID by email
+        try {
+            $user_id = $this->getUserByEmail($email);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+
+        //if the user ID exists, and is not null, or 0, return true
+        if ($user_id && $user_id != null && $user_id != 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

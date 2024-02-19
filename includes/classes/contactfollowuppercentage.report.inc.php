@@ -53,7 +53,7 @@ class ContactFollowUpPercentageReport extends Report
         $sql = "SELECT * FROM reports WHERE report_type = 'Contact Follow-Up Percentage'";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //execute the statement
         $stmt->execute();
@@ -119,7 +119,7 @@ class ContactFollowUpPercentageReport extends Report
         $sql = "SELECT * FROM reports WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param('i', $id);
@@ -185,7 +185,7 @@ class ContactFollowUpPercentageReport extends Report
         $sql = "SELECT * FROM reports WHERE report_type = 'Contact Follow-Up Percentage' AND (data LIKE ? OR created_at LIKE ? OR updated_at LIKE ?)";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $search = '%' . $search . '%';
@@ -256,7 +256,7 @@ class ContactFollowUpPercentageReport extends Report
         $sql = "INSERT INTO reports (report_type, data, created_by, created_at, updated_by, updated_at) VALUES ('Contact Follow-Up Percentage', ?, ?, ?, ?, ?)";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param('sisis', $report, $created_by, $date, $created_by, $date);
@@ -393,7 +393,7 @@ class ContactFollowUpPercentageReport extends Report
         $sql = "DELETE FROM reports WHERE id = ?";
 
         //prepare the statement
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
         $stmt->bind_param('i', $id);

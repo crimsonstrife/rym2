@@ -51,16 +51,19 @@ if (isset($_GET['login'])) {
                     //initialize the user class
                     $user = new User();
 
+                    //initialize the user login class
+                    $userLogin = new UserLogin();
+
                     //check if the user exists by username, if so get the user ID
                     $user_id = $user->getUserIdByUsername($username);
 
                     //if the user exists, check the password
                     if ($user_id) {
                         //check the password
-                        if ($user->validateUserPassword($user_id, $password)) {
+                        if ($userLogin->validateUserPassword($user_id, $password)) {
                             //try to log the user in
                             try {
-                                $user->login($username, $password);
+                                $userLogin->login($username, $password);
                             } catch (Exception $e) {
                                 // Display a generic error message
                                 $login_error = "Invalid username or password.";

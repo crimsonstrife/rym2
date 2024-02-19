@@ -9,8 +9,6 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
-use Michelf\Markdown;
-
 /**
  * The Application Class
  *
@@ -63,7 +61,7 @@ class Application
             } else {
 
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -114,7 +112,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $setting_statement = $this->mysqli->prepare($sql);
+                $setting_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $setting_statement->execute();
@@ -173,7 +171,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -233,7 +231,7 @@ class Application
                     $sql = "UPDATE settings SET app_name = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $app_name);
@@ -257,7 +255,7 @@ class Application
                     $sql = "UPDATE settings SET app_name = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $app_name);
@@ -310,7 +308,7 @@ class Application
             } else {
 
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -370,7 +368,7 @@ class Application
                     $sql = "UPDATE settings SET app_url = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $app_url);
@@ -394,7 +392,7 @@ class Application
                     $sql = "UPDATE settings SET app_url = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $app_url);
@@ -445,7 +443,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -505,7 +503,7 @@ class Application
                     $sql = "UPDATE settings SET app_logo = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('i', $app_logo);
@@ -529,7 +527,7 @@ class Application
                     $sql = "UPDATE settings SET app_logo = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('i', $app_logo);
@@ -581,7 +579,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -641,7 +639,7 @@ class Application
                     $sql = "UPDATE settings SET contact_email = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $contact_email);
@@ -665,7 +663,7 @@ class Application
                     $sql = "UPDATE settings SET contact_email = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $contact_email);
@@ -719,7 +717,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -779,7 +777,7 @@ class Application
                     $sql = "UPDATE settings SET company_name = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_name);
@@ -803,7 +801,7 @@ class Application
                     $sql = "UPDATE settings SET company_name = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_name);
@@ -855,7 +853,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -915,7 +913,7 @@ class Application
                     $sql = "UPDATE settings SET company_logo = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('i', $company_logo);
@@ -939,7 +937,7 @@ class Application
                     $sql = "UPDATE settings SET company_logo = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('i', $company_logo);
@@ -993,7 +991,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -1053,7 +1051,7 @@ class Application
                     $sql = "UPDATE settings SET company_address = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_address);
@@ -1077,7 +1075,7 @@ class Application
                     $sql = "UPDATE settings SET company_address = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_address);
@@ -1129,7 +1127,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -1189,7 +1187,7 @@ class Application
                     $sql = "UPDATE settings SET company_city = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_city);
@@ -1213,7 +1211,7 @@ class Application
                     $sql = "UPDATE settings SET company_city = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_city);
@@ -1265,7 +1263,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -1325,7 +1323,7 @@ class Application
                     $sql = "UPDATE settings SET company_state = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_state);
@@ -1349,7 +1347,7 @@ class Application
                     $sql = "UPDATE settings SET company_state = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_state);
@@ -1401,7 +1399,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -1461,7 +1459,7 @@ class Application
                     $sql = "UPDATE settings SET company_zip = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_zip);
@@ -1485,7 +1483,7 @@ class Application
                     $sql = "UPDATE settings SET company_zip = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_zip);
@@ -1567,7 +1565,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -1627,7 +1625,7 @@ class Application
                     $sql = "UPDATE settings SET company_phone = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_phone);
@@ -1651,7 +1649,7 @@ class Application
                     $sql = "UPDATE settings SET company_phone = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_phone);
@@ -1703,7 +1701,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -1763,7 +1761,7 @@ class Application
                     $sql = "UPDATE settings SET company_url = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_url);
@@ -1787,7 +1785,7 @@ class Application
                     $sql = "UPDATE settings SET company_url = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $company_url);
@@ -1841,7 +1839,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -1901,7 +1899,7 @@ class Application
                     $sql = "UPDATE settings SET mail_mailer = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $mailer_type);
@@ -1925,7 +1923,7 @@ class Application
                     $sql = "UPDATE settings SET mail_mailer = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $mailer_type);
@@ -1977,7 +1975,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -2037,7 +2035,7 @@ class Application
                     $sql = "UPDATE settings SET mail_host = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $mailer_host);
@@ -2061,7 +2059,7 @@ class Application
                     $sql = "UPDATE settings SET mail_host = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $mailer_host);
@@ -2113,7 +2111,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -2173,7 +2171,7 @@ class Application
                     $sql = "UPDATE settings SET mail_port = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('i', $mailer_port);
@@ -2197,7 +2195,7 @@ class Application
                     $sql = "UPDATE settings SET mail_port = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('i', $mailer_port);
@@ -2249,7 +2247,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -2309,7 +2307,7 @@ class Application
                     $sql = "UPDATE settings SET mail_username = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $mailer_username);
@@ -2333,7 +2331,7 @@ class Application
                     $sql = "UPDATE settings SET mail_username = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $mailer_username);
@@ -2385,7 +2383,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -2453,7 +2451,7 @@ class Application
                     $sql = "UPDATE settings SET mail_password = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //if OPENSSL is installed, encrypt the password
                     if (OPENSSL_INSTALLED) {
@@ -2501,7 +2499,7 @@ class Application
                     $sql = "UPDATE settings SET mail_password = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $password);
@@ -2553,7 +2551,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -2613,7 +2611,7 @@ class Application
                     $sql = "UPDATE settings SET mail_encryption = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $mailer_encryption);
@@ -2637,7 +2635,7 @@ class Application
                     $sql = "UPDATE settings SET mail_encryption = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $mailer_encryption);
@@ -2689,7 +2687,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -2749,7 +2747,7 @@ class Application
                     $sql = "UPDATE settings SET mail_from_address = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $mailer_from_address);
@@ -2773,7 +2771,7 @@ class Application
                     $sql = "UPDATE settings SET mail_from_address = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $mailer_from_address);
@@ -2825,7 +2823,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -2885,7 +2883,7 @@ class Application
                     $sql = "UPDATE settings SET mail_from_name = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $mailer_from_name);
@@ -2909,7 +2907,7 @@ class Application
                     $sql = "UPDATE settings SET mail_from_name = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $mailer_from_name);
@@ -2961,7 +2959,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -3021,75 +3019,14 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Check if the mailer authentication required status is set in the settings table already
-                if ($this->getMailerAuthRequired() != '' || $this->getMailerAuthRequired() != null) {
-                    //SQL statement to update the mailer authentication required status
-                    $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
-
-                    if ($mailer_auth_required) {
-                        //set the status to 1
-                        $status = 1;
-                    } else {
-                        //set the status to 0
-                        $status = 0;
-                    }
-
-                    //Bind the parameters
-                    $role_statement->bind_param('i', $status);
-
-                    //Execute the statement
-                    $role_statement->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($role_statement->affected_rows > 0) {
-                        if ($mailer_auth_required) {
-                            //log the activity
-                            $activity = new Activity();
-                            $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
-                            //Return true
-                            return true;
-                        } else {
-                            //Return false
-                            return false;
-                        }
-                    } else {
-                        //Return false
-                        return false;
-                    }
+                if ($this->isMailerAuthRequiredSet()) {
+                    $status = $this->getMailerAuthRequiredStatus($mailer_auth_required);
+                    $result = $this->updateMailerAuthRequiredStatus($status, $mailer_auth_required);
+                    return $result;
                 } else {
-                    //SQL statement to update the mailer authentication required status, where isSet is SET
-                    $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
-
-                    if ($mailer_auth_required) {
-                        //set the status to 1
-                        $status = 1;
-                    } else {
-                        //set the status to 0
-                        $status = 0;
-                    }
-
-                    //Bind the parameters
-                    $role_statement->bind_param('i', $status);
-
-                    //Execute the statement
-                    $role_statement->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($role_statement->affected_rows > 0 && $mailer_auth_required) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
+                    $status = $this->getMailerAuthRequiredStatus($mailer_auth_required);
+                    $result = $this->updateMailerAuthRequiredStatus($status, $mailer_auth_required);
+                    return $result;
                 }
             }
         } else {
@@ -3099,6 +3036,57 @@ class Application
             throw new Exception("The database connection is not set.");
         }
     }
+
+    /**
+     * Check if the Mailer Authentication Required Status is Set
+     *
+     * Check if the mailer authentication required status is set in the settings table
+     *
+     * @return bool //true if the mailer authentication required status is set, false if not
+     */
+    private function isMailerAuthRequiredSet()
+    {
+        return ($this->getMailerAuthRequired() != '' || $this->getMailerAuthRequired() != null);
+    }
+
+    /**
+     * Get the Mailer Authentication Required Status
+     *
+     * Get the mailer authentication required status from the settings table
+     *
+     * @param bool $mailer_auth_required //the mailer authentication required status
+     * @return int //the mailer authentication required status int
+     */
+    private function getMailerAuthRequiredStatus($mailer_auth_required)
+    {
+        return $mailer_auth_required ? 1 : 0;
+    }
+
+    /**
+     * Update the Mailer Authentication Required Status
+     *
+     * Update the mailer authentication required status in the settings table
+     *
+     * @param int $status //the mailer authentication required status int
+     * @param bool $mailer_auth_required //the mailer authentication required status
+     * @return bool //true if the mailer authentication required status was updated, false if not
+     */
+    private function updateMailerAuthRequiredStatus($status, $mailer_auth_required)
+    {
+        $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
+        $role_statement = prepareStatement($this->mysqli, $sql);
+        $role_statement->bind_param('i', $status);
+        $role_statement->execute();
+
+        if ($role_statement->affected_rows > 0 && $mailer_auth_required) {
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     //Hotjar Settings
 
@@ -3124,7 +3112,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -3175,94 +3163,49 @@ class Application
      */
     public function setHotjarEnabled($hotjar_enabled = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-                print_r($this->mysqli->connect_error);
-                //log the error
-                error_log('Error: ' . $this->mysqli->connect_error);
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the hotjar enabled status is set in the settings table already
-                if ($this->getHotjarEnabled() != '' || $this->getHotjarEnabled() != null) {
-                    //SQL statement to update the hotjar enabled status
-                    $sql = "UPDATE settings SET hotjar_enable = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
-
-                    if ($hotjar_enabled) {
-                        //set the status to 1
-                        $status = 1;
-                    } else {
-                        //set the status to 0
-                        $status = 0;
-                    }
-
-                    //Bind the parameters
-                    $role_statement->bind_param('i', $status);
-
-                    //Execute the statement
-                    $role_statement->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($role_statement->affected_rows > 0) {
-                        if ($hotjar_enabled) {
-                            //log the activity
-                            $activity = new Activity();
-                            $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Enabled Status Changed', 'The hotjar enabled status was changed to' . $hotjar_enabled . '.');
-                            //Return true
-                            return true;
-                        } else {
-                            //Return false
-                            return false;
-                        }
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the hotjar enabled status, where isSet is SET
-                    $sql = "UPDATE settings SET hotjar_enable = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
-
-                    if ($hotjar_enabled) {
-                        //set the status to 1
-                        $status = 1;
-                    } else {
-                        //set the status to 0
-                        $status = 0;
-                    }
-
-                    //Bind the parameters
-                    $role_statement->bind_param('i', $status);
-
-                    //Execute the statement
-                    $role_statement->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($role_statement->affected_rows > 0 && $hotjar_enabled) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Enabled Status Changed', 'The hotjar enabled status was changed to' . $hotjar_enabled . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
-            }
-        } else {
-            //log the error
+        // Check that mysqli is set
+        if (!isset($this->mysqli)) {
+            // Log the error
             error_log('Error: The database connection is not set.');
-            //throw an exception
+            // Throw an exception
             throw new Exception("The database connection is not set.");
         }
+
+        // Check that the mysqli object is not null
+        if ($this->mysqli->connect_error) {
+            print_r($this->mysqli->connect_error);
+            // Log the error
+            error_log('Error: ' . $this->mysqli->connect_error);
+            // Throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+        }
+
+        // SQL statement to update the hotjar enabled status
+        $sql = "UPDATE settings SET hotjar_enable = ? WHERE isSet = 'SET'";
+
+        // Prepare the SQL statement for execution
+        $role_statement = prepareStatement($this->mysqli, $sql);
+
+        // Set the status based on the hotjar_enabled parameter
+        $status = $hotjar_enabled ? 1 : 0;
+
+        // Bind the parameters
+        $role_statement->bind_param('i', $status);
+
+        // Execute the statement
+        $role_statement->execute();
+
+        // Check if the statement was executed successfully
+        if ($role_statement->affected_rows > 0 && $hotjar_enabled) {
+            // Log the activity
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Enabled Status Changed', 'The hotjar enabled status was changed to' . $hotjar_enabled . '.');
+            // Return true
+            return true;
+        }
+
+        // Return false
+        return false;
     }
 
     /**
@@ -3287,7 +3230,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -3346,7 +3289,7 @@ class Application
                     $sql = "UPDATE settings SET hotjar_siteid = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //convert the site ID to an integer
                     $hotjar_site_id = intval($hotjar_site_id);
@@ -3373,7 +3316,7 @@ class Application
                     $sql = "UPDATE settings SET hotjar_siteid = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $hotjar_site_id);
@@ -3424,7 +3367,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -3483,7 +3426,7 @@ class Application
                     $sql = "UPDATE settings SET hotjar_version = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('i', $hotjar_version);
@@ -3507,7 +3450,7 @@ class Application
                     $sql = "UPDATE settings SET hotjar_version = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('i', $hotjar_version);
@@ -3560,7 +3503,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -3611,92 +3554,47 @@ class Application
      */
     public function setGoogleAnalyticsEnabled($ga_enabled = null)
     {
-        //Check that mysqli is set
+        // Check that mysqli is set
         if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
+            // Check that the mysqli object is not null
             if ($this->mysqli->connect_error) {
                 print_r($this->mysqli->connect_error);
-                //log the error
+                // Log the error
                 error_log('Error: ' . $this->mysqli->connect_error);
-                //throw an exception
+                // Throw an exception
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Check if the google analytics enabled status is set in the settings table already
-                if ($this->getGoogleAnalyticsEnabled() != '' || $this->getGoogleAnalyticsEnabled() != null) {
-                    //SQL statement to update the google analytics enabled status
-                    $sql = "UPDATE settings SET ga_enable = ? WHERE isSet = 'SET'";
+                // SQL statement to update the google analytics enabled status
+                $sql = "UPDATE settings SET ga_enable = ? WHERE isSet = 'SET'";
 
-                    //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                // Prepare the SQL statement for execution
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
-                    if ($ga_enabled) {
-                        //set the status to 1
-                        $status = 1;
-                    } else {
-                        //set the status to 0
-                        $status = 0;
-                    }
+                // Set the status based on the provided $ga_enabled value
+                $status = $ga_enabled ? 1 : 0;
 
-                    //Bind the parameters
-                    $role_statement->bind_param('i', $status);
+                // Bind the parameters
+                $role_statement->bind_param('i', $status);
 
-                    //Execute the statement
-                    $role_statement->execute();
+                // Execute the statement
+                $role_statement->execute();
 
-                    //Check if the statement was executed successfully
-                    if ($role_statement->affected_rows > 0) {
-                        if ($ga_enabled) {
-                            //log the activity
-                            $activity = new Activity();
-                            $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Enabled Status Changed', 'The google analytics enabled status was changed to' . $ga_enabled . '.');
-                            //Return true
-                            return true;
-                        } else {
-                            //Return false
-                            return false;
-                        }
-                    } else {
-                        //Return false
-                        return false;
-                    }
+                // Check if the statement was executed successfully
+                if ($role_statement->affected_rows > 0 && $ga_enabled) {
+                    // Log the activity
+                    $activity = new Activity();
+                    $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Enabled Status Changed', 'The google analytics enabled status was changed to' . $ga_enabled . '.');
+                    // Return true
+                    return true;
                 } else {
-                    //SQL statement to update the google analytics enabled status, where isSet is SET
-                    $sql = "UPDATE settings SET ga_enable = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
-
-                    if ($ga_enabled) {
-                        //set the status to 1
-                        $status = 1;
-                    } else {
-                        //set the status to 0
-                        $status = 0;
-                    }
-
-                    //Bind the parameters
-                    $role_statement->bind_param('i', $status);
-
-                    //Execute the statement
-                    $role_statement->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($role_statement->affected_rows > 0 && $ga_enabled) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Enabled Status Changed', 'The google analytics enabled status was changed to' . $ga_enabled . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
+                    // Return false
+                    return false;
                 }
             }
         } else {
-            //log the error
+            // Log the error
             error_log('Error: The database connection is not set.');
-            //throw an exception
+            // Throw an exception
             throw new Exception("The database connection is not set.");
         }
     }
@@ -3722,7 +3620,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $role_statement = $this->mysqli->prepare($sql);
+                $role_statement = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $role_statement->execute();
@@ -3780,7 +3678,7 @@ class Application
                     $sql = "UPDATE settings SET google_analytics = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $google_analytics);
@@ -3804,7 +3702,7 @@ class Application
                     $sql = "UPDATE settings SET google_analytics = ? WHERE isSet = 'SET'";
 
                     //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
+                    $role_statement = prepareStatement($this->mysqli, $sql);
 
                     //Bind the parameters
                     $role_statement->bind_param('s', $google_analytics);
@@ -3957,7 +3855,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $stmt = $this->mysqli->prepare($sql);
+                $stmt = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $stmt->execute();
@@ -4010,7 +3908,7 @@ class Application
         $sql = "UPDATE settings SET privacy_policy = ? WHERE isSet = 'SET'";
 
         //Prepare the SQL statement for execution
-        $stmt = $this->mysqli->prepare($sql);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters
         $stmt->bind_param('s', $privacy_policy);
@@ -4054,7 +3952,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $stmt = $this->mysqli->prepare($sql);
+                $stmt = prepareStatement($this->mysqli, $sql);
 
                 //Execute the statement
                 $stmt->execute();
@@ -4117,7 +4015,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $stmt = $this->mysqli->prepare($sql);
+                $stmt = prepareStatement($this->mysqli, $sql);
 
                 //Bind the parameters
                 $stmt->bind_param('s', $terms);
@@ -4166,7 +4064,7 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Prepare the SQL statement for execution
-                $stmt = $this->mysqli->prepare($sql);
+                $stmt = prepareStatement($this->mysqli, $sql);
 
                 //set the privacy policy and terms and conditions to their default values
                 $terms_conditions = strval(TERMS_CONDITIONS);
