@@ -503,4 +503,32 @@ class Contact
             return true;
         }
     }
+
+    /**
+     * Notifies the user of their account creation, sends an email to the user with their username and password
+     *
+     * @param string $email The user's email
+     * @param string $username The user's username
+     * @param string $password The user's password
+     *
+     * @return bool True if the email was sent, false if not
+     */
+    public function notifyUserCreated(string $email, string $username, string $password): bool
+    {
+        //trim the email
+        $email = trim($email);
+
+        //trim the username
+        $username = trim($username);
+
+        //send the email
+        $mail = $this->sendAccountCreationEmail($email, $username, $password);
+
+        //if the email was sent, return true
+        if ($mail == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

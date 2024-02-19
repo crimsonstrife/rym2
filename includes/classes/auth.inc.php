@@ -31,6 +31,17 @@ class Authenticator extends User
         closeDatabaseConnection($this->mysqli);
     }
 
+    //Check if the user is logged in
+    public function isLoggedIn(): bool
+    {
+        // Check if the user is logged in, if not then redirect them to the login page
+        if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] !== true) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     //Get user by username
     function getUserByUsername(string $username)
     {

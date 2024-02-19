@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user->logout();
 
             // Redirect the user to the login page
-            $user->redirectUser(APP_URL . "/login.php");
+            redirectUser(APP_URL . "/login.php");
             exit();
         } else {
             // Display an error message if the password entered does not match the current password in the database
