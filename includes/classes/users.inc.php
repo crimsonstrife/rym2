@@ -365,6 +365,56 @@ class User implements Login
         }
     }
 
+    /**
+     * Get user by email
+     *
+     * @param string $email
+     * @return int $user_id
+     */
+    public function getUserByEmail(string $email): int
+    {
+        //SQL statement to get the user's ID by email
+        $sql = "SELECT id FROM users WHERE email = ?";
+
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                //log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = $this->mysqli->prepare($sql);
+
+                //Bind the email to the statement
+                $stmt->bind_param("s", $email);
+
+                //Execute the statement
+                $stmt->execute();
+
+                //Get the results
+                $result = $stmt->get_result();
+
+                //Create a variable to hold the user's ID
+                $user_id = 0;
+
+                //Loop through the results and add them to the array
+                while ($row = $result->fetch_assoc()) {
+                    $user_id = $row['id'];
+                }
+
+                //Return the user's ID
+                return intval($user_id);
+            }
+        } else {
+            //if the mysqli object is null, throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+        }
+    }
+
     //Get a user's first name
     public function getUserFirstName(int $id): string
     {
@@ -910,7 +960,7 @@ class User implements Login
     }
 
     //Update a user
-    public function updateUser(int $id, string $email = null, string $password = null, string $username = null, int $updated_by): void
+    public function setUserInfo(int $id, string $email = null, string $password = null, string $username = null, int $updated_by): void
     {
         //if the email is null, get the current email
         if ($email == null) {
@@ -1062,135 +1112,6 @@ class User implements Login
         }
     }
 
-    //User exists by ID
-    public function validateUserById(int $id): bool
-    {
-        //SQL statement to validate a user exists by ID
-        $sql = "SELECT id FROM users WHERE id = ?";
-
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-                print_r($this->mysqli->connect_error);
-                //log the error
-                error_log('Error: ' . $this->mysqli->connect_error);
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = $this->mysqli->prepare($sql);
-
-                //Bind the ID to the statement
-                $stmt->bind_param("i", $id);
-
-                //Execute the statement
-                $stmt->execute();
-
-                //Get the results
-                $result = $stmt->get_result();
-
-                //if the user exists, return true
-                if ($result->num_rows > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        } else {
-            //if the mysqli object is null, throw an exception
-            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-        }
-    }
-
-    /**
-     * User exists by username
-     *
-     * @param string $username The username to check
-     *
-     * @return bool True if the user exists, false if not
-     */
-    public function validateUserByUsername(string $username): bool
-    {
-        //SQL statement to validate a user exists by username
-        $sql = "SELECT id FROM users WHERE username = ?";
-
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-                print_r($this->mysqli->connect_error);
-                //log the error
-                error_log('Error: ' . $this->mysqli->connect_error);
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = $this->mysqli->prepare($sql);
-
-                //Bind the username to the statement
-                $stmt->bind_param("s", $username);
-
-                //Execute the statement
-                $stmt->execute();
-
-                //Get the results
-                $result = $stmt->get_result();
-
-                //if the user exists, return true
-                if ($result->num_rows > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        } else {
-            //if the mysqli object is null, throw an exception
-            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-        }
-    }
-
-    //User exists by email
-    public function validateUserByEmail(string $email): bool
-    {
-        //SQL statement to validate a user exists by email
-        $sql = "SELECT id FROM users WHERE email = ?";
-
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-                print_r($this->mysqli->connect_error);
-                //log the error
-                error_log('Error: ' . $this->mysqli->connect_error);
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = $this->mysqli->prepare($sql);
-
-                //Bind the email to the statement
-                $stmt->bind_param("s", $email);
-
-                //Execute the statement
-                $stmt->execute();
-
-                //Get the results
-                $result = $stmt->get_result();
-
-                //if the user exists, return true
-                if ($result->num_rows > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        } else {
-            //if the mysqli object is null, throw an exception
-            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-        }
-    }
-
     /**
      * Create a user and assign them a role
      *
@@ -1292,7 +1213,7 @@ class User implements Login
         $username = $this->getUsernameIfNull($username, $id);
         $password = $this->getPasswordIfNull($password, $id);
 
-        $this->updateUser($id, $email, $password, $username, $updated_by);
+        $this->setUserInfo($id, $email, $password, $username, $updated_by);
         $this->assignOrRemoveRoles($id, $roles);
 
         $this->logUpdateActivity($updated_by, $username);

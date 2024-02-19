@@ -90,7 +90,7 @@ if (!$hasPermission) {
 
             //check if the username is already taken, if it is validate it against the current user
             if ($action == 'edit') {
-                $usernameTaken = $user->validateUserByUsername($username);
+                $usernameTaken = $auth->validateUserByUsername($username);
                 //if the username is taken, check if it is the current user
                 if ($usernameTaken) {
                     //get the current user's username
@@ -102,7 +102,7 @@ if (!$hasPermission) {
                     }
                 }
             } else {
-                $usernameTaken = $user->validateUserByUsername($username);
+                $usernameTaken = $auth->validateUserByUsername($username);
             }
         }
 
@@ -114,7 +114,7 @@ if (!$hasPermission) {
 
             //check if the email is already taken, if it is validate it against the current user
             if ($action == 'edit') {
-                $emailTaken = $user->validateUserByEmail($email);
+                $emailTaken = $auth->validateUserByEmail($email);
                 //if the email is taken, check if it is the current user
                 if ($emailTaken) {
                     //get the current user's email
@@ -125,7 +125,7 @@ if (!$hasPermission) {
                     }
                 }
             } else {
-                $emailTaken = $user->validateUserByEmail($email);
+                $emailTaken = $auth->validateUserByEmail($email);
             }
         }
 

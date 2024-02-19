@@ -181,4 +181,67 @@ class Authenticator extends User
         //return the hasPermission boolean
         return $hasPermission;
     }
+
+    //User exists by ID
+    public function validateUserById(int $id): bool
+    {
+        //try to get the user object (array) by ID
+        try {
+            $user = $this->getUserById($id);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+
+        //if the user exists (ie the array is not empty), return true
+        if ($user && !empty($user)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * User exists by username
+     *
+     * @param string $username The username to check
+     *
+     * @return bool True if the user exists, false if not
+     */
+    public function validateUserByUsername(string $username): bool
+    {
+        //try to get the user ID by username
+        try {
+            $user_id = $this->getUserIdByUsername($username);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+
+        //if the user ID exists, and is not null, or 0, return true
+        if ($user_id && $user_id != null && $user_id != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //User exists by email
+    public function validateUserByEmail(string $email): bool
+    {
+        //try to get the user ID by email
+        try {
+            $user_id = $this->getUserByEmail($email);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+
+        //if the user ID exists, and is not null, or 0, return true
+        if ($user_id && $user_id != null && $user_id != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

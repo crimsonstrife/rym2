@@ -205,11 +205,11 @@ class Degree extends Grade implements Major
      */
     public function addMajor(string $major_name, int $created_by): bool
     {
-        //initialize the user class
-        $user = new User();
+        //initialize the auth object
+        $auth = new Authenticator();
 
         //validate the user id
-        if (!$user->validateUserById($created_by)) {
+        if (!$auth->validateUserById($created_by)) {
             //if the user id is invalid, then the major is being created by a student submitting a form, so set the user to NULL
             $creationUser = NULL;
         } else {
