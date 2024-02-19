@@ -148,49 +148,7 @@ class Activity
         $action_date = date('Y-m-d H:i:s');
 
         //simplify the action to an enum, if a string is found in the action
-        if (stripos($action, 'created') !== false) {
-            $action = 'CREATE';
-        } elseif (stripos($action, 'generated') !== false) {
-            $action = 'CREATE';
-        } elseif (stripos($action, 'permission') !== false) {
-            $action = 'MODIFY';
-        } elseif (stripos($action, 'updated') !== false) {
-            $action = 'MODIFY';
-        } elseif (stripos($action, 'deleted') !== false) {
-            $action = 'DELETE';
-        } elseif (stripos($action, 'logged in') !== false) {
-            $action = 'LOGIN';
-        } elseif (stripos($action, 'logged out') !== false) {
-            $action = 'LOGOUT';
-        } elseif (stripos($action, 'Failed to log the user in') !== false) {
-            $action = 'LOGIN FAILED';
-        } elseif (stripos($action, 'added to') !== false) {
-            $action = 'MODIFY';
-        } elseif (stripos($action, 'modified') !== false) {
-            $action = 'MODIFY';
-        } elseif (stripos($action, 'removed from') !== false) {
-            $action = 'MODIFY';
-        } elseif (stripos($action, 'assigned') !== false) {
-            $action = 'MODIFY';
-        } elseif (stripos($action, 'unassigned') !== false) {
-            $action = 'MODIFY';
-        } elseif (stripos($action, 'changed') !== false) {
-            $action = 'MODIFY';
-        } elseif (stripos($action, 'reset') !== false) {
-            $action = 'RESET';
-        } elseif (stripos($action, 'uploaded') !== false) {
-            $action = 'UPLOAD';
-        } elseif (stripos($action, 'downloaded') !== false) {
-            $action = 'DOWNLOAD';
-        } elseif (stripos($action, 'exported') !== false) {
-            $action = 'DOWNLOAD';
-        } elseif (stripos($action, 'error') !== false) {
-            $action = 'ERROR';
-        } elseif (stripos($action, 'email') !== false) {
-            $action = 'EMAIL';
-        } else {
-            $action = 'OTHER';
-        }
+        $action = $this->simplifyActionEnum($action);
 
         //keep the performed_on under 535 characters
         if (strlen($performed_on) > 535) {
@@ -198,14 +156,12 @@ class Activity
         }
 
         if (isset($this->mysqli)) {
-
             //check that the mysqli object is not null
             if ($this->mysqli->connect_error) {
                 print_r($this->mysqli->connect_error);
                 //log the error
                 error_log('Error: ' . $this->mysqli->connect_error);
             } else {
-
                 //check if the user id is null
                 if ($user_id == null) {
                     //prepare the sql statement
@@ -238,5 +194,63 @@ class Activity
             //throw an exception
             throw new Exception('Error: The database connection is null');
         }
+    }
+
+    /**
+     * Choose an action enum based on the action string
+     *
+     * @param string $action
+     * @return string $enum
+     */
+    private function simplifyActionEnum(string $action): string {
+        switch (true) {
+            case stripos($action, 'created') !== false:
+            case stripos($action, 'generated') !== false:
+                $action = 'CREATE';
+                break;
+            case stripos($action, 'permission') !== false:
+            case stripos($action, 'updated') !== false:
+            case stripos($action, 'added to') !== false:
+            case stripos($action, 'modified') !== false:
+            case stripos($action, 'removed from') !== false:
+            case stripos($action, 'assigned') !== false:
+            case stripos($action, 'unassigned') !== false:
+            case stripos($action, 'changed') !== false:
+                $action = 'MODIFY';
+                break;
+            case stripos($action, 'deleted') !== false:
+                $action = 'DELETE';
+                break;
+            case stripos($action, 'logged in') !== false:
+                $action = 'LOGIN';
+                break;
+            case stripos($action, 'logged out') !== false:
+                $action = 'LOGOUT';
+                break;
+            case stripos($action, 'Failed to log the user in') !== false:
+                $action = 'LOGIN FAILED';
+                break;
+            case stripos($action, 'reset') !== false:
+                $action = 'RESET';
+                break;
+            case stripos($action, 'uploaded') !== false:
+            case stripos($action, 'exported') !== false:
+                $action = 'UPLOAD';
+                break;
+            case stripos($action, 'downloaded') !== false:
+                $action = 'DOWNLOAD';
+                break;
+            case stripos($action, 'error') !== false:
+                $action = 'ERROR';
+                break;
+            case stripos($action, 'email') !== false:
+                $action = 'EMAIL';
+                break;
+            default:
+                $action = 'OTHER';
+                break;
+        }
+
+        return $action;
     }
 }
