@@ -72,10 +72,18 @@ if (!$hasReadPermission) {
                                 $fieldsData = new JobField();
                                 //for each student, display it
                                 foreach ($studentsArray as $student) {
+                                    //get the student's address
+                                    $address = $studentData->getStudentAddress(intval($student['id']));
+                                    //get the student's city
+                                    $city = $studentData->getStudentCity(intval($student['id']));
+                                    //get the student's state
+                                    $state = $studentData->getStudentState(intval($student['id']));
+                                    //get the student's zipcode
+                                    $zipcode = $studentData->getStudentZip(intval($student['id']));
                                 ?>
                             <tr>
                                 <td><?php echo $student['first_name'] . ' ' . $student['last_name']; ?></td>
-                                <td><?php echo $studentData->getStudentFormattedAddress(intval($student['id'])); ?></td>
+                                <td><?php echo formatAddress($address, $city, $state, $zipcode); ?></td>
                                 <td><?php echo $fieldsData->getSubjectName($student['interest']); ?></td>
                                 <td><?php echo $student['position']; ?></td>
                                 <td><?php echo $degreesData->getGradeNameById($student['degree']); ?></td>

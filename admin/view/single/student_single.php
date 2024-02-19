@@ -159,11 +159,15 @@ if (!$hasPermission) {
                                 <strong>Address:</strong>
                                 <?php
                                         //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
-                                        $address = $student->getStudentFormattedAddress($student_id);
+                                        $street = $student->getStudentAddress($student_id);
+                                        $city = $student->getStudentCity($student_id);
+                                        $state = $student->getStudentState($student_id);
+                                        $zip = $student->getStudentZip($student_id);
+                                        $address = formatAddress($street, $city, $state, $zip);
                                         $address = urlencode($address);
                                         ?>
                                 <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
-                                    target="_blank"><?php echo $student->getStudentFormattedAddress($student_id); ?></a>
+                                    target="_blank"><?php echo $address; ?></a>
                             </p>
                             <p>
                                 <strong>Field of Study/Area of Interest:</strong>
