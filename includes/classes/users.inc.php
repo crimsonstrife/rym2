@@ -753,44 +753,31 @@ class User implements Login
         $activity->logActivity(intval($_SESSION['user_id']), 'Updated User Username', 'User ID: ' . strval($id) . ' User Name: ' . $username . ' Old Username: ' . $old_username);
     }
 
-    // Add a user
     private function addUser(string $email, string $password, string $username, int $created_by = null): int
     {
         // Hash the password
         $password = $this->hashPassword($password);
 
-        // Get current timestamp
-        $timestamp = date("Y-m-d H:i:s");
+        // Check that mysqli is set
+        if (!isset($this->mysqli)) {
+            throw new Exception("Failed to connect to the database");
+        }
 
-        // SQL statement to add a user with current timestamp as created_at and updated_at
-        $sql = "INSERT INTO users (email, password, username, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // SQL statement to add a user
+        $sql = "INSERT INTO users (email, password, username, created_at, updated_at, created_by, updated_by)
+                VALUES (?, ?, ?, NOW(), NOW(), ?, ?)";
 
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
 
         // Bind the parameters to the SQL statement
-        $stmt->bind_param("sssssii", $email, $password, $username, $timestamp, $timestamp, $created_by, $created_by);
+        $stmt->bind_param("ssssii", $email, $password, $username, $created_by, $created_by);
 
         // Execute the statement
         $stmt->execute();
 
-        // Count the number of rows affected
-        $rows = $stmt->affected_rows;
-
-        // If the number of rows affected is greater than 0, return the user ID
-        if ($rows > 0) {
-            // Get the user ID
-            $user_id = $stmt->insert_id;
-
-            // Log the user activity
-            $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Added User', 'User Name: ' . $username . ' with User ID: ' . strval($user_id));
-
-            // Return the user ID as an integer
-            return intval($user_id);
-        } else {
-            return 0;
-        }
+        // Return the user ID
+        return $stmt->insert_id;
     }
 
     /**
@@ -830,67 +817,55 @@ class User implements Login
         return $result;
     }
 
-    //Update a user
+    /**
+     * Set the user's information
+     * @param int $id
+     * @param string $email
+     * @param string $password
+     * @param string $username
+     * @param int $updated_by
+     * @throws \Exception
+     * @return void
+     */
     public function setUserInfo(int $id, string $email = null, string $password = null, string $username = null, int $updated_by): void
     {
-        //if the email is null, get the current email
-        if ($email == null) {
-            $email = $this->getUserEmail($id);
-        }
+        // Get the current user information if the corresponding parameter is null
+        $email = $this->getEmailIfNull($email, $id);
+        $username = $this->getUsernameIfNull($username, $id);
 
-        //if the password is null, get the current password
-        if ($password == null) {
-            $password = $this->getUserPassword($id);
-        } else {
-            //if the password is not null, hash the password
+        //does the password need to be hashed?
+        if ($password != null) {
             $password = $this->hashPassword($password);
+        } else {
+            $password = $this->getPasswordIfNull($password, $id);
         }
 
-        //if the username is null, get the current username
-        if ($username == null) {
-            $username = $this->getUserUsername($id);
-        }
-
-        //get current date and time
+        // Get the current date and time
         $date = date("Y-m-d H:i:s");
 
-        //SQL statement to update a user
+        // Prepare the SQL statement
         $sql = "UPDATE users SET email = ?, password = ?, username = ?, updated_at = ?, updated_by = ? WHERE id = ?";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-                print_r($this->mysqli->connect_error);
-                //log the error
-                error_log('Error: ' . $this->mysqli->connect_error);
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                // Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        // Check that mysqli is set
+        if (!isset($this->mysqli)) {
+            throw new Exception("Failed to connect to the database");
+        }
 
-                //Bind the parameters to the SQL statement
-                $stmt->bind_param("ssssii", $email, $password, $username, $date, $updated_by, $id);
+        // Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //Execute the statement
-                $stmt->execute();
+        // Bind the parameters to the SQL statement
+        $stmt->bind_param("ssssii", $email, $password, $username, $date, $updated_by, $id);
 
-                //get the number of rows affected, if the number of rows affected is greater than 0, the user was updated
-                if ($stmt->affected_rows > 0) {
-                    // log the activity
-                    $activity = new Activity();
-                    $activity->logActivity($updated_by, "User Updated.", 'User: ' . $username . ' updated by User: ' . strval($updated_by));
-                } else {
-                    //if the number of rows affected is 0, the user was not updated
-                    // log the activity
-                    $activity = new Activity();
-                    $activity->logActivity($updated_by, "User Update Failed.", 'User: ' . $username . ' failed to update by User: ' . strval($updated_by));
-                }
-            }
+        // Execute the statement
+        $stmt->execute();
+
+        // Log the activity based on the affected rows
+        $activity = new Activity();
+        if ($stmt->affected_rows > 0) {
+            $activity->logActivity($updated_by, "User Updated.", 'User: ' . $username . ' updated by User: ' . strval($updated_by));
         } else {
-            //if the mysqli object is null, throw an exception
-            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            $activity->logActivity($updated_by, "User Update Failed.", 'User: ' . $username . ' failed to update by User: ' . strval($updated_by));
         }
     }
 
@@ -906,6 +881,11 @@ class User implements Login
         // Get current date and time
         $date = date("Y-m-d H:i:s");
 
+        // Check that mysqli is set
+        if (!isset($this->mysqli)) {
+            throw new Exception("Failed to connect to the database");
+        }
+
         // Validate if the role exists by ID
         $role = new Roles();
         if (!$role->validateRoleById($role_id)) {
@@ -917,49 +897,46 @@ class User implements Login
 
         // prepare the sql statement for execution
         $stmt = preparestatement($this->mysqli, $sql);
-        if (!$stmt) {
-            throw new Exception("Failed to prepare the SQL statement.");
-        }
 
         // Bind the parameters to the SQL statement
         $stmt->bind_param("iiss", $user_id, $role_id, $date, $date);
 
         // Execute the statement
-        if (!$stmt->execute()) {
-            throw new Exception("Failed to execute the SQL statement.");
-        }
+        $stmt->execute();
 
         // Log the activity
         $activity = new Activity();
         $activity->logActivity(null, "User Updated", "Role ID: " . strval($role_id) . " Role Name: " . $role->getRoleNameById($role_id) . " added to User ID: " . strval($user_id) . " User Name: " . $this->getUserUsername($user_id));
     }
 
-    //Remove a role from a user
+    /**
+     * Remove a role from a user
+     *
+     * @param int $user_id The user ID
+     * @param int $role_id The role ID
+     * @throws \Exception
+     * @return void
+     */
     private function removeRoleFromUser(int $user_id, int $role_id): void
     {
-        //SQL statement to remove a role from a user
-        $sql = "DELETE FROM user_has_role WHERE user_id = ? AND role_id = ?";
-
-        //Check that mysqli is set
+        // Check that mysqli is set
         if (!isset($this->mysqli)) {
             throw new Exception("Failed to connect to the database.");
         }
 
-        // prepare the sql statement for execution
-        $stmt = preparestatement($this->mysqli, $sql);
-        if (!$stmt) {
-            throw new Exception("Failed to prepare the SQL statement.");
-        }
+        // SQL statement to remove a role from a user
+        $sql = "DELETE FROM user_has_role WHERE user_id = ? AND role_id = ?";
 
-        //Bind the parameters to the SQL statement
+        // Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        // Bind the parameters to the SQL statement
         $stmt->bind_param("ii", $user_id, $role_id);
 
-        //Execute the statement
-        if (!$stmt->execute()) {
-            throw new Exception("Failed to execute the SQL statement.");
-        }
+        // Execute the statement
+        $stmt->execute();
 
-        // log the activity
+        // Log the activity
         $activity = new Activity();
         $activity->logActivity(null, "User Updated", "Role ID: " . strval($role_id) . " removed from User ID: " . strval($user_id) . " User Name: " . $this->getUserUsername($user_id) . "");
     }
@@ -977,44 +954,59 @@ class User implements Login
      */
     public function createUser(string $email, string $username, string $password, int $created_by = null, array $roles = array()): bool
     {
-        //trim the email
         $email = trim($email);
-
-        //trim the username
         $username = trim($username);
 
-        //add the user
         $user_id = $this->addUser($email, $password, $username, $created_by);
 
-        //if the user was created, assign the roles
         if ($user_id > 0 && !empty($user_id) && $user_id != null) {
-            //if the roles array is not empty, assign the roles
-            if (!empty($roles)) {
-                //loop through the roles array and assign the roles
-                foreach ($roles as $role) {
-                    $this->giveRoleToUser($user_id, intval($role));
-                }
-            } else {
-                //do nothing, roles should remain null
-            }
-
-            //if the user was created, notify the user
-            $contact = new Contact();
-            $contact->notifyUserCreated($email, $username, $password);
-
-            //log the activity
-            $activity = new Activity();
-            $activity->logActivity($created_by, "User Created.", 'User ' . $username);
-
-            //return true
+            $this->assignRolesToUser($user_id, $roles);
+            $this->notifyUserCreated($email, $username, $password);
+            $this->logUserCreationActivity($created_by, $username);
             return true;
-        } else if ($user_id == 0 || empty($user_id) || $user_id == null) {
-            //if no user was created, return false
-            return false;
         }
 
-        //if no user was created, return false
         return false;
+    }
+
+    /**
+     * Assign roles to a new user
+     *
+     * @param int $user_id The user ID of the user to assign roles to
+     * @param array $roles The roles to assign to the user
+     */
+    private function assignRolesToUser(int $user_id, array $roles): void
+    {
+        if (!empty($roles)) {
+            foreach ($roles as $role) {
+                $this->giveRoleToUser($user_id, intval($role));
+            }
+        }
+    }
+
+    /**
+     * Notify the user that they have been created
+     *
+     * @param string $email The user's email
+     * @param string $username The user's username
+     * @param string $password The user's password
+     */
+    private function notifyUserCreated(string $email, string $username, string $password): void
+    {
+        $contact = new Contact();
+        $contact->notifyUserCreated($email, $username, $password);
+    }
+
+    /**
+     * Log the user creation activity
+     *
+     * @param int $created_by The user ID of the user who created the user
+     * @param string $username The user's username
+     */
+    private function logUserCreationActivity(int $created_by, string $username): void
+    {
+        $activity = new Activity();
+        $activity->logActivity($created_by, "User Created.", 'User ' . $username);
     }
 
     /**
