@@ -534,132 +534,98 @@ class Media
      * @param array $file The file array from the $_FILES superglobal
      * @param int $user_id The user id for the user uploading the media
      */
-    public function uploadMedia(array $file, int $user_id = NULL): int
+    public function uploadMedia(array $file, int $user_id = null): int
     {
-        //placeholder for the media id
+        // Placeholder for the media id
         $media_id = 0;
 
-        //local path to the upload directory
+        // Local path to the upload directory
         $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
 
-        //placeholder boolean for if there is an error
-        $error = false;
-
-        //placeholder for the file error
-        $file_error = 0;
-
-        //placeholder for the upload error
-        $upload_error = '';
-
-        //if the file array is empty, return 0
-        if (empty($file)) {
+        // Validate the file
+        $upload_error = $this->validateFile($file);
+        if ($upload_error !== '') {
+            $activity = new Activity();
+            $activity->logActivity($user_id, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
             return $media_id;
         }
 
-        //get the file name
-        $filename = $file['name'];
-
-        //get the file type
-        $filetype = $file['type'];
-
-        //get the file size
-        $filesize = $file['size'];
-
-        //get the file path
-        $filepath = $file['tmp_name'];
-
-        //get the error if there is one
-        $file_error = intval($file['error']);
-
-        //get the file extension
-        $file_extension = pathinfo($filename, PATHINFO_EXTENSION);
-
-        //if there hasn't been an error yet, check the file type
-        if ($error === false) {
-            //check if the file is an allowed file type, compare file type to the allowed file types
-            if (!in_array($filetype, $this->getValidFileTypes())) {
-                //set the upload error
-                $upload_error = 'Invalid file type';
-                //set the error boolean to true
-                $error = true;
-            }
-        }
-
-        //if there hasn't been an error yet, check the file size
-        if ($error === false) {
-            //check if the file is an allowed file size, compare file size to the allowed file size
-            if ($filesize > MAX_FILE_SIZE) {
-                //set the upload error
-                $upload_error = 'File size is too large';
-                //set the error boolean to true
-                $error = true;
-            }
-        }
-
-        //if there hasn't been an error yet, check the file error
-        if ($error === false) {
-            //check if the file has an error
-            if ($file_error > 0) {
-                //set the upload error
-                $upload_error = 'File upload error';
-                //set the error boolean to true
-                $error = true;
-            }
-        }
-
-        //if there hasn't been an error yet, check if the file exists already
-        if ($error === false) {
-            //check if the file exists
-            if (file_exists($upload_path . $filename)) {
-                //set the upload error
-                $upload_error = 'File already exists';
-                //set the error boolean to true
-                $error = true;
-
-                //if the file exists, get the id of the media object with the same file name
-                $media_id = $this->getMediaIDByFileName($filename);
-            }
-        }
-
-        //if there hasn't been an error yet, move the file to the upload directory
-        if ($error === false) {
-            //move the file to the upload directory
-            if (move_uploaded_file($filepath, $upload_path . $filename)) {
-                //add the media object to the database
-                $media_id = $this->addMedia($filename, $file_extension, intval($filesize), $user_id);
-
-                //if the media id is 0, set the upload error
-                if ($media_id === 0) {
-                    $error = true;
-                    $upload_error = 'Error adding media to the database';
-                } else {
-                    $error = false;
-                    //set the upload error to empty
-                    $upload_error = '';
-                }
+        // Move the file to the upload directory
+        if ($this->moveFile($file, $upload_path)) {
+            $media_id = $this->addMediaToDatabase($file, $user_id);
+            $activity = new Activity();
+            if ($media_id === 0) {
+                $upload_error = 'Error adding media to the database';
+                $activity->logActivity($user_id, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
             } else {
-                //set the upload error
-                $upload_error = 'Error moving file to upload directory';
-                //set the error boolean to true
-                $error = true;
+                $activity->logActivity($user_id, 'Upload Success', 'Media Uploaded: ' . $file['name']);
             }
-        }
-
-        //if there is an error, log the activity
-        if ($error === true) {
-            $activity = new Activity();
-            $activity->logActivity($user_id, "Upload Error", "Error Uploading Media: " . $upload_error . " - " . $filename);
         } else {
-            //log the activity
+            $upload_error = 'Error moving file to upload directory';
             $activity = new Activity();
-            $activity->logActivity($user_id, "Upload Success", "Media Uploaded: " . $filename);
+            $activity->logActivity($user_id, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
         }
 
-        //generate thumbnails for the new file
+        // Generate thumbnails for the new file
         $this->generateMediaThumbs($media_id);
 
-        //return the media id
         return $media_id;
+    }
+
+    private function validateFile(array $file): string
+    {
+        // Placeholder for the upload error
+        $upload_error = '';
+
+        // Get the file name, type, size, and path
+        $filename = $file['name'];
+        $filetype = $file['type'];
+        $filesize = $file['size'];
+        $filepath = $file['tmp_name'];
+
+        // Check if the file is an allowed file type
+        if (!in_array($filetype, $this->getValidFileTypes())) {
+            $upload_error = 'Invalid file type';
+        }
+
+        // Check if the file size is too large
+        if ($filesize > MAX_FILE_SIZE) {
+            $upload_error = 'File size is too large';
+        }
+
+        // Check if the file has an error
+        if (intval($file['error']) > 0) {
+            $upload_error = 'File upload error';
+        }
+
+        // Check if the file already exists
+        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+        if (file_exists($upload_path . $filename)) {
+            $upload_error = 'File already exists';
+        }
+
+        return $upload_error;
+    }
+
+    private function moveFile(array $file, string $upload_path): bool
+    {
+        // Get the file name and path
+        $filename = $file['name'];
+        $filepath = $file['tmp_name'];
+
+        // Move the file to the upload directory
+        return move_uploaded_file($filepath, $upload_path . $filename);
+    }
+
+    private function addMediaToDatabase(array $file, int $user_id = null): int
+    {
+        // Get the file name, type, size, and extension
+        $filename = $file['name'];
+        $file_extension = pathinfo($filename, PATHINFO_EXTENSION);
+        $filesize = $file['size'];
+
+        // Add the media object to the database
+        return $this->addMedia($filename, $file_extension, intval($filesize), $user_id);
     }
 
     /**
