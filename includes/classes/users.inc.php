@@ -1,5 +1,4 @@
 <?php
-
 /**
  * User Class file for the College Recruitment Application
  * Contains all the functions for the User Class and handles all the user related tasks with the database.
@@ -31,7 +30,7 @@ require_once(BASEPATH . '/includes/connector.inc.php');
  * @package RYM2
  * @version 1.0.0
  */
-class User implements Login
+class User
 {
     //Reference to the database
     private $mysqli;
@@ -106,72 +105,6 @@ class User implements Login
     }
 
     /**
-     * Login the user by username and password
-     *
-     * @param string $username
-     * @param string $password
-     * @throws \Exception
-     * @return void
-     */
-    public function login($username, $password)
-    {
-        //trim the email
-        $username = trim($username);
-
-        //try to login
-        try {
-            //get the user ID by username
-            $user_id = $this->getUserIdByUsername($username);
-
-            //get the user's hashed password
-            $user_password = $this->getUserPassword($user_id);
-
-            //verify the password
-            if ($this->verifyPassword($password, $user_password)) {
-                //set the session variables
-                $_SESSION["logged_in"] = true;
-                $_SESSION["user_id"] = $user_id;
-                $_SESSION["username"] = $username;
-                $_SESSION["user_roles"] = $this->getUserRoles($user_id);
-
-                // log the activity
-                $activity = new Activity();
-                $activity->logActivity(null, "User logged in.", 'User ' . $this->getUserUsername($user_id));
-            } else {
-                // Password is not valid, display a generic error message
-                throw new Exception("Invalid username or password.");
-            }
-        } catch (Exception $e) {
-            // Log the error
-            error_log("Failed to log the user in: " . $e->getMessage());
-            // log the activity
-            $activity = new Activity();
-            $activity->logActivity(null, "Login Error " . $e->getMessage(), 'User ID: ' . strval($user_id) . ' Username: ' . $this->getUserUsername($user_id) . ' failed to log in with error message: ' . $e->getMessage());
-            // Display a generic error message
-            throw new Exception("Invalid username or password.");
-        }
-    }
-
-    /**
-     * Logout the user
-     * @return never
-     */
-    public function logout(): void
-    {
-        //initialize the session
-        session_start();
-
-        // Unset all of the session variables
-        $_SESSION = array();
-
-        // Destroy the session.
-        session_destroy();
-
-        // Redirect to login page
-        redirectUser(APP_URL . "/login.php");
-    }
-
-    /**
      * Get just the IDs of the roles for a specific user, returns an array of role IDs
      * @param int $id
      * @throws \Exception
@@ -220,6 +153,7 @@ class User implements Login
     {
         //new roles array
         $roles = array();
+
         //get the role IDs by user ID
         $roles = $this->getRoleIDsByUserID($id);
 
@@ -231,7 +165,7 @@ class User implements Login
 
         //loop through the roles array and get the role objects
         foreach ($roles as $roleId) {
-            $roleObject = $role->getRoleById($roleId['role_id']);
+            $roleObject = $role->getRoleById(intval($roleId));
             //add the role object to the array
             $userRoles[] = $roleObject;
         }
@@ -753,6 +687,15 @@ class User implements Login
         $activity->logActivity(intval($_SESSION['user_id']), 'Updated User Username', 'User ID: ' . strval($id) . ' User Name: ' . $username . ' Old Username: ' . $old_username);
     }
 
+    /**
+     * Add a new user to the database
+     * @param string $email
+     * @param string $password
+     * @param string $username
+     * @param int $created_by
+     * @throws \Exception
+     * @return int
+     */
     private function addUser(string $email, string $password, string $username, int $created_by = null): int
     {
         // Hash the password
@@ -795,6 +738,7 @@ class User implements Login
 
         // Prepare the SQL statement
         $sql = "DELETE FROM users WHERE id = ?";
+
         // prepare the sql statement for execution
         $stmt = preparestatement($this->mysqli, $sql);
 
@@ -860,13 +804,8 @@ class User implements Login
         // Execute the statement
         $stmt->execute();
 
-        // Log the activity based on the affected rows
-        $activity = new Activity();
-        if ($stmt->affected_rows > 0) {
-            $activity->logActivity($updated_by, "User Updated.", 'User: ' . $username . ' updated by User: ' . strval($updated_by));
-        } else {
-            $activity->logActivity($updated_by, "User Update Failed.", 'User: ' . $username . ' failed to update by User: ' . strval($updated_by));
-        }
+        // Log the activity
+        $this->logUpdateActivity($updated_by, $username);
     }
 
     /**
@@ -956,45 +895,17 @@ class User implements Login
     {
         $email = trim($email);
         $username = trim($username);
-
+        $contact = new Contact();
         $user_id = $this->addUser($email, $password, $username, $created_by);
 
         if ($user_id > 0 && !empty($user_id) && $user_id != null) {
-            $this->assignRolesToUser($user_id, $roles);
-            $this->notifyUserCreated($email, $username, $password);
+            $this->assignRoles($user_id, $roles);
+            $contact->notifyUserCreated($email, $username, $password);
             $this->logUserCreationActivity($created_by, $username);
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * Assign roles to a new user
-     *
-     * @param int $user_id The user ID of the user to assign roles to
-     * @param array $roles The roles to assign to the user
-     */
-    private function assignRolesToUser(int $user_id, array $roles): void
-    {
-        if (!empty($roles)) {
-            foreach ($roles as $role) {
-                $this->giveRoleToUser($user_id, intval($role));
-            }
-        }
-    }
-
-    /**
-     * Notify the user that they have been created
-     *
-     * @param string $email The user's email
-     * @param string $username The user's username
-     * @param string $password The user's password
-     */
-    private function notifyUserCreated(string $email, string $username, string $password): void
-    {
-        $contact = new Contact();
-        $contact->notifyUserCreated($email, $username, $password);
     }
 
     /**
@@ -1091,7 +1002,7 @@ class User implements Login
      */
     private function assignOrRemoveRoles(int $id, array $roles): void
     {
-        $currentRoleIDs = $this->getCurrentRoleIDs($id);
+        $currentRoleIDs = $this->getRoleIDsByUserID($id);
 
         if (!empty($roles)) {
             $this->assignRoles($id, $roles, $currentRoleIDs);
@@ -1102,36 +1013,24 @@ class User implements Login
     }
 
     /**
-     * Get the current roles for a user
-     *
-     * @param int $id The user ID of the user to get the roles for
-     *
-     * @return array The current roles for the user
-     */
-    private function getCurrentRoleIDs(int $id): array
-    {
-        $currentRoles = $this->getUserRoles($id);
-        $currentRoleIDs = [];
-
-        foreach ($currentRoles as $role) {
-            $currentRoleIDs[] = $role['id'];
-        }
-
-        return $currentRoleIDs;
-    }
-
-    /**
      * Assign roles to a user
      *
      * @param int $id The user ID of the user to assign roles to
      * @param array $roles The roles to assign to the user
-     * @param array $currentRoleIDs The current roles for the user
+     * @param array $currentRoleIDs The current roles for the user, null for new users
      */
-    private function assignRoles(int $id, array $roles, array $currentRoleIDs): void
+    private function assignRoles(int $id, array $roles, array $currentRoleIDs = null ): void
     {
-        foreach ($roles as $role) {
-            if (!in_array($role, $currentRoleIDs)) {
+        //check if there are any current roles
+        if ($currentRoleIDs === null) {
+            foreach ($roles as $role) {
                 $this->giveRoleToUser($id, intval($role));
+            }
+        } else {
+            foreach ($roles as $role) {
+                if (!in_array($role, $currentRoleIDs)) {
+                    $this->giveRoleToUser($id, intval($role));
+                }
             }
         }
     }
