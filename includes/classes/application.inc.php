@@ -9,8 +9,6 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
-use Michelf\Markdown;
-
 /**
  * The Application Class
  *
@@ -3021,75 +3019,14 @@ class Application
                 throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
                 //Check if the mailer authentication required status is set in the settings table already
-                if ($this->getMailerAuthRequired() != '' || $this->getMailerAuthRequired() != null) {
-                    //SQL statement to update the mailer authentication required status
-                    $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
-
-                    if ($mailer_auth_required) {
-                        //set the status to 1
-                        $status = 1;
-                    } else {
-                        //set the status to 0
-                        $status = 0;
-                    }
-
-                    //Bind the parameters
-                    $role_statement->bind_param('i', $status);
-
-                    //Execute the statement
-                    $role_statement->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($role_statement->affected_rows > 0) {
-                        if ($mailer_auth_required) {
-                            //log the activity
-                            $activity = new Activity();
-                            $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
-                            //Return true
-                            return true;
-                        } else {
-                            //Return false
-                            return false;
-                        }
-                    } else {
-                        //Return false
-                        return false;
-                    }
+                if ($this->isMailerAuthRequiredSet()) {
+                    $status = $this->getMailerAuthRequiredStatus($mailer_auth_required);
+                    $result = $this->updateMailerAuthRequiredStatus($status, $mailer_auth_required);
+                    return $result;
                 } else {
-                    //SQL statement to update the mailer authentication required status, where isSet is SET
-                    $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $role_statement = $this->mysqli->prepare($sql);
-
-                    if ($mailer_auth_required) {
-                        //set the status to 1
-                        $status = 1;
-                    } else {
-                        //set the status to 0
-                        $status = 0;
-                    }
-
-                    //Bind the parameters
-                    $role_statement->bind_param('i', $status);
-
-                    //Execute the statement
-                    $role_statement->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($role_statement->affected_rows > 0 && $mailer_auth_required) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
+                    $status = $this->getMailerAuthRequiredStatus($mailer_auth_required);
+                    $result = $this->updateMailerAuthRequiredStatus($status, $mailer_auth_required);
+                    return $result;
                 }
             }
         } else {
@@ -3099,6 +3036,57 @@ class Application
             throw new Exception("The database connection is not set.");
         }
     }
+
+    /**
+     * Check if the Mailer Authentication Required Status is Set
+     *
+     * Check if the mailer authentication required status is set in the settings table
+     *
+     * @return bool //true if the mailer authentication required status is set, false if not
+     */
+    private function isMailerAuthRequiredSet()
+    {
+        return ($this->getMailerAuthRequired() != '' || $this->getMailerAuthRequired() != null);
+    }
+
+    /**
+     * Get the Mailer Authentication Required Status
+     *
+     * Get the mailer authentication required status from the settings table
+     *
+     * @param bool $mailer_auth_required //the mailer authentication required status
+     * @return int //the mailer authentication required status int
+     */
+    private function getMailerAuthRequiredStatus($mailer_auth_required)
+    {
+        return $mailer_auth_required ? 1 : 0;
+    }
+
+    /**
+     * Update the Mailer Authentication Required Status
+     *
+     * Update the mailer authentication required status in the settings table
+     *
+     * @param int $status //the mailer authentication required status int
+     * @param bool $mailer_auth_required //the mailer authentication required status
+     * @return bool //true if the mailer authentication required status was updated, false if not
+     */
+    private function updateMailerAuthRequiredStatus($status, $mailer_auth_required)
+    {
+        $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
+        $role_statement = $this->mysqli->prepare($sql);
+        $role_statement->bind_param('i', $status);
+        $role_statement->execute();
+
+        if ($role_statement->affected_rows > 0 && $mailer_auth_required) {
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     //Hotjar Settings
 
