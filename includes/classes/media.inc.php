@@ -999,16 +999,14 @@ class Media
      */
     public function generateMediaThumbs(int $media_id)
     {
-        //max width for the thumbnail
+        //max width and height for the thumbnails
         $modalMaxWidth = 600;
         $modalMaxHeight = 300;
         $listMaxWidth = 200;
         $listMaxHeight = 200;
 
-        //get the file name
+        //get the file name and type
         $filename = $this->getMediaFileName($media_id);
-
-        //get the file type
         $filetype = $this->getMediaFileType($media_id);
 
         //base path to the upload directory
@@ -1019,132 +1017,68 @@ class Media
 
         //if the file type is SVG, do nothing
         if ($filetype != 'svg') {
-            //If the image fits within the max width and height, do nothing
-            if (
-                $image->getImageWidth() <= $modalMaxWidth &&
-                $image->getImageHeight() <= $modalMaxHeight
-            ) {
-                //do nothing
-            } else {
-                //Resize to whatever size is larger, width or height
-                if ($image->getImageWidth() >= $image->getImageHeight()) {
-                    //resize the image to the max width
-                    $image->resizeImage($modalMaxWidth, $modalMaxHeight, Imagick::FILTER_LANCZOS, 1, true);
-                } else {
-                    //resize the image to the max height
-                    $image->resizeImage($modalMaxHeight, $modalMaxWidth, Imagick::FILTER_LANCZOS, 1, true);
-                }
+            //resize and compress the image for modal thumbnail
+            $modalThumbnail = $this->resizeAndCompressImage($image, $modalMaxWidth, $modalMaxHeight, $filetype);
+            if ($modalThumbnail !== null) {
+                $modalThumbnail->writeImage($upload_path . 'thumb_600_' . $filename);
+                $modalThumbnail->destroy();
+            }
 
-                //set the compression based on the file type
-                if ($filetype === 'jpg' || $filetype === 'jpeg') {
-                    //set the compression type
-                    $image->setImageCompression(Imagick::COMPRESSION_JPEG); //JPEG is lossy
-
-                    //set the compression quality (1 = lowest, 100 = highest)
-                    $image->setImageCompressionQuality(80);
-                } elseif ($filetype === 'png') {
-                    //set the compression type
-                    $image->setImageCompression(Imagick::COMPRESSION_ZIP); //Zip is lossless
-
-                    //set the compression quality (1 = lowest, 100 = highest)
-                    $image->setImageCompressionQuality(80);
-                } elseif ($filetype === 'gif') {
-                    //set the compression type
-                    $image->setImageCompression(Imagick::COMPRESSION_LZW); //LZW is lossless
-
-                    //set the compression quality (1 = lowest, 100 = highest)
-                    $image->setImageCompressionQuality(80);
-                } elseif ($filetype === 'svg') {
-                    //do nothing, SVG is vector
-                } else {
-                    //set the compression type
-                    $image->setImageCompression(Imagick::COMPRESSION_JPEG); //JPEG is lossy
-
-                    //set the compression quality (1 = lowest, 100 = highest)
-                    $image->setImageCompressionQuality(80);
-                }
-
-                //strip the metadata from the image
-                $image->stripImage();
-
-                //set the new file name
-                $new_filename = 'thumb_600_' . $filename;
-
-                //write the image to the server
-                $image->writeImage($upload_path . $new_filename);
-
-                //destroy the image object
-                $image->destroy();
+            //resize and compress the image for list thumbnail
+            $listThumbnail = $this->resizeAndCompressImage($image, $listMaxWidth, $listMaxHeight, $filetype);
+            if ($listThumbnail !== null) {
+                $listThumbnail->writeImage($upload_path . 'thumb_200_' . $filename);
+                $listThumbnail->destroy();
             }
         }
 
-        /*repeat the process for the list thumbnail*/
+        //destroy the image object
+        $image->destroy();
+    }
 
-        //create an Imagick object
-        $image = new Imagick($upload_path . $filename);
-
-        //if the file type is SVG, do nothing
-        if ($filetype != 'svg') {
-            //If the image fits within the max width and height, do nothing
-            if (
-                $image->getImageWidth() <= $listMaxWidth &&
-                $image->getImageHeight() <= $listMaxHeight
-            ) {
-                //do nothing
-            } else {
-                //Resize to whatever size is larger, width or height
-                if ($image->getImageWidth() >= $image->getImageHeight()) {
-                    //resize the image to the max width
-                    $image->resizeImage($listMaxWidth, $listMaxHeight, Imagick::FILTER_LANCZOS, 1, true);
-                } else {
-                    //resize the image to the max height
-                    $image->resizeImage($listMaxHeight, $listMaxWidth, Imagick::FILTER_LANCZOS, 1, true);
-                }
-
-                //set the compression based on the file type
-                if (
-                    $filetype === 'jpg' || $filetype === 'jpeg'
-                ) {
-                    //set the compression type
-                    $image->setImageCompression(Imagick::COMPRESSION_JPEG); //JPEG is lossy
-
-                    //set the compression quality (1 = lowest, 100 = highest)
-                    $image->setImageCompressionQuality(80);
-                } elseif ($filetype === 'png') {
-                    //set the compression type
-                    $image->setImageCompression(Imagick::COMPRESSION_ZIP); //Zip is lossless
-
-                    //set the compression quality (1 = lowest, 100 = highest)
-                    $image->setImageCompressionQuality(80);
-                } elseif ($filetype === 'gif') {
-                    //set the compression type
-                    $image->setImageCompression(Imagick::COMPRESSION_LZW); //LZW is lossless
-
-                    //set the compression quality (1 = lowest, 100 = highest)
-                    $image->setImageCompressionQuality(80);
-                } elseif ($filetype === 'svg') {
-                    //do nothing, SVG is vector
-                } else {
-                    //set the compression type
-                    $image->setImageCompression(Imagick::COMPRESSION_JPEG); //JPEG is lossy
-
-                    //set the compression quality (1 = lowest, 100 = highest)
-                    $image->setImageCompressionQuality(80);
-                }
-
-                //strip the metadata from the image
-                $image->stripImage();
-
-                //set the new file name
-                $new_filename = 'thumb_200_' . $filename;
-
-                //write the image to the server
-                $image->writeImage($upload_path . $new_filename);
-
-                //destroy the image object
-                $image->destroy();
-            }
+    private function resizeAndCompressImage(Imagick $image, int $maxWidth, int $maxHeight, string $filetype): ?Imagick
+    {
+        //If the image fits within the max width and height, do nothing
+        if ($image->getImageWidth() <= $maxWidth && $image->getImageHeight() <= $maxHeight) {
+            return null;
         }
+
+        //Resize to whatever size is larger, width or height
+        if ($image->getImageWidth() >= $image->getImageHeight()) {
+            //resize the image to the max width
+            $image->resizeImage($maxWidth, $maxHeight, Imagick::FILTER_LANCZOS, 1, true);
+        } else {
+            //resize the image to the max height
+            $image->resizeImage($maxHeight, $maxWidth, Imagick::FILTER_LANCZOS, 1, true);
+        }
+
+        //set the compression based on the file type
+        switch ($filetype) {
+            case 'jpg':
+            case 'jpeg':
+                $compressionType = Imagick::COMPRESSION_JPEG;
+                break;
+            case 'png':
+                $compressionType = Imagick::COMPRESSION_ZIP;
+                break;
+            case 'gif':
+                $compressionType = Imagick::COMPRESSION_LZW;
+                break;
+            default:
+                $compressionType = Imagick::COMPRESSION_JPEG;
+                break;
+        }
+
+        //set the compression type
+        $image->setImageCompression($compressionType);
+
+        //set the compression quality (1 = lowest, 100 = highest)
+        $image->setImageCompressionQuality(80);
+
+        //strip the metadata from the image
+        $image->stripImage();
+
+        return $image;
     }
 
     /**
