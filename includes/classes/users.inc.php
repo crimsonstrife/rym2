@@ -57,47 +57,24 @@ class User
      * @param string $password
      * @return string
      */
-    private function hashPassword(string $password): string
+    protected function hashPassword(string $password): string
     {
         return password_hash($password, PASSWORD_DEFAULT);
     }
 
     /**
      * Verify the user's password
-     * This is a private function that can only be called from within the class
+     * This is a protected function
      * @param string $password
      * @param string $hash
      * @return bool
      */
-    private function verifyPassword(string $password, string $hash): bool
+    protected function verifyPassword(string $password, string $hash): bool
     {
         $isValid = password_verify($password, $hash);
 
         //return the result
         if ($isValid) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Validate the user's password using the user's ID and the password hash
-     * This is a public function that can be called from outside the class
-     * @param int $user_id
-     * @param string $password
-     * @return bool
-     */
-    public function validateUserPassword(int $user_id, string $password): bool
-    {
-        //get the user's hashed password
-        $user_password = $this->getUserPassword($user_id);
-
-        //hash the password to compare
-        $attempted_password = $this->hashPassword($password);
-
-        //verify the password
-        if ($this->verifyPassword($attempted_password, $user_password)) {
             return true;
         } else {
             return false;

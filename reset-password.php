@@ -53,16 +53,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //instance of the user class
         $user = new User();
 
+        //instance of the user login class
+        $userLogin = new UserLogin();
+
         // Get the user's information from the database
         $user->getUserById($_SESSION["id"]);
 
         // Check if the password entered matches the current hashed password in the database
-        if ($user->validateUserPassword($_SESSION["id"], $current_password)) {
+        if ($userLogin->validateUserPassword($_SESSION["id"], $current_password)) {
             // Password is correct, update the database with the new password
             $user->setUserPassword($_SESSION["id"], $new_password);
 
             // Log the user out
-            $user->logout();
+            $userLogin->logout();
 
             // Redirect the user to the login page
             redirectUser(APP_URL . "/login.php");

@@ -60,7 +60,7 @@ if (isset($_GET['login'])) {
                     //if the user exists, check the password
                     if ($user_id) {
                         //check the password
-                        if ($user->validateUserPassword($user_id, $password)) {
+                        if ($userLogin->validateUserPassword($user_id, $password)) {
                             //try to log the user in
                             try {
                                 $userLogin->login($username, $password);
