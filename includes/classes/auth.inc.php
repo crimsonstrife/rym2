@@ -221,6 +221,9 @@ class Authenticator extends User
      */
     public function validateUserByUsername(string $username): bool
     {
+        //placeholder for the user ID
+        $user_id = null;
+
         //try to get the user ID by username
         try {
             $user_id = $this->getUserIdByUsername($username);
