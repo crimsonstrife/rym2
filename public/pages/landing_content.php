@@ -496,10 +496,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if ($isEventPage) {
                         $student_event_id = (int) $event_id;
                         $student_id = (int) $student_id;
-                        //initialize the student class
-                        $studentObject = new Student();
+                        //initialize the student event class
+                        $studentEventObject = new StudentEvent();
                         //add the student to the event
-                        $studentObject->addStudentToEvent($student_event_id, $student_id);
+                        $studentEventObject->addStudentToEvent($student_event_id, $student_id);
                     }
 
                     //Setup the email
