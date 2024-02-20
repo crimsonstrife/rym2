@@ -60,6 +60,7 @@
             "includes/classes/school.inc.php",
             "includes/classes/reports.inc.php",
             "includes/classes/events.inc.php",
+            "includes/classes/schedule.inc.php",
             "includes/interfaces/login.inc.php",
             "includes/interfaces/major.inc.php",
             "includes/classes/contact.inc.php",
