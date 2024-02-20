@@ -97,6 +97,8 @@ if (!isset($hasViewDashboardPermission)) {
                                                         return $b['send_date'] <=> $a['send_date'];
                                                     });
                                                     foreach ($contactLogArray as $entry) {
+                                                        //debug
+                                                        error_log("contact log entry: " . print_r($entry, true));
                                                         //get the student id
                                                         $studentId = intval($entry['student']);
                                                         //get the student email

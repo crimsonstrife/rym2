@@ -167,25 +167,30 @@ class Student
      */
     public function getStudentFirstName(int $id): string
     {
-        //SQL statement to get a student first name
-        $sql = "SELECT first_name FROM student WHERE id = $id";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //execute the statement
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-
-        //If the query returns a result
-        if ($result) {
-            //Return the student first name
-            return $result->fetch_assoc()['first_name'];
-        } else {
-            //If the query fails, return an empty string
+        //if the student id is not set, or zero, return an empty string
+        if ($id == 0 || !isset($id)) {
             return "";
+        } else {
+            //SQL statement to get a student first name
+            $sql = "SELECT first_name FROM student WHERE id = $id";
+
+            //prepare the statement
+            $stmt = prepareStatement($this->mysqli, $sql);
+
+            //execute the statement
+            $stmt->execute();
+
+            //get the result
+            $result = $stmt->get_result();
+
+            //If the query returns a result
+            if ($result) {
+                //Return the student first name
+                return $result->fetch_assoc()['first_name'];
+            } else {
+                //If the query fails, return an empty string
+                return "";
+            }
         }
     }
 
@@ -197,25 +202,30 @@ class Student
      */
     public function getStudentLastName(int $id): string
     {
-        //SQL statement to get a student last name
-        $sql = "SELECT last_name FROM student WHERE id = $id";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //execute the statement
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-
-        //If the query returns a result
-        if ($result) {
-            //Return the student last name
-            return $result->fetch_assoc()['last_name'];
-        } else {
-            //If the query fails, return an empty string
+        //if the student id is not set, or zero, return an empty string
+        if ($id == 0 || !isset($id)) {
             return "";
+        } else {
+            //SQL statement to get a student last name
+            $sql = "SELECT last_name FROM student WHERE id = $id";
+
+            //prepare the statement
+            $stmt = prepareStatement($this->mysqli, $sql);
+
+            //execute the statement
+            $stmt->execute();
+
+            //get the result
+            $result = $stmt->get_result();
+
+            //If the query returns a result
+            if ($result) {
+                //Return the student last name
+                return $result->fetch_assoc()['last_name'];
+            } else {
+                //If the query fails, return an empty string
+                return "";
+            }
         }
     }
 
@@ -227,14 +237,19 @@ class Student
      */
     public function getStudentFullName(int $id): string
     {
-        //get the student first name
-        $first_name = $this->getStudentFirstName($id);
-        //get the student last name
-        $last_name = $this->getStudentLastName($id);
-        //format the student full name
-        $full_name = $first_name . " " . $last_name;
-        //return the student full name
-        return $full_name;
+        //if the student id is not set, or zero, return an empty string
+        if ($id == 0 || !isset($id)) {
+            return "";
+        } else {
+            //get the student first name
+            $first_name = $this->getStudentFirstName($id);
+            //get the student last name
+            $last_name = $this->getStudentLastName($id);
+            //format the student full name
+            $full_name = $first_name . " " . $last_name;
+            //return the student full name
+            return $full_name;
+        }
     }
 
     /**
@@ -245,25 +260,30 @@ class Student
      */
     public function getStudentEmail(int $id): string
     {
-        //SQL statement to get a student email
-        $sql = "SELECT email FROM student WHERE id = $id";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //execute the statement
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-
-        //If the query returns a result
-        if ($result) {
-            //Return the student email
-            return $result->fetch_assoc()['email'];
-        } else {
-            //If the query fails, return an empty string
+        //if the student id is not set, or zero, return an empty string
+        if ($id == 0 || !isset($id)) {
             return "";
+        } else {
+            //SQL statement to get a student email
+            $sql = "SELECT email FROM student WHERE id = $id";
+
+            //prepare the statement
+            $stmt = prepareStatement($this->mysqli, $sql);
+
+            //execute the statement
+            $stmt->execute();
+
+            //get the result
+            $result = $stmt->get_result();
+
+            //If the query returns a result
+            if ($result) {
+                //Return the student email
+                return $result->fetch_assoc()['email'];
+            } else {
+                //If the query fails, return an empty string
+                return "";
+            }
         }
     }
 
@@ -275,26 +295,31 @@ class Student
      */
     public function getStudentPhone(int $id): string
     {
-        //SQL statement to get a student phone number
-        $sql = "SELECT phone FROM student WHERE id = $id";
+        //if the student id is not set, or zero, return an empty string
+        if ($id == 0 || !isset($id)) {
+            return "";
+        } else {
+            //SQL statement to get a student phone number
+            $sql = "SELECT phone FROM student WHERE id = $id";
 
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
+            //prepare the statement
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-        //execute the statement
-        $stmt->execute();
+            //execute the statement
+            $stmt->execute();
 
-        //get the result
-        $result = $stmt->get_result();
+            //get the result
+            $result = $stmt->get_result();
 
-        $phone = "";
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $phone = $row['phone'];
+            $phone = "";
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $phone = $row['phone'];
+                }
             }
+            //Return the student phone number
+            return $phone;
         }
-        //Return the student phone number
-        return $phone;
     }
 
     /**
@@ -470,6 +495,7 @@ class Student
 
         //get current timestamp to set the created_at and updated_at fields
         $timestamp = date('Y-m-d H:i:s');
+
         //SQL statement to add a new student to the database
         $sql = "INSERT INTO student (first_name, last_name, email, phone, address, city, state, zipcode, degree, major, school, graduation, position, interest, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', '$phone', '$address', '$city', '$state', '$zip', '$degree_id', '$major_id', '$school', '$graduation', '$position', '$area_id', '$timestamp', '$timestamp')";
 
@@ -477,21 +503,19 @@ class Student
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //Execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
-        //Get the result
-        $result = getResults($stmt);
+        //check if the student was added, look for a student by their email
+        $student = $this->getStudentByEmail($email);
 
-        //If the query is successful
-        if ($result) {
-            //TODO: send email to student with a thank you.
+        //if the student was added, return true
+        if (!empty($student) && $student != null && isset($student)) {
             //log the activity
             $activity = new Activity();
-            $activity->logActivity(null, 'Student Added', $first_name . ' ' . $last_name . ' Added');
-            //Return true
+            $activity->logActivity(null, 'Added Student', 'Student ID: ' . $student['id'] . ' Student Name: ' . $student['first_name'] . ' ' . $student['last_name']);
+
             return true;
         } else {
-            //If the query fails, return false
             return false;
         }
     }
@@ -525,8 +549,19 @@ class Student
         //include the contact class, so we can delete the contact history
         $contactObject = new Contact();
 
-        //delete the contact history for the student
-        $result = $contactObject->removeContact($student_id);
+        //get all the contact history for the student
+        $contactHistory = $this->getStudentContactHistory($student_id);
+
+        //set the placeholder for the result
+        $result = false;
+
+        //if the student has any contact history, loop through the history and delete each record
+        if (!empty($contactHistory)) {
+            foreach ($contactHistory as $contact) {
+                $contact_id = intval($contact['id']);
+                $result = $contactObject->removeContact($contact_id);
+            }
+        }
 
         //log the activity if the contact history was deleted
         if ($result) {
@@ -688,7 +723,8 @@ class Student
  * Class StudentData
  * This class is used to store student data
  */
-class StudentData {
+class StudentData
+{
     public ?int $id = null;
     public ?string $first_name = null;
     public ?string $last_name = null;
@@ -721,7 +757,8 @@ class StudentData {
  * Class Student Address
  * This class is used to store student address data
  */
-class StudentAddress {
+class StudentAddress
+{
     public ?string $address = null;
     public ?string $city = null;
     public ?string $state = null;
@@ -777,10 +814,10 @@ class StudentAddress {
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         //get the result
-        $result = getResults($stmt);
+        $result = $stmt->get_result();
 
         //create a variable to hold the address
         $address = "";
@@ -810,10 +847,10 @@ class StudentAddress {
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         //get the result
-        $result = getResults($stmt);
+        $result = $stmt->get_result();
 
         //create a variable to hold the city
         $city = "";
@@ -843,10 +880,10 @@ class StudentAddress {
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         //get the result
-        $result = getResults($stmt);
+        $result = $stmt->get_result();
 
         //create a variable to hold the state
         $state = "";
@@ -876,10 +913,10 @@ class StudentAddress {
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         //get the result
-        $result = getResults($stmt);
+        $result = $stmt->get_result();
 
         //create a variable to hold the zip code
         $zip = "";
@@ -951,8 +988,16 @@ class StudentEducation
     {
         //SQL statement to get a student degree id
         $sql = "SELECT degree FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the student degree id
@@ -973,8 +1018,16 @@ class StudentEducation
     {
         //SQL statement to get a student major id
         $sql = "SELECT major FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the student major id
@@ -1305,7 +1358,8 @@ class StudentEducation
  * Student Event Class
  * This class is used to store and handle student event data
  */
-class StudentEvent extends Student {
+class StudentEvent extends Student
+{
     //Reference to the database
     private $mysqli;
 
@@ -1406,10 +1460,10 @@ class StudentEvent extends Student {
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //Execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         //Get the result
-        $result = getResults($stmt);
+        $result = $stmt->get_result();
 
         //create an array to hold the students
         $students = array();
@@ -1440,10 +1494,10 @@ class StudentEvent extends Student {
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //Execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         //Get the result
-        $result = getResults($stmt);
+        $result = $stmt->get_result();
 
         //create an array to hold the events
         $events = array();
