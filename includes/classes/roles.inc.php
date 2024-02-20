@@ -63,10 +63,10 @@ class Roles
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //Execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         //Get the results
-        $results = getResults($stmt);
+        $results = $stmt->get_result();
 
         //Create an array to hold the roles
         $roles = array();
@@ -95,10 +95,10 @@ class Roles
         $stmt->bind_param("i", $id);
 
         //Execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         //Get the results
-        $result = getResults($stmt);
+        $result = $stmt->get_result();
 
         //Create an array to hold the role
         $role = array();
@@ -125,10 +125,10 @@ class Roles
         $stmt->bind_param("i", $id);
 
         //Execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         //Get the results
-        $result = getResults($stmt);
+        $result = $stmt->get_result();
 
         //Create a variable to hold the role name
         $roleName = "";
@@ -161,10 +161,10 @@ class Roles
         $stmt->bind_param("i", $id);
 
         //Execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         //Get the results
-        $result = getResults($stmt);
+        $result = $stmt->get_result();
 
         //Create an array to hold the permissions
         $permissions = array();
@@ -304,7 +304,7 @@ class Roles
         $stmt->bind_param("ii", $roleId, $permissionId);
 
         // Execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         // Check the result for rows
         $result = $stmt->affected_rows > 0;
@@ -368,10 +368,10 @@ class Roles
         $stmt->bind_param("s", $roleName);
 
         //Execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         //Get the results
-        $result = getResults($stmt);
+        $result = $stmt->get_result();
 
         //Get the count of the results
         $count = $result->fetch_row()[0];
@@ -403,7 +403,7 @@ class Roles
         $stmt->bind_param("sisis", $roleName, $createdBy, $date, $createdBy, $date);
 
         //Execute the statement
-        executeStatement($stmt);
+        $stmt->execute();
 
         //get the result
         $result = $stmt->affected_rows > 0;
