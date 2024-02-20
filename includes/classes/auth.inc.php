@@ -243,6 +243,9 @@ class Authenticator extends User
     //User exists by email
     public function validateUserByEmail(string $email): bool
     {
+        //placeholder for the user ID
+        $user_id = null;
+
         //try to get the user ID by email
         try {
             $user_id = $this->getUserByEmail($email);
