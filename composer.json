@@ -65,6 +65,7 @@
             "includes/classes/contact.inc.php",
             "includes/classes/activity.inc.php",
             "includes/classes/media.inc.php",
+            "includes/classes/eventmedia.inc.php",
             "includes/classes/topdegreebyschool.report.inc.php",
             "includes/classes/topfieldbyschool.report.inc.php",
             "includes/classes/jobsbyfield.report.inc.php",

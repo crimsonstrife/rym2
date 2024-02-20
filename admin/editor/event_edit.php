@@ -29,6 +29,9 @@ $student = new Student();
 //include the media class
 $media = new Media();
 
+//include the event media class
+$eventMedia = new EventMedia();
+
 //create an array of available media
 $mediaArray = $media->getMedia();
 
@@ -233,11 +236,11 @@ if (isset($_GET['action'])) {
                                     <strong><label for="eventLogo">Event Logo:</label></strong>
                                     <!-- if there is an existing logo, show the file -->
                                     <?php
-                                                        if (!empty($event->getEventLogo($event_id))) {
+                                                        if (!empty($eventMedia->getEventLogo($event_id))) {
                                                             //render the file as an image
-                                                            echo '<div><img src="' . getUploadPath() . $media->getMediaFileName($event->getEventLogo($event_id)) . '" alt="Event Logo" style="max-width: 200px; max-height: auto;"></div>';
+                                                            echo '<div><img src="' . getUploadPath() . $media->getMediaFileName($eventMedia->getEventLogo($event_id)) . '" alt="Event Logo" style="max-width: 200px; max-height: auto;"></div>';
                                                             //show the file name
-                                                            echo '<div> ' . $media->getMediaFileName($event->getEventLogo($event_id)) . '</div>';
+                                                            echo '<div> ' . $media->getMediaFileName($eventMedia->getEventLogo($event_id)) . '</div>';
                                                         }
                                                         ?>
                                 </p>
@@ -290,11 +293,11 @@ if (isset($_GET['action'])) {
                                     <strong><label for="eventBanner">Event Banner:</label></strong>
                                     <!-- if there is an existing banner, show the file -->
                                     <?php
-                                                        if (!empty($event->getEventBanner($event_id))) {
+                                                        if (!empty($eventMedia->getEventBanner($event_id))) {
                                                             //render the file as an image
-                                                            echo '<div><img src="' . getUploadPath() . $media->getMediaFileName($event->getEventBanner($event_id)) . '" alt="Event Banner" style="max-width: 200px; max-height: auto;"></div>';
+                                                            echo '<div><img src="' . getUploadPath() . $media->getMediaFileName($eventMedia->getEventBanner($event_id)) . '" alt="Event Banner" style="max-width: 200px; max-height: auto;"></div>';
                                                             //show the file name
-                                                            echo '<div> ' . $media->getMediaFileName($event->getEventBanner($event_id)) . '</div>';
+                                                            echo '<div> ' . $media->getMediaFileName($eventMedia->getEventBanner($event_id)) . '</div>';
                                                         }
                                                         ?>
                                 </p>

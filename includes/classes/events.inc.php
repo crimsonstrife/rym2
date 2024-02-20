@@ -60,8 +60,16 @@ class Event
     {
         //SQL statement to get all events
         $sql = "SELECT * FROM event";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Loop through the result and add each row to the events array
@@ -87,8 +95,14 @@ class Event
         //SQL statement to get a single event by ID
         $sql = "SELECT * FROM event WHERE id = $id";
 
-        //Query the database
-        $result = $this->mysqli->query($sql);
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the result
+        $result = $stmt->get_result();
 
         //If the query returns a result
         if ($result) {
@@ -142,8 +156,16 @@ class Event
     {
         //SQL statement to get a single event by ID
         $sql = "SELECT event_date FROM event WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the event
@@ -164,8 +186,16 @@ class Event
     {
         //SQL statement to get a single event by ID
         $sql = "SELECT location FROM event WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the event
@@ -186,10 +216,13 @@ class Event
     {
         //instance of school class
         $school = new School();
+
         //get the event location id
         $locationId = $this->getEventLocationId($id);
+
         //get the school name using the location id as the school id
         $location = $school->getSchoolName($locationId);
+
         //return the school name
         return $location;
     }
@@ -246,8 +279,19 @@ class Event
     {
         //SQL statement to get a single event by ID
         $sql = "SELECT created_at FROM event WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Bind the parameters
+        $stmt->bind_param("i", $id);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the event
@@ -268,8 +312,16 @@ class Event
     {
         //SQL statement to get a single event by ID
         $sql = "SELECT updated_at FROM event WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the event
@@ -290,23 +342,42 @@ class Event
     {
         //SQL statement to get a single event by ID
         $sql = "SELECT created_by FROM event WHERE id = $id";
+
+        //Prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Bind the parameters
         $stmt->bind_param("i", $id);
+
+        //Execute the statement
         $stmt->execute();
+
+        //Get the result
         $result = $stmt->get_result();
+
+        //Placeholder for the created by user id
         $created_by = 0;
+
+        //If the query returns a result
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $created_by = $row['created_by'];
             }
         }
 
-        //instantiate the user class
+        //placeholder for the user
         $user = new User();
-        //get the matching users from the user class
-        $userArray = $user->getUserById($created_by);
-        //should only be one matching user, so set the first one
-        $user = $userArray[0];
+
+        //if the created by user id is not 0, get the user by id
+        if ($created_by > 0) {
+            //instantiate the user class
+            $userObject = new User();
+            //get the matching users from the user class
+            $userArray = $userObject->getUserById($created_by);
+            //should only be one matching user, so set the first one
+            $user = $userArray[0];
+        }
+
         //return the user
         return $user;
     }
@@ -321,23 +392,39 @@ class Event
     {
         //SQL statement to get a single event by ID
         $sql = "SELECT updated_by FROM event WHERE id = $id";
+
+        //Prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param("i", $id);
+
+        //Execute the statement
         $stmt->execute();
+
+        //Get the result
         $result = $stmt->get_result();
+
+        //Placeholder for the updated by user id
         $updated_by = 0;
+
+        //If the query returns a result
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $updated_by = $row['updated_by'];
             }
         }
 
-        //instantiate the user class
+        //placeholder for the user
         $user = new User();
-        //get the matching users from the user class
-        $userArray = $user->getUserById($updated_by);
-        //should only be one matching user, so set the first one
-        $user = $userArray[0];
+
+        //if the updated by user id is not 0, get the user by id
+        if ($updated_by > 0) {
+            //instantiate the user class
+            $userObject = new User();
+            //get the matching users from the user class
+            $userArray = $userObject->getUserById($updated_by);
+            //should only be one matching user, so set the first one
+            $user = $userArray[0];
+        }
+
         //return the user
         return $user;
     }
@@ -351,18 +438,22 @@ class Event
     {
         //instance of event class
         $event = new Event();
+
         //get all events
         $events = $event->getEvents();
+
         //sort the events by event_date
         usort($events, function ($a, $b) {
             return strtotime($a['event_date']) - strtotime($b['event_date']);
         });
+
         //return compare the dates to the current date, get the most recent passed event
         foreach ($events as $event) {
             if (strtotime($event['event_date']) < strtotime(date("Y-m-d"))) {
                 return $event;
             }
         }
+
         //if no events have passed, return an empty event
         return new Event();
     }
@@ -765,221 +856,6 @@ class Event
     }
 
     /**
-     * Get event logo
-     *
-     * @param int $id event id
-     * @return int media id
-     */
-    public function getEventLogo(int $id): int
-    {
-        //placeholder for the media id
-        $media_id = 0;
-
-        //SQL statement to get the event logo
-        $sql = "SELECT * FROM event_branding WHERE event_id = ?";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //bind the parameters
-        $stmt->bind_param("i", $id);
-
-        //execute the statement
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-        //if the result has rows, set the media id to the event logo
-        if ($result->num_rows > 0) {
-            $media_id = intval($result->fetch_assoc()['event_logo']);
-        }
-
-        //return the media id
-        return $media_id;
-    }
-
-    /**
-     * Get event banner image
-     *
-     * @param int $id event id
-     * @return int media id
-     */
-    public function getEventBanner(int $id): int
-    {
-        //placeholder for the media id
-        $media_id = 0;
-
-        //SQL statement to get the event banner
-        $sql = "SELECT * FROM event_branding WHERE event_id = ?";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //bind the parameters
-        $stmt->bind_param("i", $id);
-
-        //execute the statement
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-
-        //if the result has rows, set the media id to the event banner
-        if ($result->num_rows > 0) {
-            $media_id = intval($result->fetch_assoc()['event_banner']);
-        }
-
-        //return the media id
-        return $media_id;
-    }
-
-    /**
-     * Set event logo
-     *
-     * @param int $id event id
-     * @param int $logo media id
-     *
-     */
-    public function setEventLogo(int $id, int $logo)
-    {
-        //SQL statement to set the event logo
-        $sql = "INSERT INTO event_branding (event_id, event_logo) VALUES (?, ?)";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //bind the parameters
-        $stmt->bind_param("ii", $id, $logo);
-
-        //execute the statement
-        $stmt->execute();
-
-        //if the statement was successful, log the activity
-        if ($stmt) {
-            //log the activity
-            $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), "Event Logo Added", "Logo Image added to Event ID: " . $id . " Event Name: " . $this->getEventName($id) . "");
-        }
-    }
-
-    /**
-     * Set event banner
-     *
-     * @param int $id event id
-     * @param int $banner media id
-     */
-    public function setEventBanner(int $id, int $banner)
-    {
-        //SQL statement to set the event banner
-        $sql = "INSERT INTO event_branding (event_id, event_banner) VALUES (?, ?)";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //bind the parameters
-        $stmt->bind_param("ii", $id, $banner);
-
-        //execute the statement
-        $stmt->execute();
-
-        //if the statement was successful, log the activity
-        if ($stmt) {
-            //log the activity
-            $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), "Event Banner Added", "Banner Image added to Event ID: " . $id . " Event Name: " . $this->getEventName($id) . "");
-        }
-    }
-
-    /**
-     * Set event logo and banner
-     *
-     * does both, helps with delays in the sql execution which appeared to keep them from adding when run back to back
-     *
-     * @param int $id event id
-     * @param int $logo event logo
-     * @param int $banner event banner
-     */
-    public function setEventLogoAndBanner(int $id, int $logo, int $banner)
-    {
-        //SQL statement to set the event logo
-        $sql = "INSERT INTO event_branding (event_id, event_logo, event_banner) VALUES (?, ?, ?)";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //bind the parameters
-        $stmt->bind_param("iii", $id, $logo, $banner);
-
-        //execute the statement
-        $stmt->execute();
-    }
-
-    /**
-     * Update event logo
-     *
-     * @param int $id event id
-     * @param int $logo media id
-     */
-    public function updateEventLogo(int $id, int $logo)
-    {
-        //SQL statement to update the event logo
-        $sql = "UPDATE event_branding SET event_logo = ? WHERE event_id = ?";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //bind the parameters
-        $stmt->bind_param("ii", $logo, $id);
-
-        //execute the statement
-        $stmt->execute();
-    }
-
-    /**
-     * Update event banner
-     *
-     * @param int $id event id
-     * @param int $banner media id
-     */
-    public function updateEventBanner(int $id, int $banner)
-    {
-        //SQL statement to update the event banner
-        $sql = "UPDATE event_branding SET event_banner = ? WHERE event_id = ?";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //bind the parameters
-        $stmt->bind_param("ii", $banner, $id);
-
-        //execute the statement
-        $stmt->execute();
-    }
-
-    /**
-     * Update event logo and banner
-     * does both, helps with delays in the sql execution which appeared to keep them from adding when run back to back
-     *
-     * @param int $id event id
-     * @param int $logo event logo path
-     * @param int $banner event banner path
-     */
-    public function updateEventLogoAndBanner(int $id, int $logo, int $banner)
-    {
-        //SQL statement to update the event logo
-        $sql = "UPDATE event_branding SET event_logo = ?, event_banner = ? WHERE event_id = ?";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //bind the parameters
-        $stmt->bind_param("iii", $logo, $banner, $id);
-
-        //execute the statement
-        $stmt->execute();
-    }
-
-    /**
      * Update event
      *
      * @param int $id event id
@@ -1227,43 +1103,5 @@ class Event
 
         //return the result
         return $result;
-    }
-
-    /**
-     * Get all the event ids using a banner or logo that matches a media id
-     *
-     * @param int $media_id media id
-     *
-     * @return array event ids
-     */
-    public function getEventsByMediaId(int $media_id): array
-    {
-        //SQL statement to get all the event ids using a banner or logo that matches a media id
-        $sql = "SELECT event_id FROM event_branding WHERE event_logo = ? OR event_banner = ?";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //bind the parameters
-        $stmt->bind_param("ii", $media_id, $media_id);
-
-        //execute the statement
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-
-        //array to hold the event ids
-        $event_ids = array();
-
-        //if the result has rows, loop through the rows and add them to the event ids array
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $event_ids[] = $row['event_id'];
-            }
-        }
-
-        //return the event ids array
-        return $event_ids;
     }
 }
