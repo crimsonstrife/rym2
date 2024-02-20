@@ -904,14 +904,14 @@ class Student
         $last_name = $this->mysqli->real_escape_string($studentData->last_name);
         $email = $this->mysqli->real_escape_string($studentData->email);
         $phone = $this->mysqli->real_escape_string($studentData->phone);
-        $address = $this->mysqli->real_escape_string($studentData->address);
-        $city = $this->mysqli->real_escape_string($studentData->city);
-        $state = $this->mysqli->real_escape_string($studentData->state);
-        $zip = $this->mysqli->real_escape_string($studentData->zipcode);
-        $degree_id = intval($studentData->degree);
-        $major_id = intval($studentData->major);
-        $school = intval($studentData->school);
-        $graduation = $this->mysqli->real_escape_string($studentData->graduation);
+        $address = $this->mysqli->real_escape_string($studentData->studentAddress->address);
+        $city = $this->mysqli->real_escape_string($studentData->studentAddress->city);
+        $state = $this->mysqli->real_escape_string($studentData->studentAddress->state);
+        $zip = $this->mysqli->real_escape_string($studentData->studentAddress->zipcode);
+        $degree_id = intval($studentData->studentEducation->degree);
+        $major_id = intval($studentData->studentEducation->major);
+        $school = intval($studentData->studentEducation->school);
+        $graduation = $this->mysqli->real_escape_string($studentData->studentEducation->graduation);
         $position = $this->mysqli->real_escape_string($studentData->position);
         $area_id = intval($studentData->interest);
 
@@ -1241,20 +1241,18 @@ class Student
     }
 };
 
+/**
+ * Class StudentData
+ * This class is used to store student data
+ */
 class StudentData {
     public ?int $id = null;
     public ?string $first_name = null;
     public ?string $last_name = null;
     public ?string $email = null;
     public ?string $phone = null;
-    public ?string $address = null;
-    public ?string $city = null;
-    public ?string $state = null;
-    public ?string $zipcode = null;
-    public ?int $degree = null;
-    public ?int $major = null;
-    public ?int $school = null;
-    public ?string $graduation = null;
+    public ?StudentAddress $studentAddress = null;
+    public ?StudentEducation $studentEducation = null;
     public ?string $position = null;
     public ?int $interest = null;
     public ?string $created_at = null;
@@ -1273,5 +1271,58 @@ class StudentData {
             }
         }
         return $studentDataArray;
+    }
+}
+
+/**
+ * Class Student Address
+ * This class is used to store student address data
+ */
+class StudentAddress {
+    public ?string $address = null;
+    public ?string $city = null;
+    public ?string $state = null;
+    public ?string $zipcode = null;
+
+    /**
+     * Gets all non-null properties of the StudentAddress class as an array
+     * @return array
+     */
+    public function getStudentAddressArray(): array
+    {
+        $studentAddressArray = array();
+        foreach ($this as $key => $value) {
+            if ($value !== null) {
+                $studentAddressArray[$key] = $value;
+            }
+        }
+        return $studentAddressArray;
+    }
+}
+
+/**
+ * Class StudentEducation
+ * This class is used to store student education data
+ */
+class StudentEducation
+{
+    public ?int $degree = null;
+    public ?int $major = null;
+    public ?int $school = null;
+    public ?string $graduation = null;
+
+    /**
+     * Gets all non-null properties of the StudentEducation class as an array
+     * @return array
+     */
+    public function getStudentEducationArray(): array
+    {
+        $studentEducationArray = array();
+        foreach ($this as $key => $value) {
+            if ($value !== null) {
+                $studentEducationArray[$key] = $value;
+            }
+        }
+        return $studentEducationArray;
     }
 }
