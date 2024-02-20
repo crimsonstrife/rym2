@@ -48,6 +48,9 @@ if (!$hasPermission) {
     //student event class
     $studentEvent = new StudentEvent();
 
+    //student address class
+    $studentAddress = new StudentAddress();
+
     //contact class
     $contact = new Contact();
 
@@ -162,10 +165,10 @@ if (!$hasPermission) {
                                 <strong>Address:</strong>
                                 <?php
                                         //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
-                                        $street = $student->getStudentAddress($student_id);
-                                        $city = $student->getStudentCity($student_id);
-                                        $state = $student->getStudentState($student_id);
-                                        $zip = $student->getStudentZip($student_id);
+                                        $street = $studentAddress->getStudentAddress($student_id);
+                                        $city = $studentAddress->getStudentCity($student_id);
+                                        $state = $studentAddress->getStudentState($student_id);
+                                        $zip = $studentAddress->getStudentZip($student_id);
                                         $address = formatAddress($street, $city, $state, $zip);
                                         $address = urlencode($address);
                                         ?>
