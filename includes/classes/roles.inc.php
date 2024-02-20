@@ -196,41 +196,6 @@ class Roles
         return $rolePermissions;
     }
 
-    //validate a role exists by ID
-    public function validateRoleById(int $id): bool
-    {
-        //SQL statement to get the role by ID
-        $sql = "SELECT * FROM roles WHERE id = ?";
-
-        //Prepare the SQL statement for execution
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("i", $id);
-
-        //Execute the statement
-        executeStatement($stmt);
-
-        //Get the results
-        $result = getResults($stmt);
-
-        //Create a variable to hold the role name
-        $roleName = "";
-
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $roleName = $row['name'];
-        }
-
-        //if the role name is empty, return false
-        if (empty($roleName)) {
-            return false;
-        }
-
-        //return true
-        return true;
-    }
-
     /**
      * Add a Permission to a Role
      *
@@ -240,8 +205,11 @@ class Roles
      *
      * @return bool True if the permission was added, false if not
      */
-    public function giveRolePermission(int $roleId, int $permissionId, int $userId): bool
+    private function giveRolePermission(int $roleId, int $permissionId, int $userId): bool
     {
+        // Get the current date and time
+        $date = date('Y-m-d H:i:s');
+
         // Check if the permission is already assigned to the role
         if ($this->isPermissionAssigned($roleId, $permissionId)) {
             return true;
@@ -259,7 +227,6 @@ class Roles
         $stmt = prepareStatement($this->mysqli, $sql);
 
         // Bind the parameters to the SQL statement
-        $date = date('Y-m-d H:i:s');
         $stmt->bind_param("iisisi", $roleId, $permissionId, $date, $userId, $date, $userId);
 
         // Execute the statement
@@ -314,7 +281,7 @@ class Roles
      *
      * @return bool True if the permission was removed, false if not
      */
-    public function removeRolePermission(int $roleId, int $permissionId, int $userId): bool
+    private function removeRolePermission(int $roleId, int $permissionId, int $userId): bool
     {
         // SQL statement to remove a permission from a role
         $sql = "DELETE FROM role_has_permission WHERE role_id = ? AND permission_id = ?";
@@ -784,7 +751,8 @@ class Roles
     public function deleteRole(int $roleId): bool
     {
         // Check if the role exists
-        if (!$this->validateRoleById($roleId)) {
+        $auth = new Authenticator();
+        if (!$auth->validateRoleById($roleId)) {
             return false;
         }
 
