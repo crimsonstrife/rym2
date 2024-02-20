@@ -944,116 +944,6 @@ class Student
     }
 
     /**
-     * Student attendance
-     * Add a student to an event
-     *
-     * @param int $event_id
-     * @param int $student_id
-     * @return bool
-     */
-    public function addStudentToEvent(int $event_id, int $student_id): bool
-    {
-        //SQL statement to add a student to an event
-        $sql = "INSERT INTO student_at_event (event_id, student_id) VALUES ('$event_id', '$student_id')";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        //If the query is successful
-        if ($result) {
-            //log the activity
-            $activity = new Activity();
-            $event = new Event();
-            $student = new Student();
-            $activity->logActivity(null, 'Student Added to Event', $student->getStudentFullName($student_id) . ' Added to Event ' . $event->getEventName($event_id));
-            //Return true
-            return true;
-        } else {
-            //If the query fails, return false
-            return false;
-        }
-    }
-
-    /**
-     * Student attendance
-     * Remove a student from an event
-     *
-     * @param int $event_id
-     * @param int $student_id
-     * @return bool
-     */
-    private function removeStudentFromEvent(int $event_id, int $student_id): bool
-    {
-        //SQL statement to remove a student from an event
-        $sql = "DELETE FROM student_at_event WHERE event_id = $event_id AND student_id = $student_id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        //If the query is successful
-        if ($result) {
-            //get the student name
-            $student_name = $this->getStudentFullName($student_id);
-
-            //get the event name
-            $event = new Event();
-            $event_name = $event->getEventName($event_id);
-
-            //log the activity
-            $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Student', 'Student ID: ' . $student_id . ' Student Name: ' . $student_name . ' from Event ID: ' . $event_id . ' Event Name: ' . $event_name);
-
-            //Return true
-            return true;
-        } else {
-            //If the query fails, return false
-            return false;
-        }
-    }
-
-    /**
-     * Student attendance
-     * Get a list of students that attended an event
-     *
-     * @param int $event_id
-     * @return array
-     */
-    public function getStudentEventAttendace(int $event_id): array
-    {
-        //SQL statement to get a list of students that attended an event
-        $sql = "SELECT * FROM student_at_event WHERE event_id = $event_id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        $students = array();
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $students[] = $row;
-            }
-        }
-        //Return the students array
-        return $students;
-    }
-
-    /**
-     * Student attendance
-     * Get a list of events that a student attended
-     *
-     * @param int $student_id
-     * @return array
-     */
-    public function getEventAttendaceByStudent(int $student_id): array
-    {
-        //SQL statement to get a list of events that a student attended
-        $sql = "SELECT * FROM student_at_event WHERE student_id = $student_id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        $events = array();
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $events[] = $row;
-            }
-        }
-        //Return the events array
-        return $events;
-    }
-
-    /**
      * Get Student Contact History
      * Get the contact history for a student
      * @param int $student_id
@@ -1182,8 +1072,8 @@ class Student
      */
     public function deleteStudent(int $student_id): bool
     {
-        //get the current date and time
-        $date = date("Y-m-d H:i:s");
+        //instance the student event class
+        $studentEvent = new StudentEvent();
 
         //get the name of the student
         $student_name = $this->getStudentFullName($student_id);
@@ -1192,14 +1082,14 @@ class Student
         $result = false;
 
         //check if the student has attended any events
-        $eventsAttended = $this->getEventAttendaceByStudent($student_id);
+        $eventsAttended = $studentEvent->getEventAttendaceByStudent($student_id);
 
         //if the student has attended any events
         if (!empty($eventsAttended)) {
             //loop through the events
             foreach ($eventsAttended as $event) {
                 //remove the student from the event
-                $this->removeStudentFromEvent(intval($event['event_id']), $student_id);
+                $studentEvent->removeStudentFromEvent(intval($event['event_id']), $student_id);
             }
         }
 
@@ -1324,5 +1214,163 @@ class StudentEducation
             }
         }
         return $studentEducationArray;
+    }
+}
+
+/**
+ * Student Event Class
+ * This class is used to store and handle student event data
+ */
+class StudentEvent extends Student {
+    //Reference to the database
+    private $mysqli;
+
+    //Instantiate the database connection
+    public function __construct()
+    {
+        try {
+            $this->mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+    }
+
+    //Close the database connection when the object is destroyed
+    public function __destruct()
+    {
+        closeDatabaseConnection($this->mysqli);
+    }
+
+    /**
+     * Add a student to an event attendance list
+     * Add a student to an event
+     *
+     * @param int $event_id
+     * @param int $student_id
+     * @return bool
+     */
+    public function addStudentToEvent(int $event_id, int $student_id): bool
+    {
+        //SQL statement to add a student to an event
+        $sql = "INSERT INTO student_at_event (event_id, student_id) VALUES ('$event_id', '$student_id')";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //log the activity
+            $activity = new Activity();
+            $event = new Event();
+            $student = new Student();
+            $activity->logActivity(null, 'Student Added to Event', $student->getStudentFullName($student_id) . ' Added to Event ' . $event->getEventName($event_id));
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Remove a student from an event attendance list
+     * Remove a student from an event
+     *
+     * @param int $event_id
+     * @param int $student_id
+     * @return bool
+     */
+    public function removeStudentFromEvent(int $event_id, int $student_id): bool
+    {
+        //SQL statement to remove a student from an event
+        $sql = "DELETE FROM student_at_event WHERE event_id = $event_id AND student_id = $student_id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //get the student name
+            $student_name = $this->getStudentFullName($student_id);
+
+            //get the event name
+            $event = new Event();
+            $event_name = $event->getEventName($event_id);
+
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Student', 'Student ID: ' . $student_id . ' Student Name: ' . $student_name . ' from Event ID: ' . $event_id . ' Event Name: ' . $event_name);
+
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Student attendance
+     * Get a list of students that attended an event
+     *
+     * @param int $event_id
+     * @return array
+     */
+    public function getStudentEventAttendace(int $event_id): array
+    {
+        //SQL statement to get a list of students that attended an event
+        $sql = "SELECT * FROM student_at_event WHERE event_id = $event_id";
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        executeStatement($stmt);
+
+        //Get the result
+        $result = getResults($stmt);
+
+        //create an array to hold the students
+        $students = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $students[] = $row;
+            }
+        }
+        //Return the students array
+        return $students;
+    }
+
+    /**
+     * Student attendance
+     * Get a list of events that a student attended
+     *
+     * @param int $student_id
+     * @return array
+     */
+    public function getEventAttendaceByStudent(int $student_id): array
+    {
+        //SQL statement to get a list of events that a student attended
+        $sql = "SELECT * FROM student_at_event WHERE student_id = $student_id";
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        executeStatement($stmt);
+
+        //Get the result
+        $result = getResults($stmt);
+
+        //create an array to hold the events
+        $events = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $events[] = $row;
+            }
+        }
+        //Return the events array
+        return $events;
     }
 }
