@@ -142,7 +142,13 @@ class Roles
         return $roleName;
     }
 
-    //get permissions IDs by role ID, uses the role_has_permission table
+    /**
+     * Get Role Permissions
+     * Get a list of permission IDs for a role by role ID
+     *
+     * @param int $id The ID of the role to get the permissions for
+     * @return array An array of permissions for the role
+     */
     private function getPermissionsIdByRoleId(int $id): array
     {
         //SQL statement to get the permissions by role ID
@@ -172,11 +178,16 @@ class Roles
         return $permissions;
     }
 
-    //get list of permission objects using the permissions class and the getPermissionById function
+    /**
+     * Get Role Permissions
+     * @param int $id
+     * @return array
+     */
     public function getRolePermissions(int $id): array
     {
         //new permissions array
         $permissions = array();
+
         //get the permissions IDs by role ID
         $permissions = $this->getPermissionsIdByRoleId($id);
 
@@ -304,116 +315,6 @@ class Roles
         }
 
         return $result;
-    }
-
-    /**
-     * Get Users with Role
-     * Get a list of users with a specific role by role ID
-     *
-     * @param int $roleId The ID of the role to get the users for
-     * @return array An array of users with the role
-     */
-    public function getUsersWithRole(int $roleId): array
-    {
-        //SQL statement to get the users with a specific role
-        $sql = "SELECT * FROM user_has_role WHERE role_id = ?";
-
-        //Prepare the SQL statement for execution
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("i", $roleId);
-
-        //Execute the statement
-        $stmt->execute();
-
-        //Get the results
-        $result = $stmt->get_result();
-
-        //Create an array to hold the users
-        $users = array();
-
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $users[] = $row;
-        }
-
-        //Return the array of users
-        return $users;
-    }
-
-    /**
-     * Get the Date a Role was Given to a User
-     *
-     * @param int $userId The ID of the user to get the role date for
-     * @param int $roleId The ID of the role to get the date for
-     *
-     * @return string The date the role was given to the user
-     */
-    public function getUserRoleGivenDate(int $userId, int $roleId): string
-    {
-        //SQL statement to get the date a role was given to a user
-        $sql = "SELECT created_at FROM user_has_role WHERE user_id = ? AND role_id = ?";
-
-        //Prepare the SQL statement for execution
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("ii", $userId, $roleId);
-
-        //Execute the statement
-        $stmt->execute();
-
-        //Get the results
-        $result = $stmt->get_result();
-
-        //Create a variable to hold the date
-        $date = "";
-
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $date = $row['created_at'];
-        }
-
-        //Return the date
-        return $date;
-    }
-
-    /**
-     * Get the Date a Role was Modified on a User
-     *
-     * @param int $userId The ID of the user to get the role date for
-     * @param int $roleId The ID of the role to get the date for
-     *
-     * @return string The date the role was modified on the user
-     */
-    public function getUserRoleModifiedDate(int $userId, int $roleId): string
-    {
-        //SQL statement to get the date a role was modified on a user
-        $sql = "SELECT updated_at FROM user_has_role WHERE user_id = ? AND role_id = ?";
-
-        //Prepare the SQL statement for execution
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //Bind the parameters to the SQL statement
-        $stmt->bind_param("ii", $userId, $roleId);
-
-        //Execute the statement
-        $stmt->execute();
-
-        //Get the results
-        $result = $stmt->get_result();
-
-        //Create a variable to hold the date
-        $date = "";
-
-        //Loop through the results and add them to the array
-        while ($row = $result->fetch_assoc()) {
-            $date = $row['updated_at'];
-        }
-
-        //Return the date
-        return $date;
     }
 
     /**
@@ -706,41 +607,6 @@ class Roles
     }
 
     /**
-     * Get the date a role was granted a permission
-     *
-     * @param int $roleId The ID of the role to get the date for
-     * @param int $permissionId The ID of the permission to get the date for
-     *
-     * @return string The date the role was granted the permission
-     */
-    public function getPermissionGrantDate(int $roleId, int $permissionId): string
-    {
-        // SQL statement to get the date a role was granted a permission
-        $sql = "SELECT MAX(created_at) AS max_created_at, MAX(updated_at) AS max_updated_at FROM role_has_permission WHERE role_id = ? AND permission_id = ?";
-
-        // Prepare the SQL statement for execution
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        // Bind the parameters to the SQL statement
-        $stmt->bind_param("ii", $roleId, $permissionId);
-
-        // Execute the statement
-        $stmt->execute();
-
-        // Get the results
-        $result = $stmt->get_result();
-
-        // Fetch the row
-        $row = $result->fetch_assoc();
-
-        // Get the most recent date
-        $date = $row['max_created_at'] ?? $row['max_updated_at'] ?? "";
-
-        // Return the date
-        return strval($date);
-    }
-
-    /**
      * Delete a Role
      * Deletes a role by ID, also removes all permissions from the role
      *
@@ -787,5 +653,177 @@ class Roles
         }
 
         return false;
+    }
+}
+
+/**
+ * Role Data Class
+ * Contains all the functions for the Role Data Class and handles all role data functions, like meta-data.
+ */
+class RoleData extends Roles
+{
+    //Reference to the database
+    private $mysqli;
+
+    //Instantiate the database connection
+    public function __construct()
+    {
+        try {
+            $this->mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+    }
+
+    //Close the database connection when the object is destroyed
+    public function __destruct()
+    {
+        closeDatabaseConnection($this->mysqli);
+    }
+
+    /**
+     * Get the date a role was granted a permission
+     *
+     * @param int $roleId The ID of the role to get the date for
+     * @param int $permissionId The ID of the permission to get the date for
+     *
+     * @return string The date the role was granted the permission
+     */
+    public function getPermissionGrantDate(int $roleId, int $permissionId): string
+    {
+        // SQL statement to get the date a role was granted a permission
+        $sql = "SELECT MAX(created_at) AS max_created_at, MAX(updated_at) AS max_updated_at FROM role_has_permission WHERE role_id = ? AND permission_id = ?";
+
+        // Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        // Bind the parameters to the SQL statement
+        $stmt->bind_param("ii", $roleId, $permissionId);
+
+        // Execute the statement
+        $stmt->execute();
+
+        // Get the results
+        $result = $stmt->get_result();
+
+        // Fetch the row
+        $row = $result->fetch_assoc();
+
+        // Get the most recent date
+        $date = $row['max_created_at'] ?? $row['max_updated_at'] ?? "";
+
+        // Return the date
+        return strval($date);
+    }
+
+    /**
+     * Get the Date a Role was Modified on a User
+     *
+     * @param int $userId The ID of the user to get the role date for
+     * @param int $roleId The ID of the role to get the date for
+     *
+     * @return string The date the role was modified on the user
+     */
+    public function getUserRoleModifiedDate(int $userId, int $roleId): string
+    {
+        //SQL statement to get the date a role was modified on a user
+        $sql = "SELECT updated_at FROM user_has_role WHERE user_id = ? AND role_id = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Bind the parameters to the SQL statement
+        $stmt->bind_param("ii", $userId, $roleId);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Create a variable to hold the date
+        $date = "";
+
+        //Loop through the results and add them to the array
+        while ($row = $result->fetch_assoc()) {
+            $date = $row['updated_at'];
+        }
+
+        //Return the date
+        return $date;
+    }
+
+    /**
+     * Get the Date a Role was Given to a User
+     *
+     * @param int $userId The ID of the user to get the role date for
+     * @param int $roleId The ID of the role to get the date for
+     *
+     * @return string The date the role was given to the user
+     */
+    public function getUserRoleGivenDate(int $userId, int $roleId): string
+    {
+        //SQL statement to get the date a role was given to a user
+        $sql = "SELECT created_at FROM user_has_role WHERE user_id = ? AND role_id = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Bind the parameters to the SQL statement
+        $stmt->bind_param("ii", $userId, $roleId);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Create a variable to hold the date
+        $date = "";
+
+        //Loop through the results and add them to the array
+        while ($row = $result->fetch_assoc()) {
+            $date = $row['created_at'];
+        }
+
+        //Return the date
+        return $date;
+    }
+
+    /**
+     * Get Users with Role
+     * Get a list of users with a specific role by role ID
+     *
+     * @param int $roleId The ID of the role to get the users for
+     * @return array An array of users with the role
+     */
+    public function getUsersWithRole(int $roleId): array
+    {
+        //SQL statement to get the users with a specific role
+        $sql = "SELECT * FROM user_has_role WHERE role_id = ?";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Bind the parameters to the SQL statement
+        $stmt->bind_param("i", $roleId);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Create an array to hold the users
+        $users = array();
+
+        //Loop through the results and add them to the array
+        while ($row = $result->fetch_assoc()) {
+            $users[] = $row;
+        }
+
+        //Return the array of users
+        return $users;
     }
 }
