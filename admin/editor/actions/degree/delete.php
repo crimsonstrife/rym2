@@ -35,6 +35,9 @@ if (!$hasPermission) {
     //student class
     $student = new Student();
 
+    //student education class
+    $studentEducation = new StudentEducation();
+
     // Processing form data when form is submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //get the action from the url parameter
@@ -55,7 +58,7 @@ if (!$hasPermission) {
         $canDelete = true;
 
         //check if there are any students associated with the degree in the student table
-        $studentsWithDegree = $student->getStudentsByGrade($degree_id);
+        $studentsWithDegree = $studentEducation->getStudentsByGrade($degree_id);
 
         //if there are more than 0 records in the array, the degree cannot be deleted so set the canDelete boolean to false
         if (count($studentsWithDegree) > 0) {

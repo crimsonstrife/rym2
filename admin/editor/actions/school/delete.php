@@ -38,6 +38,9 @@ if (!$hasPermission) {
     //student class
     $student = new Student();
 
+    //student education class
+    $studentEducation = new StudentEducation();
+
     //event class
     $event = new Event();
 
@@ -61,7 +64,7 @@ if (!$hasPermission) {
         $canDelete = true;
 
         //check if there are any students associated with the school in the student table
-        $studentsAtSchool = $student->getStudentsBySchool($school_id);
+        $studentsAtSchool = $studentEducation->getStudentsBySchool($school_id);
 
         //if there are more than 0 records in the array, the school cannot be deleted so set the canDelete boolean to false
         if (count($studentsAtSchool) > 0) {
