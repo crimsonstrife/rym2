@@ -451,6 +451,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 //set the submission attempted variable to true
                 $attemptedStudentSubmission = true;
             } else {
+                //create a new student education object
+                $newStudentEducation = new StudentEducation();
+
+                //set the student education object properties
+                $newStudentEducation->degree = intval($student_degree);
+                $newStudentEducation->major = intval($student_major);
+                $newStudentEducation->school = intval($student_school);
+                $newStudentEducation->graduation = $student_graduationDate;
+
+                //create a new student address object
+                $newStudentAddress = new StudentAddress();
+
+                //set the student address object properties
+                $newStudentAddress->address = $student_address;
+                $newStudentAddress->city = $student_city;
+                $newStudentAddress->state = $student_state;
+                $newStudentAddress->zipcode = $student_zip;
+
                 //create a new student data object
                 $newStudent = new StudentData();
 
@@ -459,14 +477,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $newStudent->last_name = $student_lastName;
                 $newStudent->email = $student_email;
                 $newStudent->phone = $student_phone;
-                $newStudent->address = $student_address;
-                $newStudent->city = $student_city;
-                $newStudent->state = $student_state;
-                $newStudent->zipcode = $student_zip;
-                $newStudent->degree = intval($student_degree);
-                $newStudent->major = intval($student_major);
-                $newStudent->school = intval($student_school);
-                $newStudent->graduation = $student_graduationDate;
+                $newStudent->studentAddress = $newStudentAddress;
+                $newStudent->studentEducation = $newStudentEducation;
                 $newStudent->position = $student_jobPosition;
                 $newStudent->interest = intval($student_areaOfInterest);
 
