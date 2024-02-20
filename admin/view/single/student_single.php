@@ -51,6 +51,9 @@ if (!$hasPermission) {
     //student address class
     $studentAddress = new StudentAddress();
 
+    //student education class
+    $studentEducation = new StudentEducation();
+
     //contact class
     $contact = new Contact();
 
@@ -185,15 +188,15 @@ if (!$hasPermission) {
                             </p>
                             <p>
                                 <strong>Degree:</strong>
-                                <?php echo $student->getStudentDegree($student_id); ?>
+                                <?php echo $studentEducation->getStudentDegree($student_id); ?>
                             </p>
                             <p>
                                 <strong>Graduation Date:</strong>
-                                <?php echo formatDate($student->getStudentGraduation($student_id)); ?>
+                                <?php echo formatDate($studentEducation->getStudentGraduation($student_id)); ?>
                             </p>
                             <p>
                                 <strong>School:</strong>
-                                <?php echo $schoolsData->getSchoolName($student->getStudentSchool($student_id)); ?>
+                                <?php echo $schoolsData->getSchoolName($studentEducation->getStudentSchool($student_id)); ?>
                             </p>
                         </div>
                     </div>
