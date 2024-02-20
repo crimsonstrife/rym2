@@ -32,6 +32,9 @@ $student = new Student();
 //media class
 $media = new Media();
 
+//event media class
+$eventMedia = new EventMedia();
+
 /*confirm user has a role with read event permissions*/
 //get the id of the read event permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('READ EVENT');
@@ -183,14 +186,14 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
                             <div class="thumbnail-container"
                                 style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($event->getEventLogo($event_id)); ?>"
+                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($eventMedia->getEventLogo($event_id)); ?>"
                                     alt="Event Logo Image">
                             </div>
                             <p><strong>Event Banner:</strong></p>
                             <div class="thumbnail-container"
                                 style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($event->getEventBanner($event_id)); ?>"
+                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($eventMedia->getEventBanner($event_id)); ?>"
                                     alt="Event Banner Image">
                             </div>
                             <p><strong>School Logo:</strong></p>
