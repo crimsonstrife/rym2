@@ -298,296 +298,6 @@ class Student
     }
 
     /**
-     * Get a student degree id
-     *
-     * @param int $id
-     * @return int
-     */
-    public function getStudentDegreeId(int $id): int
-    {
-        //SQL statement to get a student degree id
-        $sql = "SELECT degree FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        //If the query returns a result
-        if ($result) {
-            //Return the student degree id
-            return intval($result->fetch_assoc()['degree']);
-        } else {
-            //If the query fails, return an empty string
-            return 0;
-        }
-    }
-
-    /**
-     * Get a student major id
-     *
-     * @param int $id
-     * @return int
-     */
-    public function getStudentMajorId(int $id): int
-    {
-        //SQL statement to get a student major id
-        $sql = "SELECT major FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        //If the query returns a result
-        if ($result) {
-            //Return the student major id
-            return intval($result->fetch_assoc()['major']);
-        } else {
-            //If the query fails, return an empty string
-            return 0;
-        }
-    }
-
-    /**
-     * Get a student's degree program
-     *
-     * @param int $id
-     * @return string
-     */
-    public function getStudentDegree(int $id): string
-    {
-        //create a string to hold the degree program
-        $degree = "";
-        //instantiate a new degree object
-        $degreeProgram = new Degree();
-        //get the student's degree id
-        $degree_id = $this->getStudentDegreeId($id);
-        //get the student's major id
-        $major_id = $this->getStudentMajorId($id);
-
-        //get the degree program by the degree id and major id
-        $degree = $degreeProgram->getDegreeProgram($degree_id, $major_id);
-
-        //return the degree program
-        return $degree;
-    }
-
-    /**
-     * Get a student's major by their id
-     *
-     * @param int $id
-     * @return array
-     */
-    public function getStudentMajor(int $id): array
-    {
-        //create an array to hold the major
-        $major = array();
-        //instantiate a new major object
-        $majorProgram = new Degree();
-        //get the student's major id
-        $major_id = $this->getStudentMajorId($id);
-        //get the major by the major id
-        $major = $majorProgram->getMajor($major_id);
-        //return the major
-        return $major;
-    }
-
-    /**
-     * Get all students by a major id
-     *
-     * @param int $major_id
-     * @return array
-     */
-    public function getStudentsByMajor(int $major_id): array
-    {
-        //SQL statement to get all students by a major id
-        $sql = "SELECT * FROM student WHERE major = ?";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //bind the parameters
-        $stmt->bind_param("i", $major_id);
-
-        //execute the statement
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-
-        //create an array to hold the students
-        $students = array();
-
-        //if the result has rows
-        if ($result->num_rows > 0) {
-            //loop through the rows
-            while ($row = $result->fetch_assoc()) {
-                //add the row to the students array
-                $students[] = $row;
-            }
-        }
-
-        //Return the students array
-        return $students;
-    }
-
-    /**
-     * Get a student's degree level by their id
-     *
-     * @param int $id
-     * @return array
-     */
-    public function getStudentDegreeLevel(int $id): array
-    {
-        //create an array to hold the degree level
-        $degree_level = array();
-        //instantiate a new degree object
-        $degreeProgram = new Degree();
-        //get the student's degree id
-        $degree_id = $this->getStudentDegreeId($id);
-        //get the degree level by the degree id
-        $degree_level = $degreeProgram->getGrade($degree_id);
-        //return the degree level
-        return $degree_level;
-    }
-
-    /**
-     * Get all students by a degree level id
-     *
-     * @param int $degree_id
-     * @return array
-     */
-    public function getStudentsByGrade(int $degree_id): array
-    {
-        //SQL statement to get all students by a degree level id
-        $sql = "SELECT * FROM student WHERE degree = ?";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //bind the parameters
-        $stmt->bind_param("i", $degree_id);
-
-        //execute the statement
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-
-        //create an array to hold the students
-        $students = array();
-
-        //if the result has rows
-        if ($result->num_rows > 0) {
-            //loop through the rows
-            while ($row = $result->fetch_assoc()) {
-                //add the row to the students array
-                $students[] = $row;
-            }
-        }
-
-        //Return the students array
-        return $students;
-    }
-
-    /**
-     * Get student graduation year
-     *
-     * @param int $id
-     * @return string
-     */
-    public function getStudentGraduation(int $id): string
-    {
-        //SQL statement to get a student graduation year
-        $sql = "SELECT graduation FROM student WHERE id = $id";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //execute the statement
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-
-        //If the query returns a result
-        if ($result) {
-            //Return the student graduation year
-            return $result->fetch_assoc()['graduation'];
-        } else {
-            //If the query fails, return an empty string
-            return "";
-        }
-    }
-
-    /**
-     * Get a student's school id
-     *
-     * @param int $id
-     * @return int
-     */
-    public function getStudentSchool(int $id): int
-    {
-        //SQL statement to get a student school id
-        $sql = "SELECT school FROM student WHERE id = $id";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //execute the statement
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-
-        //create a variable to hold the school id
-        $school = 0;
-
-        //If the query returns a result
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $school = $row['school'];
-            }
-        }
-
-        //Return the student school id
-        return intval($school);
-    }
-
-    /**
-     * Get students by school id
-     * Get a list of students associated with a school by the school id
-     *
-     * @param int $school_id
-     * @return array
-     */
-    public function getStudentsBySchool(int $school_id): array
-    {
-        //SQL statement to get a list of students associated with a school by the school id
-        $sql = "SELECT * FROM student WHERE school = ?";
-
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //bind the parameters
-        $stmt->bind_param("i", $school_id);
-
-        //execute the statement
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-
-        //create an array to hold the students
-        $students = array();
-
-        //if the result has rows
-        if ($result->num_rows > 0) {
-            //loop through the rows
-            while ($row = $result->fetch_assoc()) {
-                //add the row to the students array
-                $students[] = $row;
-            }
-        }
-
-        //Return the students array
-        return $students;
-    }
-
-    /**
      * Get a students job type preference from the job ID
      *
      * @param int $id //student id
@@ -678,75 +388,6 @@ class Student
     {
         //SQL statement to set a student's email address
         $sql = "UPDATE students SET email = '$email' WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        //If the query is successful
-        if ($result) {
-            //Return true
-            return true;
-        } else {
-            //If the query fails, return false
-            return false;
-        }
-    }
-
-    /**
-     * Set a student's degree id
-     *
-     * @param int $id
-     * @param int $degree_id
-     * @return bool
-     */
-    public function setStudentDegreeId(int $id, int $degree_id): bool
-    {
-        //SQL statement to set a student's degree level id
-        $sql = "UPDATE students SET degree = $degree_id WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        //If the query is successful
-        if ($result) {
-            //Return true
-            return true;
-        } else {
-            //If the query fails, return false
-            return false;
-        }
-    }
-
-    /**
-     * Set a student's major id
-     *
-     * @param int $id
-     * @param int $major_id
-     * @return bool
-     */
-    public function setStudentMajorId(int $id, int $major_id): bool
-    {
-        //SQL statement to set a student's major id
-        $sql = "UPDATE students SET major = $major_id WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        //If the query is successful
-        if ($result) {
-            //Return true
-            return true;
-        } else {
-            //If the query fails, return false
-            return false;
-        }
-    }
-
-    /**
-     * Set a student's graduation date
-     *
-     * @param int $id
-     * @param string $graduation
-     * @return bool
-     */
-    public function setStudentGraduation(int $id, string $graduation): bool
-    {
-        //SQL statement to set a student's graduation year
-        $sql = "UPDATE students SET graduation = '$graduation' WHERE id = $id";
         //Query the database
         $result = $this->mysqli->query($sql);
         //If the query is successful
@@ -1278,6 +919,385 @@ class StudentEducation
             }
         }
         return $studentEducationArray;
+    }
+
+    //Reference to the database
+    private $mysqli;
+
+    //Instantiate the database connection
+    public function __construct()
+    {
+        try {
+            $this->mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+    }
+
+    //Close the database connection when the object is destroyed
+    public function __destruct()
+    {
+        closeDatabaseConnection($this->mysqli);
+    }
+
+    /**
+     * Get a student degree id
+     *
+     * @param int $id
+     * @return int
+     */
+    public function getStudentDegreeId(int $id): int
+    {
+        //SQL statement to get a student degree id
+        $sql = "SELECT degree FROM student WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query returns a result
+        if ($result) {
+            //Return the student degree id
+            return intval($result->fetch_assoc()['degree']);
+        } else {
+            //If the query fails, return an empty string
+            return 0;
+        }
+    }
+
+    /**
+     * Get a student major id
+     *
+     * @param int $id
+     * @return int
+     */
+    public function getStudentMajorId(int $id): int
+    {
+        //SQL statement to get a student major id
+        $sql = "SELECT major FROM student WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query returns a result
+        if ($result) {
+            //Return the student major id
+            return intval($result->fetch_assoc()['major']);
+        } else {
+            //If the query fails, return an empty string
+            return 0;
+        }
+    }
+
+    /**
+     * Get a student's degree program
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentDegree(int $id): string
+    {
+        //create a string to hold the degree program
+        $degree = "";
+        //instantiate a new degree object
+        $degreeProgram = new Degree();
+        //get the student's degree id
+        $degree_id = $this->getStudentDegreeId($id);
+        //get the student's major id
+        $major_id = $this->getStudentMajorId($id);
+
+        //get the degree program by the degree id and major id
+        $degree = $degreeProgram->getDegreeProgram($degree_id, $major_id);
+
+        //return the degree program
+        return $degree;
+    }
+
+    /**
+     * Get a student's major by their id
+     *
+     * @param int $id
+     * @return array
+     */
+    public function getStudentMajor(int $id): array
+    {
+        //create an array to hold the major
+        $major = array();
+        //instantiate a new major object
+        $majorProgram = new Degree();
+        //get the student's major id
+        $major_id = $this->getStudentMajorId($id);
+        //get the major by the major id
+        $major = $majorProgram->getMajor($major_id);
+        //return the major
+        return $major;
+    }
+
+    /**
+     * Get all students by a major id
+     *
+     * @param int $major_id
+     * @return array
+     */
+    public function getStudentsByMajor(int $major_id): array
+    {
+        //SQL statement to get all students by a major id
+        $sql = "SELECT * FROM student WHERE major = ?";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $major_id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the students
+        $students = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            //loop through the rows
+            while ($row = $result->fetch_assoc()) {
+                //add the row to the students array
+                $students[] = $row;
+            }
+        }
+
+        //Return the students array
+        return $students;
+    }
+
+    /**
+     * Get a student's degree level by their id
+     *
+     * @param int $id
+     * @return array
+     */
+    public function getStudentDegreeLevel(int $id): array
+    {
+        //create an array to hold the degree level
+        $degree_level = array();
+        //instantiate a new degree object
+        $degreeProgram = new Degree();
+        //get the student's degree id
+        $degree_id = $this->getStudentDegreeId($id);
+        //get the degree level by the degree id
+        $degree_level = $degreeProgram->getGrade($degree_id);
+        //return the degree level
+        return $degree_level;
+    }
+
+    /**
+     * Get all students by a degree level id
+     *
+     * @param int $degree_id
+     * @return array
+     */
+    public function getStudentsByGrade(int $degree_id): array
+    {
+        //SQL statement to get all students by a degree level id
+        $sql = "SELECT * FROM student WHERE degree = ?";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $degree_id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the students
+        $students = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            //loop through the rows
+            while ($row = $result->fetch_assoc()) {
+                //add the row to the students array
+                $students[] = $row;
+            }
+        }
+
+        //Return the students array
+        return $students;
+    }
+
+    /**
+     * Get student graduation year
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentGraduation(int $id): string
+    {
+        //SQL statement to get a student graduation year
+        $sql = "SELECT graduation FROM student WHERE id = $id";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //If the query returns a result
+        if ($result) {
+            //Return the student graduation year
+            return $result->fetch_assoc()['graduation'];
+        } else {
+            //If the query fails, return an empty string
+            return "";
+        }
+    }
+
+    /**
+     * Get a student's school id
+     *
+     * @param int $id
+     * @return int
+     */
+    public function getStudentSchool(int $id): int
+    {
+        //SQL statement to get a student school id
+        $sql = "SELECT school FROM student WHERE id = $id";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //create a variable to hold the school id
+        $school = 0;
+
+        //If the query returns a result
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $school = $row['school'];
+            }
+        }
+
+        //Return the student school id
+        return intval($school);
+    }
+
+    /**
+     * Get students by school id
+     * Get a list of students associated with a school by the school id
+     *
+     * @param int $school_id
+     * @return array
+     */
+    public function getStudentsBySchool(int $school_id): array
+    {
+        //SQL statement to get a list of students associated with a school by the school id
+        $sql = "SELECT * FROM student WHERE school = ?";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $school_id);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the students
+        $students = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            //loop through the rows
+            while ($row = $result->fetch_assoc()) {
+                //add the row to the students array
+                $students[] = $row;
+            }
+        }
+
+        //Return the students array
+        return $students;
+    }
+
+    /**
+     * Set a student's degree id
+     *
+     * @param int $id
+     * @param int $degree_id
+     * @return bool
+     */
+    public function setStudentDegreeId(int $id, int $degree_id): bool
+    {
+        //SQL statement to set a student's degree level id
+        $sql = "UPDATE students SET degree = $degree_id WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Set a student's major id
+     *
+     * @param int $id
+     * @param int $major_id
+     * @return bool
+     */
+    public function setStudentMajorId(int $id, int $major_id): bool
+    {
+        //SQL statement to set a student's major id
+        $sql = "UPDATE students SET major = $major_id WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Set a student's graduation date
+     *
+     * @param int $id
+     * @param string $graduation
+     * @return bool
+     */
+    public function setStudentGraduation(int $id, string $graduation): bool
+    {
+        //SQL statement to set a student's graduation year
+        $sql = "UPDATE students SET graduation = '$graduation' WHERE id = $id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
     }
 }
 
