@@ -894,39 +894,41 @@ class Student
     /**
      * Add a new student to the database
      *
-     * @param string $first_name
-     * @param string $last_name
-     * @param string $email
-     * @param string $phone
-     * @param string $address
-     * @param string $city
-     * @param string $state
-     * @param string $zip
-     * @param int $degree_id
-     * @param int $major_id
-     * @param string $school
-     * @param string $graduation
-     * @param string $position
-     * @param int $area_id
+     * @param StudentData $studentData //student data
      * @return bool
      */
-    public function addStudent(string $first_name, string $last_name, string $email, string $phone = NULL, string $address, string $city, string $state, string $zip, int $degree_id, int $major_id, string $school, string $graduation, string $position, int $area_id): bool
+    public function addStudent(StudentData $studentData): bool
     {
-        //Escape the data to prevent SQL injection attacks
-        $first_name = $this->mysqli->real_escape_string($first_name);
-        $last_name = $this->mysqli->real_escape_string($last_name);
-        $email = $this->mysqli->real_escape_string($email);
-        $phone = $this->mysqli->real_escape_string($phone);
-        $address = $this->mysqli->real_escape_string($address);
-        $city = $this->mysqli->real_escape_string($city);
-        $state = $this->mysqli->real_escape_string($state);
-        $zip = $this->mysqli->real_escape_string($zip);
+        //get the student data, escape the strings to prevent SQL injection
+        $first_name = $this->mysqli->real_escape_string($studentData->first_name);
+        $last_name = $this->mysqli->real_escape_string($studentData->last_name);
+        $email = $this->mysqli->real_escape_string($studentData->email);
+        $phone = $this->mysqli->real_escape_string($studentData->phone);
+        $address = $this->mysqli->real_escape_string($studentData->studentAddress->address);
+        $city = $this->mysqli->real_escape_string($studentData->studentAddress->city);
+        $state = $this->mysqli->real_escape_string($studentData->studentAddress->state);
+        $zip = $this->mysqli->real_escape_string($studentData->studentAddress->zipcode);
+        $degree_id = intval($studentData->studentEducation->degree);
+        $major_id = intval($studentData->studentEducation->major);
+        $school = intval($studentData->studentEducation->school);
+        $graduation = $this->mysqli->real_escape_string($studentData->studentEducation->graduation);
+        $position = $this->mysqli->real_escape_string($studentData->position);
+        $area_id = intval($studentData->interest);
+
         //get current timestamp to set the created_at and updated_at fields
         $timestamp = date('Y-m-d H:i:s');
         //SQL statement to add a new student to the database
         $sql = "INSERT INTO student (first_name, last_name, email, phone, address, city, state, zipcode, degree, major, school, graduation, position, interest, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', '$phone', '$address', '$city', '$state', '$zip', '$degree_id', '$major_id', '$school', '$graduation', '$position', '$area_id', '$timestamp', '$timestamp')";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        executeStatement($stmt);
+
+        //Get the result
+        $result = getResults($stmt);
+
         //If the query is successful
         if ($result) {
             //TODO: send email to student with a thank you.
@@ -1238,3 +1240,89 @@ class Student
         return $result;
     }
 };
+
+/**
+ * Class StudentData
+ * This class is used to store student data
+ */
+class StudentData {
+    public ?int $id = null;
+    public ?string $first_name = null;
+    public ?string $last_name = null;
+    public ?string $email = null;
+    public ?string $phone = null;
+    public ?StudentAddress $studentAddress = null;
+    public ?StudentEducation $studentEducation = null;
+    public ?string $position = null;
+    public ?int $interest = null;
+    public ?string $created_at = null;
+    public ?string $updated_at = null;
+
+    /**
+     * Gets all non-null properties of the StudentData class as an array
+     * @return array
+     */
+    public function getStudentDataArray(): array
+    {
+        $studentDataArray = array();
+        foreach ($this as $key => $value) {
+            if ($value !== null) {
+                $studentDataArray[$key] = $value;
+            }
+        }
+        return $studentDataArray;
+    }
+}
+
+/**
+ * Class Student Address
+ * This class is used to store student address data
+ */
+class StudentAddress {
+    public ?string $address = null;
+    public ?string $city = null;
+    public ?string $state = null;
+    public ?string $zipcode = null;
+
+    /**
+     * Gets all non-null properties of the StudentAddress class as an array
+     * @return array
+     */
+    public function getStudentAddressArray(): array
+    {
+        $studentAddressArray = array();
+        foreach ($this as $key => $value) {
+            if ($value !== null) {
+                $studentAddressArray[$key] = $value;
+            }
+        }
+        return $studentAddressArray;
+    }
+}
+
+/**
+ * Class StudentEducation
+ * This class is used to store student education data
+ */
+class StudentEducation
+{
+    public ?int $degree = null;
+    public ?int $major = null;
+    public ?int $school = null;
+    public ?string $graduation = null;
+
+    /**
+     * Gets all non-null properties of the StudentEducation class as an array
+     * @return array
+     */
+    public function getStudentEducationArray(): array
+    {
+        $studentEducationArray = array();
+        foreach ($this as $key => $value) {
+            if ($value !== null) {
+                $studentEducationArray[$key] = $value;
+            }
+        }
+        return $studentEducationArray;
+    }
+}
