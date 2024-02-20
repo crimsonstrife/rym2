@@ -45,6 +45,9 @@ if (!$hasPermission) {
     //events class
     $eventsData = new Event();
 
+    //student event class
+    $studentEvent = new StudentEvent();
+
     //contact class
     $contact = new Contact();
 
@@ -206,7 +209,7 @@ if (!$hasPermission) {
                         <div id="info" class="">
                             <?php
                                         //get the events the student has attended
-                                        $events = $student->getStudentEventAttendace($student_id);
+                                        $events = $studentEvent->getStudentEventAttendace($student_id);
                                         //if there are events, display them
                                         if ($events) {
                                             foreach ($events as $event) {
