@@ -41,6 +41,9 @@ if (!$hasPermission) {
     //event class
     $event = new Event();
 
+    //student event class
+    $studentEvent = new StudentEvent();
+
     //variables
     $action = null;
     $student_id = null;
@@ -73,7 +76,7 @@ if (!$hasPermission) {
         $canDelete = true;
 
         //check if the student has any event attendance records
-        $studentHasEventAttendance = $student->getEventAttendaceByStudent($student_id);
+        $studentHasEventAttendance = $studentEvent->getEventAttendaceByStudent($student_id);
 
         //if the student has more than 0 event attendance records, set the canDelete boolean to false
         if (count($studentHasEventAttendance) > 0) {
