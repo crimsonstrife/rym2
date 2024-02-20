@@ -532,7 +532,7 @@ class User
         $stmt = prepareStatement($this->mysqli, $sql);
 
         // Bind the parameters to the SQL statement
-        $stmt->bind_param("ssssii", $email, $password, $username, $created_by, $created_by);
+        $stmt->bind_param("sssii", $email, $password, $username, $created_by, $created_by);
 
         // Execute the statement
         $stmt->execute();

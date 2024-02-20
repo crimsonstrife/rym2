@@ -62,6 +62,8 @@ if (!$hasReadPermission) {
                                 /* Setup datatable of Students */
                                 //include the student class
                                 $studentData = new Student();
+                                //include the student address class
+                                $studentAddress = new StudentAddress();
                                 //get all the students
                                 $studentsArray = $studentData->getStudents();
                                 //include the schools class
@@ -73,13 +75,13 @@ if (!$hasReadPermission) {
                                 //for each student, display it
                                 foreach ($studentsArray as $student) {
                                     //get the student's address
-                                    $address = $studentData->getStudentAddress(intval($student['id']));
+                                    $address = $studentAddress->getStudentAddress(intval($student['id']));
                                     //get the student's city
-                                    $city = $studentData->getStudentCity(intval($student['id']));
+                                    $city = $studentAddress->getStudentCity(intval($student['id']));
                                     //get the student's state
-                                    $state = $studentData->getStudentState(intval($student['id']));
+                                    $state = $studentAddress->getStudentState(intval($student['id']));
                                     //get the student's zipcode
-                                    $zipcode = $studentData->getStudentZip(intval($student['id']));
+                                    $zipcode = $studentAddress->getStudentZip(intval($student['id']));
                                 ?>
                             <tr>
                                 <td><?php echo $student['first_name'] . ' ' . $student['last_name']; ?></td>
