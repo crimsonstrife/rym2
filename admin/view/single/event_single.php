@@ -29,6 +29,9 @@ $user = new User();
 //student class
 $student = new Student();
 
+//student event class
+$studentEvent = new StudentEvent();
+
 //media class
 $media = new Media();
 
@@ -215,7 +218,7 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
                             <!-- list of students that signed up at this event -->
                             <?php
                                     //get the list of students that signed up at this event, and display them. If there are none, display a message.
-                                    $students = $student->getStudentEventAttendace($event_id);
+                                    $students = $studentEvent->getStudentEventAttendace($event_id);
                                     ?>
                             <div class="card mb-4">
                                 <div class="card-body">
