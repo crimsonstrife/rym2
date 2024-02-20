@@ -298,94 +298,6 @@ class Student
     }
 
     /**
-     * Get a student address
-     *
-     * @param int $id
-     * @return string
-     */
-    public function getStudentAddress(int $id): string
-    {
-        //SQL statement to get a student address
-        $sql = "SELECT address FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        $address = "";
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $address = $row['address'];
-            }
-        }
-        //Return the student address
-        return $address;
-    }
-
-    /**
-     * Get a student city
-     *
-     * @param int $id
-     * @return string
-     */
-    public function getStudentCity(int $id): string
-    {
-        //SQL statement to get a student city
-        $sql = "SELECT city FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        $city = "";
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $city = $row['city'];
-            }
-        }
-        //Return the student city
-        return $city;
-    }
-
-    /**
-     * Get a student state
-     *
-     * @param int $id
-     * @return string
-     */
-    public function getStudentState(int $id): string
-    {
-        //SQL statement to get a student state
-        $sql = "SELECT state FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        $state = "";
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $state = $row['state'];
-            }
-        }
-        //Return the student state
-        return $state;
-    }
-
-    /**
-     * Get a student zip code
-     *
-     * @param int $id
-     * @return string
-     */
-    public function getStudentZip(int $id): string
-    {
-        //SQL statement to get a student zip code
-        $sql = "SELECT zipcode FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        $zip = "";
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $zip = $row['zipcode'];
-            }
-        }
-        //Return the student zip code
-        return $zip;
-    }
-
-    /**
      * Get a student degree id
      *
      * @param int $id
@@ -1187,6 +1099,158 @@ class StudentAddress {
             }
         }
         return $studentAddressArray;
+    }
+
+    //Reference to the database
+    private $mysqli;
+
+    //Instantiate the database connection
+    public function __construct()
+    {
+        try {
+            $this->mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+    }
+
+    //Close the database connection when the object is destroyed
+    public function __destruct()
+    {
+        closeDatabaseConnection($this->mysqli);
+    }
+
+    /**
+     * Get a student address
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentAddress(int $id): string
+    {
+        //SQL statement to get a student address
+        $sql = "SELECT address FROM student WHERE id = $id";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        executeStatement($stmt);
+
+        //get the result
+        $result = getResults($stmt);
+
+        //create a variable to hold the address
+        $address = "";
+
+        //If the query returns a result
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $address = $row['address'];
+            }
+        }
+        //Return the student address
+        return $address;
+    }
+
+    /**
+     * Get a student city
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentCity(int $id): string
+    {
+        //SQL statement to get a student city
+        $sql = "SELECT city FROM student WHERE id = $id";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        executeStatement($stmt);
+
+        //get the result
+        $result = getResults($stmt);
+
+        //create a variable to hold the city
+        $city = "";
+
+        //If the query returns a result
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $city = $row['city'];
+            }
+        }
+        //Return the student city
+        return $city;
+    }
+
+    /**
+     * Get a student state
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentState(int $id): string
+    {
+        //SQL statement to get a student state
+        $sql = "SELECT state FROM student WHERE id = $id";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        executeStatement($stmt);
+
+        //get the result
+        $result = getResults($stmt);
+
+        //create a variable to hold the state
+        $state = "";
+
+        //If the query returns a result
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $state = $row['state'];
+            }
+        }
+        //Return the student state
+        return $state;
+    }
+
+    /**
+     * Get a student zip code
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStudentZip(int $id): string
+    {
+        //SQL statement to get a student zip code
+        $sql = "SELECT zipcode FROM student WHERE id = $id";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        executeStatement($stmt);
+
+        //get the result
+        $result = getResults($stmt);
+
+        //create a variable to hold the zip code
+        $zip = "";
+
+        //If the query returns a result
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $zip = $row['zipcode'];
+            }
+        }
+        //Return the student zip code
+        return $zip;
     }
 }
 
