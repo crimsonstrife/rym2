@@ -255,4 +255,31 @@ class Authenticator extends User
             return false;
         }
     }
+
+    /**
+     * Validate a role exists by ID
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function validateRoleById(int $id): bool
+    {
+        //reference the role class
+        $roleClass = new Roles();
+
+        //try to get the role by ID
+        try {
+            $role = $roleClass->getRoleById($id);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+
+        //if the role exists (ie the array is not empty), return true
+        if ($role && !empty($role)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
