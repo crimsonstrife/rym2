@@ -644,8 +644,8 @@ class User
         }
 
         // Validate if the role exists by ID
-        $role = new Roles();
-        if (!$role->validateRoleById($role_id)) {
+        $auth = new Authenticator();
+        if (!$auth->validateRoleById($role_id)) {
             throw new Exception("Role does not exist.");
         }
 
@@ -662,6 +662,7 @@ class User
         $stmt->execute();
 
         // Log the activity
+        $role = new Roles();
         $activity = new Activity();
         $activity->logActivity(null, "User Updated", "Role ID: " . strval($role_id) . " Role Name: " . $role->getRoleNameById($role_id) . " added to User ID: " . strval($user_id) . " User Name: " . $this->getUserUsername($user_id));
     }
