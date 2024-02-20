@@ -275,6 +275,10 @@ if (!$hasReadPermission) {
                                                             <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal" onclick="setDeleteID(<?php echo $singleUser['id']; ?>)">
                                                                 Delete User
                                                             </button>
+                                                        <?php } else if ($currentAndSelectedUsersMatch == false && (($currentUserIsSuperAdmin && $selectedUserIsAdmin) || (($selectedUserIsAdmin && $selectedUserIsAdmin) && ($userCount > 1)))) { ?>
+                                                            <button type="button" id="openDeleteModal" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal" onclick="setDeleteID(<?php echo $singleUser['id']; ?>)">
+                                                                Delete User
+                                                            </button>
                                                         <?php } else if ($currentAndSelectedUsersMatch == true) { ?>
                                                             <button type="button" id="openDeleteModal" class="btn btn-danger" disabled>
                                                                 Delete User
