@@ -32,6 +32,9 @@ $student = new Student();
 //student event class
 $studentEvent = new StudentEvent();
 
+//student education class
+$studentEducation = new StudentEducation();
+
 //media class
 $media = new Media();
 
@@ -263,7 +266,7 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
                                                     </td>
                                                     <td><?php echo $student->getStudentEmail($eventStudent['student_id']); ?>
                                                     </td>
-                                                    <td><?php echo $student->getStudentDegree($eventStudent['student_id']); ?>
+                                                    <td><?php echo $studentEducation->getStudentDegree($eventStudent['student_id']); ?>
                                                     </td>
                                                 </tr>
                                                 <?php }
