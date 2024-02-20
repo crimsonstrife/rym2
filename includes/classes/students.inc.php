@@ -894,33 +894,27 @@ class Student
     /**
      * Add a new student to the database
      *
-     * @param string $first_name
-     * @param string $last_name
-     * @param string $email
-     * @param string $phone
-     * @param string $address
-     * @param string $city
-     * @param string $state
-     * @param string $zip
-     * @param int $degree_id
-     * @param int $major_id
-     * @param string $school
-     * @param string $graduation
-     * @param string $position
-     * @param int $area_id
+     * @param StudentData $studentData //student data
      * @return bool
      */
-    public function addStudent(string $first_name, string $last_name, string $email, string $phone = NULL, string $address, string $city, string $state, string $zip, int $degree_id, int $major_id, string $school, string $graduation, string $position, int $area_id): bool
+    public function addStudent(StudentData $studentData): bool
     {
         //Escape the data to prevent SQL injection attacks
-        $first_name = $this->mysqli->real_escape_string($first_name);
-        $last_name = $this->mysqli->real_escape_string($last_name);
-        $email = $this->mysqli->real_escape_string($email);
-        $phone = $this->mysqli->real_escape_string($phone);
-        $address = $this->mysqli->real_escape_string($address);
-        $city = $this->mysqli->real_escape_string($city);
-        $state = $this->mysqli->real_escape_string($state);
-        $zip = $this->mysqli->real_escape_string($zip);
+        $first_name = $this->mysqli->real_escape_string($studentData->first_name);
+        $last_name = $this->mysqli->real_escape_string($studentData->last_name);
+        $email = $this->mysqli->real_escape_string($studentData->email);
+        $phone = $this->mysqli->real_escape_string($studentData->phone);
+        $address = $this->mysqli->real_escape_string($studentData->address);
+        $city = $this->mysqli->real_escape_string($studentData->city);
+        $state = $this->mysqli->real_escape_string($studentData->state);
+        $zip = $this->mysqli->real_escape_string($studentData->zipcode);
+        //get the ids for the degree, major, school and area of interest
+        $degree_id = intval($studentData->degree);
+        $major_id = intval($studentData->major);
+        $school = intval($studentData->school);
+        $graduation = $this->mysqli->real_escape_string($studentData->graduation);
+        $position = $this->mysqli->real_escape_string($studentData->position);
+        $area_id = intval($studentData->interest);
         //get current timestamp to set the created_at and updated_at fields
         $timestamp = date('Y-m-d H:i:s');
         //SQL statement to add a new student to the database
@@ -929,7 +923,6 @@ class Student
         $result = $this->mysqli->query($sql);
         //If the query is successful
         if ($result) {
-            //TODO: send email to student with a thank you.
             //log the activity
             $activity = new Activity();
             $activity->logActivity(null, 'Student Added', $first_name . ' ' . $last_name . ' Added');
@@ -1238,3 +1231,23 @@ class Student
         return $result;
     }
 };
+
+class StudentData {
+    public ?int $id = null;
+    public ?string $first_name = null;
+    public ?string $last_name = null;
+    public ?string $email = null;
+    public ?string $phone = null;
+    public ?string $address = null;
+    public ?string $city = null;
+    public ?string $state = null;
+    public ?string $zipcode = null;
+    public ?int $degree = null;
+    public ?int $major = null;
+    public ?int $school = null;
+    public ?string $graduation = null;
+    public ?string $position = null;
+    public ?int $interest = null;
+    public ?string $created_at = null;
+    public ?string $updated_at = null;
+}
