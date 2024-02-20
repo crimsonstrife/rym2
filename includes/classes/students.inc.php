@@ -899,7 +899,7 @@ class Student
      */
     public function addStudent(StudentData $studentData): bool
     {
-        //Escape the data to prevent SQL injection attacks
+        //get the student data, escape the strings to prevent SQL injection
         $first_name = $this->mysqli->real_escape_string($studentData->first_name);
         $last_name = $this->mysqli->real_escape_string($studentData->last_name);
         $email = $this->mysqli->real_escape_string($studentData->email);
@@ -908,21 +908,30 @@ class Student
         $city = $this->mysqli->real_escape_string($studentData->city);
         $state = $this->mysqli->real_escape_string($studentData->state);
         $zip = $this->mysqli->real_escape_string($studentData->zipcode);
-        //get the ids for the degree, major, school and area of interest
         $degree_id = intval($studentData->degree);
         $major_id = intval($studentData->major);
         $school = intval($studentData->school);
         $graduation = $this->mysqli->real_escape_string($studentData->graduation);
         $position = $this->mysqli->real_escape_string($studentData->position);
         $area_id = intval($studentData->interest);
+
         //get current timestamp to set the created_at and updated_at fields
         $timestamp = date('Y-m-d H:i:s');
         //SQL statement to add a new student to the database
         $sql = "INSERT INTO student (first_name, last_name, email, phone, address, city, state, zipcode, degree, major, school, graduation, position, interest, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', '$phone', '$address', '$city', '$state', '$zip', '$degree_id', '$major_id', '$school', '$graduation', '$position', '$area_id', '$timestamp', '$timestamp')";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        executeStatement($stmt);
+
+        //Get the result
+        $result = getResults($stmt);
+
         //If the query is successful
         if ($result) {
+            //TODO: send email to student with a thank you.
             //log the activity
             $activity = new Activity();
             $activity->logActivity(null, 'Student Added', $first_name . ' ' . $last_name . ' Added');
@@ -1250,4 +1259,19 @@ class StudentData {
     public ?int $interest = null;
     public ?string $created_at = null;
     public ?string $updated_at = null;
+
+    /**
+     * Gets all non-null properties of the StudentData class as an array
+     * @return array
+     */
+    public function getStudentDataArray(): array
+    {
+        $studentDataArray = array();
+        foreach ($this as $key => $value) {
+            if ($value !== null) {
+                $studentDataArray[$key] = $value;
+            }
+        }
+        return $studentDataArray;
+    }
 }
