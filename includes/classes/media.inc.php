@@ -665,11 +665,14 @@ class Media
         //include the event class
         $event = new Event();
 
+        //include the event media class
+        $eventMedia = new EventMedia();
+
         //get the ids of the schools that are using the media
         $schoolsArray = $school->getSchoolsByMediaID($media_id);
 
         //get the ids of the events that are using the media
-        $eventsArray = $event->getEventsByMediaID($media_id);
+        $eventsArray = $eventMedia->getEventsByMediaID($media_id);
 
         //if there are schools using the media, add the school ids to the media usage array
         if (count($schoolsArray) > 0) {

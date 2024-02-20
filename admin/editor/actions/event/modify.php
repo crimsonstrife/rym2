@@ -39,6 +39,9 @@ if (!$hasPermission) {
     //media class
     $media = new Media();
 
+    //event media class
+    $eventMedia = new EventMedia();
+
     //get the schools list
     $schools_list = $school->getSchools();
     //for each item, set the id as the value and the name as the label
@@ -218,20 +221,20 @@ if (!$hasPermission) {
                 //if the logo media id is not null, see if it is different from the current logo media id
                 if ($logoMedia_id != null) {
                     //get the current logo media id
-                    $currentLogoMedia_id = $event->getEventLogo($event_id);
+                    $currentLogoMedia_id = $eventMedia->getEventLogo($event_id);
                     //if the new logo media id is different from the current logo media id, update the event logo
                     if ($logoMedia_id != $currentLogoMedia_id) {
-                        $event->updateEventLogo($event_id, $logoMedia_id);
+                        $eventMedia->updateEventLogo($event_id, $logoMedia_id);
                     }
                 }
 
                 //if the banner media id is not null, see if it is different from the current banner media id
                 if ($bannerMedia_id != null) {
                     //get the current banner media id
-                    $currentBannerMedia_id = $event->getEventBanner($event_id);
+                    $currentBannerMedia_id = $eventMedia->getEventBanner($event_id);
                     //if the new banner media id is different from the current banner media id, update the event banner
                     if ($bannerMedia_id != $currentBannerMedia_id) {
-                        $event->updateEventBanner($event_id, $bannerMedia_id);
+                        $eventMedia->updateEventBanner($event_id, $bannerMedia_id);
                     }
                 }
             }

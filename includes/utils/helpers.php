@@ -54,6 +54,22 @@ function formatPhone(string $phone): string
     return "<a href='tel:$phone'>$phoneString</a>";
 };
 
+/**
+ * Format a street address
+ * @param string $address - the street address to be formatted
+ * @param string $city - the city
+ * @param string $state - the state
+ * @param string $zip - the zip code
+ * @return string
+ */
+function formatAddress(string $address, string $city, string $state, string $zip): string
+{
+    //format the address
+    $formatted_address = $address . " " . $city . ", " . $state . " " . $zip;
+    //return the address
+    return $formatted_address;
+};
+
 function clearCookies()
 {
     //clear the cookies
@@ -237,7 +253,7 @@ function getImageDimensions(string $imagePath): array
     return $imageDimensions;
 }
 
- //redirect user
+//redirect user
 function redirectUser($location)
 {
     header("location: " . $location);

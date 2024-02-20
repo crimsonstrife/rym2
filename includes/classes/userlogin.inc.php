@@ -1,8 +1,8 @@
 <?php
 
 /**
- * User Class file for the College Recruitment Application
- * Contains all the functions for the User Class and handles all the user related tasks with the database.
+ * User Login Class file for the College Recruitment Application
+ * Contains all the functions for the User Login Class and handles all the user related tasks with the database.
  *
  * Author:  Patrick Barnhardt
  * Author Email: pbarnh1@wgu.edu

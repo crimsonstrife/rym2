@@ -451,10 +451,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 //set the submission attempted variable to true
                 $attemptedStudentSubmission = true;
             } else {
-                //if the student does not exist, attempt to add the student
+                //create a new student education object
+                $newStudentEducation = new StudentEducation();
+
+                //set the student education object properties
+                $newStudentEducation->degree = intval($student_degree);
+                $newStudentEducation->major = intval($student_major);
+                $newStudentEducation->school = intval($student_school);
+                $newStudentEducation->graduation = $student_graduationDate;
+
+                //create a new student address object
+                $newStudentAddress = new StudentAddress();
+
+                //set the student address object properties
+                $newStudentAddress->address = $student_address;
+                $newStudentAddress->city = $student_city;
+                $newStudentAddress->state = $student_state;
+                $newStudentAddress->zipcode = $student_zip;
+
+                //create a new student data object
+                $newStudent = new StudentData();
+
+                //set the student object properties
+                $newStudent->first_name = $student_firstName;
+                $newStudent->last_name = $student_lastName;
+                $newStudent->email = $student_email;
+                $newStudent->phone = $student_phone;
+                $newStudent->studentAddress = $newStudentAddress;
+                $newStudent->studentEducation = $newStudentEducation;
+                $newStudent->position = $student_jobPosition;
+                $newStudent->interest = intval($student_areaOfInterest);
 
                 //add the student, check if the add was successful
-                if ($student->addStudent($student_firstName, $student_lastName, $student_email, $student_phone, $student_address, $student_city, $student_state, $student_zip, $student_degree, $student_major, $student_school, $student_graduationDate, $student_jobPosition, $student_areaOfInterest)) {
+                if ($student->addStudent($newStudent)) {
                     //if the add was successful, get the student id
                     $studentArray = $student->getStudentByEmail($student_email);
                     $student_id = $studentArray['id'];
@@ -467,10 +496,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if ($isEventPage) {
                         $student_event_id = (int) $event_id;
                         $student_id = (int) $student_id;
-                        //initialize the student class
-                        $studentObject = new Student();
+                        //initialize the student event class
+                        $studentEventObject = new StudentEvent();
                         //add the student to the event
-                        $studentObject->addStudentToEvent($student_event_id, $student_id);
+                        $studentEventObject->addStudentToEvent($student_event_id, $student_id);
                     }
 
                     //Setup the email

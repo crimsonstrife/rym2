@@ -54,8 +54,16 @@ class Student
     {
         //SQL statement to get all students
         $sql = "SELECT * FROM student";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Loop through the result and add each row to the students array
@@ -86,8 +94,16 @@ class Student
     {
         //SQL statement to get a student by their ID
         $sql = "SELECT * FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //check if the result has rows
@@ -114,10 +130,19 @@ class Student
     {
         //clean the email variable
         $email = $this->mysqli->real_escape_string($email);
+
         //SQL statement to get a student by their email address
         $sql = "SELECT * FROM student WHERE email = '$email'";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //check if the result has rows
@@ -144,8 +169,16 @@ class Student
     {
         //SQL statement to get a student first name
         $sql = "SELECT first_name FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the student first name
@@ -166,8 +199,16 @@ class Student
     {
         //SQL statement to get a student last name
         $sql = "SELECT last_name FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the student last name
@@ -206,8 +247,16 @@ class Student
     {
         //SQL statement to get a student email
         $sql = "SELECT email FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the student email
@@ -228,8 +277,16 @@ class Student
     {
         //SQL statement to get a student phone number
         $sql = "SELECT phone FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         $phone = "";
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -238,22 +295,6 @@ class Student
         }
         //Return the student phone number
         return $phone;
-    }
-
-    /**
-     * Get a formatted student phone number
-     *
-     * @param int $id
-     * @return string
-     */
-    public function getStudentFormattedPhone(int $id): string
-    {
-        //get the student phone number
-        $phone = $this->getStudentPhone($id);
-        //format the student phone number
-        $formatted_phone = "(" . substr($phone, 0, 3) . ") " . substr($phone, 3, 3) . "-" . substr($phone, 6, 4);
-        //return the student phone number
-        return $formatted_phone;
     }
 
     /**
@@ -342,28 +383,6 @@ class Student
         }
         //Return the student zip code
         return $zip;
-    }
-
-    /**
-     * Get a formatted student address
-     *
-     * @param int $id
-     * @return string
-     */
-    public function getStudentFormattedAddress(int $id): string
-    {
-        //get the student address
-        $address = $this->getStudentAddress($id);
-        //get the student city
-        $city = $this->getStudentCity($id);
-        //get the student state
-        $state = $this->getStudentState($id);
-        //get the student zip code
-        $zip = $this->getStudentZip($id);
-        //format the student address
-        $formatted_address = $address . " " . $city . ", " . $state . " " . $zip;
-        //return the student address
-        return $formatted_address;
     }
 
     /**
@@ -562,8 +581,16 @@ class Student
     {
         //SQL statement to get a student graduation year
         $sql = "SELECT graduation FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
         //If the query returns a result
         if ($result) {
             //Return the student graduation year
@@ -584,14 +611,26 @@ class Student
     {
         //SQL statement to get a student school id
         $sql = "SELECT school FROM student WHERE id = $id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //create a variable to hold the school id
         $school = 0;
+
+        //If the query returns a result
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $school = $row['school'];
             }
         }
+
         //Return the student school id
         return intval($school);
     }
@@ -855,39 +894,41 @@ class Student
     /**
      * Add a new student to the database
      *
-     * @param string $first_name
-     * @param string $last_name
-     * @param string $email
-     * @param string $phone
-     * @param string $address
-     * @param string $city
-     * @param string $state
-     * @param string $zip
-     * @param int $degree_id
-     * @param int $major_id
-     * @param string $school
-     * @param string $graduation
-     * @param string $position
-     * @param int $area_id
+     * @param StudentData $studentData //student data
      * @return bool
      */
-    public function addStudent(string $first_name, string $last_name, string $email, string $phone = NULL, string $address, string $city, string $state, string $zip, int $degree_id, int $major_id, string $school, string $graduation, string $position, int $area_id): bool
+    public function addStudent(StudentData $studentData): bool
     {
-        //Escape the data to prevent SQL injection attacks
-        $first_name = $this->mysqli->real_escape_string($first_name);
-        $last_name = $this->mysqli->real_escape_string($last_name);
-        $email = $this->mysqli->real_escape_string($email);
-        $phone = $this->mysqli->real_escape_string($phone);
-        $address = $this->mysqli->real_escape_string($address);
-        $city = $this->mysqli->real_escape_string($city);
-        $state = $this->mysqli->real_escape_string($state);
-        $zip = $this->mysqli->real_escape_string($zip);
+        //get the student data, escape the strings to prevent SQL injection
+        $first_name = $this->mysqli->real_escape_string($studentData->first_name);
+        $last_name = $this->mysqli->real_escape_string($studentData->last_name);
+        $email = $this->mysqli->real_escape_string($studentData->email);
+        $phone = $this->mysqli->real_escape_string($studentData->phone);
+        $address = $this->mysqli->real_escape_string($studentData->studentAddress->address);
+        $city = $this->mysqli->real_escape_string($studentData->studentAddress->city);
+        $state = $this->mysqli->real_escape_string($studentData->studentAddress->state);
+        $zip = $this->mysqli->real_escape_string($studentData->studentAddress->zipcode);
+        $degree_id = intval($studentData->studentEducation->degree);
+        $major_id = intval($studentData->studentEducation->major);
+        $school = intval($studentData->studentEducation->school);
+        $graduation = $this->mysqli->real_escape_string($studentData->studentEducation->graduation);
+        $position = $this->mysqli->real_escape_string($studentData->position);
+        $area_id = intval($studentData->interest);
+
         //get current timestamp to set the created_at and updated_at fields
         $timestamp = date('Y-m-d H:i:s');
         //SQL statement to add a new student to the database
         $sql = "INSERT INTO student (first_name, last_name, email, phone, address, city, state, zipcode, degree, major, school, graduation, position, interest, created_at, updated_at) VALUES ('$first_name', '$last_name', '$email', '$phone', '$address', '$city', '$state', '$zip', '$degree_id', '$major_id', '$school', '$graduation', '$position', '$area_id', '$timestamp', '$timestamp')";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        executeStatement($stmt);
+
+        //Get the result
+        $result = getResults($stmt);
+
         //If the query is successful
         if ($result) {
             //TODO: send email to student with a thank you.
@@ -900,116 +941,6 @@ class Student
             //If the query fails, return false
             return false;
         }
-    }
-
-    /**
-     * Student attendance
-     * Add a student to an event
-     *
-     * @param int $event_id
-     * @param int $student_id
-     * @return bool
-     */
-    public function addStudentToEvent(int $event_id, int $student_id): bool
-    {
-        //SQL statement to add a student to an event
-        $sql = "INSERT INTO student_at_event (event_id, student_id) VALUES ('$event_id', '$student_id')";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        //If the query is successful
-        if ($result) {
-            //log the activity
-            $activity = new Activity();
-            $event = new Event();
-            $student = new Student();
-            $activity->logActivity(null, 'Student Added to Event', $student->getStudentFullName($student_id) . ' Added to Event ' . $event->getEventName($event_id));
-            //Return true
-            return true;
-        } else {
-            //If the query fails, return false
-            return false;
-        }
-    }
-
-    /**
-     * Student attendance
-     * Remove a student from an event
-     *
-     * @param int $event_id
-     * @param int $student_id
-     * @return bool
-     */
-    public function removeStudentFromEvent(int $event_id, int $student_id): bool
-    {
-        //SQL statement to remove a student from an event
-        $sql = "DELETE FROM student_at_event WHERE event_id = $event_id AND student_id = $student_id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        //If the query is successful
-        if ($result) {
-            //get the student name
-            $student_name = $this->getStudentFullName($student_id);
-
-            //get the event name
-            $event = new Event();
-            $event_name = $event->getEventName($event_id);
-
-            //log the activity
-            $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Student', 'Student ID: ' . $student_id . ' Student Name: ' . $student_name . ' from Event ID: ' . $event_id . ' Event Name: ' . $event_name);
-
-            //Return true
-            return true;
-        } else {
-            //If the query fails, return false
-            return false;
-        }
-    }
-
-    /**
-     * Student attendance
-     * Get a list of students that attended an event
-     *
-     * @param int $event_id
-     * @return array
-     */
-    public function getStudentEventAttendace(int $event_id): array
-    {
-        //SQL statement to get a list of students that attended an event
-        $sql = "SELECT * FROM student_at_event WHERE event_id = $event_id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        $students = array();
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $students[] = $row;
-            }
-        }
-        //Return the students array
-        return $students;
-    }
-
-    /**
-     * Student attendance
-     * Get a list of events that a student attended
-     *
-     * @param int $student_id
-     * @return array
-     */
-    public function getEventAttendaceByStudent(int $student_id): array
-    {
-        //SQL statement to get a list of events that a student attended
-        $sql = "SELECT * FROM student_at_event WHERE student_id = $student_id";
-        //Query the database
-        $result = $this->mysqli->query($sql);
-        $events = array();
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $events[] = $row;
-            }
-        }
-        //Return the events array
-        return $events;
     }
 
     /**
@@ -1036,7 +967,7 @@ class Student
      * @param int $student_id
      * @return bool
      */
-    public function deleteStudentContactHistory(int $student_id): bool
+    private function deleteStudentContactHistory(int $student_id): bool
     {
         //include the contact class, so we can delete the contact history
         $contactObject = new Contact();
@@ -1052,46 +983,6 @@ class Student
             //log the activity
             $activity = new Activity();
             $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Student Contact History', 'Student ID: ' . $student_id . ' Student Name: ' . $student_name);
-        }
-
-        //return the result
-        return $result;
-    }
-
-    /**
-     * Add Student Contact History
-     * Add a new contact log entry for a student
-     *
-     * @param int $student_id
-     * @param string $dateTime
-     * @param int $isAuto is the email automated or manual, 1 = automated, 0 = manual
-     * @param int $sender_id is the id of the user that sent the email, will be null if automated
-     * @param string $subject
-     * @param string $message
-     * @return bool
-     */
-    public function logContactHistory(int $student_id, string $dateTime, int $isAuto, int $sender_id = NULL, string $subject, string $message): bool
-    {
-        //include the contact class, so we can log the contact
-        $contactObject = new Contact();
-
-        //convert the isAuto value to a boolean
-        if ($isAuto == 1) {
-            $isAuto = true;
-        } else {
-            $isAuto = false;
-        }
-
-        //placeholder for the result
-        $result = false;
-
-        //if the sender id is null, do not include it in the query
-        if ($sender_id == NULL) {
-            //use the contact class to log the contact
-            $result = $contactObject->logContact($student_id, $isAuto, NULL, $dateTime, $subject, $message);
-        } else {
-            //use the contact class to log the contact
-            $result = $contactObject->logContact($student_id, $isAuto, $sender_id, $dateTime, $subject, $message);
         }
 
         //return the result
@@ -1181,8 +1072,8 @@ class Student
      */
     public function deleteStudent(int $student_id): bool
     {
-        //get the current date and time
-        $date = date("Y-m-d H:i:s");
+        //instance the student event class
+        $studentEvent = new StudentEvent();
 
         //get the name of the student
         $student_name = $this->getStudentFullName($student_id);
@@ -1191,14 +1082,14 @@ class Student
         $result = false;
 
         //check if the student has attended any events
-        $eventsAttended = $this->getEventAttendaceByStudent($student_id);
+        $eventsAttended = $studentEvent->getEventAttendaceByStudent($student_id);
 
         //if the student has attended any events
         if (!empty($eventsAttended)) {
             //loop through the events
             foreach ($eventsAttended as $event) {
                 //remove the student from the event
-                $this->removeStudentFromEvent(intval($event['event_id']), $student_id);
+                $studentEvent->removeStudentFromEvent(intval($event['event_id']), $student_id);
             }
         }
 
@@ -1207,12 +1098,7 @@ class Student
 
         //if the student has any contact history
         if (!empty($contactHistory)) {
-            //loop through the contact history
-            foreach ($contactHistory as $contact) {
-                //delete the contact history
-                $contactObject = new Contact();
-                $contactObject->removeContact(intval($contact['id']));
-            }
+            $this->deleteStudentContactHistory($student_id);
         }
 
         //create the sql statement
@@ -1244,3 +1130,247 @@ class Student
         return $result;
     }
 };
+
+/**
+ * Class StudentData
+ * This class is used to store student data
+ */
+class StudentData {
+    public ?int $id = null;
+    public ?string $first_name = null;
+    public ?string $last_name = null;
+    public ?string $email = null;
+    public ?string $phone = null;
+    public ?StudentAddress $studentAddress = null;
+    public ?StudentEducation $studentEducation = null;
+    public ?string $position = null;
+    public ?int $interest = null;
+    public ?string $created_at = null;
+    public ?string $updated_at = null;
+
+    /**
+     * Gets all non-null properties of the StudentData class as an array
+     * @return array
+     */
+    public function getStudentDataArray(): array
+    {
+        $studentDataArray = array();
+        foreach ($this as $key => $value) {
+            if ($value !== null) {
+                $studentDataArray[$key] = $value;
+            }
+        }
+        return $studentDataArray;
+    }
+}
+
+/**
+ * Class Student Address
+ * This class is used to store student address data
+ */
+class StudentAddress {
+    public ?string $address = null;
+    public ?string $city = null;
+    public ?string $state = null;
+    public ?string $zipcode = null;
+
+    /**
+     * Gets all non-null properties of the StudentAddress class as an array
+     * @return array
+     */
+    public function getStudentAddressArray(): array
+    {
+        $studentAddressArray = array();
+        foreach ($this as $key => $value) {
+            if ($value !== null) {
+                $studentAddressArray[$key] = $value;
+            }
+        }
+        return $studentAddressArray;
+    }
+}
+
+/**
+ * Class StudentEducation
+ * This class is used to store student education data
+ */
+class StudentEducation
+{
+    public ?int $degree = null;
+    public ?int $major = null;
+    public ?int $school = null;
+    public ?string $graduation = null;
+
+    /**
+     * Gets all non-null properties of the StudentEducation class as an array
+     * @return array
+     */
+    public function getStudentEducationArray(): array
+    {
+        $studentEducationArray = array();
+        foreach ($this as $key => $value) {
+            if ($value !== null) {
+                $studentEducationArray[$key] = $value;
+            }
+        }
+        return $studentEducationArray;
+    }
+}
+
+/**
+ * Student Event Class
+ * This class is used to store and handle student event data
+ */
+class StudentEvent extends Student {
+    //Reference to the database
+    private $mysqli;
+
+    //Instantiate the database connection
+    public function __construct()
+    {
+        try {
+            $this->mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+    }
+
+    //Close the database connection when the object is destroyed
+    public function __destruct()
+    {
+        closeDatabaseConnection($this->mysqli);
+    }
+
+    /**
+     * Add a student to an event attendance list
+     * Add a student to an event
+     *
+     * @param int $event_id
+     * @param int $student_id
+     * @return bool
+     */
+    public function addStudentToEvent(int $event_id, int $student_id): bool
+    {
+        //SQL statement to add a student to an event
+        $sql = "INSERT INTO student_at_event (event_id, student_id) VALUES ('$event_id', '$student_id')";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //log the activity
+            $activity = new Activity();
+            $event = new Event();
+            $student = new Student();
+            $activity->logActivity(null, 'Student Added to Event', $student->getStudentFullName($student_id) . ' Added to Event ' . $event->getEventName($event_id));
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Remove a student from an event attendance list
+     * Remove a student from an event
+     *
+     * @param int $event_id
+     * @param int $student_id
+     * @return bool
+     */
+    public function removeStudentFromEvent(int $event_id, int $student_id): bool
+    {
+        //SQL statement to remove a student from an event
+        $sql = "DELETE FROM student_at_event WHERE event_id = $event_id AND student_id = $student_id";
+        //Query the database
+        $result = $this->mysqli->query($sql);
+        //If the query is successful
+        if ($result) {
+            //get the student name
+            $student_name = $this->getStudentFullName($student_id);
+
+            //get the event name
+            $event = new Event();
+            $event_name = $event->getEventName($event_id);
+
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Student', 'Student ID: ' . $student_id . ' Student Name: ' . $student_name . ' from Event ID: ' . $event_id . ' Event Name: ' . $event_name);
+
+            //Return true
+            return true;
+        } else {
+            //If the query fails, return false
+            return false;
+        }
+    }
+
+    /**
+     * Student attendance
+     * Get a list of students that attended an event
+     *
+     * @param int $event_id
+     * @return array
+     */
+    public function getStudentEventAttendace(int $event_id): array
+    {
+        //SQL statement to get a list of students that attended an event
+        $sql = "SELECT * FROM student_at_event WHERE event_id = $event_id";
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        executeStatement($stmt);
+
+        //Get the result
+        $result = getResults($stmt);
+
+        //create an array to hold the students
+        $students = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $students[] = $row;
+            }
+        }
+        //Return the students array
+        return $students;
+    }
+
+    /**
+     * Student attendance
+     * Get a list of events that a student attended
+     *
+     * @param int $student_id
+     * @return array
+     */
+    public function getEventAttendaceByStudent(int $student_id): array
+    {
+        //SQL statement to get a list of events that a student attended
+        $sql = "SELECT * FROM student_at_event WHERE student_id = $student_id";
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        executeStatement($stmt);
+
+        //Get the result
+        $result = getResults($stmt);
+
+        //create an array to hold the events
+        $events = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $events[] = $row;
+            }
+        }
+        //Return the events array
+        return $events;
+    }
+}

@@ -328,7 +328,7 @@ class Contact
             return false;
         } else {
             //if there is no error, log the email and return true
-            $studentData->logContactHistory(intval($student['id']), $date, 1, NULL, $subject, $message);
+            $this->logContactHistory(intval($student['id']), $date, 1, NULL, $subject, $message);
             return true;
         }
     }
@@ -421,7 +421,7 @@ class Contact
             return false;
         } else {
             //if there is no error, log the email and return true
-            $studentData->logContactHistory($studentId, $date, 0, $senderId, $subject, $message);
+            $this->logContactHistory($studentId, $date, 0, $senderId, $subject, $message);
             return true;
         }
     }
@@ -530,5 +530,42 @@ class Contact
         } else {
             return false;
         }
+    }
+
+    /**
+     * Add Student Contact History
+     * Add a new contact log entry for a student
+     *
+     * @param int $student_id
+     * @param string $dateTime
+     * @param int $isAuto is the email automated or manual, 1 = automated, 0 = manual
+     * @param int $sender_id is the id of the user that sent the email, will be null if automated
+     * @param string $subject
+     * @param string $message
+     * @return bool
+     */
+    public function logContactHistory(int $student_id, string $dateTime, int $isAuto, int $sender_id = NULL, string $subject, string $message): bool
+    {
+        //convert the isAuto value to a boolean
+        if ($isAuto == 1) {
+            $isAuto = true;
+        } else {
+            $isAuto = false;
+        }
+
+        //placeholder for the result
+        $result = false;
+
+        //if the sender id is null, do not include it in the query
+        if ($sender_id == NULL) {
+            //use the contact class to log the contact
+            $result = $this->logContact($student_id, $isAuto, NULL, $dateTime, $subject, $message);
+        } else {
+            //use the contact class to log the contact
+            $result = $this->logContact($student_id, $isAuto, $sender_id, $dateTime, $subject, $message);
+        }
+
+        //return the result
+        return $result;
     }
 }

@@ -29,8 +29,14 @@ $user = new User();
 //student class
 $student = new Student();
 
+//student event class
+$studentEvent = new StudentEvent();
+
 //media class
 $media = new Media();
+
+//event media class
+$eventMedia = new EventMedia();
 
 /*confirm user has a role with read event permissions*/
 //get the id of the read event permission
@@ -79,12 +85,19 @@ if (!$hasPermission) {
 
     //if not empty, display the event information
     if (!empty($object)) {
+
+        //get the event location information
+        $location = $event->getEventLocation($event_id);
+        $streetAddress = $school->getSchoolAddress(intval($event->getEventLocationId($event_id)));
+        $city = $school->getSchoolCity(intval($event->getEventLocationId($event_id)));
+        $state = $school->getSchoolState(intval($event->getEventLocationId($event_id)));
+        $zip = $school->getSchoolZip(intval($event->getEventLocationId($event_id)));
 ?>
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet/leaflet.css'; ?>">
 <link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.css'; ?>">
 <script>
-var mapLocationTitle = "<?php echo $event->getEventLocation($event_id); ?>";
-var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?>";
+var mapLocationTitle = "<?php echo $location; ?>";
+var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>";
 </script>
 <div class="container-fluid px-4">
     <h1 class="mt-4"><?php echo $event->getEventName($event_id); ?></h1>
@@ -140,17 +153,17 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                                             class="fa-solid fa-arrow-up-right-from-square"></i></a></span>
                             </p>
                             <p><strong>Event Date:</strong> <?php echo $event->getEventDate($event_id); ?></p>
-                            <p><strong>Event Location:</strong> <?php echo $event->getEventLocation($event_id); ?></p>
+                            <p><strong>Event Location:</strong> <?php echo $location; ?></p>
                             <!-- Formatted School address -->
                             <div>
                                 <p><strong>Event Address:</strong>
                                     <?php
                                             //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
-                                            $address = $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id)));
-                                            $address = urlencode($address);
+                                            $formattedAddress = formatAddress($streetAddress, $city, $state, $zip);
+                                            $address = urlencode($formattedAddress);
                                             ?>
                                     <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
-                                        target="_blank"><?php echo $school->getFormattedSchoolAddress(intval($event->getEventLocationId($event_id))); ?></a>
+                                        target="_blank"><?php echo $address; ?></a>
                                 </p>
                             </div>
                             <div id="map"></div>
@@ -176,14 +189,14 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                             <div class="thumbnail-container"
                                 style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($event->getEventLogo($event_id)); ?>"
+                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($eventMedia->getEventLogo($event_id)); ?>"
                                     alt="Event Logo Image">
                             </div>
                             <p><strong>Event Banner:</strong></p>
                             <div class="thumbnail-container"
                                 style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($event->getEventBanner($event_id)); ?>"
+                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($eventMedia->getEventBanner($event_id)); ?>"
                                     alt="Event Banner Image">
                             </div>
                             <p><strong>School Logo:</strong></p>
@@ -205,7 +218,7 @@ var address = "<?php echo $school->getFormattedSchoolAddress(intval($event->getE
                             <!-- list of students that signed up at this event -->
                             <?php
                                     //get the list of students that signed up at this event, and display them. If there are none, display a message.
-                                    $students = $student->getStudentEventAttendace($event_id);
+                                    $students = $studentEvent->getStudentEventAttendace($event_id);
                                     ?>
                             <div class="card mb-4">
                                 <div class="card-body">
