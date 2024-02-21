@@ -31,7 +31,7 @@ require_once(BASEPATH . '/includes/connector.inc.php');
 class Schedule extends Event
 {
     //Reference to the database
-    private $mysqli;
+    protected $mysqli;
 
     //Instantiate the database connection
     public function __construct()
@@ -48,6 +48,36 @@ class Schedule extends Event
     public function __destruct()
     {
         closeDatabaseConnection($this->mysqli);
+    }
+
+    /**
+     * Get event date
+     *
+     * @param int $id event id
+     * @return string
+     */
+    public function getEventDate(int $id): string
+    {
+        //SQL statement to get a single event by ID
+        $sql = "SELECT event_date FROM event WHERE id = $id";
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the result
+        $result = $stmt->get_result();
+
+        //If the query returns a result
+        if ($result) {
+            //Return the event
+            return $result->fetch_assoc()['event_date'];
+        } else {
+            //If the query fails, return an empty array
+            return "";
+        }
     }
 
     /**

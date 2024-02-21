@@ -45,6 +45,9 @@ if (!$hasPermission) {
     //events class
     $eventsData = new Event();
 
+    //schedule class
+    $schedule = new Schedule();
+
     //student event class
     $studentEvent = new StudentEvent();
 
@@ -226,7 +229,7 @@ if (!$hasPermission) {
                                 <br />
                                 <?php echo $eventsData->getEventLocation($event['event_id']); ?>
                                 <br />
-                                <?php echo formatDate($eventsData->getEventDate($event['event_id'])); ?>
+                                <?php echo formatDate($schedule->getEventDate($event['event_id'])); ?>
                             </p>
                             <?php
                                             }

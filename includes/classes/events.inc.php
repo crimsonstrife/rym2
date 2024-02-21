@@ -32,7 +32,7 @@ require_once(BASEPATH . '/includes/connector.inc.php');
 class Event
 {
     //Reference to the database
-    private $mysqli;
+    protected $mysqli;
 
     //Instantiate the database connection
     public function __construct()
@@ -140,36 +140,6 @@ class Event
         if ($result) {
             //Return the event
             return $result->fetch_assoc()['name'];
-        } else {
-            //If the query fails, return an empty array
-            return "";
-        }
-    }
-
-    /**
-     * Get event date
-     *
-     * @param int $id event id
-     * @return string
-     */
-    public function getEventDate(int $id): string
-    {
-        //SQL statement to get a single event by ID
-        $sql = "SELECT event_date FROM event WHERE id = $id";
-
-        //Prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        //Execute the statement
-        $stmt->execute();
-
-        //Get the result
-        $result = $stmt->get_result();
-
-        //If the query returns a result
-        if ($result) {
-            //Return the event
-            return $result->fetch_assoc()['event_date'];
         } else {
             //If the query fails, return an empty array
             return "";
@@ -435,7 +405,7 @@ class Event
      * @param int $id event id
      * @return bool
      */
-    public function slugifyEvent(int $id): bool
+    private function slugifyEvent(int $id): bool
     {
         //instance of event class
         $event = new Event();
@@ -468,7 +438,7 @@ class Event
      * @param string $slug event slug
      * @return bool
      */
-    public function checkEventSlug(int $id, string $slug): bool
+    private function checkEventSlug(int $id, string $slug): bool
     {
         //SQL statement to check if the event slug already exists
         $sql = "SELECT * FROM event_slugs WHERE event_id = ? AND slug = ?";
@@ -496,7 +466,7 @@ class Event
      * @param string $slug event slug
      * @return bool
      */
-    public function checkEventSlugExists(string $slug): bool
+    private function checkEventSlugExists(string $slug): bool
     {
         //SQL statement to check if the event slug already exists
         $sql = "SELECT * FROM event_slugs WHERE slug = ?";
@@ -523,7 +493,7 @@ class Event
      * @param string $slug event slug
      * @return int
      */
-    public function getEventIdBySlug(string $slug): int
+    private function getEventIdBySlug(string $slug): int
     {
         //SQL statement to get the event id by slug
         $sql = "SELECT event_id FROM event_slugs WHERE slug = ?";
@@ -551,7 +521,7 @@ class Event
      * @param string $slug event slug
      * @return bool
      */
-    public function updateEventSlug(int $id, string $slug): bool
+    private function updateEventSlug(int $id, string $slug): bool
     {
         //check if the slug already exists using on any event id
         $slugExists = $this->checkEventSlugExists($slug);
@@ -614,7 +584,7 @@ class Event
      * @param string $slug event slug
      * @return string
      */
-    public function incrementSlug(string $slug): string
+    private function incrementSlug(string $slug): string
     {
         //get the last character of the slug
         $lastChar = substr($slug, -1);
@@ -677,7 +647,7 @@ class Event
      * @param int $id event id
      * @return bool
      */
-    public function createEventSlug(int $id): bool
+    private function createEventSlug(int $id): bool
     {
         //SQL statement to create the event slug
         $sql = "INSERT INTO event_slugs (event_id, slug) VALUES (?, ?)";
@@ -931,43 +901,6 @@ class Event
     }
 
     /**
-     * Search Events
-     * Search events by name, date, or location, gets the location name from the school database
-     *
-     * @param string $searchTerm search string
-     *
-     * @return array
-     */
-    public function searchEvents(string $searchTerm): array
-    {
-        //SQL statement to search events, cross referencing the location with the school database id
-        $sql = "SELECT event.id, event.name, event.event_date, school.name AS location FROM event INNER JOIN school ON event.location = school.id WHERE event.name LIKE ? OR event.event_date LIKE ? OR school.name LIKE ?";
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-        //setup the search term
-        $searchTerm = "%" . $searchTerm . "%";
-        //bind the parameters
-        $stmt->bind_param("sss", $searchTerm, $searchTerm, $searchTerm);
-        //execute the statement
-        $stmt->execute();
-        //get the result
-        $result = $stmt->get_result();
-
-        //array to hold the events
-        $events = array();
-
-        //if the result has rows, loop through the rows and add them to the events array
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $events[] = $row;
-            }
-        }
-
-        //return the events array
-        return $events;
-    }
-
-    /**
      * Delete event
      * Delete an event from the database
      *
@@ -1012,5 +945,49 @@ class Event
 
         //return the result
         return $result;
+    }
+}
+
+/**
+ * Event Search Class
+ * Contains functions for searching the events in the database
+ */
+class EventSearch extends Event
+{
+    /**
+     * Search Events
+     * Search events by name, date, or location, gets the location name from the school database
+     *
+     * @param string $searchTerm search string
+     *
+     * @return array
+     */
+    public function searchEvents(string $searchTerm): array
+    {
+        //SQL statement to search events, cross referencing the location with the school database id
+        $sql = "SELECT event.id, event.name, event.event_date, school.name AS location FROM event INNER JOIN school ON event.location = school.id WHERE event.name LIKE ? OR event.event_date LIKE ? OR school.name LIKE ?";
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+        //setup the search term
+        $searchTerm = "%" . $searchTerm . "%";
+        //bind the parameters
+        $stmt->bind_param("sss", $searchTerm, $searchTerm, $searchTerm);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+
+        //array to hold the events
+        $events = array();
+
+        //if the result has rows, loop through the rows and add them to the events array
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $events[] = $row;
+            }
+        }
+
+        //return the events array
+        return $events;
     }
 }

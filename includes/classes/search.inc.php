@@ -33,7 +33,7 @@ class Search {
         $schoolData = new School();
 
         //include the event class
-        $eventData = new Event();
+        $eventData = new EventSearch();
 
         //create an array to store the results
         $results = array(

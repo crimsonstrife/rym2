@@ -17,6 +17,9 @@ $permissionsObject = new Permission();
 //event class
 $event = new Event();
 
+//schedule class
+$schedule = new Schedule();
+
 //school class
 $school = new School();
 
@@ -169,8 +172,8 @@ if (isset($_GET['action'])) {
                                 <p><strong><label for="eventDate">Event Date: <strong><span
                                                     class="required">*</span></strong></label></strong></p>
                                 <p><input type="date" id="eventDate" name="event_date" class="form-control"
-                                        value="<?php echo $event->getEventDate($event_id); ?>"
-                                        placeholder="<?php echo $event->getEventDate($event_id); ?>" required></p>
+                                        value="<?php echo $schedule->getEventDate($event_id); ?>"
+                                        placeholder="<?php echo $schedule->getEventDate($event_id); ?>" required></p>
                                 <p><small id="eventDateHelp" class="form-text text-muted">Enter the date of the event,
                                         must
                                         be
