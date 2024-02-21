@@ -21,7 +21,7 @@ $media_class = new Media();
 $author = 'Patrick Barnhardt';
 
 // get the company name from the application settings
-$companyName = $companysettings->getCompanyName();
+$companyName = $companySettings->getCompanyName();
 
 //if the company name is not set, use the default of the developer name
 if (!empty($companyName) && $companyName != null && $companyName != '') {
