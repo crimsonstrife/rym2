@@ -3,11 +3,10 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Feb 13, 2024 at 01:03 PM
+-- Generation Time: Feb 19, 2024 at 06:41 PM
 -- Server version: 5.7.39
 -- PHP Version: 7.4.33
 
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -19,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `talentflow`
+-- Database: `capstone`
 --
 
 -- --------------------------------------------------------
@@ -28,15 +27,13 @@ SET time_zone = "+00:00";
 -- Table structure for table `activity_log`
 --
 
-DROP TABLE IF EXISTS `activity_log`;
-CREATE TABLE IF NOT EXISTS `activity_log` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `activity_log` (
+  `id` bigint(20) NOT NULL,
   `user_id` bigint(20) DEFAULT NULL,
   `action` enum('CREATE','MODIFY','DELETE','LOGIN','LOGOUT','LOGIN FAILED','OTHER','RESET','UPLOAD','DOWNLOAD','ERROR','EMAIL') COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `performed_on` varchar(535) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `action_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=370 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `action_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `activity_log`
@@ -411,7 +408,32 @@ INSERT INTO `activity_log` (`id`, `user_id`, `action`, `performed_on`, `action_d
 (366, 1, 'MODIFY', 'The application logo was changed.', '2024-02-09 22:33:48'),
 (367, 1, 'MODIFY', 'The company logo was changed.', '2024-02-09 22:33:48'),
 (368, 1, 'MODIFY', 'The privacy policy was changed.', '2024-02-09 23:57:38'),
-(369, 1, 'MODIFY', 'The company URL was changed to https://www.pipecompany.example.', '2024-02-10 00:02:44');
+(369, 1, 'MODIFY', 'The company URL was changed to https://www.pipecompany.example.', '2024-02-10 00:02:44'),
+(370, NULL, 'LOGIN', 'User admin', '2024-02-15 21:40:18'),
+(371, 1, 'MODIFY', 'User: admin updated by User: 1', '2024-02-16 00:09:57'),
+(372, 1, 'MODIFY', 'User: admin updated by User: 1', '2024-02-16 00:09:57'),
+(373, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:38:44'),
+(374, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:43:15'),
+(375, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:43:56'),
+(376, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:44:46'),
+(377, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:46:47'),
+(378, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:47:52'),
+(379, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:49:09'),
+(380, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=1', '2024-02-16 00:49:58'),
+(381, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:58:06'),
+(382, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:59:23'),
+(383, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 01:00:03'),
+(384, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 01:01:11'),
+(385, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 01:03:41'),
+(386, 1, 'MODIFY', 'The hotjar site ID was changed to 3867800.', '2024-02-16 21:11:24'),
+(387, 1, 'MODIFY', 'The hotjar version was changed to 6.', '2024-02-16 21:11:24'),
+(388, 1, 'MODIFY', 'The hotjar site ID was changed to 3867800.', '2024-02-17 01:04:38'),
+(389, 1, 'MODIFY', 'The hotjar version was changed to 6.', '2024-02-17 01:04:38'),
+(390, 1, 'MODIFY', 'The hotjar site ID was changed to 3867800.', '2024-02-17 01:05:58'),
+(391, 1, 'MODIFY', 'The hotjar version was changed to 6.', '2024-02-17 01:05:58'),
+(392, 1, 'MODIFY', 'The hotjar enabled status was changed to1.', '2024-02-17 01:19:45'),
+(393, 1, 'MODIFY', 'The hotjar enabled status was changed to1.', '2024-02-17 01:20:15'),
+(394, NULL, 'LOGIN', 'User admin', '2024-02-19 20:06:45');
 
 -- --------------------------------------------------------
 
@@ -419,19 +441,14 @@ INSERT INTO `activity_log` (`id`, `user_id`, `action`, `performed_on`, `action_d
 -- Table structure for table `aoi`
 --
 
-DROP TABLE IF EXISTS `aoi`;
-CREATE TABLE IF NOT EXISTS `aoi` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `aoi` (
+  `id` bigint(20) NOT NULL,
   `name` varchar(55) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_by` bigint(20) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  KEY `created` (`created_by`),
-  KEY `updated` (`updated_by`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `aoi`
@@ -452,19 +469,15 @@ INSERT INTO `aoi` (`id`, `name`, `created_by`, `updated_by`, `created_at`, `upda
 -- Table structure for table `contact_log`
 --
 
-DROP TABLE IF EXISTS `contact_log`;
-CREATE TABLE IF NOT EXISTS `contact_log` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `contact_log` (
+  `id` bigint(20) NOT NULL,
   `student` bigint(20) DEFAULT NULL,
   `auto` tinyint(1) NOT NULL DEFAULT '1',
   `sender` bigint(20) DEFAULT NULL,
   `send_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `subject` varchar(150) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `message` varchar(500) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `student` (`student`),
-  KEY `sender` (`sender`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `message` varchar(500) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `contact_log`
@@ -497,19 +510,14 @@ INSERT INTO `contact_log` (`id`, `student`, `auto`, `sender`, `send_date`, `subj
 -- Table structure for table `degree_lvl`
 --
 
-DROP TABLE IF EXISTS `degree_lvl`;
-CREATE TABLE IF NOT EXISTS `degree_lvl` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `degree_lvl` (
+  `id` bigint(20) NOT NULL,
   `name` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
-  `updated_by` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `updated_by` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `degree_lvl`
@@ -533,21 +541,16 @@ INSERT INTO `degree_lvl` (`id`, `name`, `created_at`, `updated_at`, `created_by`
 -- Table structure for table `event`
 --
 
-DROP TABLE IF EXISTS `event`;
-CREATE TABLE IF NOT EXISTS `event` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `event` (
+  `id` bigint(20) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `event_date` date NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_by` bigint(20) DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
-  `location` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `eventCreatedBy` (`created_by`),
-  KEY `eventUpdatedBy` (`updated_by`),
-  KEY `eventAtSchool` (`location`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `location` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `event`
@@ -571,17 +574,12 @@ INSERT INTO `event` (`id`, `name`, `event_date`, `created_at`, `updated_at`, `up
 -- Table structure for table `event_branding`
 --
 
-DROP TABLE IF EXISTS `event_branding`;
-CREATE TABLE IF NOT EXISTS `event_branding` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `event_branding` (
+  `id` bigint(20) NOT NULL,
   `event_id` bigint(20) NOT NULL,
   `event_logo` bigint(20) DEFAULT NULL,
-  `event_banner` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `event_id` (`event_id`) USING BTREE,
-  KEY `eventLogoFile` (`event_logo`),
-  KEY `eventBannerFile` (`event_banner`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `event_banner` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `event_branding`
@@ -598,14 +596,11 @@ INSERT INTO `event_branding` (`id`, `event_id`, `event_logo`, `event_banner`) VA
 -- Table structure for table `event_slugs`
 --
 
-DROP TABLE IF EXISTS `event_slugs`;
-CREATE TABLE IF NOT EXISTS `event_slugs` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `event_slugs` (
+  `id` bigint(20) NOT NULL,
   `event_id` bigint(20) NOT NULL,
-  `slug` varchar(30) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `eventHasSlug` (`event_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `slug` varchar(30) COLLATE utf8mb4_unicode_520_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `event_slugs`
@@ -629,9 +624,8 @@ INSERT INTO `event_slugs` (`id`, `event_id`, `slug`) VALUES
 -- Table structure for table `jobs`
 --
 
-DROP TABLE IF EXISTS `jobs`;
-CREATE TABLE IF NOT EXISTS `jobs` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `jobs` (
+  `id` bigint(20) NOT NULL,
   `name` varchar(150) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `description` longtext COLLATE utf8mb4_unicode_520_ci,
   `summary` text COLLATE utf8mb4_unicode_520_ci,
@@ -642,13 +636,8 @@ CREATE TABLE IF NOT EXISTS `jobs` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
-  `updated_by` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `jobField` (`field`),
-  KEY `jobCreatedBy` (`created_by`),
-  KEY `jobUpdatedBy` (`updated_by`),
-  KEY `jobEducation` (`education`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `updated_by` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `jobs`
@@ -664,19 +653,14 @@ INSERT INTO `jobs` (`id`, `name`, `description`, `summary`, `type`, `field`, `ed
 -- Table structure for table `major`
 --
 
-DROP TABLE IF EXISTS `major`;
-CREATE TABLE IF NOT EXISTS `major` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `major` (
+  `id` bigint(20) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
-  `updated_by` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `updated_by` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `major`
@@ -698,21 +682,16 @@ INSERT INTO `major` (`id`, `name`, `created_at`, `updated_at`, `created_by`, `up
 -- Table structure for table `media`
 --
 
-DROP TABLE IF EXISTS `media`;
-CREATE TABLE IF NOT EXISTS `media` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `media` (
+  `id` bigint(20) NOT NULL,
   `filename` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `filetype` varchar(5) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `filesize` bigint(20) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_by` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `filename` (`filename`),
-  KEY `fileCreatedBy` (`created_by`),
-  KEY `fileUpdatedBy` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `updated_by` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `media`
@@ -732,13 +711,10 @@ INSERT INTO `media` (`id`, `filename`, `filetype`, `filesize`, `created_at`, `cr
 -- Table structure for table `permissions`
 --
 
-DROP TABLE IF EXISTS `permissions`;
-CREATE TABLE IF NOT EXISTS `permissions` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+CREATE TABLE `permissions` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `permissions`
@@ -814,21 +790,15 @@ INSERT INTO `permissions` (`id`, `name`) VALUES
 -- Table structure for table `reports`
 --
 
-DROP TABLE IF EXISTS `reports`;
-CREATE TABLE IF NOT EXISTS `reports` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `reports` (
+  `id` bigint(20) NOT NULL,
   `report_type` varchar(500) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `data` json NOT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_by` bigint(20) DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`),
-  KEY `created_at` (`created_at`),
-  KEY `updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `reports`
@@ -902,19 +872,14 @@ INSERT INTO `reports` (`id`, `report_type`, `data`, `created_by`, `created_at`, 
 -- Table structure for table `roles`
 --
 
-DROP TABLE IF EXISTS `roles`;
-CREATE TABLE IF NOT EXISTS `roles` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `roles` (
+  `id` bigint(20) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_by` bigint(20) DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  KEY `created_by` (`created_by`),
-  KEY `roleUpdatedBy` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `roles`
@@ -933,21 +898,15 @@ INSERT INTO `roles` (`id`, `name`, `created_by`, `created_at`, `updated_by`, `up
 -- Table structure for table `role_has_permission`
 --
 
-DROP TABLE IF EXISTS `role_has_permission`;
-CREATE TABLE IF NOT EXISTS `role_has_permission` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `role_has_permission` (
+  `id` bigint(20) NOT NULL,
   `role_id` bigint(20) NOT NULL,
   `permission_id` bigint(20) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_by` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `roleHasPermission` (`role_id`,`permission_id`),
-  KEY `permissionID` (`permission_id`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `updated_by` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `role_has_permission`
@@ -1115,9 +1074,8 @@ INSERT INTO `role_has_permission` (`id`, `role_id`, `permission_id`, `created_at
 -- Table structure for table `school`
 --
 
-DROP TABLE IF EXISTS `school`;
-CREATE TABLE IF NOT EXISTS `school` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `school` (
+  `id` bigint(20) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `address` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `city` varchar(50) COLLATE utf8mb4_unicode_520_ci NOT NULL,
@@ -1126,12 +1084,8 @@ CREATE TABLE IF NOT EXISTS `school` (
   `created_by` bigint(20) DEFAULT NULL,
   `updated_by` bigint(20) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  KEY `created_by` (`created_by`),
-  KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `school`
@@ -1161,16 +1115,12 @@ INSERT INTO `school` (`id`, `name`, `address`, `city`, `state`, `zipcode`, `crea
 -- Table structure for table `school_branding`
 --
 
-DROP TABLE IF EXISTS `school_branding`;
-CREATE TABLE IF NOT EXISTS `school_branding` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `school_branding` (
+  `id` bigint(20) NOT NULL,
   `school_id` bigint(20) DEFAULT NULL,
   `school_logo` bigint(20) DEFAULT NULL,
-  `school_color` varchar(8) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `schoolHasBranding` (`school_id`),
-  KEY `schoolLogoFile` (`school_logo`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `school_color` varchar(8) COLLATE utf8mb4_unicode_520_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `school_branding`
@@ -1200,8 +1150,7 @@ INSERT INTO `school_branding` (`id`, `school_id`, `school_logo`, `school_color`)
 -- Table structure for table `settings`
 --
 
-DROP TABLE IF EXISTS `settings`;
-CREATE TABLE IF NOT EXISTS `settings` (
+CREATE TABLE `settings` (
   `isSet` enum('SET') COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `app_name` varchar(50) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `app_url` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -1226,17 +1175,19 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `mail_encryption` enum('ssl','tls') COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `privacy_policy` longtext COLLATE utf8mb4_unicode_520_ci,
   `terms_conditions` longtext COLLATE utf8mb4_unicode_520_ci,
-  PRIMARY KEY (`isSet`),
-  KEY `companyLogo` (`company_logo`),
-  KEY `appLogo` (`app_logo`)
+  `hotjar_enable` tinyint(1) DEFAULT NULL,
+  `hotjar_siteid` mediumint(9) DEFAULT NULL,
+  `hotjar_version` int(11) DEFAULT NULL,
+  `ga_enable` tinyint(1) DEFAULT NULL,
+  `google_analytics` varchar(20) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `settings`
 --
 
-INSERT INTO `settings` (`isSet`, `app_name`, `app_url`, `company_name`, `company_url`, `company_logo`, `company_address`, `company_city`, `company_state`, `company_zip`, `company_phone`, `app_logo`, `contact_email`, `mail_from_address`, `mail_from_name`, `mail_mailer`, `mail_host`, `mail_port`, `mail_auth_req`, `mail_username`, `mail_password`, `mail_encryption`, `privacy_policy`, `terms_conditions`) VALUES
-('SET', 'TalentFlow', NULL, 'Pipe and Foundry Company', 'https://www.pipecompany.example', 23, '1234 Main St', 'Anyplace', 'NC', '123456', '123-456-1234', 24, 'contact@talentflow.email', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>', '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>');
+INSERT INTO `settings` (`isSet`, `app_name`, `app_url`, `company_name`, `company_url`, `company_logo`, `company_address`, `company_city`, `company_state`, `company_zip`, `company_phone`, `app_logo`, `contact_email`, `mail_from_address`, `mail_from_name`, `mail_mailer`, `mail_host`, `mail_port`, `mail_auth_req`, `mail_username`, `mail_password`, `mail_encryption`, `privacy_policy`, `terms_conditions`, `hotjar_enable`, `hotjar_siteid`, `hotjar_version`, `ga_enable`, `google_analytics`) VALUES
+('SET', 'TalentFlow', NULL, 'Pipe and Foundry Company', 'https://www.pipecompany.example', 23, '1234 Main St', 'Anyplace', 'NC', '123456', '123-456-1234', 24, 'contact@talentflow.email', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>', '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>', 0, 3867800, 6, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1244,9 +1195,8 @@ INSERT INTO `settings` (`isSet`, `app_name`, `app_url`, `company_name`, `company
 -- Table structure for table `student`
 --
 
-DROP TABLE IF EXISTS `student`;
-CREATE TABLE IF NOT EXISTS `student` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `student` (
+  `id` bigint(20) NOT NULL,
   `first_name` varchar(55) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `last_name` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
@@ -1262,13 +1212,8 @@ CREATE TABLE IF NOT EXISTS `student` (
   `position` enum('FULL','PART','INTERN') COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'INTERN',
   `graduation` date NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `areaOfInterest` (`interest`),
-  KEY `degree` (`degree`),
-  KEY `major` (`major`),
-  KEY `school` (`school`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `student`
@@ -1288,15 +1233,11 @@ INSERT INTO `student` (`id`, `first_name`, `last_name`, `email`, `phone`, `addre
 -- Table structure for table `student_at_event`
 --
 
-DROP TABLE IF EXISTS `student_at_event`;
-CREATE TABLE IF NOT EXISTS `student_at_event` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `student_at_event` (
+  `id` bigint(20) NOT NULL,
   `student_id` bigint(20) NOT NULL,
-  `event_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `studentAtEvent` (`student_id`),
-  KEY `eventHadStudent` (`event_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `event_id` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `student_at_event`
@@ -1314,27 +1255,23 @@ INSERT INTO `student_at_event` (`id`, `student_id`, `event_id`) VALUES
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `users` (
+  `id` bigint(20) NOT NULL,
   `username` varchar(55) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_by` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `updated_by` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 'admin', 'admin@capstone.hostedprojects.net', '$2y$10$54/SM02sd2HOoui0sVxbzeUzwRDPpxUKgvQQsdOAc2i.3Yay8Gnd.', '2023-10-12 18:34:47', NULL, '2024-01-11 01:14:19', 1),
+(1, 'admin', 'admin@capstone.hostedprojects.net', '$2y$10$bueKn7DZtN7mNMa6vkVKNegMbjdceXmFR.KI/.xjgU8pHBjXo/g2S', '2023-10-12 18:34:47', NULL, '2024-02-16 00:09:57', 1),
 (2, 'test', 'test@email.com', '$2y$10$aTrqh2Bjt0Zj0b3L706NpuMCBnnhALLrdy8Ba1XCCWaNvyhPJIfQy', '2024-01-17 02:29:03', 1, '2024-01-17 02:29:03', 1);
 
 -- --------------------------------------------------------
@@ -1343,21 +1280,15 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `creat
 -- Table structure for table `user_has_role`
 --
 
-DROP TABLE IF EXISTS `user_has_role`;
-CREATE TABLE IF NOT EXISTS `user_has_role` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `user_has_role` (
+  `id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `role_id` bigint(20) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_by` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `userHasRole` (`user_id`,`role_id`),
-  KEY `roleID` (`role_id`),
-  KEY `userGivenRole` (`created_by`),
-  KEY `userRoleModified` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `updated_by` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `user_has_role`
@@ -1373,19 +1304,15 @@ INSERT INTO `user_has_role` (`id`, `user_id`, `role_id`, `created_at`, `created_
 -- Table structure for table `user_token_auth`
 --
 
-DROP TABLE IF EXISTS `user_token_auth`;
-CREATE TABLE IF NOT EXISTS `user_token_auth` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `user_token_auth` (
+  `id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `user_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `selector_hash` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `is_expired` int(11) NOT NULL DEFAULT '0',
-  `expiry_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `userHasToken` (`user_id`),
-  KEY `usersName` (`user_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `expiry_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `user_token_auth`
@@ -1406,6 +1333,330 @@ INSERT INTO `user_token_auth` (`id`, `user_id`, `user_name`, `password_hash`, `s
 (12, 1, 'admin', '$2y$10$LvJsCTVOYqUYO3HCNjJpDut.5rPnM7mIkO/wi59uUtEI9ttEuQVqK', '$2y$10$US85Jb1kbg5/PddUPsC4xOy2eVuDg5UeqE5JTXeCWxbBbEnYG5d7G', 1, '2024-01-16 15:57:58'),
 (13, 1, 'admin', '$2y$10$5zg9mZqQGbOIt7dmo.lmeOZuZNrwMGMW1VZEv2FrsFvXG9oLkCHBG', '$2y$10$SjvtW3coyIHg1lOW0ZConeCt/YrlCxakPt84l2zgSKpNZiynyqDx2', 1, '2024-01-17 14:30:40'),
 (14, 2, 'test', '$2y$10$VK1qmYCv5Ry1tJg6xgAZIeMBmi3qfIh2FMZWHRP1Oc7gmr3sPGC5e', '$2y$10$fHYlrz.l8.cE4xbb074REuP.arA/W.AZ7qRn8nMnSnxym1AxkB29y', 1, '2024-01-31 19:50:50');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `activity_log`
+--
+ALTER TABLE `activity_log`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `aoi`
+--
+ALTER TABLE `aoi`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `created` (`created_by`),
+  ADD KEY `updated` (`updated_by`) USING BTREE;
+
+--
+-- Indexes for table `contact_log`
+--
+ALTER TABLE `contact_log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student` (`student`),
+  ADD KEY `sender` (`sender`);
+
+--
+-- Indexes for table `degree_lvl`
+--
+ALTER TABLE `degree_lvl`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indexes for table `event`
+--
+ALTER TABLE `event`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `eventCreatedBy` (`created_by`),
+  ADD KEY `eventUpdatedBy` (`updated_by`),
+  ADD KEY `eventAtSchool` (`location`);
+
+--
+-- Indexes for table `event_branding`
+--
+ALTER TABLE `event_branding`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `event_id` (`event_id`) USING BTREE,
+  ADD KEY `eventLogoFile` (`event_logo`),
+  ADD KEY `eventBannerFile` (`event_banner`);
+
+--
+-- Indexes for table `event_slugs`
+--
+ALTER TABLE `event_slugs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `eventHasSlug` (`event_id`);
+
+--
+-- Indexes for table `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `jobField` (`field`),
+  ADD KEY `jobCreatedBy` (`created_by`),
+  ADD KEY `jobUpdatedBy` (`updated_by`),
+  ADD KEY `jobEducation` (`education`);
+
+--
+-- Indexes for table `major`
+--
+ALTER TABLE `major`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indexes for table `media`
+--
+ALTER TABLE `media`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `filename` (`filename`),
+  ADD KEY `fileCreatedBy` (`created_by`),
+  ADD KEY `fileUpdatedBy` (`updated_by`);
+
+--
+-- Indexes for table `permissions`
+--
+ALTER TABLE `permissions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `reports`
+--
+ALTER TABLE `reports`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`),
+  ADD KEY `created_at` (`created_at`),
+  ADD KEY `updated_at` (`updated_at`);
+
+--
+-- Indexes for table `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `roleUpdatedBy` (`updated_by`);
+
+--
+-- Indexes for table `role_has_permission`
+--
+ALTER TABLE `role_has_permission`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `roleHasPermission` (`role_id`,`permission_id`),
+  ADD KEY `permissionID` (`permission_id`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indexes for table `school`
+--
+ALTER TABLE `school`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `updated_by` (`updated_by`);
+
+--
+-- Indexes for table `school_branding`
+--
+ALTER TABLE `school_branding`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `schoolHasBranding` (`school_id`),
+  ADD KEY `schoolLogoFile` (`school_logo`);
+
+--
+-- Indexes for table `settings`
+--
+ALTER TABLE `settings`
+  ADD UNIQUE KEY `IsSet` (`isSet`),
+  ADD KEY `companyLogo` (`company_logo`),
+  ADD KEY `appLogo` (`app_logo`);
+
+--
+-- Indexes for table `student`
+--
+ALTER TABLE `student`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `areaOfInterest` (`interest`),
+  ADD KEY `degree` (`degree`),
+  ADD KEY `major` (`major`),
+  ADD KEY `school` (`school`);
+
+--
+-- Indexes for table `student_at_event`
+--
+ALTER TABLE `student_at_event`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `studentAtEvent` (`student_id`),
+  ADD KEY `eventHadStudent` (`event_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `user_has_role`
+--
+ALTER TABLE `user_has_role`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `userHasRole` (`user_id`,`role_id`),
+  ADD KEY `roleID` (`role_id`),
+  ADD KEY `userGivenRole` (`created_by`),
+  ADD KEY `userRoleModified` (`updated_by`);
+
+--
+-- Indexes for table `user_token_auth`
+--
+ALTER TABLE `user_token_auth`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `userHasToken` (`user_id`),
+  ADD KEY `usersName` (`user_name`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `activity_log`
+--
+ALTER TABLE `activity_log`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=395;
+
+--
+-- AUTO_INCREMENT for table `aoi`
+--
+ALTER TABLE `aoi`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `contact_log`
+--
+ALTER TABLE `contact_log`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT for table `degree_lvl`
+--
+ALTER TABLE `degree_lvl`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `event`
+--
+ALTER TABLE `event`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `event_branding`
+--
+ALTER TABLE `event_branding`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `event_slugs`
+--
+ALTER TABLE `event_slugs`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `major`
+--
+ALTER TABLE `major`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `media`
+--
+ALTER TABLE `media`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT for table `permissions`
+--
+ALTER TABLE `permissions`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+
+--
+-- AUTO_INCREMENT for table `reports`
+--
+ALTER TABLE `reports`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+
+--
+-- AUTO_INCREMENT for table `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `role_has_permission`
+--
+ALTER TABLE `role_has_permission`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
+
+--
+-- AUTO_INCREMENT for table `school`
+--
+ALTER TABLE `school`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `school_branding`
+--
+ALTER TABLE `school_branding`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `student`
+--
+ALTER TABLE `student`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `student_at_event`
+--
+ALTER TABLE `student_at_event`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `user_has_role`
+--
+ALTER TABLE `user_has_role`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `user_token_auth`
+--
+ALTER TABLE `user_token_auth`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables
@@ -1552,7 +1803,6 @@ ALTER TABLE `user_has_role`
 ALTER TABLE `user_token_auth`
   ADD CONSTRAINT `userHasToken` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `usersName` FOREIGN KEY (`user_name`) REFERENCES `users` (`username`) ON DELETE CASCADE ON UPDATE NO ACTION;
-SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

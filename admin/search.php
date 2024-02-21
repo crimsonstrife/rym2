@@ -20,6 +20,9 @@ $permissionsObject = new Permission();
 //include the auth class
 $auth = new Authenticator();
 
+//include the search class
+$search = new Search();
+
 //verify the url parameter
 if (isset($_GET['view'])) {
     switch ($_GET['view']) {
@@ -53,7 +56,7 @@ if (isset($_GET['view'])) {
                 $eventData = new Event();
 
                 //perform the search
-                $searchResults = $APP->search($searchTerm);
+                $searchResults = $search->search($searchTerm);
             ?>
                 <!-- main content -->
                 <div id="layout_content" class="w-95 mx-auto">

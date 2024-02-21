@@ -149,7 +149,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                         <td><?php echo $student['first_name']; ?></td>
                                                         <td><?php echo $student['last_name']; ?></td>
                                                         <td><?php echo $student['email']; ?></td>
-                                                        <td><?php echo $degreesData->getDegreeProgram($student['degree'], $student['major']); ?>
+                                                        <td><?php echo getDegreeProgram($student['degree'], $student['major']); ?>
                                                         </td>
                                                         <td><?php echo $schoolsData->getSchoolById($student['school'])['name']; ?></td>
                                                         <td>

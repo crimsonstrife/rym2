@@ -1,7 +1,7 @@
 [
 {"type":"header","version":"5.2.0","comment":"Export to JSON plugin for PHPMyAdmin"},
-{"type":"database","name":"talentflow"},
-{"type":"table","name":"activity_log","database":"talentflow","data":
+{"type":"database","name":"capstone"},
+{"type":"table","name":"activity_log","database":"capstone","data":
 [
 {"id":"1","user_id":null,"action":"OTHER","performed_on":"User 1","action_date":"2023-12-28 18:20:28"},
 {"id":"2","user_id":null,"action":"OTHER","performed_on":"User 4","action_date":"2023-12-28 18:22:41"},
@@ -371,10 +371,35 @@
 {"id":"366","user_id":"1","action":"MODIFY","performed_on":"The application logo was changed.","action_date":"2024-02-09 17:33:48"},
 {"id":"367","user_id":"1","action":"MODIFY","performed_on":"The company logo was changed.","action_date":"2024-02-09 17:33:48"},
 {"id":"368","user_id":"1","action":"MODIFY","performed_on":"The privacy policy was changed.","action_date":"2024-02-09 18:57:38"},
-{"id":"369","user_id":"1","action":"MODIFY","performed_on":"The company URL was changed to https:\/\/www.pipecompany.example.","action_date":"2024-02-09 19:02:44"}
+{"id":"369","user_id":"1","action":"MODIFY","performed_on":"The company URL was changed to https:\/\/www.pipecompany.example.","action_date":"2024-02-09 19:02:44"},
+{"id":"370","user_id":null,"action":"LOGIN","performed_on":"User admin","action_date":"2024-02-15 16:40:18"},
+{"id":"371","user_id":"1","action":"MODIFY","performed_on":"User: admin updated by User: 1","action_date":"2024-02-15 19:09:57"},
+{"id":"372","user_id":"1","action":"MODIFY","performed_on":"User: admin updated by User: 1","action_date":"2024-02-15 19:09:57"},
+{"id":"373","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=2","action_date":"2024-02-15 19:38:44"},
+{"id":"374","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=2","action_date":"2024-02-15 19:43:15"},
+{"id":"375","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=2","action_date":"2024-02-15 19:43:56"},
+{"id":"376","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=2","action_date":"2024-02-15 19:44:46"},
+{"id":"377","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=2","action_date":"2024-02-15 19:46:47"},
+{"id":"378","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=2","action_date":"2024-02-15 19:47:52"},
+{"id":"379","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=2","action_date":"2024-02-15 19:49:09"},
+{"id":"380","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=1","action_date":"2024-02-15 19:49:58"},
+{"id":"381","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=2","action_date":"2024-02-15 19:58:06"},
+{"id":"382","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=2","action_date":"2024-02-15 19:59:23"},
+{"id":"383","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=2","action_date":"2024-02-15 20:00:03"},
+{"id":"384","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=2","action_date":"2024-02-15 20:01:11"},
+{"id":"385","user_id":"1","action":"ERROR","performed_on":"CODE: [LYNX]- AT: \/admin\/dashboard.php?view=users&user=single&id=2","action_date":"2024-02-15 20:03:41"},
+{"id":"386","user_id":"1","action":"MODIFY","performed_on":"The hotjar site ID was changed to 3867800.","action_date":"2024-02-16 16:11:24"},
+{"id":"387","user_id":"1","action":"MODIFY","performed_on":"The hotjar version was changed to 6.","action_date":"2024-02-16 16:11:24"},
+{"id":"388","user_id":"1","action":"MODIFY","performed_on":"The hotjar site ID was changed to 3867800.","action_date":"2024-02-16 20:04:38"},
+{"id":"389","user_id":"1","action":"MODIFY","performed_on":"The hotjar version was changed to 6.","action_date":"2024-02-16 20:04:38"},
+{"id":"390","user_id":"1","action":"MODIFY","performed_on":"The hotjar site ID was changed to 3867800.","action_date":"2024-02-16 20:05:58"},
+{"id":"391","user_id":"1","action":"MODIFY","performed_on":"The hotjar version was changed to 6.","action_date":"2024-02-16 20:05:58"},
+{"id":"392","user_id":"1","action":"MODIFY","performed_on":"The hotjar enabled status was changed to1.","action_date":"2024-02-16 20:19:45"},
+{"id":"393","user_id":"1","action":"MODIFY","performed_on":"The hotjar enabled status was changed to1.","action_date":"2024-02-16 20:20:15"},
+{"id":"394","user_id":null,"action":"LOGIN","performed_on":"User admin","action_date":"2024-02-19 15:06:45"}
 ]
 }
-,{"type":"table","name":"aoi","database":"talentflow","data":
+,{"type":"table","name":"aoi","database":"capstone","data":
 [
 {"id":"1","name":"IT","created_by":"1","updated_by":"1","created_at":"2023-10-18 13:11:07","updated_at":"2023-10-18 13:11:07"},
 {"id":"2","name":"Programming","created_by":"1","updated_by":"1","created_at":"2023-10-18 13:11:07","updated_at":"2023-10-18 13:11:07"},
@@ -385,7 +410,7 @@
 {"id":"7","name":"Sales","created_by":"1","updated_by":"1","created_at":"2023-12-12 18:44:32","updated_at":"2023-12-12 18:44:32"}
 ]
 }
-,{"type":"table","name":"contact_log","database":"talentflow","data":
+,{"type":"table","name":"contact_log","database":"capstone","data":
 [
 {"id":"2","student":"5","auto":"1","sender":null,"send_date":"2023-12-15 20:02:37","subject":"Thank you Sam, for registering!","message":"Thank you for registering for the College Recruitment Program. We will be in touch with you soon."},
 {"id":"5","student":"6","auto":"1","sender":null,"send_date":"2024-01-16 15:34:21","subject":"Thank you Emily, for registering!","message":"Thank you for registering for the College Recruitment Program. We will be in touch with you soon."},
@@ -408,7 +433,7 @@
 {"id":"24","student":null,"auto":"1","sender":null,"send_date":"2024-02-05 18:36:03","subject":"Thank you Patrick, for registering!","message":"Thank you for registering for the College Recruitment Program. We will be in touch with you soon."}
 ]
 }
-,{"type":"table","name":"degree_lvl","database":"talentflow","data":
+,{"type":"table","name":"degree_lvl","database":"capstone","data":
 [
 {"id":"1","name":"AA - Associate of Arts","created_at":"2023-10-18 13:01:38","updated_at":"2023-10-18 13:01:38","created_by":"1","updated_by":"1"},
 {"id":"2","name":"AAA - Associate of Applied Arts","created_at":"2023-10-18 13:01:38","updated_at":"2023-10-18 13:01:38","created_by":"1","updated_by":"1"},
@@ -422,7 +447,7 @@
 {"id":"11","name":"BS - Bachelor of Science","created_at":"2023-12-15 16:14:29","updated_at":"2023-12-15 16:14:29","created_by":"1","updated_by":"1"}
 ]
 }
-,{"type":"table","name":"event","database":"talentflow","data":
+,{"type":"table","name":"event","database":"capstone","data":
 [
 {"id":"1","name":"WGU Job Faire","event_date":"2024-03-15","created_at":"2023-10-19 14:04:31","updated_at":"2024-01-15 15:39:02","updated_by":"1","created_by":"1","location":"1"},
 {"id":"2","name":"UNCC Charlotte","event_date":"2024-02-29","created_at":"2023-10-24 13:49:33","updated_at":"2024-01-05 10:21:13","updated_by":"1","created_by":"1","location":"2"},
@@ -436,14 +461,14 @@
 {"id":"10","name":"RCCC - Community Recruitment Event","event_date":"2024-08-21","created_at":"2024-01-16 15:25:21","updated_at":"2024-01-16 10:30:18","updated_by":"1","created_by":"1","location":"4"}
 ]
 }
-,{"type":"table","name":"event_branding","database":"talentflow","data":
+,{"type":"table","name":"event_branding","database":"capstone","data":
 [
 {"id":"2","event_id":"1","event_logo":"20","event_banner":"19"},
 {"id":"3","event_id":"2","event_logo":"20","event_banner":"19"},
 {"id":"4","event_id":"5","event_logo":"20","event_banner":"19"}
 ]
 }
-,{"type":"table","name":"event_slugs","database":"talentflow","data":
+,{"type":"table","name":"event_slugs","database":"capstone","data":
 [
 {"id":"1","event_id":"1","slug":"wgu-job-faire"},
 {"id":"2","event_id":"2","slug":"uncc-charlotte"},
@@ -457,13 +482,13 @@
 {"id":"13","event_id":"10","slug":"rccc---community-recruitm"}
 ]
 }
-,{"type":"table","name":"jobs","database":"talentflow","data":
+,{"type":"table","name":"jobs","database":"capstone","data":
 [
 {"id":"4","name":"Intern","description":"<p><strong>[Intro paragraph] <\/strong>The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers and set yourself apart from competing job listings.<\/p><p><strong>Intern Job Responsibilities:<\/strong><\/p><ul><li>Understands the overall concept of the company, including the brand, customer, product goals, and all other aspects of service.<\/li><li>Rotates through our divisions of responsibility and provides ideas to grow and improve the business.<\/li><li>Accepts designated, business-focus projects to research, propose ideas and solutions, and present final project during the internship.<\/li><li>Engages with customers or clients and provides service and\/or sales.<\/li><li>Provide suggestions to management for improving customer service and internal processes.<\/li><li>Learns and becomes proficient on internal software systems.<\/li><li>Assists in creating performance reports.<\/li><\/ul><p><strong>[Work Hours &amp; Benefits]<\/strong> It’s always a good idea to highlight the <strong>working hours and benefits <\/strong>specific to your business. Potential interns want to learn things like team size, mentor-to-intern ratios, and weekly hour requirements. You can also highlight any of the benefits that set you apart, like contact with upper management or school credits.<\/p>","summary":"The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers.","type":"INTERN","field":"2","education":"4","skills":"[\"Communication\", \"Problem solving skills\", \"Analysis\", \"Adaptability\", \"Computer skills\", \"Initiative\", \"Critical thinking\", \"Time management\", \"Collaboration\", \"Planning and prioritizing\", \"Teamwork\", \"Work ethic\", \"Customer service\", \"Interpersonal\", \"Networking\", \"Passionate\", \"Punctuality\", \"Scripting\"]","created_at":"2024-01-29 09:38:56","updated_at":"2024-01-29 14:38:56","created_by":"1","updated_by":"1"},
 {"id":"5","name":"Intern","description":"<p><strong>[Intro paragraph] <\/strong>The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers and set yourself apart from competing job listings.<\/p><p><strong>Intern Job Responsibilities:<\/strong><\/p><ul><li>Understands the overall concept of the company, including the brand, customer, product goals, and all other aspects of service.<\/li><li>Rotates through our divisions of responsibility and provides ideas to grow and improve the business.<\/li><li>Accepts designated, business-focus projects to research, propose ideas and solutions, and present final project during the internship.<\/li><li>Engages with customers or clients and provides service and\/or sales.<\/li><li>Provide suggestions to management for improving customer service and internal processes.<\/li><li>Learns and becomes proficient on internal software systems.<\/li><li>Assists in creating performance reports.<\/li><\/ul><p><strong>[Work Hours &amp; Benefits]<\/strong> It’s always a good idea to highlight the <strong>working hours and benefits <\/strong>specific to your business. Potential interns want to learn things like team size, mentor-to-intern ratios, and weekly hour requirements. You can also highlight any of the benefits that set you apart, like contact with upper management or school credits.<\/p>","summary":"The best job descriptions provide 2-3 sentences that will introduce the prospective interns to your company culture and working environment. This is where you can sell your opening to job seekers.","type":"INTERN","field":"4","education":"11","skills":"[\"Communication\", \"Problem solving skills\", \"Adaptability\", \"Computer skills\", \"Initiative\", \"Critical thinking\", \"Time management\", \"Collaboration\", \"Planning and prioritizing\", \"Teamwork\", \"Work ethic\", \"Customer service\", \"Passionate\", \"Punctuality\"]","created_at":"2024-01-29 09:38:56","updated_at":"2024-01-29 14:38:56","created_by":"1","updated_by":"1"}
 ]
 }
-,{"type":"table","name":"major","database":"talentflow","data":
+,{"type":"table","name":"major","database":"capstone","data":
 [
 {"id":"1","name":"Software Development","created_at":"2023-10-18 13:07:54","updated_at":"2023-10-18 13:07:54","created_by":"1","updated_by":"1"},
 {"id":"2","name":"Business Administration","created_at":"2023-10-18 13:08:11","updated_at":"2023-10-18 13:08:11","created_by":"1","updated_by":"1"},
@@ -475,7 +500,7 @@
 {"id":"10","name":"Economics","created_at":"2024-01-16 15:47:01","updated_at":"2024-01-16 15:47:01","created_by":null,"updated_by":null}
 ]
 }
-,{"type":"table","name":"media","database":"talentflow","data":
+,{"type":"table","name":"media","database":"capstone","data":
 [
 {"id":"19","filename":"placeholderbanner_1920x400.png","filetype":"png","filesize":"29410","created_at":"2024-01-24 18:20:09","created_by":"1","updated_at":"2024-01-24 13:50:58","updated_by":"1"},
 {"id":"20","filename":"placeholderlogo_200x200.png","filetype":"png","filesize":"2835","created_at":"2024-01-24 20:31:24","created_by":"1","updated_at":"2024-01-24 15:31:41","updated_by":"1"},
@@ -485,7 +510,7 @@
 {"id":"24","filename":"TalentFlow-Logo.svg","filetype":"svg","filesize":"2230","created_at":"2024-02-09 15:00:28","created_by":"1","updated_at":"2024-02-09 15:00:28","updated_by":"1"}
 ]
 }
-,{"type":"table","name":"permissions","database":"talentflow","data":
+,{"type":"table","name":"permissions","database":"capstone","data":
 [
 {"id":"40","name":"CAN EXPORT"},
 {"id":"54","name":"CONTACT STUDENT"},
@@ -551,7 +576,7 @@
 {"id":"37","name":"VIEW DASHBOARD"}
 ]
 }
-,{"type":"table","name":"reports","database":"talentflow","data":
+,{"type":"table","name":"reports","database":"capstone","data":
 [
 {"id":"1","report_type":"Top Degree by School","data":"[{\"major\": \"Accounting\", \"degree\": \"AA - Associate of Arts\", \"school\": \"Rowan-Cabarrus Community College - RCCC\", \"student_count\": 2}, {\"major\": \"Software Development\", \"degree\": \"BScIT - Bachelor of Science in Information Technology\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Business Administration\", \"degree\": \"BA - Bachelor of Arts\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"AAS - Associate of Applied Science\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1}]","created_by":"1","created_at":"2023-12-19 19:36:04","updated_by":"1","updated_at":"2023-12-19 19:36:04"},
 {"id":"2","report_type":"Top Degree by School","data":"[{\"major\": \"Accounting\", \"degree\": \"AA - Associate of Arts\", \"school\": \"Rowan-Cabarrus Community College - RCCC\", \"student_count\": 2}, {\"major\": \"Software Development\", \"degree\": \"BScIT - Bachelor of Science in Information Technology\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Business Administration\", \"degree\": \"BA - Bachelor of Arts\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"AAS - Associate of Applied Science\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1}]","created_by":"1","created_at":"2023-12-19 19:41:49","updated_by":"1","updated_at":"2023-12-19 19:41:49"},
@@ -615,7 +640,7 @@
 {"id":"67","report_type":"Contact Follow-Up Percentage","data":"[{\"total\": 18, \"percentage\": \"61.11111\", \"top_sending_user\": \"admin\"}]","created_by":"1","created_at":"2024-02-05 05:02:59","updated_by":"1","updated_at":"2024-02-05 05:02:59"}
 ]
 }
-,{"type":"table","name":"roles","database":"talentflow","data":
+,{"type":"table","name":"roles","database":"capstone","data":
 [
 {"id":"1","name":"Admin","created_by":"1","created_at":"2023-12-22 09:42:47","updated_by":"1","updated_at":"2023-12-22 09:43:10"},
 {"id":"2","name":"Guest","created_by":"1","created_at":"2023-12-22 09:42:47","updated_by":"1","updated_at":"2023-12-22 09:43:15"},
@@ -624,7 +649,7 @@
 {"id":"11","name":"standard user","created_by":"1","created_at":"2023-12-22 18:44:27","updated_by":"1","updated_at":"2023-12-22 18:44:27"}
 ]
 }
-,{"type":"table","name":"role_has_permission","database":"talentflow","data":
+,{"type":"table","name":"role_has_permission","database":"capstone","data":
 [
 {"id":"1","role_id":"1","permission_id":"1","created_at":"2023-10-12 14:08:00","created_by":"1","updated_at":"2023-12-22 09:39:18","updated_by":"1"},
 {"id":"2","role_id":"1","permission_id":"3","created_at":"2023-10-12 14:08:00","created_by":"1","updated_at":"2023-12-22 09:39:24","updated_by":"1"},
@@ -782,7 +807,7 @@
 {"id":"158","role_id":"3","permission_id":"62","created_at":"2024-01-23 14:05:31","created_by":"1","updated_at":"2024-01-23 14:05:31","updated_by":"1"}
 ]
 }
-,{"type":"table","name":"school","database":"talentflow","data":
+,{"type":"table","name":"school","database":"capstone","data":
 [
 {"id":"1","name":"Western Governor&#039;s University - WGU","address":"4001 700 East","city":"Millcreek","state":"UT","zipcode":"84107","created_by":"1","updated_by":"1","created_at":"2023-11-09 15:28:23","updated_at":"2024-01-24 20:32:11"},
 {"id":"2","name":"University of North Carolina at Charlotte - UNCC","address":"9201 University City Blvd","city":"Charlotte","state":"NC","zipcode":"28223","created_by":"1","updated_by":"1","created_at":"2023-10-24 13:47:54","updated_at":"2024-01-24 20:32:38"},
@@ -802,7 +827,7 @@
 {"id":"16","name":"Wake Forest University","address":"1834 Wake Forest Road","city":"Winston-Salem","state":"NC","zipcode":"27109","created_by":"1","updated_by":"1","created_at":"2024-01-16 15:06:30","updated_at":"2024-01-24 20:36:27"}
 ]
 }
-,{"type":"table","name":"school_branding","database":"talentflow","data":
+,{"type":"table","name":"school_branding","database":"capstone","data":
 [
 {"id":"1","school_id":"1","school_logo":"20","school_color":"#003057"},
 {"id":"2","school_id":"3","school_logo":"20","school_color":"#ffd200"},
@@ -822,12 +847,12 @@
 {"id":"16","school_id":"16","school_logo":"20","school_color":"#8c6d2c"}
 ]
 }
-,{"type":"table","name":"settings","database":"talentflow","data":
+,{"type":"table","name":"settings","database":"capstone","data":
 [
-{"isSet":"SET","app_name":"TalentFlow","app_url":null,"company_name":"Pipe and Foundry Company","company_url":"https:\/\/www.pipecompany.example","company_logo":"23","company_address":"1234 Main St","company_city":"Anyplace","company_state":"NC","company_zip":"123456","company_phone":"123-456-1234","app_logo":"24","contact_email":"contact@talentflow.email","mail_from_address":null,"mail_from_name":null,"mail_mailer":null,"mail_host":null,"mail_port":null,"mail_auth_req":null,"mail_username":null,"mail_password":null,"mail_encryption":null,"privacy_policy":"<h2>Test Header<\/h2><p>test paragraph<\/p><blockquote><p>test quote<\/p><\/blockquote><ul><li>test list item 1<\/li><li>test list item 2<\/li><\/ul>","terms_conditions":"<h2>Test Header<\/h2><p>test paragraph<\/p><blockquote><p>test quote<\/p><\/blockquote><ul><li>test list item 1<\/li><li>test list item 2<\/li><\/ul>"}
+{"isSet":"SET","app_name":"TalentFlow","app_url":null,"company_name":"Pipe and Foundry Company","company_url":"https:\/\/www.pipecompany.example","company_logo":"23","company_address":"1234 Main St","company_city":"Anyplace","company_state":"NC","company_zip":"123456","company_phone":"123-456-1234","app_logo":"24","contact_email":"contact@talentflow.email","mail_from_address":null,"mail_from_name":null,"mail_mailer":null,"mail_host":null,"mail_port":null,"mail_auth_req":null,"mail_username":null,"mail_password":null,"mail_encryption":null,"privacy_policy":"<h2>Test Header<\/h2><p>test paragraph<\/p><blockquote><p>test quote<\/p><\/blockquote><ul><li>test list item 1<\/li><li>test list item 2<\/li><\/ul>","terms_conditions":"<h2>Test Header<\/h2><p>test paragraph<\/p><blockquote><p>test quote<\/p><\/blockquote><ul><li>test list item 1<\/li><li>test list item 2<\/li><\/ul>","hotjar_enable":"0","hotjar_siteid":"3867800","hotjar_version":"6","ga_enable":null,"google_analytics":null}
 ]
 }
-,{"type":"table","name":"student","database":"talentflow","data":
+,{"type":"table","name":"student","database":"capstone","data":
 [
 {"id":"5","first_name":"Sam","last_name":"Smith","email":"ssmith@example.com","phone":"223-432-5454","address":"2221 Devon Dr","city":"Dallas","state":"NC","zipcode":"28034","interest":"1","degree":"11","major":"6","school":"2","position":"FULL","graduation":"2023-12-31","created_at":"2023-12-15 20:02:37","updated_at":"2023-12-15 20:02:37"},
 {"id":"6","first_name":"Emily","last_name":"Johnson","email":"emily.johnson@email.com","phone":"(555) 123-4567","address":"123 College Avenue","city":"Durham","state":"NC","zipcode":"27708","interest":"1","degree":"11","major":"6","school":"13","position":"FULL","graduation":"2025-05-31","created_at":"2024-01-16 15:34:21","updated_at":"2024-01-16 15:34:21"},
@@ -837,7 +862,7 @@
 {"id":"10","first_name":"Michael","last_name":"Miller","email":"michael.miller@email.com","phone":"(555) 456-7890","address":"101 Blue Ridge Road","city":"Durham","state":"NC","zipcode":"27708","interest":"1","degree":"11","major":"6","school":"13","position":"FULL","graduation":"2024-05-31","created_at":"2024-01-16 15:48:33","updated_at":"2024-01-16 15:48:33"}
 ]
 }
-,{"type":"table","name":"student_at_event","database":"talentflow","data":
+,{"type":"table","name":"student_at_event","database":"capstone","data":
 [
 {"id":"3","student_id":"6","event_id":"8"},
 {"id":"4","student_id":"8","event_id":"5"},
@@ -845,19 +870,19 @@
 {"id":"6","student_id":"10","event_id":"8"}
 ]
 }
-,{"type":"table","name":"users","database":"talentflow","data":
+,{"type":"table","name":"users","database":"capstone","data":
 [
-{"id":"1","username":"admin","email":"admin@capstone.hostedprojects.net","password":"$2y$10$54\/SM02sd2HOoui0sVxbzeUzwRDPpxUKgvQQsdOAc2i.3Yay8Gnd.","created_at":"2023-10-12 14:34:47","created_by":null,"updated_at":"2024-01-10 20:14:19","updated_by":"1"},
+{"id":"1","username":"admin","email":"admin@capstone.hostedprojects.net","password":"$2y$10$bueKn7DZtN7mNMa6vkVKNegMbjdceXmFR.KI\/.xjgU8pHBjXo\/g2S","created_at":"2023-10-12 14:34:47","created_by":null,"updated_at":"2024-02-15 19:09:57","updated_by":"1"},
 {"id":"2","username":"test","email":"test@email.com","password":"$2y$10$aTrqh2Bjt0Zj0b3L706NpuMCBnnhALLrdy8Ba1XCCWaNvyhPJIfQy","created_at":"2024-01-16 21:29:03","created_by":"1","updated_at":"2024-01-16 21:29:03","updated_by":"1"}
 ]
 }
-,{"type":"table","name":"user_has_role","database":"talentflow","data":
+,{"type":"table","name":"user_has_role","database":"capstone","data":
 [
 {"id":"7","user_id":"1","role_id":"3","created_at":"2024-01-10 20:14:19","created_by":null,"updated_at":"2024-01-10 20:14:19","updated_by":null},
 {"id":"8","user_id":"2","role_id":"11","created_at":"2024-01-16 21:29:03","created_by":null,"updated_at":"2024-01-16 21:29:03","updated_by":null}
 ]
 }
-,{"type":"table","name":"user_token_auth","database":"talentflow","data":
+,{"type":"table","name":"user_token_auth","database":"capstone","data":
 [
 {"id":"1","user_id":"1","user_name":"admin","password_hash":"$2y$10$mTEfMXuOKoix.YGz2uVPSuIxXJ\/jyCpdM3tifpycUy9sSi8suld76","selector_hash":"$2y$10$TzwL8obqyt3uhOBBNE6PBerRpDA1m7sa0Wq56w6ks.5DwHfiKigZm","is_expired":"1","expiry_date":"2023-11-22 12:41:56"},
 {"id":"2","user_id":"1","user_name":"admin","password_hash":"$2y$10$MsbF1YERJOqcJtYab.z.yOX4sbw7g4fPiZxSgwpQkB6kYbjNB8El2","selector_hash":"$2y$10$UpEOAReFyZ4\/Ap3hKUnQS.sOzvrbcWhKwbPwKGjyyWBbJjn6E70FW","is_expired":"1","expiry_date":"2023-12-15 11:12:06"},

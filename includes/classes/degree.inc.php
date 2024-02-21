@@ -410,18 +410,29 @@ class Degree extends Grade implements Major
         //initialize an empty string to store the degree level name
         $grade_name = "";
 
-        //prepare the query
-        $stmt = $this->mysqli->prepare("SELECT name FROM degree_lvl WHERE id = ?");
+        //create the sql statement
+        $sql = "SELECT name FROM degree_lvl WHERE id = ?";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
         //bind the parameters
         $stmt->bind_param('i', $lvl_id);
+
         //execute the query
         $stmt->execute();
+
         //get the result
         $result = $stmt->get_result();
-        //there should only be one result, so get the first item in the array
-        $row = $result->fetch_assoc();
-        //set the degree level name
-        $grade_name = $row['name'];
+
+        //check if the query returned any results
+        if ($result->num_rows > 0) {
+            //loop through the results
+            while ($row = $result->fetch_assoc()) {
+                //set the degree level name
+                $grade_name = $row['name'];
+            }
+        }
 
         //return the string
         return $grade_name;
@@ -437,18 +448,29 @@ class Degree extends Grade implements Major
         //initialize an empty string to store the major name
         $major_name = "";
 
-        //prepare the query
-        $stmt = $this->mysqli->prepare("SELECT name FROM major WHERE id = ?");
+        //create the sql statement
+        $sql = "SELECT name FROM major WHERE id = ?";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
         //bind the parameters
         $stmt->bind_param('i', $major_id);
+
         //execute the query
         $stmt->execute();
+
         //get the result
         $result = $stmt->get_result();
-        //there should only be one result, so get the first item in the array
-        $row = $result->fetch_assoc();
-        //set the major name
-        $major_name = $row['name'];
+
+        //check if the query returned any results
+        if ($result->num_rows > 0) {
+            //loop through the results
+            while ($row = $result->fetch_assoc()) {
+                //set the major name
+                $major_name = $row['name'];
+            }
+        }
 
         //return the string
         return $major_name;
@@ -763,54 +785,6 @@ class Degree extends Grade implements Major
     }
 
     /**
-     * Get the total number of degree levels in the database
-     * @return int
-     */
-    public function getGradesCount(): int
-    {
-        //prepare sql statement
-        $sql = "SELECT COUNT(*) FROM degree_lvl";
-        //execute the query
-        $result = $this->mysqli->query($sql);
-        //initialize a variable to store the count
-        $count = 0;
-        //check if the query returned any results
-        if ($result->num_rows > 0) {
-            //loop through the results
-            while ($row = $result->fetch_assoc()) {
-                //set the count
-                $count = $row['COUNT(*)'];
-            }
-        }
-        //return the count
-        return $count;
-    }
-
-    /**
-     * Get the total number of majors in the database
-     * @return int
-     */
-    public function getMajorCount(): int
-    {
-        //prepare sql statement
-        $sql = "SELECT COUNT(*) FROM major";
-        //execute the query
-        $result = $this->mysqli->query($sql);
-        //initialize a variable to store the count
-        $count = 0;
-        //check if the query returned any results
-        if ($result->num_rows > 0) {
-            //loop through the results
-            while ($row = $result->fetch_assoc()) {
-                //set the count
-                $count = $row['COUNT(*)'];
-            }
-        }
-        //return the count
-        return $count;
-    }
-
-    /**
      * Check if a degree level exists in the database by id
      *
      * @param int $lvl_id //id from the degree levels table
@@ -952,27 +926,6 @@ class Degree extends Grade implements Major
             //return false if unsuccessful
             return false;
         }
-    }
-
-    /**
-     * Get the degree program for a student
-     *
-     * @param int $students_degreeId //id from the students table
-     * @param int $students_majorId //id from the students table
-     * @return string
-     */
-    public function getDegreeProgram(int $students_degreeId, int $students_majorId): string
-    {
-        //initialize an empty string to store the degree program
-        $degree_program = "";
-        //get the degree level and major
-        $major = $this->getMajorNameById($students_majorId);
-        $degree = $this->getGradeNameById($students_degreeId);
-        //format the string
-        $degree_program = $degree . ", " . $major;
-
-        //return the string
-        return $degree_program;
     }
 
     /**

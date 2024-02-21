@@ -80,6 +80,8 @@ if (!isset($hasViewDashboardPermission)) {
                                                     /* Setup datatable of students */
                                                     //include the student class
                                                     $studentsData = new Student();
+                                                    //include the student education class
+                                                    $studentEducation = new StudentEducation();
                                                     //include the school class
                                                     $schoolsData = new School();
                                                     //include the degree class
@@ -95,6 +97,8 @@ if (!isset($hasViewDashboardPermission)) {
                                                         return $b['send_date'] <=> $a['send_date'];
                                                     });
                                                     foreach ($contactLogArray as $entry) {
+                                                        //debug
+                                                        error_log("contact log entry: " . print_r($entry, true));
                                                         //get the student id
                                                         $studentId = intval($entry['student']);
                                                         //get the student email
@@ -102,13 +106,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                         //get the student name
                                                         $studentName = $studentsData->getStudentFullName($studentId);
                                                         //get the school id from the student id
-                                                        $schoolId = $studentsData->getStudentSchool($studentId);
+                                                        $schoolId = $studentEducation->getStudentSchool($studentId);
                                                         //get the school name
                                                         $schoolName = $schoolsData->getSchoolName($schoolId);
                                                         //get the degree id from the student id
-                                                        $degreeId = $studentsData->getStudentDegree($studentId);
+                                                        $degreeId = $studentEducation->getStudentDegree($studentId);
                                                         //get the degree name
-                                                        $degreeName = $studentsData->getStudentDegree($studentId);
+                                                        $degreeName = $studentEducation->getStudentDegree($studentId);
                                                         //get the sending user id
                                                         $sendingUserId = $entry['sender'];
                                                         //get the sending user name, if the sending user is not null

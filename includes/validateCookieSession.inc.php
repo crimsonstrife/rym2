@@ -48,36 +48,46 @@ if (!empty($_SESSION["user_id"])) {
     //Get authentication token
     $auth_token = $auth->getAuthenticationToken(intval($_COOKIE["user_id"]), $_COOKIE["user_name"], 0);
 
-    //user ID cookie verification
-    if (!empty($auth_token[0]["user_id"]) && hash_equals($_COOKIE["user_id"], strval($auth_token[0]["user_id"]))) {
-        $user_id_verified = true;
-    }
+    //check if the authentication token is not empty
+    if (!empty($auth_token) || $auth_token != null) {
+        //is auth_token an array?
+        if (is_array($auth_token)) {
+            //user ID cookie verification
+            if (!empty($auth_token[0]["user_id"]) && hash_equals($_COOKIE["user_id"], strval($auth_token[0]["user_id"]))) {
+                $user_id_verified = true;
+            }
 
-    //password cookie verification
-    if (password_verify($_COOKIE["user_password"], strval($auth_token[0]["password_hash"]) ?? '')) {
-        $user_password_verified = true;
-    }
+            //password cookie verification
+            if (password_verify($_COOKIE["user_password"], strval($auth_token[0]["password_hash"]) ?? '')) {
+                $user_password_verified = true;
+            }
 
-    //password selector cookie verification
-    if (hash_equals($_COOKIE["user_password_selector"], strval($auth_token[0]["password_hash"]) ?? '')) {
-        $user_password_selector_verified = true;
-    }
+            //password selector cookie verification
+            if (hash_equals($_COOKIE["user_password_selector"], strval($auth_token[0]["password_hash"]) ?? '')) {
+                $user_password_selector_verified = true;
+            }
 
-    //session expiry verification
-    if ($auth_token[0]["expiry_date"] >= $current_date) {
-        $session_expiry_verified = true;
-    }
+            //session expiry verification
+            if ($auth_token[0]["expiry_date"] >= $current_date) {
+                $session_expiry_verified = true;
+            }
 
-    //if all the verification variables are true, redirect. Else, expire the token and clear the cookies
-    if ($user_id_verified && $user_password_verified && $user_password_selector_verified && $session_expiry_verified) {
-        //set the logged in boolean to true
-        $logged_in = true;
-    } else {
-        if (!empty($auth_token[0]["id"])) {
-            //expire the token
-            $auth->expireToken($auth_token[0]["id"]);
+            //if all the verification variables are true, redirect. Else, expire the token and clear the cookies
+            if ($user_id_verified && $user_password_verified && $user_password_selector_verified && $session_expiry_verified) {
+                //set the logged in boolean to true
+                $logged_in = true;
+            } else {
+                if (!empty($auth_token[0]["id"])) {
+                    //expire the token
+                    $auth->expireToken($auth_token[0]["id"]);
+                }
+                //clear the cookies
+                clearCookies();
+            }
+        } else {
+            //auth_token is not an array, should be a boolean of false indicating no token was found
+            //clear the cookies
+            clearCookies();
         }
-        //clear the cookies
-        clearCookies();
     }
 }
