@@ -253,6 +253,29 @@ function getImageDimensions(string $imagePath): array
     return $imageDimensions;
 }
 
+    /**
+     * Get the degree program for a student
+     *
+     * @param int $students_degreeId //id from the students table
+     * @param int $students_majorId //id from the students table
+     * @return string
+     */
+    function getDegreeProgram(int $students_degreeId, int $students_majorId): string
+    {
+        //instance of the Degree class
+        $degreeClass = new Degree();
+        //initialize an empty string to store the degree program
+        $degree_program = "";
+        //get the degree level and major
+        $major = $degreeClass->getMajorNameById($students_majorId);
+        $degree = $degreeClass->getGradeNameById($students_degreeId);
+        //format the string
+        $degree_program = $degree . ", " . $major;
+
+        //return the string
+        return $degree_program;
+    }
+
 //redirect user
 function redirectUser($location)
 {

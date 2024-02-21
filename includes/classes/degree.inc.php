@@ -785,54 +785,6 @@ class Degree extends Grade implements Major
     }
 
     /**
-     * Get the total number of degree levels in the database
-     * @return int
-     */
-    public function getGradesCount(): int
-    {
-        //prepare sql statement
-        $sql = "SELECT COUNT(*) FROM degree_lvl";
-        //execute the query
-        $result = $this->mysqli->query($sql);
-        //initialize a variable to store the count
-        $count = 0;
-        //check if the query returned any results
-        if ($result->num_rows > 0) {
-            //loop through the results
-            while ($row = $result->fetch_assoc()) {
-                //set the count
-                $count = $row['COUNT(*)'];
-            }
-        }
-        //return the count
-        return $count;
-    }
-
-    /**
-     * Get the total number of majors in the database
-     * @return int
-     */
-    public function getMajorCount(): int
-    {
-        //prepare sql statement
-        $sql = "SELECT COUNT(*) FROM major";
-        //execute the query
-        $result = $this->mysqli->query($sql);
-        //initialize a variable to store the count
-        $count = 0;
-        //check if the query returned any results
-        if ($result->num_rows > 0) {
-            //loop through the results
-            while ($row = $result->fetch_assoc()) {
-                //set the count
-                $count = $row['COUNT(*)'];
-            }
-        }
-        //return the count
-        return $count;
-    }
-
-    /**
      * Check if a degree level exists in the database by id
      *
      * @param int $lvl_id //id from the degree levels table
@@ -974,27 +926,6 @@ class Degree extends Grade implements Major
             //return false if unsuccessful
             return false;
         }
-    }
-
-    /**
-     * Get the degree program for a student
-     *
-     * @param int $students_degreeId //id from the students table
-     * @param int $students_majorId //id from the students table
-     * @return string
-     */
-    public function getDegreeProgram(int $students_degreeId, int $students_majorId): string
-    {
-        //initialize an empty string to store the degree program
-        $degree_program = "";
-        //get the degree level and major
-        $major = $this->getMajorNameById($students_majorId);
-        $degree = $this->getGradeNameById($students_degreeId);
-        //format the string
-        $degree_program = $degree . ", " . $major;
-
-        //return the string
-        return $degree_program;
     }
 
     /**
