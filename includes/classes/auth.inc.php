@@ -221,6 +221,9 @@ class Authenticator extends User
      */
     public function validateUserByUsername(string $username): bool
     {
+        //placeholder for the user ID
+        $user_id = null;
+
         //try to get the user ID by username
         try {
             $user_id = $this->getUserIdByUsername($username);
@@ -240,6 +243,9 @@ class Authenticator extends User
     //User exists by email
     public function validateUserByEmail(string $email): bool
     {
+        //placeholder for the user ID
+        $user_id = null;
+
         //try to get the user ID by email
         try {
             $user_id = $this->getUserByEmail($email);
@@ -250,6 +256,33 @@ class Authenticator extends User
 
         //if the user ID exists, and is not null, or 0, return true
         if ($user_id && $user_id != null && $user_id != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Validate a role exists by ID
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function validateRoleById(int $id): bool
+    {
+        //reference the role class
+        $roleClass = new Roles();
+
+        //try to get the role by ID
+        try {
+            $role = $roleClass->getRoleById($id);
+        } catch (Exception $e) {
+            //log the error
+            error_log('Error: ' . $e->getMessage());
+        }
+
+        //if the role exists (ie the array is not empty), return true
+        if ($role && !empty($role)) {
             return true;
         } else {
             return false;

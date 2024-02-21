@@ -45,6 +45,15 @@ if (!$hasPermission) {
     //events class
     $eventsData = new Event();
 
+    //student event class
+    $studentEvent = new StudentEvent();
+
+    //student address class
+    $studentAddress = new StudentAddress();
+
+    //student education class
+    $studentEducation = new StudentEducation();
+
     //contact class
     $contact = new Contact();
 
@@ -159,10 +168,10 @@ if (!$hasPermission) {
                                 <strong>Address:</strong>
                                 <?php
                                         //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
-                                        $street = $student->getStudentAddress($student_id);
-                                        $city = $student->getStudentCity($student_id);
-                                        $state = $student->getStudentState($student_id);
-                                        $zip = $student->getStudentZip($student_id);
+                                        $street = $studentAddress->getStudentAddress($student_id);
+                                        $city = $studentAddress->getStudentCity($student_id);
+                                        $state = $studentAddress->getStudentState($student_id);
+                                        $zip = $studentAddress->getStudentZip($student_id);
                                         $address = formatAddress($street, $city, $state, $zip);
                                         $address = urlencode($address);
                                         ?>
@@ -179,15 +188,15 @@ if (!$hasPermission) {
                             </p>
                             <p>
                                 <strong>Degree:</strong>
-                                <?php echo $student->getStudentDegree($student_id); ?>
+                                <?php echo $studentEducation->getStudentDegree($student_id); ?>
                             </p>
                             <p>
                                 <strong>Graduation Date:</strong>
-                                <?php echo formatDate($student->getStudentGraduation($student_id)); ?>
+                                <?php echo formatDate($studentEducation->getStudentGraduation($student_id)); ?>
                             </p>
                             <p>
                                 <strong>School:</strong>
-                                <?php echo $schoolsData->getSchoolName($student->getStudentSchool($student_id)); ?>
+                                <?php echo $schoolsData->getSchoolName($studentEducation->getStudentSchool($student_id)); ?>
                             </p>
                         </div>
                     </div>
@@ -206,7 +215,7 @@ if (!$hasPermission) {
                         <div id="info" class="">
                             <?php
                                         //get the events the student has attended
-                                        $events = $student->getStudentEventAttendace($student_id);
+                                        $events = $studentEvent->getStudentEventAttendace($student_id);
                                         //if there are events, display them
                                         if ($events) {
                                             foreach ($events as $event) {

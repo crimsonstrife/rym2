@@ -41,6 +41,9 @@ if (!$hasPermission) {
     //event class
     $event = new Event();
 
+    //student event class
+    $studentEvent = new StudentEvent();
+
     // Processing form data when form is submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //get the action from the url parameter
@@ -61,7 +64,7 @@ if (!$hasPermission) {
         $canDelete = true;
 
         //check if there are any students associated with the event in the student table
-        $studentsAtEvent = $student->getStudentEventAttendace($event_id);
+        $studentsAtEvent = $studentEvent->getStudentEventAttendace($event_id);
 
         //if there are more than 0 records in the array, the event cannot be deleted so set the canDelete boolean to false
         if (count($studentsAtEvent) > 0) {

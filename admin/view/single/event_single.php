@@ -29,8 +29,17 @@ $user = new User();
 //student class
 $student = new Student();
 
+//student event class
+$studentEvent = new StudentEvent();
+
+//student education class
+$studentEducation = new StudentEducation();
+
 //media class
 $media = new Media();
+
+//event media class
+$eventMedia = new EventMedia();
 
 /*confirm user has a role with read event permissions*/
 //get the id of the read event permission
@@ -183,14 +192,14 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
                             <div class="thumbnail-container"
                                 style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($event->getEventLogo($event_id)); ?>"
+                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($eventMedia->getEventLogo($event_id)); ?>"
                                     alt="Event Logo Image">
                             </div>
                             <p><strong>Event Banner:</strong></p>
                             <div class="thumbnail-container"
                                 style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($event->getEventBanner($event_id)); ?>"
+                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($eventMedia->getEventBanner($event_id)); ?>"
                                     alt="Event Banner Image">
                             </div>
                             <p><strong>School Logo:</strong></p>
@@ -212,7 +221,7 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
                             <!-- list of students that signed up at this event -->
                             <?php
                                     //get the list of students that signed up at this event, and display them. If there are none, display a message.
-                                    $students = $student->getStudentEventAttendace($event_id);
+                                    $students = $studentEvent->getStudentEventAttendace($event_id);
                                     ?>
                             <div class="card mb-4">
                                 <div class="card-body">
@@ -257,7 +266,7 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
                                                     </td>
                                                     <td><?php echo $student->getStudentEmail($eventStudent['student_id']); ?>
                                                     </td>
-                                                    <td><?php echo $student->getStudentDegree($eventStudent['student_id']); ?>
+                                                    <td><?php echo $studentEducation->getStudentDegree($eventStudent['student_id']); ?>
                                                     </td>
                                                 </tr>
                                                 <?php }

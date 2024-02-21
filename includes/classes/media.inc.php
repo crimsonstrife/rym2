@@ -665,11 +665,14 @@ class Media
         //include the event class
         $event = new Event();
 
+        //include the event media class
+        $eventMedia = new EventMedia();
+
         //get the ids of the schools that are using the media
         $schoolsArray = $school->getSchoolsByMediaID($media_id);
 
         //get the ids of the events that are using the media
-        $eventsArray = $event->getEventsByMediaID($media_id);
+        $eventsArray = $eventMedia->getEventsByMediaID($media_id);
 
         //if there are schools using the media, add the school ids to the media usage array
         if (count($schoolsArray) > 0) {
@@ -978,8 +981,14 @@ class Media
         //base path to the upload directory
         $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
 
+        //file path to the original file
+        $originalFile = $upload_path . $filename;
+
         //create an Imagick object
-        $image = new Imagick($upload_path . $filename);
+        $image = new Imagick();
+
+        //read the original file
+        $image->readImage($originalFile);
 
         //if the file type is SVG, do nothing
         if ($filetype != 'svg') {
@@ -989,6 +998,9 @@ class Media
                 $modalThumbnail->writeImage($upload_path . 'thumb_600_' . $filename);
                 $modalThumbnail->destroy();
             }
+
+            //read the original file, again
+            $image->readImage($originalFile);
 
             //resize and compress the image for list thumbnail
             $listThumbnail = $this->resizeAndCompressImage($image, $listMaxWidth, $listMaxHeight, $filetype);

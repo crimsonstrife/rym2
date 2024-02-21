@@ -196,13 +196,13 @@ $positionType_list = JOBTYPES;
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if the submit button was pressed
-    if (isset($_POST['submit'])) {
+    if (isset($_POST['submit_btn'])) {
         //set the entry error to false
         $entry_error = false;
 
         /* Validate and sanitize input */
         // Check if student_firstName is set
-        if (!isset($_POST["student_firstName"])) {
+        if (isset($_POST["student_firstName"])) {
             // Check if student_firstName is empty
             if (empty(trim($_POST["student_firstName"]))) {
                 $student_firstName_error = "Please enter your first name.";
@@ -210,9 +210,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $student_firstName = trim($_POST["student_firstName"]);
             }
+        } else {
+            $student_firstName_error = "Please enter your first name.";
+            $entry_error = true;
         }
+
         // Check if student_lastName is set
-        if (!isset($_POST["student_lastName"])) {
+        if (isset($_POST["student_lastName"])) {
             // Check if student_lastName is empty
             if (empty(trim($_POST["student_lastName"]))) {
                 $student_lastName_error = "Please enter your last name.";
@@ -220,9 +224,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $student_lastName = trim($_POST["student_lastName"]);
             }
+        } else {
+            $student_lastName_error = "Please enter your last name.";
+            $entry_error = true;
         }
+
         // Check if student_email is set
-        if (!isset($_POST["student_email"])) {
+        if (isset($_POST["student_email"])) {
             // Check if student_email is empty
             if (empty(trim($_POST["student_email"]))) {
                 $student_email_error = "Please enter your email.";
@@ -236,9 +244,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $entry_error = true;
                 }
             }
+        } else {
+            $student_email_error = "Please enter your email.";
+            $entry_error = true;
         }
+
         // Check if student_phone is set
-        if (!isset($_POST["student_phone"])) {
+        if (isset($_POST["student_phone"])) {
             // Check if student_phone is empty
             if (empty(trim($_POST["student_phone"]))) {
                 $student_phone_error = "Please enter your phone number.";
@@ -252,9 +264,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $entry_error = true;
                 }
             }
+        } else {
+            $student_phone_error = "Please enter your phone number.";
+            $entry_error = true;
         }
+
         // Check if student_address is set
-        if (!isset($_POST["student_address"])) {
+        if (isset($_POST["student_address"])) {
             // Check if student_address is empty
             if (empty(trim($_POST["student_address"]))) {
                 $student_address_error = "Please enter your address.";
@@ -262,9 +278,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $student_address = trim($_POST["student_address"]);
             }
+        } else {
+            $student_address_error = "Please enter your address.";
+            $entry_error = true;
         }
+
         // Check if student_city is set
-        if (!isset($_POST["student_city"])) {
+        if (isset($_POST["student_city"])) {
             // Check if student_city is empty
             if (empty(trim($_POST["student_city"]))) {
                 $student_city_error = "Please enter your city.";
@@ -272,9 +292,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $student_city = trim($_POST["student_city"]);
             }
+        } else {
+            $student_city_error = "Please enter your city.";
+            $entry_error = true;
         }
+
         // Check if student_state is set
-        if (!isset($_POST["student_state"])) {
+        if (isset($_POST["student_state"])) {
             // Check if student_state is empty
             if (empty(trim($_POST["student_state"]))) {
                 $student_state_error = "Please select your state.";
@@ -282,9 +306,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $student_state = trim($_POST["student_state"]);
             }
+        } else {
+            $student_state_error = "Please select your state.";
+            $entry_error = true;
         }
+
         // Check if student_zip is set
-        if (!isset($_POST["student_zip"])) {
+        if (isset($_POST["student_zip"])) {
             // Check if student_zip is empty
             if (empty(trim($_POST["student_zip"]))) {
                 $student_zip = "";
@@ -297,9 +325,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $entry_error = true;
                 }
             }
+        } else {
+            $student_zip_error = "Please enter your zip code.";
+            $entry_error = true;
         }
+
         // Check if student_degree is set
-        if (!isset($_POST["student_degree"])) {
+        if (isset($_POST["student_degree"])) {
             // Check if student_degree is empty
             if (empty(trim($_POST["student_degree"]))) {
                 $student_degree_error = "Please select your degree level.";
@@ -307,9 +339,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $student_degree = trim($_POST["student_degree"]);
             }
+        } else {
+            $student_degree_error = "Please select your degree level.";
+            $entry_error = true;
         }
+
         // Check if student_major is set
-        if (!isset($_POST["student_major"])) {
+        if (isset($_POST["student_major"])) {
             // Check if student_major is empty
             if (empty(trim($_POST["student_major"]))) {
                 $student_major_error = "Please select your major.";
@@ -317,9 +353,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $student_major = trim($_POST["student_major"]);
             }
+        } else {
+            $student_major_error = "Please select your major.";
+            $entry_error = true;
         }
+
         // Check if student_school is set
-        if (!isset($_POST["student_school"])) {
+        if (isset($_POST["student_school"])) {
             // Check if student_school is empty
             if (empty(trim($_POST["student_school"]))) {
                 $student_school_error = "Please select your school.";
@@ -327,9 +367,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $student_school = trim($_POST["student_school"]);
             }
+        } else {
+            $student_school_error = "Please select your school.";
+            $entry_error = true;
         }
+
         // Check if student_graduationDate is set
-        if (!isset($_POST["student_graduationDate"])) {
+        if (isset($_POST["student_graduationDate"])) {
             // Check if student_graduationDate is empty
             if (empty(trim($_POST["student_graduationDate"]))) {
                 $student_graduationDate_error = "Please enter your graduation date.";
@@ -349,9 +393,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $entry_error = true;
                 }
             }
+        } else {
+            $student_graduationDate_error = "Please enter your graduation date.";
+            $entry_error = true;
         }
+
         // Check if student_jobPosition is set
-        if (!isset($_POST["student_jobPosition"])) {
+        if (isset($_POST["student_jobPosition"])) {
             // Check if student_jobPosition is empty
             if (empty(trim($_POST["student_jobPosition"]))) {
                 $student_jobPosition_error = "Please select your preferred job type.";
@@ -359,9 +407,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $student_jobPosition = trim($_POST["student_jobPosition"]);
             }
+        } else {
+            $student_jobPosition_error = "Please select your preferred job type.";
+            $entry_error = true;
         }
+
         // Check if student_areaOfInterest is set
-        if (!isset($_POST["student_areaOfInterest"])) {
+        if (isset($_POST["student_areaOfInterest"])) {
             // Check if student_areaOfInterest is empty
             if (empty(trim($_POST["student_areaOfInterest"]))) {
                 $student_areaOfInterest_error = "Please select your area of interest.";
@@ -369,7 +421,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $student_areaOfInterest = trim($_POST["student_areaOfInterest"]);
             }
+        } else {
+            $student_areaOfInterest_error = "Please select your area of interest.";
+            $entry_error = true;
         }
+
         //check if there were any errors, and that the fields are not empty
         if ($entry_error == false && !empty($student_firstName) && !empty($student_lastName) && !empty($student_email) && !empty($student_phone) && !empty($student_address) && !empty($student_city) && !empty($student_state) && !empty($student_zip) && !empty($student_degree) && !empty($student_major) && !empty($student_school) && !empty($student_graduationDate) && !empty($student_jobPosition) && !empty($student_areaOfInterest)) {
             //initialize the student class
@@ -451,10 +507,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 //set the submission attempted variable to true
                 $attemptedStudentSubmission = true;
             } else {
-                //if the student does not exist, attempt to add the student
+                //create a new student education object
+                $newStudentEducation = new StudentEducation();
+
+                //set the student education object properties
+                $newStudentEducation->degree = intval($student_degree);
+                $newStudentEducation->major = intval($student_major);
+                $newStudentEducation->school = intval($student_school);
+                $newStudentEducation->graduation = $student_graduationDate;
+
+                //create a new student address object
+                $newStudentAddress = new StudentAddress();
+
+                //set the student address object properties
+                $newStudentAddress->address = $student_address;
+                $newStudentAddress->city = $student_city;
+                $newStudentAddress->state = $student_state;
+                $newStudentAddress->zipcode = $student_zip;
+
+                //create a new student data object
+                $newStudent = new StudentData();
+
+                //set the student object properties
+                $newStudent->first_name = $student_firstName;
+                $newStudent->last_name = $student_lastName;
+                $newStudent->email = $student_email;
+                $newStudent->phone = $student_phone;
+                $newStudent->studentAddress = $newStudentAddress;
+                $newStudent->studentEducation = $newStudentEducation;
+                $newStudent->position = $student_jobPosition;
+                $newStudent->interest = intval($student_areaOfInterest);
 
                 //add the student, check if the add was successful
-                if ($student->addStudent($student_firstName, $student_lastName, $student_email, $student_phone, $student_address, $student_city, $student_state, $student_zip, $student_degree, $student_major, $student_school, $student_graduationDate, $student_jobPosition, $student_areaOfInterest)) {
+                if ($student->addStudent($newStudent)) {
                     //if the add was successful, get the student id
                     $studentArray = $student->getStudentByEmail($student_email);
                     $student_id = $studentArray['id'];
@@ -467,10 +552,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if ($isEventPage) {
                         $student_event_id = (int) $event_id;
                         $student_id = (int) $student_id;
-                        //initialize the student class
-                        $studentObject = new Student();
+                        //initialize the student event class
+                        $studentEventObject = new StudentEvent();
                         //add the student to the event
-                        $studentObject->addStudentToEvent($student_event_id, $student_id);
+                        $studentEventObject->addStudentToEvent($student_event_id, $student_id);
                     }
 
                     //Setup the email

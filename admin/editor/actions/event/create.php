@@ -17,6 +17,9 @@ $auth = new Authenticator();
 //include the media class
 $media = new Media();
 
+//include the event media class
+$eventMedia = new EventMedia();
+
 /*confirm user has a role with create event permissions*/
 //get the id of the create event permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('CREATE EVENT');
@@ -221,11 +224,11 @@ if (!$hasPermission) {
             if ($eventCreated && $addMediaToNewEvent) {
                 //if neither the logo or banner are empty, update the event logo and banner
                 if (!empty($logoMedia_id) && !empty($bannerMedia_id)) {
-                    $event->setEventLogoAndBanner($event_id, $logoMedia_id, $bannerMedia_id);
+                    $eventMedia->setEventLogoAndBanner($event_id, $logoMedia_id, $bannerMedia_id);
                 } else if (!empty($logoMedia_id)) {
-                    $event->setEventLogo($event_id, $logoMedia_id);
+                    $eventMedia->setEventLogo($event_id, $logoMedia_id);
                 } else if (!empty($bannerMedia_id)) {
-                    $event->setEventBanner($event_id, $bannerMedia_id);
+                    $eventMedia->setEventBanner($event_id, $bannerMedia_id);
                 }
             }
         }
