@@ -253,28 +253,91 @@ function getImageDimensions(string $imagePath): array
     return $imageDimensions;
 }
 
-    /**
-     * Get the degree program for a student
-     *
-     * @param int $students_degreeId //id from the students table
-     * @param int $students_majorId //id from the students table
-     * @return string
-     */
-    function getDegreeProgram(int $students_degreeId, int $students_majorId): string
-    {
-        //instance of the Degree class
-        $degreeClass = new Degree();
-        //initialize an empty string to store the degree program
-        $degree_program = "";
-        //get the degree level and major
-        $major = $degreeClass->getMajorNameById($students_majorId);
-        $degree = $degreeClass->getGradeNameById($students_degreeId);
-        //format the string
-        $degree_program = $degree . ", " . $major;
+/**
+ * Get the degree program for a student
+ *
+ * @param int $students_degreeId //id from the students table
+ * @param int $students_majorId //id from the students table
+ * @return string
+ */
+function getDegreeProgram(int $students_degreeId, int $students_majorId): string
+{
+    //instance of the Degree class
+    $degreeClass = new Degree();
+    //initialize an empty string to store the degree program
+    $degree_program = "";
+    //get the degree level and major
+    $major = $degreeClass->getMajorNameById($students_majorId);
+    $degree = $degreeClass->getGradeNameById($students_degreeId);
+    //format the string
+    $degree_program = $degree . ", " . $major;
 
-        //return the string
-        return $degree_program;
+    //return the string
+    return $degree_program;
+}
+
+/**
+ * Get Valid File Types
+ * Returns an array of valid file types for media uploads
+ *
+ * @return array The valid file types
+ */
+function getValidFileTypes(): array
+{
+    //get the allowed file types from the contants file
+    $valid_file_types = ALLOWED_FILE_TYPES;
+
+    //return the valid file types
+    return $valid_file_types;
+}
+
+function validateFile(array $file): string
+{
+    // instance of the Media class
+    $media = new Media();
+
+    // Placeholder for the upload error
+    $upload_error = '';
+
+    // Get the file name, type, size, and path
+    $filename = $file['name'];
+    $filetype = $file['type'];
+    $filesize = $file['size'];
+    $filepath = $file['tmp_name'];
+
+    // Check if the file is an allowed file type
+    if (!in_array($filetype, getValidFileTypes())) {
+        $upload_error = 'Invalid file type';
     }
+
+    // Check if the file size is too large
+    if ($filesize > MAX_FILE_SIZE) {
+        $upload_error = 'File size is too large';
+    }
+
+    // Check if the file has an error
+    if (intval($file['error']) > 0) {
+        $upload_error = 'File upload error';
+    }
+
+    // Check if the file already exists
+    $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+    if (file_exists($upload_path . $filename)) {
+        $upload_error = 'File already exists';
+    }
+
+    return $upload_error;
+}
+
+function moveFile(array $file, string $upload_path): bool
+{
+    // Get the file name and path
+    $filename = $file['name'];
+    $filepath = $file['tmp_name'];
+
+    // Move the file to the upload directory
+    return move_uploaded_file($filepath, $upload_path . $filename);
+}
 
 //redirect user
 function redirectUser($location)
