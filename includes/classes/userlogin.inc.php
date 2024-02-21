@@ -24,6 +24,12 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
+use Session;
+use Activity;
+use User;
+use Login;
+use Exception;
+
 /**
  * User Login Class
  * This class is used to handle user login and logout
@@ -38,7 +44,6 @@ class UserLogin extends User implements Login
      *
      * @param string $username
      * @param string $password
-     * @throws \Exception
      * @return void
      */
     public function login($username, $password)
@@ -49,34 +54,38 @@ class UserLogin extends User implements Login
         //try to login
         try {
             //get the user ID by username
-            $user_id = $this->getUserIdByUsername($username);
+            $userID = $this->getUserIdByUsername($username);
 
             //get the user's hashed password
-            $user_password = $this->getUserPassword($user_id);
+            $userPassword = $this->getUserPassword($userID);
 
             //check if the password is correct
-            if (password_verify($password, $user_password)) {
+            if (password_verify($password, $userPassword)) {
                 //initialize the session
                 session_start();
 
-                // Set session variables
-                $_SESSION["loggedin"] = true;
-                $_SESSION["user_id"] = $user_id;
-                $_SESSION["username"] = $username;
+                // Store data in session variables
+                $session = new Session();
 
-                // Redirect user to welcome page
-                redirectUser(APP_URL . "/index.php");
-            } else {
-                // log the activity
-                $activity = new Activity();
-                $activity->logActivity(null, "Login Error Invalid Password", 'User ID: ' . strval($user_id) . ' Username: ' . $username . ' failed to log in with invalid password.');
-                // Display a generic error message
-                throw new Exception("Invalid username or password.");
+                // Set session variables
+                $session->sessionVars["logged_in"] = true;
+                $session->sessionVars["user_id"] = $userID;
+                $session->sessionVars["username"] = $username;
+
+                // Redirect user to the dashboard
+                redirectUser(APP_URL . "/admin/dashboard.php");
             }
+
+            //if the password is incorrect
+            // log the activity
+            $activity = new Activity();
+            $activity->logActivity(null, "Login Error Invalid Password", 'User ID: ' . strval($userID) . ' Username: ' . $username . ' failed to log in with invalid password.');
+            // Display a generic error message
+            throw new Exception("Invalid username or password.");
         } catch (Exception $e) {
             // log the activity
             $activity = new Activity();
-            $activity->logActivity(null, "Login Error " . $e->getMessage(), 'User ID: ' . strval($user_id) . ' Username: ' . $this->getUserUsername($user_id) . ' failed to log in with error message: ' . $e->getMessage());
+            $activity->logActivity(null, "Login Error " . $e->getMessage(), 'User ID: ' . strval($userID) . ' Username: ' . $username . ' failed to log in with error message: ' . $e->getMessage());
             // Display a generic error message
             throw new Exception("Invalid username or password.");
         }
@@ -91,8 +100,11 @@ class UserLogin extends User implements Login
         //initialize the session
         session_start();
 
+        //get the session variables
+        $session = new Session();
+
         // Unset all of the session variables
-        $_SESSION = array();
+        $session->sessionVars = array();
 
         // Destroy the session.
         session_destroy();
@@ -104,23 +116,23 @@ class UserLogin extends User implements Login
     /**
      * Validate the user's password using the user's ID and the password hash
      * This is a public function that can be called from outside the class
-     * @param int $user_id
+     * @param int $userID
      * @param string $password
      * @return bool
      */
-    public function validateUserPassword(int $user_id, string $password): bool
+    public function validateUserPassword(int $userID, string $password): bool
     {
         //get the user's hashed password
-        $user_password = $this->getUserPassword($user_id);
+        $userPassword = $this->getUserPassword($userID);
 
         //hash the password to compare
-        $attempted_password = $password; //removed the hash function, it is not needed here as the native password_verify function will handle the hashing
+        $attemptedPassword = $password; //removed the hash function, it is not needed here as the native password_verify function will handle the hashing
 
         //verify the password
-        if ($this->verifyPassword($attempted_password, $user_password)) {
+        if ($this->verifyPassword($attemptedPassword, $userPassword)) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }
