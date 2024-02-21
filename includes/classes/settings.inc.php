@@ -618,636 +618,6 @@ class Settings extends Application
             throw new Exception("The database connection is not set.");
         }
     }
-
-    //Hotjar Settings
-
-    /**
-     * Get Hotjar Enabled Status
-     * Get the hotjar enabled status from the settings table
-     *
-     * @return bool //the hotjar enabled status bool
-     */
-    public function getHotjarEnabled()
-    {
-        //SQL statement to get the hotjar enabled status
-        $sql = "SELECT hotjar_enable FROM settings WHERE isSet = 'SET'";
-
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
-
-                //Execute the statement
-                $stmt->execute();
-
-                //Get the results
-                $result = $stmt->get_result();
-
-                //Get the row
-                $row = $result->fetch_assoc();
-
-                //Check if the row exists
-                if ($row) {
-                    //check if the hotjar_enabled is set or not
-                    if (isset($row['hotjar_enable'])) {
-                        if ($row['hotjar_enable'] == 1) {
-                            //Return true
-                            return true;
-                        } elseif ($row['hotjar_enable'] == 0) {
-                            //Return false
-                            return false;
-                        } else {
-                            //Return false
-                            return false;
-                        }
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //Return false
-                    return false;
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-    }
-
-    /**
-     * Set Hotjar Enabled Status
-     * Set the hotjar enabled status in the settings table
-     *
-     * @param bool $hotjar_enabled //the hotjar enabled status
-     * @return bool //true if the hotjar enabled status was set, false if not
-     */
-    public function setHotjarEnabled($hotjar_enabled = null)
-    {
-        // Check that mysqli is set
-        if (!isset($this->mysqli)) {
-            // Log the error
-            error_log('Error: The database connection is not set.');
-            // Throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-
-        // Check that the mysqli object is not null
-        if ($this->mysqli->connect_error) {
-            print_r($this->mysqli->connect_error);
-            // Log the error
-            error_log('Error: ' . $this->mysqli->connect_error);
-            // Throw an exception
-            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-        }
-
-        // SQL statement to update the hotjar enabled status
-        $sql = "UPDATE settings SET hotjar_enable = ? WHERE isSet = 'SET'";
-
-        // Prepare the SQL statement for execution
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        // Set the status based on the hotjar_enabled parameter
-        $status = $hotjar_enabled ? 1 : 0;
-
-        // Bind the parameters
-        $stmt->bind_param('i', $status);
-
-        // Execute the statement
-        $stmt->execute();
-
-        // Check if the statement was executed successfully
-        if ($stmt->affected_rows > 0 && $hotjar_enabled
-        ) {
-            // Log the activity
-            $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Enabled Status Changed', 'The hotjar enabled status was changed to' . $hotjar_enabled . '.');
-            // Return true
-            return true;
-        }
-
-        // Return false
-        return false;
-    }
-
-    /**
-     * Get Hotjar Site ID
-     * Get the hotjar site ID from the settings table
-     *
-     * @return string //the hotjar site ID
-     */
-    public function getHotjarSiteID()
-    {
-        //SQL statement to get the hotjar site ID
-        $sql = "SELECT hotjar_siteid FROM settings WHERE isSet = 'SET'";
-
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
-
-                //Execute the statement
-                $stmt->execute();
-
-                //Get the results
-                $result = $stmt->get_result();
-
-                //Get the row
-                $row = $result->fetch_assoc();
-
-                //Check if the row exists
-                if ($row) {
-                    //check if the hotjar_site_id is set or not
-                    if (isset($row['hotjar_siteid'])) {
-                        //Return the hotjar_site_id
-                        return $row['hotjar_siteid'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-    }
-
-    /**
-     * Set Hotjar Site ID
-     * Set the hotjar site ID in the settings table
-     *
-     * @param string $hotjar_site_id //the hotjar site ID
-     * @return bool //true if the hotjar site ID was set, false if not
-     */
-    public function setHotjarSiteID($hotjar_site_id = null)
-    {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the hotjar site ID is set in the settings table already
-                if ($this->getHotjarSiteID() != '' || $this->getHotjarSiteID() != null) {
-                    //SQL statement to update the hotjar site ID
-                    $sql = "UPDATE settings SET hotjar_siteid = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //convert the site ID to an integer
-                    $hotjar_site_id = intval($hotjar_site_id);
-
-                    //Bind the parameters
-                    $stmt->bind_param('i', $hotjar_site_id);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Site ID Changed', 'The hotjar site ID was changed to ' . $hotjar_site_id . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the hotjar site ID, where isSet is SET
-                    $sql = "UPDATE settings SET hotjar_siteid = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $hotjar_site_id);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Site ID Changed', 'The hotjar site ID was changed to ' . $hotjar_site_id . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-    }
-
-    /**
-     * Get Hotjar Version
-     * Get the hotjar version from the settings table
-     *
-     * @return int|null //the hotjar version
-     */
-    public function getHotjarVersion(): ?int
-    {
-        //SQL statement to get the hotjar version
-        $sql = "SELECT hotjar_version FROM settings WHERE isSet = 'SET'";
-
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
-
-                //Execute the statement
-                $stmt->execute();
-
-                //Get the results
-                $result = $stmt->get_result();
-
-                //Get the row
-                $row = $result->fetch_assoc();
-
-                //Check if the row exists
-                if ($row) {
-                    //check if the hotjar_version is set or not
-                    if (isset($row['hotjar_version'])) {
-                        //Return the hotjar_version
-                        return intval($row['hotjar_version']);
-                    } else {
-                        //Return null
-                        return null;
-                    }
-                } else {
-                    //Return null
-                    return null;
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-    }
-
-    /**
-     * Set Hotjar Version
-     * Set the hotjar version in the settings table
-     *
-     * @param int $hotjar_version //the hotjar version
-     * @return bool //true if the hotjar version was set, false if not
-     */
-    public function setHotjarVersion($hotjar_version = null)
-    {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the hotjar version is set in the settings table already
-                if ($this->getHotjarVersion() != '' || $this->getHotjarVersion() != null) {
-                    //SQL statement to update the hotjar version
-                    $sql = "UPDATE settings SET hotjar_version = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('i', $hotjar_version);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Version Changed', 'The hotjar version was changed to ' . $hotjar_version . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the hotjar version, where isSet is SET
-                    $sql = "UPDATE settings SET hotjar_version = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('i', $hotjar_version);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Version Changed', 'The hotjar version was changed to ' . $hotjar_version . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-    }
-
-    // Google Analytics Settings
-
-    /**
-     * Get Google Analytics Enabled Status
-     * Get the google analytics enabled status from the settings table
-     *
-     * @return bool //the google analytics enabled status bool
-     */
-    public function getGoogleAnalyticsEnabled()
-    {
-        //SQL statement to get the google analytics enabled status
-        $sql = "SELECT ga_enable FROM settings WHERE isSet = 'SET'";
-
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
-
-                //Execute the statement
-                $stmt->execute();
-
-                //Get the results
-                $result = $stmt->get_result();
-
-                //Get the row
-                $row = $result->fetch_assoc();
-
-                //Check if the row exists
-                if ($row) {
-                    //check if the ga_enabled is set or not
-                    if (isset($row['ga_enable'])) {
-                        if ($row['ga_enable'] == 1) {
-                            //Return true
-                            return true;
-                        } elseif ($row['ga_enable'] == 0) {
-                            //Return false
-                            return false;
-                        } else {
-                            //Return false
-                            return false;
-                        }
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //Return false
-                    return false;
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-    }
-
-    /**
-     * Set Google Analytics Enabled Status
-     * Set the google analytics enabled status in the settings table
-     *
-     * @param bool $ga_enabled //the google analytics enabled status
-     * @return bool //true if the google analytics enabled status was set, false if not
-     */
-    public function setGoogleAnalyticsEnabled($ga_enabled = null)
-    {
-        // Check that mysqli is set
-        if (isset($this->mysqli)) {
-            // Check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-                print_r($this->mysqli->connect_error);
-                // Log the error
-                error_log('Error: ' . $this->mysqli->connect_error);
-                // Throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                // SQL statement to update the google analytics enabled status
-                $sql = "UPDATE settings SET ga_enable = ? WHERE isSet = 'SET'";
-
-                // Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
-
-                // Set the status based on the provided $ga_enabled value
-                $status = $ga_enabled ? 1 : 0;
-
-                // Bind the parameters
-                $stmt->bind_param('i', $status);
-
-                // Execute the statement
-                $stmt->execute();
-
-                // Check if the statement was executed successfully
-                if ($stmt->affected_rows > 0 && $ga_enabled) {
-                    // Log the activity
-                    $activity = new Activity();
-                    $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Enabled Status Changed', 'The google analytics enabled status was changed to' . $ga_enabled . '.');
-                    // Return true
-                    return true;
-                } else {
-                    // Return false
-                    return false;
-                }
-            }
-        } else {
-            // Log the error
-            error_log('Error: The database connection is not set.');
-            // Throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-    }
-
-    /**
-     * Get Google Analytics Tag
-     * Get the Google Analytics tag from the settings table
-     *
-     * @return string //the Google Analytics tag
-     */
-    public function getGoogleAnalyticsTag()
-    {
-        //SQL statement to get the Google Analytics tag
-        $sql = "SELECT google_analytics FROM settings WHERE isSet = 'SET'";
-
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
-
-                //Execute the statement
-                $stmt->execute();
-
-                //Get the results
-                $result = $stmt->get_result();
-
-                //Get the row
-                $row = $result->fetch_assoc();
-
-                //Check if the row exists
-                if ($row) {
-                    //check if the google_analytics is set or not
-                    if (isset($row['google_analytics'])) {
-                        //Return the google_analytics
-                        return $row['google_analytics'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-    }
-
-    /**
-     * Set Google Analytics Tag
-     * Set the Google Analytics tag in the settings table
-     *
-     * @param string $google_analytics //the Google Analytics tag
-     * @return bool //true if the Google Analytics tag was set, false if not
-     */
-    public function setGoogleAnalyticsTag($google_analytics = null)
-    {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the Google Analytics tag is set in the settings table already
-                if ($this->getGoogleAnalyticsTag() != '' || $this->getGoogleAnalyticsTag() != null) {
-                    //SQL statement to update the Google Analytics tag
-                    $sql = "UPDATE settings SET google_analytics = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $google_analytics);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Tag Changed', 'The Google Analytics tag was changed to ' . $google_analytics . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the Google Analytics tag, where isSet is SET
-                    $sql = "UPDATE settings SET google_analytics = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $google_analytics);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Tag Changed', 'The Google Analytics tag was changed to ' . $google_analytics . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-    }
 }
 
 /**
@@ -3542,6 +2912,644 @@ class CompanySettings extends Settings
                         //log the activity
                         $activity = new Activity();
                         $activity->logActivity(intval($_SESSION['user_id']), 'Company URL Changed', 'The company URL was changed to ' . $company_url . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+}
+
+/**
+ * Tracker Settings Class
+ * Functions to get and set the tracker settings
+ */
+class TrackerSettings extends Settings
+{
+    //Hotjar Settings
+
+    /**
+     * Get Hotjar Enabled Status
+     * Get the hotjar enabled status from the settings table
+     *
+     * @return bool //the hotjar enabled status bool
+     */
+    public function getHotjarEnabled()
+    {
+        //SQL statement to get the hotjar enabled status
+        $sql = "SELECT hotjar_enable FROM settings WHERE isSet = 'SET'";
+
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = prepareStatement($this->mysqli, $sql);
+
+                //Execute the statement
+                $stmt->execute();
+
+                //Get the results
+                $result = $stmt->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the hotjar_enabled is set or not
+                    if (isset($row['hotjar_enable'])) {
+                        if ($row['hotjar_enable'] == 1) {
+                            //Return true
+                            return true;
+                        } elseif ($row['hotjar_enable'] == 0) {
+                            //Return false
+                            return false;
+                        } else {
+                            //Return false
+                            return false;
+                        }
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //Return false
+                    return false;
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Set Hotjar Enabled Status
+     * Set the hotjar enabled status in the settings table
+     *
+     * @param bool $hotjar_enabled //the hotjar enabled status
+     * @return bool //true if the hotjar enabled status was set, false if not
+     */
+    public function setHotjarEnabled($hotjar_enabled = null)
+    {
+        // Check that mysqli is set
+        if (!isset($this->mysqli)) {
+            // Log the error
+            error_log('Error: The database connection is not set.');
+            // Throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+
+        // Check that the mysqli object is not null
+        if ($this->mysqli->connect_error) {
+            print_r($this->mysqli->connect_error);
+            // Log the error
+            error_log('Error: ' . $this->mysqli->connect_error);
+            // Throw an exception
+            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+        }
+
+        // SQL statement to update the hotjar enabled status
+        $sql = "UPDATE settings SET hotjar_enable = ? WHERE isSet = 'SET'";
+
+        // Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        // Set the status based on the hotjar_enabled parameter
+        $status = $hotjar_enabled ? 1 : 0;
+
+        // Bind the parameters
+        $stmt->bind_param('i', $status);
+
+        // Execute the statement
+        $stmt->execute();
+
+        // Check if the statement was executed successfully
+        if (
+            $stmt->affected_rows > 0 && $hotjar_enabled
+        ) {
+            // Log the activity
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Enabled Status Changed', 'The hotjar enabled status was changed to' . $hotjar_enabled . '.');
+            // Return true
+            return true;
+        }
+
+        // Return false
+        return false;
+    }
+
+    /**
+     * Get Hotjar Site ID
+     * Get the hotjar site ID from the settings table
+     *
+     * @return string //the hotjar site ID
+     */
+    public function getHotjarSiteID()
+    {
+        //SQL statement to get the hotjar site ID
+        $sql = "SELECT hotjar_siteid FROM settings WHERE isSet = 'SET'";
+
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = prepareStatement($this->mysqli, $sql);
+
+                //Execute the statement
+                $stmt->execute();
+
+                //Get the results
+                $result = $stmt->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the hotjar_site_id is set or not
+                    if (isset($row['hotjar_siteid'])) {
+                        //Return the hotjar_site_id
+                        return $row['hotjar_siteid'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Set Hotjar Site ID
+     * Set the hotjar site ID in the settings table
+     *
+     * @param string $hotjar_site_id //the hotjar site ID
+     * @return bool //true if the hotjar site ID was set, false if not
+     */
+    public function setHotjarSiteID($hotjar_site_id = null)
+    {
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Check if the hotjar site ID is set in the settings table already
+                if ($this->getHotjarSiteID() != '' || $this->getHotjarSiteID() != null) {
+                    //SQL statement to update the hotjar site ID
+                    $sql = "UPDATE settings SET hotjar_siteid = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $stmt = prepareStatement($this->mysqli, $sql);
+
+                    //convert the site ID to an integer
+                    $hotjar_site_id = intval($hotjar_site_id);
+
+                    //Bind the parameters
+                    $stmt->bind_param('i', $hotjar_site_id);
+
+                    //Execute the statement
+                    $stmt->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($stmt->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Site ID Changed', 'The hotjar site ID was changed to ' . $hotjar_site_id . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the hotjar site ID, where isSet is SET
+                    $sql = "UPDATE settings SET hotjar_siteid = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $stmt = prepareStatement($this->mysqli, $sql);
+
+                    //Bind the parameters
+                    $stmt->bind_param('s', $hotjar_site_id);
+
+                    //Execute the statement
+                    $stmt->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($stmt->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Site ID Changed', 'The hotjar site ID was changed to ' . $hotjar_site_id . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Get Hotjar Version
+     * Get the hotjar version from the settings table
+     *
+     * @return int|null //the hotjar version
+     */
+    public function getHotjarVersion(): ?int
+    {
+        //SQL statement to get the hotjar version
+        $sql = "SELECT hotjar_version FROM settings WHERE isSet = 'SET'";
+
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = prepareStatement($this->mysqli, $sql);
+
+                //Execute the statement
+                $stmt->execute();
+
+                //Get the results
+                $result = $stmt->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the hotjar_version is set or not
+                    if (isset($row['hotjar_version'])) {
+                        //Return the hotjar_version
+                        return intval($row['hotjar_version']);
+                    } else {
+                        //Return null
+                        return null;
+                    }
+                } else {
+                    //Return null
+                    return null;
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Set Hotjar Version
+     * Set the hotjar version in the settings table
+     *
+     * @param int $hotjar_version //the hotjar version
+     * @return bool //true if the hotjar version was set, false if not
+     */
+    public function setHotjarVersion($hotjar_version = null)
+    {
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Check if the hotjar version is set in the settings table already
+                if ($this->getHotjarVersion() != '' || $this->getHotjarVersion() != null) {
+                    //SQL statement to update the hotjar version
+                    $sql = "UPDATE settings SET hotjar_version = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $stmt = prepareStatement($this->mysqli, $sql);
+
+                    //Bind the parameters
+                    $stmt->bind_param('i', $hotjar_version);
+
+                    //Execute the statement
+                    $stmt->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($stmt->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Version Changed', 'The hotjar version was changed to ' . $hotjar_version . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the hotjar version, where isSet is SET
+                    $sql = "UPDATE settings SET hotjar_version = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $stmt = prepareStatement($this->mysqli, $sql);
+
+                    //Bind the parameters
+                    $stmt->bind_param('i', $hotjar_version);
+
+                    //Execute the statement
+                    $stmt->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($stmt->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Version Changed', 'The hotjar version was changed to ' . $hotjar_version . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    // Google Analytics Settings
+
+    /**
+     * Get Google Analytics Enabled Status
+     * Get the google analytics enabled status from the settings table
+     *
+     * @return bool //the google analytics enabled status bool
+     */
+    public function getGoogleAnalyticsEnabled()
+    {
+        //SQL statement to get the google analytics enabled status
+        $sql = "SELECT ga_enable FROM settings WHERE isSet = 'SET'";
+
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = prepareStatement($this->mysqli, $sql);
+
+                //Execute the statement
+                $stmt->execute();
+
+                //Get the results
+                $result = $stmt->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the ga_enabled is set or not
+                    if (isset($row['ga_enable'])) {
+                        if ($row['ga_enable'] == 1) {
+                            //Return true
+                            return true;
+                        } elseif ($row['ga_enable'] == 0) {
+                            //Return false
+                            return false;
+                        } else {
+                            //Return false
+                            return false;
+                        }
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //Return false
+                    return false;
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Set Google Analytics Enabled Status
+     * Set the google analytics enabled status in the settings table
+     *
+     * @param bool $ga_enabled //the google analytics enabled status
+     * @return bool //true if the google analytics enabled status was set, false if not
+     */
+    public function setGoogleAnalyticsEnabled($ga_enabled = null)
+    {
+        // Check that mysqli is set
+        if (isset($this->mysqli)) {
+            // Check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+                print_r($this->mysqli->connect_error);
+                // Log the error
+                error_log('Error: ' . $this->mysqli->connect_error);
+                // Throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                // SQL statement to update the google analytics enabled status
+                $sql = "UPDATE settings SET ga_enable = ? WHERE isSet = 'SET'";
+
+                // Prepare the SQL statement for execution
+                $stmt = prepareStatement($this->mysqli, $sql);
+
+                // Set the status based on the provided $ga_enabled value
+                $status = $ga_enabled ? 1 : 0;
+
+                // Bind the parameters
+                $stmt->bind_param('i', $status);
+
+                // Execute the statement
+                $stmt->execute();
+
+                // Check if the statement was executed successfully
+                if ($stmt->affected_rows > 0 && $ga_enabled) {
+                    // Log the activity
+                    $activity = new Activity();
+                    $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Enabled Status Changed', 'The google analytics enabled status was changed to' . $ga_enabled . '.');
+                    // Return true
+                    return true;
+                } else {
+                    // Return false
+                    return false;
+                }
+            }
+        } else {
+            // Log the error
+            error_log('Error: The database connection is not set.');
+            // Throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Get Google Analytics Tag
+     * Get the Google Analytics tag from the settings table
+     *
+     * @return string //the Google Analytics tag
+     */
+    public function getGoogleAnalyticsTag()
+    {
+        //SQL statement to get the Google Analytics tag
+        $sql = "SELECT google_analytics FROM settings WHERE isSet = 'SET'";
+
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Prepare the SQL statement for execution
+                $stmt = prepareStatement($this->mysqli, $sql);
+
+                //Execute the statement
+                $stmt->execute();
+
+                //Get the results
+                $result = $stmt->get_result();
+
+                //Get the row
+                $row = $result->fetch_assoc();
+
+                //Check if the row exists
+                if ($row) {
+                    //check if the google_analytics is set or not
+                    if (isset($row['google_analytics'])) {
+                        //Return the google_analytics
+                        return $row['google_analytics'];
+                    } else {
+                        //Return an empty string
+                        return '';
+                    }
+                } else {
+                    //Return an empty string
+                    return '';
+                }
+            }
+        } else {
+            //log the error
+            error_log('Error: The database connection is not set.');
+            //throw an exception
+            throw new Exception("The database connection is not set.");
+        }
+    }
+
+    /**
+     * Set Google Analytics Tag
+     * Set the Google Analytics tag in the settings table
+     *
+     * @param string $google_analytics //the Google Analytics tag
+     * @return bool //true if the Google Analytics tag was set, false if not
+     */
+    public function setGoogleAnalyticsTag($google_analytics = null)
+    {
+        //Check that mysqli is set
+        if (isset($this->mysqli)) {
+            //check that the mysqli object is not null
+            if ($this->mysqli->connect_error) {
+
+                //throw an exception
+                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+            } else {
+                //Check if the Google Analytics tag is set in the settings table already
+                if ($this->getGoogleAnalyticsTag() != '' || $this->getGoogleAnalyticsTag() != null) {
+                    //SQL statement to update the Google Analytics tag
+                    $sql = "UPDATE settings SET google_analytics = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $stmt = prepareStatement($this->mysqli, $sql);
+
+                    //Bind the parameters
+                    $stmt->bind_param('s', $google_analytics);
+
+                    //Execute the statement
+                    $stmt->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($stmt->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Tag Changed', 'The Google Analytics tag was changed to ' . $google_analytics . '.');
+                        //Return true
+                        return true;
+                    } else {
+                        //Return false
+                        return false;
+                    }
+                } else {
+                    //SQL statement to update the Google Analytics tag, where isSet is SET
+                    $sql = "UPDATE settings SET google_analytics = ? WHERE isSet = 'SET'";
+
+                    //Prepare the SQL statement for execution
+                    $stmt = prepareStatement($this->mysqli, $sql);
+
+                    //Bind the parameters
+                    $stmt->bind_param('s', $google_analytics);
+
+                    //Execute the statement
+                    $stmt->execute();
+
+                    //Check if the statement was executed successfully
+                    if ($stmt->affected_rows > 0) {
+                        //log the activity
+                        $activity = new Activity();
+                        $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Tag Changed', 'The Google Analytics tag was changed to ' . $google_analytics . '.');
                         //Return true
                         return true;
                     } else {
