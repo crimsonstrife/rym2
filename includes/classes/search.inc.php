@@ -27,7 +27,7 @@ class Search {
     public function search(string $searchTerm): array
     {
         //include the student class
-        $studentData = new Student();
+        $studentData = new StudentSearch();
 
         //include the school class
         $schoolData = new School();
