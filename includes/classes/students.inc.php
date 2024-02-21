@@ -1056,7 +1056,7 @@ class StudentEducation
         $major_id = $this->getStudentMajorId($id);
 
         //get the degree program by the degree id and major id
-        $degree = $degreeProgram->getDegreeProgram($degree_id, $major_id);
+        $degree = getDegreeProgram($degree_id, $major_id);
 
         //return the degree program
         return $degree;
