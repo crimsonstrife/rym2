@@ -9,11 +9,12 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
+use Session;
+use User;
+use Roles;
+
 class Authenticator extends User
 {
-    //Reference to the database
-    private $mysqli;
-
     //Instantiate the database connection
     public function __construct()
     {
@@ -31,50 +32,72 @@ class Authenticator extends User
         closeDatabaseConnection($this->mysqli);
     }
 
-    //Check if the user is logged in
+    /**
+     * Check if the user is logged in
+     *
+     * @return bool True if the user is logged in, false if not
+     */
     public function isLoggedIn(): bool
     {
+        //instantiate the session class
+        $session = new Session();
+
+        //get the logged in status from the session
+        $isLoggedIn = $session->sessionVars["logged_in"] ?? false;
+
         // Check if the user is logged in, if not then redirect them to the login page
-        if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] !== true) {
+        if (!isset($isLoggedIn) || $isLoggedIn !== true) {
             return false;
-        } else {
-            return true;
         }
+
+        //return the logged in status, which should otherwise be true
+        return true;
     }
 
-    //Get user by username
-    function getUserByUsername(string $username)
+    /**
+     * Get the user data by username
+     *
+     * @param string $username The username to check
+     * @return array The user data
+     */
+    function getUserByUsername(string $username) : array
     {
         //set user class object
         $user = new User();
 
         //get the user ID by username
-        $user_id = $user->getUserIdByUsername($username);
+        $userID = $user->getUserIdByUsername($username);
 
         //create array to hold the user data
-        $user_data = array();
+        $userData = array();
 
         //if the user exists, get the user data and assign it to the user_data array
-        if ($user_id) {
+        if ($userID) {
             //add the user ID to the user data array
-            $user_data['user_id'] = $user_id;
-            $user_data['username'] = $username;
-            $user_data['password'] = $user->getUserPassword($user_id);
-            $user_data['email'] = $user->getUserEmail($user_id);
+            $userData['user_id'] = $userID;
+            $userData['username'] = $username;
+            $userData['password'] = $user->getUserPassword($userID);
+            $userData['email'] = $user->getUserEmail($userID);
 
             //get user roles
-            $user_roles = $user->getUserRoles($user_id);
+            $userRoles = $user->getUserRoles($userID);
 
             //add the user roles array to the user data
-            $user_data['roles'] = $user_roles;
+            $userData['roles'] = $userRoles;
         }
 
         //return the user data array
-        return $user_data;
+        return $userData;
     }
 
-    //Get authentication token by user ID and username
-    function getAuthenticationToken(int $user_id, string $username, $expired)
+    /**
+     * Get the authentication token
+     * @param int $userID
+     * @param string $username
+     * @param mixed $expired
+     * @return array|bool
+     */
+    function getAuthenticationToken(int $userID, string $username, $expired)
     {
         //SQL statement to get the authentication token
         $sql = "SELECT * FROM user_token_auth WHERE user_id = ? AND user_name = ? AND is_expired = ?";
@@ -83,7 +106,7 @@ class Authenticator extends User
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters to the SQL statement
-        $stmt->bind_param("isi", $user_id, $username, $expired);
+        $stmt->bind_param("isi", $userID, $username, $expired);
 
         //execute the SQL statement
         $stmt->execute();
@@ -93,13 +116,18 @@ class Authenticator extends User
         if ($result->num_rows > 0) {
             //return the result
             return $result->fetch_all(MYSQLI_ASSOC);;
-        } else {
-            return false;
         }
+
+        //return false if no token is found
+        return false;
     }
 
-    //Expire authentication token
-    function expireToken(int $token_id)
+    /**
+     * Expire the authentication token
+     * @param int $tokenID
+     * @return bool if the token was expired
+     */
+    function expireToken(int $tokenID)
     {
         //SQL statement to expire the token
         $sql = "UPDATE user_token_auth SET is_expired = 1 WHERE id = ?";
@@ -108,20 +136,30 @@ class Authenticator extends User
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters to the SQL statement
-        $stmt->bind_param("i", $token_id);
+        $stmt->bind_param("i", $tokenID);
 
         //execute the SQL statement
         $stmt->execute();
 
-        //get the result of the SQL statement
-        $result = $stmt->get_result();
+        //if there were more than 0 rows affected, return true
+        if ($this->mysqli->affected_rows > 0) {
+            return true;
+        }
 
-        //return the result
-        return $result;
+        //return false if no rows were affected
+        return false;
     }
 
-    //Create authentication token
-    function createToken(int $user_id, string $username, string $password_hash, string $selector_hash, $expire_date)
+    /**
+     * Create the authentication token
+     * @param int $userID
+     * @param string $username
+     * @param string $passwordHash
+     * @param string $selectorHash
+     * @param string $expireDate
+     * @return bool
+     */
+    function createToken(int $userID, string $username, string $passwordHash, string $selectorHash, $expireDate)
     {
         //SQL statement to create the token
         $sql = "INSERT INTO user_token_auth (user_id, user_name, password_hash, selector_hash, expiry_date) VALUES (?, ?, ?, ?, ?)";
@@ -130,7 +168,7 @@ class Authenticator extends User
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters to the SQL statement
-        $stmt->bind_param("issss", $user_id, $username, $password_hash, $selector_hash, $expire_date);
+        $stmt->bind_param("issss", $userID, $username, $passwordHash, $selectorHash, $expireDate);
 
         //execute the SQL statement
         $stmt->execute();
@@ -138,19 +176,24 @@ class Authenticator extends User
         //get the result of the SQL statement
         $result = $stmt->get_result();
 
-        //return the result
-        return $result;
+        //if the result is true, return true
+        if ($result) {
+            return true;
+        }
+
+        //return false if the result is false
+        return false;
     }
 
     /**
      * Check if any of the user's roles have the specified permission
      *
-     * @param int $user_id The user ID
-     * @param int $permission_id The permission ID
+     * @param int $userID The user ID
+     * @param int $permissionID The permission ID
      *
      * @return bool True if the user has the permission, false if not
      */
-    function checkUserPermission(int $user_id, int $permission_id)
+    function checkUserPermission(int $userID, int $permissionID)
     {
         //include the role class
         $rolesObject = new Roles();
@@ -159,7 +202,7 @@ class Authenticator extends User
         $user = new User();
 
         //get the user's roles
-        $userRoles = $user->getUserRoles($user_id);
+        $userRoles = $user->getUserRoles($userID);
 
         //boolean to check if the user has the permission
         $hasPermission = false;
@@ -174,17 +217,14 @@ class Authenticator extends User
                     //if hasPermission is true, break out of the loop
                     if (!$hasPermission) {
                         //get the id of the permission
-                        $permissionID = intval($value['id']);
+                        $comparedID = intval($value['id']);
 
                         //if the permission id matches the relevant permission id, set the hasPermission boolean to true
-                        if ($permissionID == $permission_id) {
+                        if ($comparedID == $permissionID) {
                             $hasPermission = true;
-                        } else {
-                            $hasPermission = false;
                         }
-                    } else {
-                        break;
                     }
+                    break;
                 }
             }
         }
@@ -193,12 +233,18 @@ class Authenticator extends User
         return $hasPermission;
     }
 
-    //User exists by ID
-    public function validateUserById(int $id): bool
+    /**
+     * Validate the user by ID
+     *
+     * @param int $userID The user ID
+     *
+     * @return bool True if the user exists, false if not
+     */
+    public function validateUserById(int $userID): bool
     {
         //try to get the user object (array) by ID
         try {
-            $user = $this->getUserById($id);
+            $user = $this->getUserById($userID);
         } catch (Exception $e) {
             //log the error
             error_log('Error: ' . $e->getMessage());
@@ -207,9 +253,10 @@ class Authenticator extends User
         //if the user exists (ie the array is not empty), return true
         if ($user && !empty($user)) {
             return true;
-        } else {
-            return false;
         }
+
+        //return false if the user does not exist
+        return false;
     }
 
     /**
@@ -222,60 +269,62 @@ class Authenticator extends User
     public function validateUserByUsername(string $username): bool
     {
         //placeholder for the user ID
-        $user_id = null;
+        $userID = null;
 
         //try to get the user ID by username
         try {
-            $user_id = $this->getUserIdByUsername($username);
+            $userID = $this->getUserIdByUsername($username);
         } catch (Exception $e) {
             //log the error
             error_log('Error: ' . $e->getMessage());
         }
 
         //if the user ID exists, and is not null, or 0, return true
-        if ($user_id && $user_id != null && $user_id != 0) {
+        if ($userID && $userID != null && $userID != 0) {
             return true;
-        } else {
-            return false;
         }
+
+        //return false if the user does not exist
+        return false;
     }
 
     //User exists by email
     public function validateUserByEmail(string $email): bool
     {
         //placeholder for the user ID
-        $user_id = null;
+        $userID = null;
 
         //try to get the user ID by email
         try {
-            $user_id = $this->getUserByEmail($email);
+            $userID = $this->getUserByEmail($email);
         } catch (Exception $e) {
             //log the error
             error_log('Error: ' . $e->getMessage());
         }
 
         //if the user ID exists, and is not null, or 0, return true
-        if ($user_id && $user_id != null && $user_id != 0) {
+        if ($userID && $userID != null && $userID != 0) {
             return true;
-        } else {
-            return false;
         }
+
+        //return false if the user does not exist
+        return false;
     }
 
     /**
      * Validate a role exists by ID
      *
-     * @param int $id
+     * @param int $userID
      * @return bool
      */
-    public function validateRoleById(int $id): bool
+    public function validateRoleById(int $userID): bool
     {
         //reference the role class
         $roleClass = new Roles();
 
         //try to get the role by ID
         try {
-            $role = $roleClass->getRoleById($id);
+            $role = $roleClass->getRoleById($userID);
         } catch (Exception $e) {
             //log the error
             error_log('Error: ' . $e->getMessage());
@@ -284,8 +333,9 @@ class Authenticator extends User
         //if the role exists (ie the array is not empty), return true
         if ($role && !empty($role)) {
             return true;
-        } else {
-            return false;
         }
+
+        //return false if the role does not exist
+        return false;
     }
 }
