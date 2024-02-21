@@ -44,6 +44,7 @@
             "CrimsonStrife\\RYM2\\Interfaces\\": "includes/interfaces/"
         },
         "classmap": [
+            "includes/classes/session.inc.php",
             "includes/classes/application.inc.php",
             "includes/classes/users.inc.php",
             "includes/classes/userlogin.inc.php",
