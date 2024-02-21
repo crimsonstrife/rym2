@@ -26,26 +26,6 @@ require_once(BASEPATH . '/includes/connector.inc.php');
 
 class EventMedia extends Media
 {
-    //Reference to the database
-    private $mysqli;
-
-    //Instantiate the database connection
-    public function __construct()
-    {
-        try {
-            $this->mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-        } catch (Exception $e) {
-            //log the error
-            error_log('Error: ' . $e->getMessage());
-        }
-    }
-
-    //Close the database connection when the object is destroyed
-    public function __destruct()
-    {
-        closeDatabaseConnection($this->mysqli);
-    }
-
     /**
      * Get event logo
      *

@@ -34,7 +34,7 @@ require_once(BASEPATH . '/includes/connector.inc.php');
 class Media
 {
     //Reference to the database
-    private $mysqli;
+    protected $mysqli;
 
     //Instantiate the database connection
     public function __construct()
@@ -117,43 +117,6 @@ class Media
     }
 
     /**
-     * Get Media By Type
-     * Returns the media object for the given media type
-     *
-     * @param string $media_type The media type
-     *
-     * @return array The media object
-     */
-    public function getMediaByType(string $media_type): array
-    {
-        //placeholder for the media object
-        $media = [];
-
-        //query to get the media by type
-        $query = "SELECT * FROM media WHERE filetype = ?";
-
-        //prepare the query
-        $stmt = $this->mysqli->prepare($query);
-
-        //bind the media type to the query
-        $stmt->bind_param('s', $media_type);
-
-        //execute the query
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-
-        //if there is a result, get the media object
-        if ($result->num_rows > 0) {
-            $media = $result->fetch_assoc();
-        }
-
-        //return the media object(s)
-        return $media;
-    }
-
-    /**
      * Get the file name for the media
      * Returns the file name for the given media id
      *
@@ -199,7 +162,7 @@ class Media
      *
      * @return bool True if the file name was updated, false if it was not
      */
-    public function updateMediaFileName(int $media_id, string $file_name = NULL): bool
+    private function updateMediaFileName(int $media_id, string $file_name = NULL): bool
     {
         //placeholder for the result
         $result = false;
@@ -268,46 +231,6 @@ class Media
     }
 
     /**
-     * Update the file type for the media
-     * Updates the file type for the given media id
-     *
-     * @param int $media_id The media id
-     * @param string $file_type The file type
-     *
-     * @return bool True if the file type was updated, false if it was not
-     */
-    public function updateMediaFileType(int $media_id, string $file_type = NULL): bool
-    {
-        //placeholder for the result
-        $result = false;
-
-        //if the new file type is null, do not update the file type
-        if ($file_type === NULL) {
-            return $result;
-        }
-
-        //query to update the file type for the media
-        $query = "UPDATE media SET filetype = ? WHERE id = ?";
-
-        //prepare the query
-        $stmt = $this->mysqli->prepare($query);
-
-        //bind the file type and media id to the query
-        $stmt->bind_param('si', $file_type, $media_id);
-
-        //execute the query
-        $stmt->execute();
-
-        //if the query was successful, set the result to true
-        if ($stmt->affected_rows > 0) {
-            $result = true;
-        }
-
-        //return the result
-        return $result;
-    }
-
-    /**
      * Update the file size for the media
      * Updates the file size for the given media id
      *
@@ -316,7 +239,7 @@ class Media
      *
      * @return bool True if the file size was updated, false if it was not
      */
-    public function updateMediaFileSize(int $media_id, int $file_size = NULL): bool
+    private function updateMediaFileSize(int $media_id, int $file_size = NULL): bool
     {
         //placeholder for the result
         $result = false;
@@ -345,67 +268,6 @@ class Media
 
         //return the result
         return $result;
-    }
-
-    /**
-     * Get the file size for the media
-     * Returns the file size for the given media id, if the database shows it as null, it checks the file size on the server and updates the database before returning the file size.
-     * This should compensate for any files that were uploaded before the file size was being recorded.
-     *
-     * @param int $media_id The media id
-     *
-     * @return int The file size
-     */
-    public function getMediaFileSize(int $media_id): int
-    {
-        //placeholder for the file size
-        $filesize = 0;
-
-        //local path to the upload directory
-        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
-
-        //placeholder for the result if the size needs to be updated
-        $updatedResult = false;
-
-        //query to get the file size for the media
-        $query = "SELECT filesize FROM media WHERE id = ?";
-
-        //prepare the query
-        $stmt = $this->mysqli->prepare($query);
-
-        //bind the media id to the query
-        $stmt->bind_param('i', $media_id);
-
-        //execute the query
-        $stmt->execute();
-
-        //get the result
-        $result = $stmt->get_result();
-
-        //if there is a result, get the file size
-        if ($result->num_rows > 0) {
-            $filesize = $result->fetch_assoc()['filesize'];
-        }
-
-        //if the file size is null, get the file size from the server and update the database
-        if ($filesize === NULL) {
-            $filename = $this->getMediaFileName($media_id);
-            $filesize = filesize($upload_path . $filename);
-
-            if ($filesize > 0) {
-                $updatedResult = $this->updateMediaFileSize($media_id, $filesize);
-            }
-        }
-
-        //if the file size was updated, return the updated file size
-        if ($updatedResult) {
-            return $filesize;
-        } else {
-            //set the file size to 0 if it was not updated
-            $filesize = 0;
-            //return the file size
-            return $filesize;
-        }
     }
 
     /**
@@ -543,7 +405,7 @@ class Media
         $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
 
         // Validate the file
-        $upload_error = $this->validateFile($file);
+        $upload_error = validateFile($file);
         if ($upload_error !== '') {
             $activity = new Activity();
             $activity->logActivity($user_id, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
@@ -551,7 +413,7 @@ class Media
         }
 
         // Move the file to the upload directory
-        if ($this->moveFile($file, $upload_path)) {
+        if (moveFile($file, $upload_path)) {
             $media_id = $this->addMediaToDatabase($file, $user_id);
             $activity = new Activity();
             if ($media_id === 0) {
@@ -572,51 +434,6 @@ class Media
         return $media_id;
     }
 
-    private function validateFile(array $file): string
-    {
-        // Placeholder for the upload error
-        $upload_error = '';
-
-        // Get the file name, type, size, and path
-        $filename = $file['name'];
-        $filetype = $file['type'];
-        $filesize = $file['size'];
-        $filepath = $file['tmp_name'];
-
-        // Check if the file is an allowed file type
-        if (!in_array($filetype, $this->getValidFileTypes())) {
-            $upload_error = 'Invalid file type';
-        }
-
-        // Check if the file size is too large
-        if ($filesize > MAX_FILE_SIZE) {
-            $upload_error = 'File size is too large';
-        }
-
-        // Check if the file has an error
-        if (intval($file['error']) > 0) {
-            $upload_error = 'File upload error';
-        }
-
-        // Check if the file already exists
-        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
-        if (file_exists($upload_path . $filename)) {
-            $upload_error = 'File already exists';
-        }
-
-        return $upload_error;
-    }
-
-    private function moveFile(array $file, string $upload_path): bool
-    {
-        // Get the file name and path
-        $filename = $file['name'];
-        $filepath = $file['tmp_name'];
-
-        // Move the file to the upload directory
-        return move_uploaded_file($filepath, $upload_path . $filename);
-    }
-
     private function addMediaToDatabase(array $file, int $user_id = null): int
     {
         // Get the file name, type, size, and extension
@@ -626,21 +443,6 @@ class Media
 
         // Add the media object to the database
         return $this->addMedia($filename, $file_extension, intval($filesize), $user_id);
-    }
-
-    /**
-     * Get Valid File Types
-     * Returns an array of valid file types for media uploads
-     *
-     * @return array The valid file types
-     */
-    public function getValidFileTypes(): array
-    {
-        //get the allowed file types from the contants file
-        $valid_file_types = ALLOWED_FILE_TYPES;
-
-        //return the valid file types
-        return $valid_file_types;
     }
 
     /**
