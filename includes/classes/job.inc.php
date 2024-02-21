@@ -26,7 +26,7 @@ require_once(BASEPATH . '/includes/connector.inc.php');
 class Job
 {
     //Reference to the database
-    private $mysqli;
+    protected $mysqli;
 
     //Instantiate the database connection
     public function __construct()
@@ -52,14 +52,29 @@ class Job
      */
     public function getAllJobs(): array
     {
+        //sql statement to get all the jobs
         $sql = "SELECT * FROM jobs";
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the results
+        $result = $stmt->get_result();
+
+        //placeholder for the jobs
         $jobs = [];
+
+        //if there are results
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $jobs[] = $row;
             }
         }
+
+        //return the jobs
         return $jobs;
     }
 
@@ -71,14 +86,29 @@ class Job
      */
     public function getJob(int $id): array
     {
+        //sql statement to get the job
         $sql = "SELECT * FROM jobs WHERE id = $id";
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the results
+        $result = $stmt->get_result();
+
+        //placeholder for the job
         $job = [];
+
+        //if there are results
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $job = $row;
             }
         }
+
+        //return the job
         return $job;
     }
 
@@ -90,14 +120,29 @@ class Job
      */
     public function getJobField(int $id): int
     {
+        //sql statement to get the field id
         $sql = "SELECT field FROM jobs WHERE id = $id";
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the results
+        $result = $stmt->get_result();
+
+        //placeholder for the field id
         $fieldID = 0;
+
+        //if there are results
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $fieldID = $row['field'];
             }
         }
+
+        //return the field id
         return intval($fieldID);
     }
 
@@ -109,11 +154,22 @@ class Job
      */
     public function getJobDescription(int $id): string
     {
+        //sql statement to get the job description
+        $sql = "SELECT description FROM jobs WHERE id = $id";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the results
+        $result = $stmt->get_result();
+
         //placeholder for the description
         $description = '';
-        $sql = "SELECT description FROM jobs WHERE id = $id";
-        $result = $this->mysqli->query($sql);
-        $description = '';
+
+        //if there are results
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $description = $row['description'];
@@ -132,14 +188,29 @@ class Job
      */
     public function getJobTitle(int $id): string
     {
+        //sql statement to get the job title
         $sql = "SELECT name FROM jobs WHERE id = $id";
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the results
+        $result = $stmt->get_result();
+
+        //placeholder for the title
         $title = "";
+
+        //if there are results
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $title = $row['name'];
             }
         }
+
+        //return the title
         return $title;
     }
 
@@ -151,14 +222,9 @@ class Job
      */
     public function getJobType(int $id): string
     {
-        $sql = "SELECT type FROM jobs WHERE id = $id";
-        $result = $this->mysqli->query($sql);
-        $type = "";
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $type = $row['type'];
-            }
-        }
+        //get the type from the job table
+        $type = $this->getJobTypeEnum($id);
+
         //depending on the type, return the correct string
         if ($type == 'FULL') {
             return 'Full Time';
@@ -179,33 +245,30 @@ class Job
      */
     public function getJobTypeEnum(int $id): string
     {
+        //sql statement to get the job type
         $sql = "SELECT type FROM jobs WHERE id = $id";
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the results
+        $result = $stmt->get_result();
+
+        //placeholder for the type
         $type = "";
+
+        //if there are results
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $type = $row['type'];
             }
         }
-        return $type;
-    }
 
-    /**
-     * Get the job count from the database
-     *
-     * @return int
-     */
-    public function getJobCount(): int
-    {
-        $sql = "SELECT COUNT(*) FROM jobs";
-        $result = $this->mysqli->query($sql);
-        $count = 0;
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $count = $row['COUNT(*)'];
-            }
-        }
-        return $count;
+        //return the type
+        return $type;
     }
 
     /**
@@ -216,14 +279,29 @@ class Job
      */
     public function getJobCreatedDate(int $id): string
     {
+        //sql statement to get the job creation date
         $sql = "SELECT created_at FROM jobs WHERE id = $id";
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the results
+        $result = $stmt->get_result();
+
+        //placeholder for the created date
         $created_at = "";
+
+        //if there are results
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $created_at = $row['created_at'];
             }
         }
+
+        //return the created date
         return $created_at;
     }
 
@@ -235,14 +313,29 @@ class Job
      */
     public function getJobLastUpdatedDate(int $id): string
     {
+        //get the last updated date from the job table
         $sql = "SELECT updated_at FROM jobs WHERE id = $id";
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the results
+        $result = $stmt->get_result();
+
+        //placeholder for the last updated date
         $updated_at = "";
+
+        //if there are results
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $updated_at = $row['updated_at'];
             }
         }
+
+        //return the last updated date
         return $updated_at;
     }
 
@@ -256,11 +349,23 @@ class Job
     {
         //get the created by user id from the job table
         $sql = "SELECT created_by FROM jobs WHERE id = $id";
+
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the parameters
         $stmt->bind_param("i", $id);
+
+        //execute the statement
         $stmt->execute();
+
+        //get the results
         $result = $stmt->get_result();
+
+        //placeholder for the user id
         $created_by = 0;
+
+        //if there are results
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $created_by = $row['created_by'];
@@ -287,11 +392,23 @@ class Job
     {
         //get the last updated by user id from the job table
         $sql = "SELECT updated_by FROM jobs WHERE id = $id";
+
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the parameters
         $stmt->bind_param("i", $id);
+
+        //execute the statement
         $stmt->execute();
+
+        //get the results
         $result = $stmt->get_result();
+
+        //placeholder for the user id
         $updated_by = 0;
+
+        //if there are results
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $updated_by = $row['updated_by'];
@@ -339,8 +456,14 @@ class Job
 
         //prepare the sql statement
         $sql = "INSERT INTO jobs (name, description, summary, type, field, education, skills, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the parameters
         $stmt->bind_param("ssssiisssii", $name, $description, $summary, $type, $field, $education, $skillsString, $date, $date, $created_by, $created_by);
+
+        //execute the statement
         $stmt->execute();
 
         //check if the query was successful
@@ -386,9 +509,18 @@ class Job
 
         //prepare the sql statement
         $sql = "UPDATE jobs SET name = ?, description = ?, summary = ?, type = ?, field = ?, education = ?, skills = ?, updated_at = ?, updated_by = ? WHERE id = ?";
+
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the parameters
         $stmt->bind_param("ssssiissii", $name, $description, $summary, $type, $field, $education, $skillsString, $date, $updated_by, $id);
+
+        //execute the statement
         $stmt->execute();
+
+        //get the results
+        $result = $stmt->get_result();
 
         //check if the query was successful
         if ($stmt->affected_rows > 0) {
@@ -408,14 +540,29 @@ class Job
      */
     public function getJobsByField(int $field): array
     {
+        //sql statement to get the jobs by field
         $sql = "SELECT * FROM jobs WHERE field = $field";
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the results
+        $result = $stmt->get_result();
+
+        //placeholder for the jobs
         $jobs = [];
+
+        //if there are results
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $jobs[] = $row;
             }
         }
+
+        //return the jobs
         return $jobs;
     }
 
@@ -473,9 +620,22 @@ class Job
      */
     public function getJobSkills(int $id): array
     {
+        //sql statement to get the job skills
         $sql = "SELECT skills FROM jobs WHERE id = $id";
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the results
+        $result = $stmt->get_result();
+
+        //placeholder for the skills
         $skills = '';
+
+        //if there are results
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $skills = $row['skills'];
@@ -509,10 +669,17 @@ class Job
 
         //get the current date and time
         $date = date('Y-m-d H:i:s');
+
         //prepare the sql statement
         $sql = "UPDATE jobs SET skills = ?, updated_at = ? WHERE id = ?";
+
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the parameters
         $stmt->bind_param("ssi", $skillsString, $date, $id);
+
+        //execute the statement
         $stmt->execute();
 
         //check if the query was successful
@@ -603,10 +770,17 @@ class Job
     {
         //get the current date and time
         $date = date('Y-m-d H:i:s');
-        //prepare the sql statement
+
+        //sql statement to update the job education
         $sql = "UPDATE jobs SET education = ?, updated_at = ?, updated_by = ? WHERE id = ?";
+
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the parameters
         $stmt->bind_param("isii", $education, $date, $updated_by, $id);
+
+        //execute the statement
         $stmt->execute();
 
         //check if the query was successful
