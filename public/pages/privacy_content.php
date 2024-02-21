@@ -22,6 +22,9 @@ include_once('header.php');
 //include the application class
 $APP = new Application();
 
+//get the settings class
+$settings_class = new Settings();
+
 //get the privacy policy content
 $privacy_policy = $APP->getPrivacyPolicy();
 ?>
@@ -36,7 +39,7 @@ $privacy_policy = $APP->getPrivacyPolicy();
                         <!-- Page Content -->
                         <div class="container">
                             <div class="row">
-                                <h1 class="mt-5"><?php echo $APP->getAppName(); ?></h1>
+                                <h1 class="mt-5"><?php echo $settings_class->getAppName(); ?></h1>
                                 <p class="lead">Privacy Policy</p>
                                 <ul class="list-unstyled">
                                     <li>Last Updated: </li>
