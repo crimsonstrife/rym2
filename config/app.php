@@ -37,6 +37,8 @@ $settings = new Settings();
 $mailSettings = new MailerSettings();
 $companySettings = new CompanySettings();
 $trackerSettings = new TrackerSettings();
+$googleAnalyticsSettings = new GoogleAnalyticsTracker();
+$hotjarSettings = new HotjarTracker();
 
 if (file_exists(BASEPATH . '/.env')) {
     /* Use the phpdotenv package to read the .env file */
@@ -466,7 +468,7 @@ if (file_exists(BASEPATH . '/.env')) {
 $hotjar_enabled = null;
 //try to get the hotjar_enabled setting
 try {
-    $hotjar_enabled = $trackerSettings->getHotjarEnabled();
+    $hotjar_enabled = $hotjarSettings->getHotjarStatus();
 } catch (Exception $e) {
     $hotjar_enabled = null;
 }
@@ -484,8 +486,8 @@ $hotjar_version = null;
 //if hotjar is enabled, try to get the hotjar_id and hotjar_version
 if (HOTJAR_ENABLED == true) {
     try {
-        $hotjar_id = $trackerSettings->getHotjarSiteID();
-        $hotjar_version = $trackerSettings->getHotjarVersion();
+        $hotjar_id = $hotjarSettings->getHotjarId();
+        $hotjar_version = $hotjarSettings->getHotjarVersion();
     } catch (Exception $e) {
         $hotjar_id = null;
         $hotjar_version = null;
@@ -512,7 +514,7 @@ if ($hotjar_version != null || $hotjar_version != '') {
 $google_analytics_enabled = null;
 //try to get the google_analytics_enabled setting
 try {
-    $google_analytics_enabled = $trackerSettings->getGoogleAnalyticsEnabled();
+    $google_analytics_enabled = $googleAnalyticsSettings->getGoogleAnalyticsStatus();
 } catch (Exception $e) {
     $google_analytics_enabled = null;
 }
@@ -529,7 +531,7 @@ $google_analytics_tag = null;
 //if google analytics is enabled, try to get the google_analytics_tag
 if (GOOGLE_ANALYTICS_ENABLED == true) {
     try {
-        $google_analytics_tag = $trackerSettings->getGoogleAnalyticsTag();
+        $google_analytics_tag = $googleAnalyticsSettings->getGoogleAnalyticsID();
     } catch (Exception $e) {
         $google_analytics_tag = null;
     }

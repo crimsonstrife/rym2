@@ -39,6 +39,12 @@ if (!isset($hasViewDashboardPermission)) {
         //include the tracker settings class
         $trackerSettings = new TrackerSettings();
 
+        //include the hotjar settings class
+        $hotjarSettings = new HotjarTracker();
+
+        //include the google analytics settings class
+        $googleAnalyticsSettings = new GoogleAnalyticsTracker();
+
         // include the authenticator class
         $auth = new Authenticator();
 
@@ -440,7 +446,7 @@ if (!isset($hasViewDashboardPermission)) {
                     // check if  enable hotjar is set
                     if (isset($_POST['hotjar_enable'])) {
                         // set the enable hotjar
-                        $trackerSettings->setHotjarEnabled(true);
+                        $hotjarSettings->setHotjarStatus(true);
 
                         // check if the hotjar site id is set
                         if (isset($_POST['hotjar_siteid']) && $_POST['hotjar_siteid'] != '') {
@@ -449,7 +455,7 @@ if (!isset($hasViewDashboardPermission)) {
                             // trim whitespace from the hotjar site id
                             $_POST['hotjar_siteid'] = trim($_POST['hotjar_siteid']);
                             // set the hotjar site id
-                            $trackerSettings->setHotjarSiteId($_POST['hotjar_siteid']);
+                            $hotjarSettings->setHotjarID($_POST['hotjar_siteid']);
                         }
 
                         // check if the hotjar version is set
@@ -459,17 +465,17 @@ if (!isset($hasViewDashboardPermission)) {
                             // trim whitespace from the hotjar version
                             $_POST['hotjar_version'] = trim($_POST['hotjar_version']);
                             // set the hotjar version
-                            $trackerSettings->setHotjarVersion(intval($_POST['hotjar_version']));
+                            $hotjarSettings->setHotjarVersion(intval($_POST['hotjar_version']));
                         }
                     } else {
                         // set the enable hotjar to false
-                        $trackerSettings->setHotjarEnabled(false);
+                        $hotjarSettings->setHotjarStatus(false);
                     }
 
                     // check if  enable google analytics is set
                     if (isset($_POST['ga_enable'])) {
                         // set the enable google analytics
-                        $trackerSettings->setGoogleAnalyticsEnabled(true);
+                        $googleAnalyticsSettings->setGoogleAnalyticsStatus(true);
 
                         // check if the google analytics tag is set
                         if (isset($_POST['ga_tracking_tag']) && $_POST['ga_tracking_tag'] != '') {
@@ -478,11 +484,11 @@ if (!isset($hasViewDashboardPermission)) {
                             // trim whitespace from the google analytics tag
                             $_POST['ga_tracking_tag'] = trim($_POST['ga_tracking_tag']);
                             // set the google analytics tag
-                            $trackerSettings->setGoogleAnalyticsTag($_POST['ga_tracking_tag']);
+                            $googleAnalyticsSettings->setGoogleAnalyticsID($_POST['ga_tracking_tag']);
                         }
                     } else {
                         // set the enable google analytics to false
-                        $trackerSettings->setGoogleAnalyticsEnabled(false);
+                        $googleAnalyticsSettings->setGoogleAnalyticsStatus(false);
                     }
 
                     // if there are files to upload for the app, upload them
@@ -1309,9 +1315,9 @@ if (!isset($hasViewDashboardPermission)) {
                                             </label>
                                             <div id="hotjar_settings">
                                                 <?php  // get the hotjar tracking settings
-                                                $enableHotjar = $trackerSettings->getHotjarEnabled();
-                                                $hotjarSiteId = $trackerSettingstrackerSettings->getHotjarSiteId();
-                                                $hotjarVersion = $trackerSettings->getHotjarVersion();
+                                                $enableHotjar = $hotjarSettings->getHotjarStatus();
+                                                $hotjarSiteId = $hotjarSettings->getHotjarID();
+                                                $hotjarVersion = $hotjarSettings->getHotjarVersion();
                                                 ?>
                                                 <div class="form-group">
                                                     <div class="form-row">
@@ -1383,8 +1389,8 @@ if (!isset($hasViewDashboardPermission)) {
                                             </label>
                                             <div id="google_analytics">
                                                 <?php  // get the google analytics tracking settings
-                                                $enableGA = $trackerSettings->getGoogleAnalyticsEnabled();
-                                                $gaTrackingTag = $trackerSettings->getGoogleAnalyticsTag();
+                                                $enableGA = $googleAnalyticsSettings->getGoogleAnalyticsStatus();
+                                                $gaTrackingTag = $googleAnalyticsSettings->getGoogleAnalyticsID();
                                                 ?>
                                                 <div class="form-group">
                                                     <div class="form-row">
