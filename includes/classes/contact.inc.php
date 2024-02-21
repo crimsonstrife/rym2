@@ -9,6 +9,9 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
+use MailerSettings;
+use Session;
+
 /**
  * The Contact Class
  *
@@ -263,7 +266,7 @@ class Contact
     function sendAutoEmail(string $email, string $name, string $subject, string $message): bool
     {
         //include the application class
-        $APP = new Application();
+        $settings = new MailerSettings();
         //Create a new PHPMailer instance
         $mail = new PHPMailer\PHPMailer\PHPMailer();
         //Tell what protocol to use
@@ -286,7 +289,7 @@ class Contact
         if (MAIL_AUTH_REQ == 'true') {
             $mail->Username = MAIL_USERNAME;
             //if the password was set in the database
-            if ($APP->getMailerPassword() != null || $APP->getMailerPassword() != '') {
+            if ($settings->getMailerPassword() != null || $settings->getMailerPassword() != '') {
                 //if openssl is installed, decrypt the password
                 if (OPENSSL_INSTALLED) {
                     $mail->Password = openssl_decrypt(MAIL_PASSWORD, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
@@ -360,7 +363,8 @@ class Contact
         $senderEmail = $userObject->getUserEmail($senderId);
 
         //include the application class
-        $APP = new Application();
+        $settings = new MailerSettings();
+
         //Create a new PHPMailer instance
         $mail = new PHPMailer\PHPMailer\PHPMailer();
         //Tell what protocol to use
@@ -383,7 +387,7 @@ class Contact
         if (MAIL_AUTH_REQ == 'true') {
             $mail->Username = MAIL_USERNAME;
             //if the password was set in the database
-            if ($APP->getMailerPassword() != null || $APP->getMailerPassword() != '') {
+            if ($settings->getMailerPassword() != null || $settings->getMailerPassword() != '') {
                 //if openssl is installed, decrypt the password
                 if (OPENSSL_INSTALLED) {
                     $mail->Password = openssl_decrypt(MAIL_PASSWORD, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
@@ -438,7 +442,7 @@ class Contact
     public function sendAccountCreationEmail(string $email, string $username, string $password): bool
     {
         //include the application class
-        $APP = new Application();
+        $settings = new MailerSettings();
         //Create a new PHPMailer instance
         $mail = new PHPMailer\PHPMailer\PHPMailer();
         //Tell what protocol to use
@@ -461,7 +465,7 @@ class Contact
         if (MAIL_AUTH_REQ == 'true') {
             $mail->Username = MAIL_USERNAME;
             //if the password was set in the database
-            if ($APP->getMailerPassword() != null || $APP->getMailerPassword() != '') {
+            if ($settings->getMailerPassword() != null || $settings->getMailerPassword() != '') {
                 //if openssl is installed, decrypt the password
                 if (OPENSSL_INSTALLED) {
                     $mail->Password = openssl_decrypt(MAIL_PASSWORD, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
@@ -492,16 +496,22 @@ class Contact
         if (!$mail->send()) {
             //log the error
             $activity = new Activity();
-            $activity->logActivity(null, 'Error Sending Account Creation Email', $mail->ErrorInfo);
+            //instance of the session class
+            $session = new Session();
+            $userID = intval($session->sessionVars['user_id']) ?? null;
+            $activity->logActivity($userID, 'Error Sending Account Creation Email', $mail->ErrorInfo);
             //if there is an error, return false
             return false;
-        } else {
-            //log the activity
-            $activity = new Activity();
-            $activity->logActivity(null, 'Account Creation Email Sent', $email);
-            //if there is no error, return true
-            return true;
         }
+
+        //log the activity
+        $activity = new Activity();
+        //instance of the session class
+        $session = new Session();
+        $userID = intval($session->sessionVars['user_id']) ?? null;
+        $activity->logActivity($userID, 'Account Creation Email Sent', $email);
+        //if there is no error, return true
+        return true;
     }
 
     /**
@@ -527,24 +537,25 @@ class Contact
         //if the email was sent, return true
         if ($mail == true) {
             return true;
-        } else {
-            return false;
         }
+
+        //if the email was not sent, return false
+        return false;
     }
 
     /**
      * Add Student Contact History
      * Add a new contact log entry for a student
      *
-     * @param int $student_id
+     * @param int $studentID
      * @param string $dateTime
      * @param int $isAuto is the email automated or manual, 1 = automated, 0 = manual
-     * @param int $sender_id is the id of the user that sent the email, will be null if automated
+     * @param int $senderID is the id of the user that sent the email, will be null if automated
      * @param string $subject
      * @param string $message
      * @return bool
      */
-    public function logContactHistory(int $student_id, string $dateTime, int $isAuto, int $sender_id = NULL, string $subject, string $message): bool
+    public function logContactHistory(int $studentID, string $dateTime, int $isAuto, int $senderID = NULL, string $subject, string $message): bool
     {
         //convert the isAuto value to a boolean
         if ($isAuto == 1) {
@@ -557,13 +568,16 @@ class Contact
         $result = false;
 
         //if the sender id is null, do not include it in the query
-        if ($sender_id == NULL) {
+        if ($senderID == NULL) {
             //use the contact class to log the contact
-            $result = $this->logContact($student_id, $isAuto, NULL, $dateTime, $subject, $message);
-        } else {
-            //use the contact class to log the contact
-            $result = $this->logContact($student_id, $isAuto, $sender_id, $dateTime, $subject, $message);
+            $result = $this->logContact($studentID, $isAuto, NULL, $dateTime, $subject, $message);
+
+            //return the result
+            return $result;
         }
+
+        //use the contact class to log the contact
+        $result = $this->logContact($studentID, $isAuto, $senderID, $dateTime, $subject, $message);
 
         //return the result
         return $result;
