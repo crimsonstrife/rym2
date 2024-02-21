@@ -2932,318 +2932,319 @@ class CompanySettings extends Settings
 /**
  * Tracker Settings Class
  * Functions to get and set the tracker settings
+ * e.g. Google Analytics, Hotjar, etc.
+ *
  */
 class TrackerSettings extends Settings
 {
-    //Hotjar Settings
+    //The tracker id e.g. UA-123456789-1 for google analytics or 1234567 for hotjar
+    protected $tracker_id;
+    //The tracker name to identify the tracker e.g. Google Analytics, Hotjar, etc.
+    protected $tracker_name;
+    //The tracker type e.g. ga, hotjar, etc. used for the column names in the settings table
+    protected $tracker_type;
+    //The tracker status e.g. true or false to enable or disable the tracker
+    protected $tracker_status;
 
     /**
-     * Get Hotjar Enabled Status
-     * Get the hotjar enabled status from the settings table
+     * Get Tracker ID
      *
-     * @return bool //the hotjar enabled status bool
+     * Get the tracker id from the settings table
+     *
+     * @return string //the tracker id
      */
-    public function getHotjarEnabled()
+    public function getTrackerID()
     {
-        //SQL statement to get the hotjar enabled status
-        $sql = "SELECT hotjar_enable FROM settings WHERE isSet = 'SET'";
+        //SQL statement to get the tracker id
+        $sql = "SELECT " . $this->tracker_type . "_id FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the tracker_id is set or not
+            if (isset($row[$this->tracker_type . '_id'])) {
+                //Return the tracker_id
+                return $row[$this->tracker_type . '_id'];
             } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+                //Return an empty string
+                return '';
+            }
+        } else {
+            //Return an empty string
+            return '';
+        }
+    }
 
-                //Execute the statement
-                $stmt->execute();
+    /**
+     * Set Tracker ID
+     *
+     * Set the tracker id in the settings table
+     *
+     * @param string $tracker_id //the tracker id
+     * @return bool //true if the tracker id was set, false if not
+     */
+    public function setTrackerID($tracker_id = null)
+    {
+        //Check if the tracker id is set in the settings table already
+        if ($this->getTrackerID() != '' || $this->getTrackerID() != null) {
+            //SQL statement to update the tracker id
+            $sql = "UPDATE settings SET " . $this->tracker_type . "_id = ? WHERE isSet = 'SET'";
 
-                //Get the results
-                $result = $stmt->get_result();
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                //Get the row
-                $row = $result->fetch_assoc();
+            //Bind the parameters
+            $stmt->bind_param('s', $tracker_id);
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the hotjar_enabled is set or not
-                    if (isset($row['hotjar_enable'])) {
-                        if ($row['hotjar_enable'] == 1) {
-                            //Return true
-                            return true;
-                        } elseif ($row['hotjar_enable'] == 0) {
-                            //Return false
-                            return false;
-                        } else {
-                            //Return false
-                            return false;
-                        }
-                    } else {
-                        //Return false
-                        return false;
-                    }
+            //Execute the statement
+            $stmt->execute();
+
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), $this->tracker_name . ' ID Changed', 'The ' . $this->tracker_name . ' ID was changed to ' . $tracker_id . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        } else {
+            //SQL statement to update the tracker id, where isSet is SET
+            $sql = "UPDATE settings SET " . $this->tracker_type . "_id = ? WHERE isSet = 'SET'";
+
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
+
+            //Bind the parameters
+            $stmt->bind_param('s', $tracker_id);
+
+            //Execute the statement
+            $stmt->execute();
+
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(intval($_SESSION['user_id']), $this->tracker_name . ' ID Changed', 'The ' . $this->tracker_name . ' ID was changed to ' . $tracker_id . '.');
+                //Return true
+                return true;
+            } else {
+                //Return false
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Get Tracker Status
+     * Get the tracker status from the settings table
+     *
+     * @return bool //the tracker status
+     */
+    public function getTrackerStatus()
+    {
+        //SQL statement to get the tracker status
+        $sql = "SELECT " . $this->tracker_type . "_enable FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the tracker_enable is set or not
+            if (isset($row[$this->tracker_type . '_enable'])) {
+                //Return the tracker_enable
+                return boolval($row[$this->tracker_type . '_enable']);
+            } else {
+                //Return false
+                return false;
+            }
+        } else {
+            //Return false
+            return false;
+        }
+    }
+
+    /**
+     * Set Tracker Status
+     *
+     * Set the tracker status in the settings table
+     *
+     * @param bool $tracker_status //the tracker status
+     * @return bool //true if the tracker status was set, false if not
+     */
+    public function setTrackerStatus($tracker_status = null)
+    {
+        //SQL statement to update the tracker status
+        $sql = "UPDATE settings SET " . $this->tracker_type . "_enable = ? WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Bind the parameters
+        $stmt->bind_param('i', $tracker_status);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), $this->tracker_name . ' Status Changed', 'The ' . $this->tracker_name . ' status was changed to ' . $tracker_status . '.');
+            //Return true
+            return true;
+        } else {
+            //Return false
+            return false;
+        }
+    }
+
+    /**
+     * Get If Any Tracker Is Enabled
+     * Get if any tracker is enabled from the settings table
+     */
+    public function getIfAnyTrackerIsEnabled()
+    {
+        //SQL statement to get if any tracker is enabled
+        $sql = "SELECT ga_enable, hotjar_enable FROM settings WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the ga_enable or hotjar_enable is set or not
+            if (isset($row['ga_enable']) || isset($row['hotjar_enable'])) {
+                //check if the ga_enable is true or the hotjar_enable is true
+                if ($row['ga_enable'] == 1 || $row['hotjar_enable'] == 1) {
+                    //Return true
+                    return true;
                 } else {
                     //Return false
                     return false;
                 }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-    }
-
-    /**
-     * Set Hotjar Enabled Status
-     * Set the hotjar enabled status in the settings table
-     *
-     * @param bool $hotjar_enabled //the hotjar enabled status
-     * @return bool //true if the hotjar enabled status was set, false if not
-     */
-    public function setHotjarEnabled($hotjar_enabled = null)
-    {
-        // Check that mysqli is set
-        if (!isset($this->mysqli)) {
-            // Log the error
-            error_log('Error: The database connection is not set.');
-            // Throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-
-        // Check that the mysqli object is not null
-        if ($this->mysqli->connect_error) {
-            print_r($this->mysqli->connect_error);
-            // Log the error
-            error_log('Error: ' . $this->mysqli->connect_error);
-            // Throw an exception
-            throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-        }
-
-        // SQL statement to update the hotjar enabled status
-        $sql = "UPDATE settings SET hotjar_enable = ? WHERE isSet = 'SET'";
-
-        // Prepare the SQL statement for execution
-        $stmt = prepareStatement($this->mysqli, $sql);
-
-        // Set the status based on the hotjar_enabled parameter
-        $status = $hotjar_enabled ? 1 : 0;
-
-        // Bind the parameters
-        $stmt->bind_param('i', $status);
-
-        // Execute the statement
-        $stmt->execute();
-
-        // Check if the statement was executed successfully
-        if (
-            $stmt->affected_rows > 0 && $hotjar_enabled
-        ) {
-            // Log the activity
-            $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Enabled Status Changed', 'The hotjar enabled status was changed to' . $hotjar_enabled . '.');
-            // Return true
-            return true;
-        }
-
-        // Return false
-        return false;
-    }
-
-    /**
-     * Get Hotjar Site ID
-     * Get the hotjar site ID from the settings table
-     *
-     * @return string //the hotjar site ID
-     */
-    public function getHotjarSiteID()
-    {
-        //SQL statement to get the hotjar site ID
-        $sql = "SELECT hotjar_siteid FROM settings WHERE isSet = 'SET'";
-
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
             } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
-
-                //Execute the statement
-                $stmt->execute();
-
-                //Get the results
-                $result = $stmt->get_result();
-
-                //Get the row
-                $row = $result->fetch_assoc();
-
-                //Check if the row exists
-                if ($row) {
-                    //check if the hotjar_site_id is set or not
-                    if (isset($row['hotjar_siteid'])) {
-                        //Return the hotjar_site_id
-                        return $row['hotjar_siteid'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+                //Return false
+                return false;
             }
         } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+            //Return false
+            return false;
         }
+    }
+}
+
+/**
+ * Hotjar Tracker Class
+ * Functions to get and set the hotjar tracker settings
+ */
+class HotjarTracker extends TrackerSettings
+{
+    //The tracker name to identify the tracker e.g. Google Analytics, Hotjar, etc.
+    protected $tracker_name = 'Hotjar';
+    //The tracker type e.g. ga, hotjar, etc. used for the column names in the settings table
+    protected $tracker_type = 'hotjar';
+
+    /**
+     * Get Hotjar ID
+     *
+     * Get the hotjar id from the settings table
+     *
+     * @return string //the hotjar id
+     */
+    public function getHotjarID()
+    {
+        return $this->getTrackerID();
     }
 
     /**
-     * Set Hotjar Site ID
-     * Set the hotjar site ID in the settings table
+     * Set Hotjar ID
      *
-     * @param string $hotjar_site_id //the hotjar site ID
-     * @return bool //true if the hotjar site ID was set, false if not
+     * Set the hotjar id in the settings table
+     *
+     * @param string $hotjar_id //the hotjar id
+     * @return bool //true if the hotjar id was set, false if not
      */
-    public function setHotjarSiteID($hotjar_site_id = null)
+    public function setHotjarID($hotjar_id = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the hotjar site ID is set in the settings table already
-                if ($this->getHotjarSiteID() != '' || $this->getHotjarSiteID() != null) {
-                    //SQL statement to update the hotjar site ID
-                    $sql = "UPDATE settings SET hotjar_siteid = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //convert the site ID to an integer
-                    $hotjar_site_id = intval($hotjar_site_id);
-
-                    //Bind the parameters
-                    $stmt->bind_param('i', $hotjar_site_id);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Site ID Changed', 'The hotjar site ID was changed to ' . $hotjar_site_id . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the hotjar site ID, where isSet is SET
-                    $sql = "UPDATE settings SET hotjar_siteid = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $hotjar_site_id);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Site ID Changed', 'The hotjar site ID was changed to ' . $hotjar_site_id . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
+        return $this->setTrackerID($hotjar_id);
     }
 
     /**
      * Get Hotjar Version
+     *
      * Get the hotjar version from the settings table
      *
-     * @return int|null //the hotjar version
+     * @return ?int //the hotjar version
      */
-    public function getHotjarVersion(): ?int
+    public function getHotjarVersion()
     {
         //SQL statement to get the hotjar version
         $sql = "SELECT hotjar_version FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the results
+        $result = $stmt->get_result();
+
+        //Get the row
+        $row = $result->fetch_assoc();
+
+        //Check if the row exists
+        if ($row) {
+            //check if the hotjar_version is set or not
+            if (isset($row['hotjar_version'])) {
+                //Return the hotjar_version
+                return intval($row['hotjar_version']);
             } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
-
-                //Execute the statement
-                $stmt->execute();
-
-                //Get the results
-                $result = $stmt->get_result();
-
-                //Get the row
-                $row = $result->fetch_assoc();
-
-                //Check if the row exists
-                if ($row) {
-                    //check if the hotjar_version is set or not
-                    if (isset($row['hotjar_version'])) {
-                        //Return the hotjar_version
-                        return intval($row['hotjar_version']);
-                    } else {
-                        //Return null
-                        return null;
-                    }
-                } else {
-                    //Return null
-                    return null;
-                }
+                //Return null
+                return null;
             }
         } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+            //Return null
+            return null;
         }
     }
 
     /**
      * Set Hotjar Version
+     *
      * Set the hotjar version in the settings table
      *
      * @param int $hotjar_version //the hotjar version
@@ -3251,318 +3252,115 @@ class TrackerSettings extends Settings
      */
     public function setHotjarVersion($hotjar_version = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //SQL statement to update the hotjar version
+        $sql = "UPDATE settings SET hotjar_version = ? WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the hotjar version is set in the settings table already
-                if ($this->getHotjarVersion() != '' || $this->getHotjarVersion() != null) {
-                    //SQL statement to update the hotjar version
-                    $sql = "UPDATE settings SET hotjar_version = ? WHERE isSet = 'SET'";
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+        //Bind the parameters
+        $stmt->bind_param('i', $hotjar_version);
 
-                    //Bind the parameters
-                    $stmt->bind_param('i', $hotjar_version);
+        //Execute the statement
+        $stmt->execute();
 
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Version Changed', 'The hotjar version was changed to ' . $hotjar_version . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the hotjar version, where isSet is SET
-                    $sql = "UPDATE settings SET hotjar_version = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('i', $hotjar_version);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Version Changed', 'The hotjar version was changed to ' . $hotjar_version . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
-            }
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Version Changed', 'The hotjar version was changed to ' . $hotjar_version . '.');
+            //Return true
+            return true;
         } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
-    }
-
-    // Google Analytics Settings
-
-    /**
-     * Get Google Analytics Enabled Status
-     * Get the google analytics enabled status from the settings table
-     *
-     * @return bool //the google analytics enabled status bool
-     */
-    public function getGoogleAnalyticsEnabled()
-    {
-        //SQL statement to get the google analytics enabled status
-        $sql = "SELECT ga_enable FROM settings WHERE isSet = 'SET'";
-
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
-
-                //Execute the statement
-                $stmt->execute();
-
-                //Get the results
-                $result = $stmt->get_result();
-
-                //Get the row
-                $row = $result->fetch_assoc();
-
-                //Check if the row exists
-                if ($row) {
-                    //check if the ga_enabled is set or not
-                    if (isset($row['ga_enable'])) {
-                        if ($row['ga_enable'] == 1) {
-                            //Return true
-                            return true;
-                        } elseif ($row['ga_enable'] == 0) {
-                            //Return false
-                            return false;
-                        } else {
-                            //Return false
-                            return false;
-                        }
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //Return false
-                    return false;
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+            //Return false
+            return false;
         }
     }
 
     /**
-     * Set Google Analytics Enabled Status
-     * Set the google analytics enabled status in the settings table
+     * Get Hotjar Status
      *
-     * @param bool $ga_enabled //the google analytics enabled status
-     * @return bool //true if the google analytics enabled status was set, false if not
+     * Get the hotjar status from the settings table
+     *
+     * @return bool //the hotjar status
      */
-    public function setGoogleAnalyticsEnabled($ga_enabled = null)
+    public function getHotjarStatus()
     {
-        // Check that mysqli is set
-        if (isset($this->mysqli)) {
-            // Check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-                print_r($this->mysqli->connect_error);
-                // Log the error
-                error_log('Error: ' . $this->mysqli->connect_error);
-                // Throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                // SQL statement to update the google analytics enabled status
-                $sql = "UPDATE settings SET ga_enable = ? WHERE isSet = 'SET'";
-
-                // Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
-
-                // Set the status based on the provided $ga_enabled value
-                $status = $ga_enabled ? 1 : 0;
-
-                // Bind the parameters
-                $stmt->bind_param('i', $status);
-
-                // Execute the statement
-                $stmt->execute();
-
-                // Check if the statement was executed successfully
-                if ($stmt->affected_rows > 0 && $ga_enabled) {
-                    // Log the activity
-                    $activity = new Activity();
-                    $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Enabled Status Changed', 'The google analytics enabled status was changed to' . $ga_enabled . '.');
-                    // Return true
-                    return true;
-                } else {
-                    // Return false
-                    return false;
-                }
-            }
-        } else {
-            // Log the error
-            error_log('Error: The database connection is not set.');
-            // Throw an exception
-            throw new Exception("The database connection is not set.");
-        }
+        return $this->getTrackerStatus();
     }
 
     /**
-     * Get Google Analytics Tag
-     * Get the Google Analytics tag from the settings table
+     * Set Hotjar Status
      *
-     * @return string //the Google Analytics tag
+     * Set the hotjar status in the settings table
+     *
+     * @param bool $hotjar_status //the hotjar status
+     * @return bool //true if the hotjar status was set, false if not
      */
-    public function getGoogleAnalyticsTag()
+    public function setHotjarStatus($hotjar_status = null)
     {
-        //SQL statement to get the Google Analytics tag
-        $sql = "SELECT google_analytics FROM settings WHERE isSet = 'SET'";
+        return $this->setTrackerStatus($hotjar_status);
+    }
+}
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+/**
+ * Google Analytics Tracker Class
+ * Functions to get and set the google analytics tracker settings
+ */
+class GoogleAnalyticsTracker extends TrackerSettings
+{
+    //The tracker name to identify the tracker e.g. Google Analytics, Hotjar, etc.
+    protected $tracker_name = 'Google Analytics';
+    //The tracker type e.g. ga, hotjar, etc. used for the column names in the settings table
+    protected $tracker_type = 'ga';
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
-
-                //Execute the statement
-                $stmt->execute();
-
-                //Get the results
-                $result = $stmt->get_result();
-
-                //Get the row
-                $row = $result->fetch_assoc();
-
-                //Check if the row exists
-                if ($row) {
-                    //check if the google_analytics is set or not
-                    if (isset($row['google_analytics'])) {
-                        //Return the google_analytics
-                        return $row['google_analytics'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
+    /**
+     * Get Google Analytics ID
+     *
+     * Get the google analytics id from the settings table
+     *
+     * @return string //the google analytics id
+     */
+    public function getGoogleAnalyticsID()
+    {
+        return $this->getTrackerID();
     }
 
     /**
-     * Set Google Analytics Tag
-     * Set the Google Analytics tag in the settings table
+     * Set Google Analytics ID
      *
-     * @param string $google_analytics //the Google Analytics tag
-     * @return bool //true if the Google Analytics tag was set, false if not
+     * Set the google analytics id in the settings table
+     *
+     * @param string $google_analytics_id //the google analytics id
+     * @return bool //true if the google analytics id was set, false if not
      */
-    public function setGoogleAnalyticsTag($google_analytics = null)
+    public function setGoogleAnalyticsID($google_analytics_id = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        return $this->setTrackerID($google_analytics_id);
+    }
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the Google Analytics tag is set in the settings table already
-                if ($this->getGoogleAnalyticsTag() != '' || $this->getGoogleAnalyticsTag() != null) {
-                    //SQL statement to update the Google Analytics tag
-                    $sql = "UPDATE settings SET google_analytics = ? WHERE isSet = 'SET'";
+    /**
+     * Get Google Analytics Status
+     *
+     * Get the google analytics status from the settings table
+     *
+     * @return bool //the google analytics status
+     */
+    public function getGoogleAnalyticsStatus()
+    {
+        return $this->getTrackerStatus();
+    }
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $google_analytics);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Tag Changed', 'The Google Analytics tag was changed to ' . $google_analytics . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the Google Analytics tag, where isSet is SET
-                    $sql = "UPDATE settings SET google_analytics = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $google_analytics);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Google Analytics Tag Changed', 'The Google Analytics tag was changed to ' . $google_analytics . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
+    /**
+     * Set Google Analytics Status
+     *
+     * Set the google analytics status in the settings table
+     *
+     * @param bool $google_analytics_status //the google analytics status
+     * @return bool //true if the google analytics status was set, false if not
+     */
+    public function setGoogleAnalyticsStatus($google_analytics_status = null)
+    {
+        return $this->setTrackerStatus($google_analytics_status);
     }
 }
