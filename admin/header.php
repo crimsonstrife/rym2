@@ -8,6 +8,12 @@ require_once(__DIR__ . '../../config/app.php');
 /* include the application class */
 $app_class = new Application();
 
+/* include the settings class */
+$settings = new Settings();
+
+/* include the company settings class */
+$companySettings = new CompanySettings();
+
 /* include the media class */
 $media_class = new Media();
 
@@ -15,7 +21,7 @@ $media_class = new Media();
 $author = 'Patrick Barnhardt';
 
 // get the company name from the application settings
-$companyName = $app_class->getCompanyName();
+$companyName = $companysettings->getCompanyName();
 
 //if the company name is not set, use the default of the developer name
 if (!empty($companyName) && $companyName != null && $companyName != '') {
@@ -65,7 +71,7 @@ if (!empty($companyName) && $companyName != null && $companyName != '') {
                 <div class="brand-logo">
                     <?php
                 // Get the app logo from the application settings, if not set use default
-                $appLogo = $app_class->getAppLogo();
+                $appLogo = $settings->getAppLogo();
                 if (!empty($appLogo) && $appLogo != null && $appLogo != '') {
                     echo '<img src="' . getUploadPath() . $media_class->getMediaFileName(intval($appLogo)) . '" alt="' . APP_NAME . '" class="brand-logo" />';
                 }
