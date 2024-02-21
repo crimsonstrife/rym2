@@ -458,9 +458,7 @@ class Job
         $date = date('Y-m-d H:i:s');
 
         //if the education is empty or 0, set it to null
-        if ($education == 0 || $education == null) {
-            $education = null;
-        }
+        $education = ($education == 0 || $education == null) ? null : $education;
 
         //prepare the sql statement
         $sql = "INSERT INTO jobs (name, description, summary, type, field, education, skills, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
