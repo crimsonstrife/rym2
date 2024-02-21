@@ -25,6 +25,7 @@ require_once(BASEPATH . '/includes/connector.inc.php');
 
 use User;
 use Activity;
+use Session;
 
 class Job
 {
@@ -603,7 +604,9 @@ class Job
         //log the job activity if the job was deleted
         if ($result) {
             $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Job', 'Job ID: ' . $jobID . ' Job Name: ' . $jobName);
+            $session = new Session();
+            $userID = $session->sessionVars['user_id'];
+            $activity->logActivity(intval($userID), 'Deleted Job', 'Job ID: ' . $jobID . ' Job Name: ' . $jobName);
         }
 
         //return the result
