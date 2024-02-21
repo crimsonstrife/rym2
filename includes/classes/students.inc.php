@@ -26,7 +26,7 @@ require_once(BASEPATH . '/includes/connector.inc.php');
 class Student
 {
     //Reference to the database
-    private $mysqli;
+    protected $mysqli;
 
     //Instantiate the database connection
     public function __construct()
@@ -575,44 +575,6 @@ class Student
 
         //return the result
         return $result;
-    }
-
-    /**
-     * Search Students
-     * Search for students by their first name, last name, email, or phone number using a search term
-     *
-     * @param string $searchTerm
-     * @return array
-     */
-    public function searchStudents(string $searchTerm): array
-    {
-        //SQL statement to search for students by their first name, last name, email, or phone number using a search term
-        $sql = "SELECT * FROM student WHERE first_name LIKE ? OR last_name LIKE ? OR email LIKE ? OR phone LIKE ?";
-        //prepare the statement
-        $stmt = prepareStatement($this->mysqli, $sql);
-        //setup the search term
-        $searchTerm = "%" . $searchTerm . "%";
-        //bind the parameters
-        $stmt->bind_param("ssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm);
-        //execute the statement
-        $stmt->execute();
-        //get the result
-        $result = $stmt->get_result();
-
-        //create an array to hold the students
-        $students = array();
-
-        //if the result has rows
-        if ($result->num_rows > 0) {
-            //loop through the rows
-            while ($row = $result->fetch_assoc()) {
-                //add the row to the students array
-                $students[] = $row;
-            }
-        }
-
-        //Return the students array
-        return $students;
     }
 
     /**
@@ -1360,26 +1322,6 @@ class StudentEducation
  */
 class StudentEvent extends Student
 {
-    //Reference to the database
-    private $mysqli;
-
-    //Instantiate the database connection
-    public function __construct()
-    {
-        try {
-            $this->mysqli = connectToDatabase(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
-        } catch (Exception $e) {
-            //log the error
-            error_log('Error: ' . $e->getMessage());
-        }
-    }
-
-    //Close the database connection when the object is destroyed
-    public function __destruct()
-    {
-        closeDatabaseConnection($this->mysqli);
-    }
-
     /**
      * Add a student to an event attendance list
      * Add a student to an event
@@ -1510,5 +1452,50 @@ class StudentEvent extends Student
         }
         //Return the events array
         return $events;
+    }
+}
+
+/**
+ * Student Search Class
+ * This class is used to search for students
+ */
+class StudentSearch extends Student
+{
+    /**
+     * Search Students
+     * Search for students by their first name, last name, email, or phone number using a search term
+     *
+     * @param string $searchTerm
+     * @return array
+     */
+    public function searchStudents(string $searchTerm): array
+    {
+        //SQL statement to search for students by their first name, last name, email, or phone number using a search term
+        $sql = "SELECT * FROM student WHERE first_name LIKE ? OR last_name LIKE ? OR email LIKE ? OR phone LIKE ?";
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+        //setup the search term
+        $searchTerm = "%" . $searchTerm . "%";
+        //bind the parameters
+        $stmt->bind_param("ssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the students
+        $students = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            //loop through the rows
+            while ($row = $result->fetch_assoc()) {
+                //add the row to the students array
+                $students[] = $row;
+            }
+        }
+
+        //Return the students array
+        return $students;
     }
 }
