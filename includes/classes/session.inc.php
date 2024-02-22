@@ -25,9 +25,47 @@ class Session
         if (!isset($_SESSION)) {
             //Start the session
             session_start();
-        } else {
-            //Get the session variables
-            $this->sessionVars = $_SESSION;
         }
+    }
+
+    /**
+     * Set a session variable
+     * @param string $name The name of the session variable
+     * @param mixed $value The value of the session variable
+     * @return void
+     */
+    public function set(string $name, $value): void
+    {
+        $_SESSION[$name] = $value;
+    }
+
+    /**
+     * Get a session variable
+     * @param string $name The name of the session variable
+     * @return mixed The value of the session variable
+     */
+    public function get(string $name)
+    {
+        return $_SESSION[$name];
+    }
+
+    /**
+     * Check if a session variable exists
+     * @param string $name The name of the session variable
+     * @return bool True if the session variable exists, false if not
+     */
+    public function check(string $name): bool
+    {
+        return isset($_SESSION[$name]);
+    }
+
+    /**
+     * Remove a session variable
+     * @param string $name The name of the session variable
+     * @return void
+     */
+    public function remove(string $name): void
+    {
+        unset($_SESSION[$name]);
     }
 }
