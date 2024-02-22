@@ -1,6 +1,5 @@
 <?php
 require_once(__DIR__ . '/../constants.php');
-
 function formatDate(string $date, string $format = DATE_FORMAT): string
 {
     $date = new DateTime($date);
@@ -45,10 +44,9 @@ function formatPhone(string $phone): string
     //if the phone number is 10 digits, format it as (xxx) xxx-xxxx
     if (strlen($phone) == 10) {
         $phoneString = "(" . substr($phone, 0, 3) . ") " . substr($phone, 3, 3) . "-" . substr($phone, 6);
-    } else {
-        //otherwise, format it as xxx-xxx-xxxx
-        $phoneString = substr($phone, 0, 3) . "-" . substr($phone, 3, 3) . "-" . substr($phone, 6);
     }
+    //otherwise, format it as xxx-xxx-xxxx
+    $phoneString = substr($phone, 0, 3) . "-" . substr($phone, 3, 3) . "-" . substr($phone, 6);
 
     //return the formatted phone number
     return "<a href='tel:$phone'>$phoneString</a>";
@@ -65,9 +63,9 @@ function formatPhone(string $phone): string
 function formatAddress(string $address, string $city, string $state, string $zip): string
 {
     //format the address
-    $formatted_address = $address . " " . $city . ", " . $state . " " . $zip;
+    $formattedAddress = $address . " " . $city . ", " . $state . " " . $zip;
     //return the address
-    return $formatted_address;
+    return $formattedAddress;
 };
 
 function clearCookies()
@@ -79,31 +77,31 @@ function clearCookies()
     setcookie("user_password_selector", "");
 };
 
-function setCookies(int $user_id, string $username, string $password_hash, string $selector_hash, string $expiry_date)
+function setCookies(int $userID, string $username, string $passwordHash, string $selectorHash, string $expiryDate)
 {
     //convert the expiry date to a unix timestamp
-    $expiry_date = strtotime($expiry_date);
-    $expiry_date = mktime(date("H", $expiry_date), date("i", $expiry_date), date("s", $expiry_date), date("m", $expiry_date), date("d", $expiry_date), date("Y", $expiry_date));
+    $expiryDate = strtotime($expiryDate);
+    $expiryDate = mktime(date("H", $expiryDate), date("i", $expiryDate), date("s", $expiryDate), date("m", $expiryDate), date("d", $expiryDate), date("Y", $expiryDate));
 
     //set the cookies
-    setcookie("user_id", $user_id, $expiry_date, "/");
-    setcookie("user_name", $username, $expiry_date, "/");
-    setcookie("user_password", $password_hash, $expiry_date, "/");
-    setcookie("user_password_selector", $selector_hash, $expiry_date, "/");
+    setcookie("user_id", $userID, $expiryDate, "/");
+    setcookie("user_name", $username, $expiryDate, "/");
+    setcookie("user_password", $passwordHash, $expiryDate, "/");
+    setcookie("user_password_selector", $selectorHash, $expiryDate, "/");
 };
 
 function randomizeEncryption($minimum, $maximum)
 {
     //number range
-    $random_range = $maximum - $minimum;
+    $randomRange = $maximum - $minimum;
 
     //ensure the range is greater than 1
-    if ($random_range < 1) {
+    if ($randomRange < 1) {
         return $minimum;
     }
 
     //determine the log base 2 of the range
-    $log = ceil(log($random_range, 2));
+    $log = ceil(log($randomRange, 2));
 
     //determine the number of bits
     $bits = (int) $log + 1;
@@ -119,7 +117,7 @@ function randomizeEncryption($minimum, $maximum)
         $random = hexdec(bin2hex(openssl_random_pseudo_bytes($bytes)));
         //filter random bytes
         $random = $random & $filter;
-    } while ($random >= $random_range);
+    } while ($random >= $randomRange);
     return $minimum + $random;
 };
 
@@ -139,14 +137,13 @@ function performRedirect(string $filePath)
 {
     //redirect to the specified file
     header("Location: " . APP_URL . $filePath);
-    exit;
 }
 
 function flattenArray(array $array): array
 {
     $return = array();
-    array_walk_recursive($array, function ($a) use (&$return) {
-        $return[] = $a;
+    array_walk_recursive($array, function ($keyA) use (&$return) {
+        $return[] = $keyA;
     });
     return $return;
 }
@@ -227,7 +224,7 @@ function formatFilesize(int $bytes, int $decimals = 2): string
     $factor = floor((strlen($bytes) - 1) / 3);
 
     //format the size
-    $formattedSize = sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . ' ' . @$size[$factor];
+    $formattedSize = sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . ' ' . $size[$factor];
 
     //return the formatted size
     return $formattedSize;
@@ -256,24 +253,24 @@ function getImageDimensions(string $imagePath): array
 /**
  * Get the degree program for a student
  *
- * @param int $students_degreeId //id from the students table
- * @param int $students_majorId //id from the students table
+ * @param int $studentDegreeID //id from the students table
+ * @param int $studentMajorID //id from the students table
  * @return string
  */
-function getDegreeProgram(int $students_degreeId, int $students_majorId): string
+function getDegreeProgram(int $studentDegreeID, int $studentMajorID): string
 {
     //instance of the Degree class
     $degreeClass = new Degree();
     //initialize an empty string to store the degree program
-    $degree_program = "";
+    $degreeProgram = "";
     //get the degree level and major
-    $major = $degreeClass->getMajorNameById($students_majorId);
-    $degree = $degreeClass->getGradeNameById($students_degreeId);
+    $major = $degreeClass->getMajorNameById($studentMajorID);
+    $degree = $degreeClass->getGradeNameById($studentDegreeID);
     //format the string
-    $degree_program = $degree . ", " . $major;
+    $degreeProgram = $degree . ", " . $major;
 
     //return the string
-    return $degree_program;
+    return $degreeProgram;
 }
 
 /**
@@ -285,63 +282,58 @@ function getDegreeProgram(int $students_degreeId, int $students_majorId): string
 function getValidFileTypes(): array
 {
     //get the allowed file types from the contants file
-    $valid_file_types = ALLOWED_FILE_TYPES;
+    $validTypes = ALLOWED_FILE_TYPES;
 
     //return the valid file types
-    return $valid_file_types;
+    return $validTypes;
 }
 
 function validateFile(array $file): string
 {
-    // instance of the Media class
-    $media = new Media();
-
     // Placeholder for the upload error
-    $upload_error = '';
+    $uploadError = '';
 
     // Get the file name, type, size, and path
     $filename = $file['name'];
     $filetype = $file['type'];
     $filesize = $file['size'];
-    $filepath = $file['tmp_name'];
 
     // Check if the file is an allowed file type
     if (!in_array($filetype, getValidFileTypes())) {
-        $upload_error = 'Invalid file type';
+        $uploadError = 'Invalid file type';
     }
 
     // Check if the file size is too large
     if ($filesize > MAX_FILE_SIZE) {
-        $upload_error = 'File size is too large';
+        $uploadError = 'File size is too large';
     }
 
     // Check if the file has an error
     if (intval($file['error']) > 0) {
-        $upload_error = 'File upload error';
+        $uploadError = 'File upload error';
     }
 
     // Check if the file already exists
-    $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
-    if (file_exists($upload_path . $filename)) {
-        $upload_error = 'File already exists';
+    $uploadPath = dirname(__DIR__, 2) . '/public/content/uploads/';
+    if (file_exists($uploadPath . $filename)) {
+        $uploadError = 'File already exists';
     }
 
-    return $upload_error;
+    return $uploadError;
 }
 
-function moveFile(array $file, string $upload_path): bool
+function moveFile(array $file, string $uploadPath): bool
 {
     // Get the file name and path
     $filename = $file['name'];
     $filepath = $file['tmp_name'];
 
     // Move the file to the upload directory
-    return move_uploaded_file($filepath, $upload_path . $filename);
+    return move_uploaded_file($filepath, $uploadPath . $filename);
 }
 
 //redirect user
 function redirectUser($location)
 {
     header("location: " . $location);
-    exit;
 }
