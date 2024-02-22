@@ -24,12 +24,6 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
-use Session;
-use Activity;
-use User;
-use Login;
-use Exception;
-
 /**
  * User Login Class
  * This class is used to handle user login and logout
@@ -68,12 +62,12 @@ class UserLogin extends User implements Login
                 $session = new Session();
 
                 // Set session variables
-                $session->sessionVars["logged_in"] = true;
-                $session->sessionVars["user_id"] = $userID;
-                $session->sessionVars["username"] = $username;
+                $session->set("logged_in", true);
+                $session->set("user_id", $userID);
+                $session->set("username", $username);
 
                 // Redirect user to the dashboard
-                redirectUser(APP_URL . "/admin/dashboard.php");
+                performRedirect(APP_URL . "/admin/dashboard.php");
             }
 
             //if the password is incorrect
@@ -110,7 +104,7 @@ class UserLogin extends User implements Login
         session_destroy();
 
         // Redirect to login page
-        redirectUser(APP_URL . "/login.php");
+        performRedirect(APP_URL . "/login.php");
     }
 
     /**
