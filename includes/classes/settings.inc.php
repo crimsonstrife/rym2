@@ -46,47 +46,36 @@ class Settings extends Application
     public function resetSettings()
     {
         //SQL statement to reset the settings
-        $sql = "UPDATE settings SET app_name = null, app_url = null, company_name = null, company_url = null, company_logo = null, company_address = null, company_phone = null, app_logo = null, contact_email = null, mail_host = null, mail_port = null, mail_username = null, mail_password = null, mail_encryption = null, mail_from_address = null, mail_from_name = null, mail_auth_req = null, privacy_policy = ?, terms_conditions = ?, ga_enable = null, hotjar_siteid = null, hotjar_version = null, WHERE isSet = 'SET'";
+        $sql = "UPDATE settings SET app_name = null, app_url = null, company_name = null, company_url = null, company_logo = null, company_address = null, company_phone = null, app_logo = null, contact_email = null, mail_host = null, mail_port = null, mail_username = null, mail_password = null, mail_encryption = null, mail_from_address = null, mail_from_name = null, mail_auth_req = null, privacy_policy = ?, terms_conditions = ?, ga_enable = null, ga_id = null, hotjar_enable = null, hotjar_id = null, hotjar_version = null, WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //set the privacy policy and terms and conditions to their default values
+        $termsConditions = strval(TERMS_CONDITIONS) ?? null;
+        $privacyPolicy = strval(PRIVACY_POLICY) ?? null;
 
-                //set the privacy policy and terms and conditions to their default values
-                $terms_conditions = strval(TERMS_CONDITIONS);
-                $privacy_policy = strval(PRIVACY_POLICY);
+        //Bind the parameters
+        $stmt->bind_param('ss', $privacyPolicy, $termsConditions);
 
-                //Bind the parameters
-                $stmt->bind_param('ss', $privacy_policy, $terms_conditions);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
-
-                //Check if the statement was executed successfully
-                if ($stmt->affected_rows > 0) {
-                    //log the activity
-                    $activity = new Activity();
-                    $activity->logActivity(intval($_SESSION['user_id']), 'Settings Reset', 'The settings were reset to their default values.');
-                    //Return true
-                    return true;
-                } else {
-                    //Return false
-                    return false;
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            //instance of the session class
+            $session = new Session();
+            //get the user id from the session
+            $userID = intval($session->get('user_id')) ?? null;
+            $activity->logActivity($userID, 'Settings Reset', 'The settings were reset to their default values.');
+            //Return true
+            return true;
         }
+
+        //Return false
+        return false;
     }
 
     //General App Settings
@@ -103,47 +92,32 @@ class Settings extends Application
         //SQL statement to get the application name
         $sql = "SELECT app_name FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //placeholder for the app name
+        $appName = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the app_name is set or not
-                    if (isset($row['app_name'])) {
-                        //Return the app_name
-                        return $row['app_name'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the app_name is set or not
+            if (isset($row['app_name'])) {
+                //set the app name
+                $appName = $row['app_name'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the app name
+        return $appName;
     }
 
     /**
@@ -151,76 +125,65 @@ class Settings extends Application
      *
      * Set the application name in the settings table
      *
-     * @param string $app_name //the application name
+     * @param string $appName //the application name
      * @return bool //true if the application name was set, false if not
      */
-    public function setAppName($app_name = null)
+    public function setAppName($appName = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the application name is set in the settings table already
+        if ($this->getAppName() != '' || $this->getAppName() != null) {
+            //SQL statement to update the application name
+            $sql = "UPDATE settings SET app_name = ? WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the application name is set in the settings table already
-                if ($this->getAppName() != '' || $this->getAppName() != null) {
-                    //SQL statement to update the application name
-                    $sql = "UPDATE settings SET app_name = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Bind the parameters
+            $stmt->bind_param('s', $appName);
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $app_name);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Application Name Changed', 'The application name was changed to ' . $app_name . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the application name, where isSet is SET
-                    $sql = "UPDATE settings SET app_name = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $app_name);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Application Name Changed', 'The application name was changed to ' . $app_name . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Application Name Changed', 'The application name was changed to ' . $appName . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+
+        //SQL statement to update the application name, where isSet is SET
+        $sql = "UPDATE settings SET app_name = ? WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Bind the parameters
+        $stmt->bind_param('s', $appName);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Application Name Changed', 'The application name was changed to ' . $appName . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -235,48 +198,32 @@ class Settings extends Application
         //SQL statement to get the application URL
         $sql = "SELECT app_url FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
+        //Execute the statement
+        $stmt->execute();
 
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //placeholder for the app URL
+        $appURL = '';
 
-                //Get the row
-                $row = $result->fetch_assoc();
-
-                //Check if the row exists
-                if ($row) {
-                    //check if the app_url is set or not
-                    if (isset($row['app_url'])) {
-                        //Return the app_url
-                        return $row['app_url'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the app_url is set or not
+            if (isset($row['app_url'])) {
+                //set the app URL
+                $appURL = $row['app_url'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the app URL
+        return $appURL;
     }
 
     /**
@@ -284,130 +231,98 @@ class Settings extends Application
      *
      * Set the application URL in the settings table
      *
-     * @param string $app_url //the application URL
+     * @param string $appUrl //the application URL
      * @return bool //true if the application URL was set, false if not
      */
-    public function setAppURL($app_url = null)
+    public function setAppURL($appUrl = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the application URL is set in the settings table already
+        if ($this->getAppURL() != '' || $this->getAppURL() != null) {
+            //SQL statement to update the application URL
+            $sql = "UPDATE settings SET app_url = $appUrl WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the application URL is set in the settings table already
-                if ($this->getAppURL() != '' || $this->getAppURL() != null) {
-                    //SQL statement to update the application URL
-                    $sql = "UPDATE settings SET app_url = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $app_url);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Application URL Changed', 'The application URL was changed to ' . $app_url . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the application URL, where isSet is SET
-                    $sql = "UPDATE settings SET app_url = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $app_url);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Application URL Changed', 'The application URL was changed to ' . $app_url . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Application URL Changed', 'The application URL was changed to ' . $appUrl . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+
+        //SQL statement to update the application URL, where isSet is SET
+        $sql = "UPDATE settings SET app_url = $appUrl WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Application URL Changed', 'The application URL was changed to ' . $appUrl . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
      * Get Application Logo
      * Get the application logo from the settings table
      *
-     * @return int //the logo media id
+     * @return ?int //the logo media id
      */
-    public function getAppLogo()
+    public function getAppLogo(): ?int
     {
         //SQL statement to get the application logo
         $sql = "SELECT app_logo FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //placeholder for the app logo id
+        $appLogo = null;
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the app_logo is set or not
-                    if (isset($row['app_logo'])) {
-                        //Return the app_logo
-                        return intval($row['app_logo']);
-                    } else {
-                        //Return an empty string
-                        return intval(null);
-                    }
-                } else {
-                    //Return an empty string
-                    return intval(null);
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the app_logo is set or not
+            if (isset($row['app_logo'])) {
+                //set the app logo
+                $appLogo = intval($row['app_logo']);
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the app logo
+        return $appLogo;
     }
 
     /**
@@ -415,76 +330,64 @@ class Settings extends Application
      *
      * Set the application logo in the settings table
      *
-     * @param int $app_logo //the application logo media id
+     * @param int $appLogo //the application logo media id
      * @return bool //true if the application logo was set, false if not
      */
-    public function setAppLogo(int $app_logo = null)
+    public function setAppLogo(int $appLogo = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the application logo is set in the settings table already
+        if ($this->getAppLogo() != '' || $this->getAppLogo() != null) {
+            //SQL statement to update the application logo
+            $sql = "UPDATE settings SET app_logo = ? WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the application logo is set in the settings table already
-                if ($this->getAppLogo() != '' || $this->getAppLogo() != null) {
-                    //SQL statement to update the application logo
-                    $sql = "UPDATE settings SET app_logo = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Bind the parameters
+            $stmt->bind_param('i', $appLogo);
 
-                    //Bind the parameters
-                    $stmt->bind_param('i', $app_logo);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Application Logo Changed', 'The application logo was changed.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the application logo, where isSet is SET
-                    $sql = "UPDATE settings SET app_logo = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('i', $app_logo);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Application Logo Changed', 'The application logo was changed.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Application Logo Changed', 'The application logo was changed.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+            //Return false
+            return false;
         }
+
+        //SQL statement to update the application logo, where isSet is SET
+        $sql = "UPDATE settings SET app_logo = ? WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Bind the parameters
+        $stmt->bind_param('i', $appLogo);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Application Logo Changed', 'The application logo was changed.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -499,47 +402,32 @@ class Settings extends Application
         //SQL statement to get the contact email
         $sql = "SELECT contact_email FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //placeholder for the contact email
+        $contactEmail = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the contact_email is set or not
-                    if (isset($row['contact_email'])) {
-                        //Return the contact_email
-                        return $row['contact_email'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the contact_email is set or not
+            if (isset($row['contact_email'])) {
+                //set the contact email
+                $contactEmail = $row['contact_email'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the contact email
+        return $contactEmail;
     }
 
     /**
@@ -547,76 +435,65 @@ class Settings extends Application
      *
      * Set the contact email in the settings table
      *
-     * @param string $contact_email //the contact email
+     * @param string $contactEmail //the contact email
      * @return bool //true if the contact email was set, false if not
      */
-    public function setContactEmail($contact_email = null)
+    public function setContactEmail($contactEmail = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the contact email is set in the settings table already
+        if ($this->getContactEmail() != '' || $this->getContactEmail() != null) {
+            //SQL statement to update the contact email
+            $sql = "UPDATE settings SET contact_email = ? WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the contact email is set in the settings table already
-                if ($this->getContactEmail() != '' || $this->getContactEmail() != null) {
-                    //SQL statement to update the contact email
-                    $sql = "UPDATE settings SET contact_email = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Bind the parameters
+            $stmt->bind_param('s', $contactEmail);
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $contact_email);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Contact Email Changed', 'The contact email was changed to ' . $contact_email . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the contact email, where isSet is SET
-                    $sql = "UPDATE settings SET contact_email = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $contact_email);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Contact Email Changed', 'The contact email was changed to ' . $contact_email . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Contact Email Changed', 'The contact email was changed to ' . $contactEmail . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+
+        //SQL statement to update the contact email, where isSet is SET
+        $sql = "UPDATE settings SET contact_email = ? WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Bind the parameters
+        $stmt->bind_param('s', $contactEmail);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Contact Email Changed', 'The contact email was changed to ' . $contactEmail . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 }
 
@@ -626,8 +503,6 @@ class Settings extends Application
  */
 class MailerSettings extends Settings
 {
-    //MAIL Settings
-
     /**
      * Get the Mailer Type
      *
@@ -640,47 +515,32 @@ class MailerSettings extends Settings
         //SQL statement to get the mailer type
         $sql = "SELECT mail_mailer FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //placeholder for the mailer type
+        $mailerType = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the mailer_type is set or not
-                    if (isset($row['mail_mailer'])) {
-                        //Return the mailer_type
-                        return $row['mail_mailer'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the mailer_type is set or not
+            if (isset($row['mail_mailer'])) {
+                //set the mailer type
+                $mailerType = $row['mail_mailer'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the mailer type
+        return $mailerType;
     }
 
     /**
@@ -688,76 +548,58 @@ class MailerSettings extends Settings
      *
      * Set the mailer type in the settings table
      *
-     * @param string $mailer_type //the mailer type
+     * @param string $mailerType //the mailer type
      * @return bool //true if the mailer type was set, false if not
      */
-    public function setMailerType($mailer_type = null)
+    public function setMailerType($mailerType = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the mailer type is set in the settings table already
+        if ($this->getMailerType() != '' || $this->getMailerType() != null) {
+            //SQL statement to update the mailer type
+            $sql = "UPDATE settings SET mail_mailer = $mailerType WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the mailer type is set in the settings table already
-                if ($this->getMailerType() != '' || $this->getMailerType() != null) {
-                    //SQL statement to update the mailer type
-                    $sql = "UPDATE settings SET mail_mailer = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $mailer_type);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Type Changed', 'The mailer type was changed to ' . $mailer_type . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the mailer type, where isSet is SET
-                    $sql = "UPDATE settings SET mail_mailer = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $mailer_type);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Type Changed', 'The mailer type was changed to ' . $mailer_type . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Mailer Type Changed', 'The mailer type was changed to ' . $mailerType . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the mailer type, where isSet is SET
+        $sql = "UPDATE settings SET mail_mailer = $mailerType WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Mailer Type Changed', 'The mailer type was changed to ' . $mailerType . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -772,47 +614,32 @@ class MailerSettings extends Settings
         //SQL statement to get the mailer host
         $sql = "SELECT mail_host FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the mailer host
+        $mailerHost = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the mailer_host is set or not
-                    if (isset($row['mail_host'])) {
-                        //Return the mailer_host
-                        return $row['mail_host'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the mailer_host is set or not
+            if (isset($row['mail_host'])) {
+                //Set the mailer host
+                $mailerHost = $row['mail_host'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the mailer host
+        return $mailerHost;
     }
 
     /**
@@ -820,76 +647,58 @@ class MailerSettings extends Settings
      *
      * Set the mailer host in the settings table
      *
-     * @param string $mailer_host //the mailer host
+     * @param string $mailerHost //the mailer host
      * @return bool //true if the mailer host was set, false if not
      */
-    public function setMailerHost($mailer_host = null)
+    public function setMailerHost($mailerHost = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the mailer host is set in the settings table already
+        if ($this->getMailerHost() != '' || $this->getMailerHost() != null) {
+            //SQL statement to update the mailer host
+            $sql = "UPDATE settings SET mail_host = $mailerHost WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the mailer host is set in the settings table already
-                if ($this->getMailerHost() != '' || $this->getMailerHost() != null) {
-                    //SQL statement to update the mailer host
-                    $sql = "UPDATE settings SET mail_host = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $mailer_host);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Host Changed', 'The mailer host was changed to ' . $mailer_host . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the mailer host, where isSet is SET
-                    $sql = "UPDATE settings SET mail_host = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $mailer_host);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Host Changed', 'The mailer host was changed to ' . $mailer_host . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Mailer Host Changed', 'The mailer host was changed to ' . $mailerHost . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the mailer host, where isSet is SET
+        $sql = "UPDATE settings SET mail_host = $mailerHost WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Mailer Host Changed', 'The mailer host was changed to ' . $mailerHost . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -904,47 +713,32 @@ class MailerSettings extends Settings
         //SQL statement to get the mailer port
         $sql = "SELECT mail_port FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the mailer port
+        $mailerPort = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the mailer_port is set or not
-                    if (isset($row['mail_port'])) {
-                        //Return the mailer_port
-                        return $row['mail_port'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the mailer_port is set or not
+            if (isset($row['mail_port'])) {
+                //Set the mailer port
+                $mailerPort = $row['mail_port'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the mailer port
+        return $mailerPort;
     }
 
     /**
@@ -952,76 +746,58 @@ class MailerSettings extends Settings
      *
      * Set the mailer port in the settings table
      *
-     * @param string $mailer_port //the mailer port
+     * @param string $mailerPort //the mailer port
      * @return bool //true if the mailer port was set, false if not
      */
-    public function setMailerPort($mailer_port = null)
+    public function setMailerPort($mailerPort = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the mailer port is set in the settings table already
+        if ($this->getMailerPort() != '' || $this->getMailerPort() != null) {
+            //SQL statement to update the mailer port
+            $sql = "UPDATE settings SET mail_port = $mailerPort WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the mailer port is set in the settings table already
-                if ($this->getMailerPort() != '' || $this->getMailerPort() != null) {
-                    //SQL statement to update the mailer port
-                    $sql = "UPDATE settings SET mail_port = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('i', $mailer_port);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Port Changed', 'The mailer port was changed to ' . $mailer_port . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the mailer port, where isSet is SET
-                    $sql = "UPDATE settings SET mail_port = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('i', $mailer_port);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Port Changed', 'The mailer port was changed to ' . $mailer_port . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Mailer Port Changed', 'The mailer port was changed to ' . $mailerPort . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the mailer port, where isSet is SET
+        $sql = "UPDATE settings SET mail_port = $mailerPort WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Mailer Port Changed', 'The mailer port was changed to ' . $mailerPort . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -1036,47 +812,32 @@ class MailerSettings extends Settings
         //SQL statement to get the mailer username
         $sql = "SELECT mail_username FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the mailer username
+        $mailerUsername = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the mailer_username is set or not
-                    if (isset($row['mail_username'])) {
-                        //Return the mailer_username
-                        return $row['mail_username'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the mailer_username is set or not
+            if (isset($row['mail_username'])) {
+                //Set the mailer username
+                $mailerUsername = $row['mail_username'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the mailer username
+        return $mailerUsername;
     }
 
     /**
@@ -1084,76 +845,58 @@ class MailerSettings extends Settings
      *
      * Set the mailer username in the settings table
      *
-     * @param string $mailer_username //the mailer username
+     * @param string $mailerUsername //the mailer username
      * @return bool //true if the mailer username was set, false if not
      */
-    public function setMailerUsername($mailer_username = null)
+    public function setMailerUsername($mailerUsername = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the mailer username is set in the settings table already
+        if ($this->getMailerUsername() != '' || $this->getMailerUsername() != null) {
+            //SQL statement to update the mailer username
+            $sql = "UPDATE settings SET mail_username = $mailerUsername WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the mailer username is set in the settings table already
-                if ($this->getMailerUsername() != '' || $this->getMailerUsername() != null) {
-                    //SQL statement to update the mailer username
-                    $sql = "UPDATE settings SET mail_username = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $mailer_username);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Username Changed', 'The mailer username was changed to ' . $mailer_username . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the mailer username, where isSet is SET
-                    $sql = "UPDATE settings SET mail_username = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $mailer_username);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Username Changed', 'The mailer username was changed to ' . $mailer_username . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Mailer Username Changed', 'The mailer username was changed to ' . $mailerUsername . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the mailer username, where isSet is SET
+        $sql = "UPDATE settings SET mail_username = $mailerUsername WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Mailer Username Changed', 'The mailer username was changed to ' . $mailerUsername . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -1168,55 +911,40 @@ class MailerSettings extends Settings
         //SQL statement to get the mailer password
         $sql = "SELECT mail_password FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the mailer password
+        $mailerPassword = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the mailer_password is set or not
-                    if (isset($row['mail_password'])) {
-                        //if OPENSSL is installed, decrypt the password
-                        if (OPENSSL_INSTALLED) {
-                            //Decrypt the password
-                            $decrypted_password = openssl_decrypt($row['mail_password'], 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
-                        } else {
-                            //store the password as plain text
-                            $decrypted_password = $row['mail_password'];
-                        }
-                        //Return the mailer_password
-                        return $decrypted_password;
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
+        //Check if the row exists
+        if ($row) {
+            //check if the mailer_password is set or not
+            if (isset($row['mail_password'])) {
+                //if OPENSSL is installed, decrypt the password
+                if (OPENSSL_INSTALLED) {
+                    //Decrypt the password
+                    $mailerPassword = openssl_decrypt($row['mail_password'], 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+
+                    //return the decrypted password
+                    return $mailerPassword;
                 }
+                //store the password as plain text
+                $mailerPassword = $row['mail_password'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the mailer password
+        return $mailerPassword;
     }
 
     /**
@@ -1224,100 +952,86 @@ class MailerSettings extends Settings
      *
      * Set the mailer password in the settings table
      *
-     * @param string $mailer_password //the mailer password
+     * @param string $mailerPassword //the mailer password
      * @return bool //true if the mailer password was set, false if not
      */
-    public function setMailerPassword($mailer_password = null)
+    public function setMailerPassword($mailerPassword = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the mailer password is set in the settings table already
+        if ($this->getMailerPassword() != '' || $this->getMailerPassword() != null) {
+            //SQL statement to update the mailer password
+            $sql = "UPDATE settings SET mail_password = ? WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the mailer password is set in the settings table already
-                if ($this->getMailerPassword() != '' || $this->getMailerPassword() != null) {
-                    //SQL statement to update the mailer password
-                    $sql = "UPDATE settings SET mail_password = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //if OPENSSL is installed, encrypt the password
-                    if (OPENSSL_INSTALLED) {
-                        //Encrypt the password
-                        $encrypted_password = openssl_encrypt($mailer_password, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
-                    } else {
-                        //store the password as plain text
-                        $encrypted_password = $mailer_password;
-                    }
-
-                    //set the password
-                    $password = $encrypted_password;
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $password);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Password Changed', 'The mailer password was changed.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //if OPENSSL is installed, encrypt the password
-                    if (OPENSSL_INSTALLED) {
-                        //Encrypt the password
-                        $encrypted_password = openssl_encrypt($mailer_password, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
-                    } else {
-                        //store the password as plain text
-                        $encrypted_password = $mailer_password;
-                    }
-
-                    //set the password
-                    $password = $encrypted_password;
-
-                    //SQL statement to update the mailer password, where isSet is SET
-                    $sql = "UPDATE settings SET mail_password = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $password);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Password Changed', 'The mailer password was changed.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //if OPENSSL is installed, encrypt the password
+            if (OPENSSL_INSTALLED) {
+                //Encrypt the password
+                $password = openssl_encrypt($mailerPassword, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            if (!OPENSSL_INSTALLED) {
+                //store the password as plain text
+                $password = $mailerPassword;
+            }
+
+            //Bind the parameters
+            $stmt->bind_param('s', $password);
+
+            //Execute the statement
+            $stmt->execute();
+
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Mailer Password Changed', 'The mailer password was changed.');
+                //Return true
+                return true;
+            }
+
+            //Return false
+            return false;
         }
+        //if OPENSSL is installed, encrypt the password
+        if (OPENSSL_INSTALLED) {
+            //Encrypt the password
+            $password = openssl_encrypt($mailerPassword, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+        }
+
+        if (!OPENSSL_INSTALLED) {
+            //store the password as plain text
+            $password = $mailerPassword;
+        }
+
+        //SQL statement to update the mailer password, where isSet is SET
+        $sql = "UPDATE settings SET mail_password = ? WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Bind the parameters
+        $stmt->bind_param('s', $password);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Mailer Password Changed', 'The mailer password was changed.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -1332,47 +1046,32 @@ class MailerSettings extends Settings
         //SQL statement to get the mailer encryption
         $sql = "SELECT mail_encryption FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the mailer encryption
+        $mailerEncryption = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the mailer_encryption is set or not
-                    if (isset($row['mail_encryption'])) {
-                        //Return the mailer_encryption
-                        return $row['mail_encryption'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the mailer_encryption is set or not
+            if (isset($row['mail_encryption'])) {
+                //Set the mailer encryption
+                $mailerEncryption = $row['mail_encryption'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the mailer encryption
+        return $mailerEncryption;
     }
 
     /**
@@ -1380,76 +1079,58 @@ class MailerSettings extends Settings
      *
      * Set the mailer encryption in the settings table
      *
-     * @param string $mailer_encryption //the mailer encryption
+     * @param string $mailerEncryption //the mailer encryption
      * @return bool //true if the mailer encryption was set, false if not
      */
-    public function setMailerEncryption($mailer_encryption = null)
+    public function setMailerEncryption($mailerEncryption = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the mailer encryption is set in the settings table already
+        if ($this->getMailerEncryption() != '' || $this->getMailerEncryption() != null) {
+            //SQL statement to update the mailer encryption
+            $sql = "UPDATE settings SET mail_encryption = $mailerEncryption WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the mailer encryption is set in the settings table already
-                if ($this->getMailerEncryption() != '' || $this->getMailerEncryption() != null) {
-                    //SQL statement to update the mailer encryption
-                    $sql = "UPDATE settings SET mail_encryption = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $mailer_encryption);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Encryption Changed', 'The mailer encryption was changed to ' . $mailer_encryption . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the mailer encryption, where isSet is SET
-                    $sql = "UPDATE settings SET mail_encryption = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $mailer_encryption);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Encryption Changed', 'The mailer encryption was changed to ' . $mailer_encryption . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Mailer Encryption Changed', 'The mailer encryption was changed to ' . $mailerEncryption . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the mailer encryption, where isSet is SET
+        $sql = "UPDATE settings SET mail_encryption = $mailerEncryption WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Mailer Encryption Changed', 'The mailer encryption was changed to ' . $mailerEncryption . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -1464,47 +1145,32 @@ class MailerSettings extends Settings
         //SQL statement to get the mailer from address
         $sql = "SELECT mail_from_address FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the mailer from address
+        $fromAddress = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the mailer_from_address is set or not
-                    if (isset($row['mail_from_address'])) {
-                        //Return the mailer_from_address
-                        return $row['mail_from_address'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the mailer_from_address is set or not
+            if (isset($row['mail_from_address'])) {
+                //Set the mailer from address
+                $fromAddress = $row['mail_from_address'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the mailer from address
+        return $fromAddress;
     }
 
     /**
@@ -1512,76 +1178,58 @@ class MailerSettings extends Settings
      *
      * Set the mailer from address in the settings table
      *
-     * @param string $mailer_from_address //the mailer from address
+     * @param string $fromAddress //the mailer from address
      * @return bool //true if the mailer from address was set, false if not
      */
-    public function setMailerFromAddress($mailer_from_address = null)
+    public function setMailerFromAddress($fromAddress = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the mailer from address is set in the settings table already
+        if ($this->getMailerFromAddress() != '' || $this->getMailerFromAddress() != null) {
+            //SQL statement to update the mailer from address
+            $sql = "UPDATE settings SET mail_from_address = $fromAddress WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the mailer from address is set in the settings table already
-                if ($this->getMailerFromAddress() != '' || $this->getMailerFromAddress() != null) {
-                    //SQL statement to update the mailer from address
-                    $sql = "UPDATE settings SET mail_from_address = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $mailer_from_address);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Address Changed', 'The mailer from address was changed to ' . $mailer_from_address . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the mailer from address, where isSet is SET
-                    $sql = "UPDATE settings SET mail_from_address = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $mailer_from_address);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Address Changed', 'The mailer from address was changed to ' . $mailer_from_address . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Mailer From Address Changed', 'The mailer from address was changed to ' . $fromAddress . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the mailer from address, where isSet is SET
+        $sql = "UPDATE settings SET mail_from_address = $fromAddress WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Mailer From Address Changed', 'The mailer from address was changed to ' . $fromAddress . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -1596,47 +1244,32 @@ class MailerSettings extends Settings
         //SQL statement to get the mailer from name
         $sql = "SELECT mail_from_name FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the mailer from name
+        $fromName = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the mailer_from_name is set or not
-                    if (isset($row['mail_from_name'])) {
-                        //Return the mailer_from_name
-                        return $row['mail_from_name'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the mailer_from_name is set or not
+            if (isset($row['mail_from_name'])) {
+                //Set the mailer from name
+                $fromName = $row['mail_from_name'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the mailer from name
+        return $fromName;
     }
 
     /**
@@ -1644,76 +1277,58 @@ class MailerSettings extends Settings
      *
      * Set the mailer from name in the settings table
      *
-     * @param string $mailer_from_name //the mailer from name
+     * @param string $fromName //the mailer from name
      * @return bool //true if the mailer from name was set, false if not
      */
-    public function setMailerFromName($mailer_from_name = null)
+    public function setMailerFromName($fromName = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the mailer from name is set in the settings table already
+        if ($this->getMailerFromName() != '' || $this->getMailerFromName() != null) {
+            //SQL statement to update the mailer from name
+            $sql = "UPDATE settings SET mail_from_name = $fromName WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the mailer from name is set in the settings table already
-                if ($this->getMailerFromName() != '' || $this->getMailerFromName() != null) {
-                    //SQL statement to update the mailer from name
-                    $sql = "UPDATE settings SET mail_from_name = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $mailer_from_name);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Name Changed', 'The mailer from name was changed to ' . $mailer_from_name . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the mailer from name, where isSet is SET
-                    $sql = "UPDATE settings SET mail_from_name = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $mailer_from_name);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Mailer From Name Changed', 'The mailer from name was changed to ' . $mailer_from_name . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Mailer From Name Changed', 'The mailer from name was changed to ' . $fromName . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the mailer from name, where isSet is SET
+        $sql = "UPDATE settings SET mail_from_name = $fromName WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Mailer From Name Changed', 'The mailer from name was changed to ' . $fromName . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -1728,52 +1343,34 @@ class MailerSettings extends Settings
         //SQL statement to get the mailer authentication required status
         $sql = "SELECT mail_auth_req FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the mailer authentication required status
+        $isAuthRequired = false;
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the mailer_auth_required is set or not
-                    if (isset($row['mail_auth_required'])) {
-                        if ($row['mail_auth_required'] == 1) {
-                            //Return true
-                            return true;
-                        } else {
-                            //Return false
-                            return false;
-                        }
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //Return false
-                    return false;
+        //Check if the row exists
+        if ($row) {
+            //check if the mailer_auth_required is set or not
+            if (isset($row['mail_auth_required'])) {
+                if ($row['mail_auth_required'] == 1) {
+                    //Set the mailer authentication required status
+                    $isAuthRequired = true;
                 }
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the mailer authentication required status
+        return $isAuthRequired;
     }
 
     /**
@@ -1781,36 +1378,24 @@ class MailerSettings extends Settings
      *
      * Set the mailer authentication required status in the settings table
      *
-     * @param bool $mailer_auth_required //the mailer authentication required status
+     * @param bool $isAuthRequired //the mailer authentication required status
      * @return bool //true if the mailer authentication required status was set, false if not
      */
-    public function setMailerAuthRequired($mailer_auth_required = null)
+    public function setMailerAuthRequired($isAuthRequired = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Check if the mailer authentication required status is set in the settings table already
+        if ($this->isMailerAuthRequiredSet()) {
+            //Get the mailer authentication required status
+            $status = $this->getMailerAuthRequiredStatus($isAuthRequired);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the mailer authentication required status is set in the settings table already
-                if ($this->isMailerAuthRequiredSet()) {
-                    $status = $this->getMailerAuthRequiredStatus($mailer_auth_required);
-                    $result = $this->updateMailerAuthRequiredStatus($status, $mailer_auth_required);
-                    return $result;
-                } else {
-                    $status = $this->getMailerAuthRequiredStatus($mailer_auth_required);
-                    $result = $this->updateMailerAuthRequiredStatus($status, $mailer_auth_required);
-                    return $result;
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+            //Update the mailer authentication required status
+            $result = $this->updateMailerAuthRequiredStatus($status, $isAuthRequired);
+
+            //Return the result
+            return $result;
         }
+
+        return false;
     }
 
     /**
@@ -1830,12 +1415,12 @@ class MailerSettings extends Settings
      *
      * Get the mailer authentication required status from the settings table
      *
-     * @param bool $mailer_auth_required //the mailer authentication required status
+     * @param bool $isAuthRequired //the mailer authentication required status
      * @return int //the mailer authentication required status int
      */
-    private function getMailerAuthRequiredStatus($mailer_auth_required)
+    private function getMailerAuthRequiredStatus($isAuthRequired)
     {
-        return $mailer_auth_required ? 1 : 0;
+        return $isAuthRequired ? 1 : 0;
     }
 
     /**
@@ -1844,25 +1429,34 @@ class MailerSettings extends Settings
      * Update the mailer authentication required status in the settings table
      *
      * @param int $status //the mailer authentication required status int
-     * @param bool $mailer_auth_required //the mailer authentication required status
+     * @param bool $isAuthRequired //the mailer authentication required status
      * @return bool //true if the mailer authentication required status was updated, false if not
      */
-    private function updateMailerAuthRequiredStatus($status, $mailer_auth_required)
+    private function updateMailerAuthRequiredStatus($status, $isAuthRequired)
     {
-        $sql = "UPDATE settings SET mail_auth_req = ? WHERE isSet = 'SET'";
+        //SQL statement to update the mailer authentication required status
+        $sql = "UPDATE settings SET mail_auth_req = $status WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param('i', $status);
+
+        //Execute the statement
         $stmt->execute();
 
+        //Check if the statement was executed successfully and if the mailer authentication required status is set
         if (
-            $stmt->affected_rows > 0 && $mailer_auth_required
+            $stmt->affected_rows > 0 && $isAuthRequired
         ) {
             $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $mailer_auth_required . '.');
+            //instance of the session class
+            $session = new Session();
+            //get the user id from the session
+            $userID = intval($session->get('user_id')) ?? null;
+            $activity->logActivity($userID, 'Mailer Authentication Required Status Changed', 'The mailer authentication required status was changed to' . $isAuthRequired . '.');
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }
 
@@ -1884,47 +1478,32 @@ class CompanySettings extends Settings
         //SQL statement to get the company name
         $sql = "SELECT company_name FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the company name
+        $companyName = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the company_name is set or not
-                    if (isset($row['company_name'])) {
-                        //Return the company_name
-                        return $row['company_name'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the company_name is set or not
+            if (isset($row['company_name'])) {
+                //Set the company name
+                $companyName = $row['company_name'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the company name
+        return $companyName;
     }
 
     /**
@@ -1932,76 +1511,58 @@ class CompanySettings extends Settings
      *
      * Set the company name in the settings table
      *
-     * @param string $company_name //the company name
+     * @param string $companyName //the company name
      * @return bool //true if the company name was set, false if not
      */
-    public function setCompanyName($company_name = null)
+    public function setCompanyName($companyName = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the company name is set in the settings table already
+        if ($this->getCompanyName() != '' || $this->getCompanyName() != null) {
+            //SQL statement to update the company name
+            $sql = "UPDATE settings SET company_name = $companyName WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the company name is set in the settings table already
-                if ($this->getCompanyName() != '' || $this->getCompanyName() != null) {
-                    //SQL statement to update the company name
-                    $sql = "UPDATE settings SET company_name = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_name);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Name Changed', 'The company name was changed to ' . $company_name . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the company name, where isSet is SET
-                    $sql = "UPDATE settings SET company_name = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_name);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Name Changed', 'The company name was changed to ' . $company_name . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Company Name Changed', 'The company name was changed to ' . $companyName . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the company name, where isSet is SET
+        $sql = "UPDATE settings SET company_name = $companyName WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Company Name Changed', 'The company name was changed to ' . $companyName . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -2009,54 +1570,39 @@ class CompanySettings extends Settings
      *
      * Get the company logo from the settings table
      *
-     * @return int //the logo media id
+     * @return ?int //the logo media id
      */
-    public function getCompanyLogo()
+    public function getCompanyLogo(): ?int
     {
         //SQL statement to get the company logo
         $sql = "SELECT company_logo FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the company logo
+        $companyLogo = null;
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the company_logo is set or not
-                    if (isset($row['company_logo'])) {
-                        //Return the company_logo
-                        return intval($row['company_logo']);
-                    } else {
-                        //Return an empty string
-                        return intval(null);
-                    }
-                } else {
-                    //Return an empty string
-                    return intval(null);
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the company_logo is set or not
+            if (isset($row['company_logo'])) {
+                //Set the company logo
+                $companyLogo = $row['company_logo'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the company logo
+        return $companyLogo;
     }
 
     /**
@@ -2064,76 +1610,58 @@ class CompanySettings extends Settings
      *
      * Set the company logo in the settings table
      *
-     * @param int $company_logo //the company logo media id
+     * @param int $companyLogo //the company logo media id
      * @return bool //true if the company logo was set, false if not
      */
-    public function setCompanyLogo($company_logo = null)
+    public function setCompanyLogo($companyLogo = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the company logo is set in the settings table already
+        if ($this->getCompanyLogo() != '' || $this->getCompanyLogo() != null) {
+            //SQL statement to update the company logo
+            $sql = "UPDATE settings SET company_logo = $companyLogo WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the company logo is set in the settings table already
-                if ($this->getCompanyLogo() != '' || $this->getCompanyLogo() != null) {
-                    //SQL statement to update the company logo
-                    $sql = "UPDATE settings SET company_logo = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('i', $company_logo);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Logo Changed', 'The company logo was changed.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the company logo, where isSet is SET
-                    $sql = "UPDATE settings SET company_logo = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('i', $company_logo);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Logo Changed', 'The company logo was changed.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Company Logo Changed', 'The company logo was changed.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the company logo, where isSet is SET
+        $sql = "UPDATE settings SET company_logo = $companyLogo WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Company Logo Changed', 'The company logo was changed.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -2148,47 +1676,32 @@ class CompanySettings extends Settings
         //SQL statement to get the company address
         $sql = "SELECT company_address FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the company address
+        $companyAddress = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the company_address is set or not
-                    if (isset($row['company_address'])) {
-                        //Return the company_address
-                        return $row['company_address'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the company_address is set or not
+            if (isset($row['company_address'])) {
+                //Set the company address
+                $companyAddress = $row['company_address'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the company address
+        return $companyAddress;
     }
 
     /**
@@ -2196,76 +1709,58 @@ class CompanySettings extends Settings
      *
      * Set the company address in the settings table
      *
-     * @param string $company_address //the company address
+     * @param string $companyAddress //the company address
      * @return bool //true if the company address was set, false if not
      */
-    public function setCompanyAddress($company_address = null)
+    public function setCompanyAddress($companyAddress = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the company address is set in the settings table already
+        if ($this->getCompanyAddress() != '' || $this->getCompanyAddress() != null) {
+            //SQL statement to update the company address
+            $sql = "UPDATE settings SET company_address = $companyAddress WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the company address is set in the settings table already
-                if ($this->getCompanyAddress() != '' || $this->getCompanyAddress() != null) {
-                    //SQL statement to update the company address
-                    $sql = "UPDATE settings SET company_address = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_address);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Address Changed', 'The company address was changed to ' . $company_address . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the company address, where isSet is SET
-                    $sql = "UPDATE settings SET company_address = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_address);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Address Changed', 'The company address was changed to ' . $company_address . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Company Address Changed', 'The company address was changed to ' . $companyAddress . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the company address, where isSet is SET
+        $sql = "UPDATE settings SET company_address = $companyAddress WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Company Address Changed', 'The company address was changed to ' . $companyAddress . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -2280,47 +1775,32 @@ class CompanySettings extends Settings
         //SQL statement to get the company city
         $sql = "SELECT company_city FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the company city
+        $companyCity = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the company_city is set or not
-                    if (isset($row['company_city'])) {
-                        //Return the company_city
-                        return $row['company_city'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the company_city is set or not
+            if (isset($row['company_city'])) {
+                //Set the company city
+                $companyCity = $row['company_city'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the company city
+        return $companyCity;
     }
 
     /**
@@ -2328,76 +1808,58 @@ class CompanySettings extends Settings
      *
      * Set the company city in the settings table
      *
-     * @param string $company_city //the company city
+     * @param string $companyCity //the company city
      * @return bool //true if the company city was set, false if not
      */
-    public function setCompanyCity($company_city = null)
+    public function setCompanyCity($companyCity = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the company city is set in the settings table already
+        if ($this->getCompanyCity() != '' || $this->getCompanyCity() != null) {
+            //SQL statement to update the company city
+            $sql = "UPDATE settings SET company_city = $companyCity WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the company city is set in the settings table already
-                if ($this->getCompanyCity() != '' || $this->getCompanyCity() != null) {
-                    //SQL statement to update the company city
-                    $sql = "UPDATE settings SET company_city = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_city);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company City Changed', 'The company city was changed to ' . $company_city . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the company city, where isSet is SET
-                    $sql = "UPDATE settings SET company_city = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_city);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company City Changed', 'The company city was changed to ' . $company_city . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Company City Changed', 'The company city was changed to ' . $companyCity . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the company city, where isSet is SET
+        $sql = "UPDATE settings SET company_city = $companyCity WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Company City Changed', 'The company city was changed to ' . $companyCity . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -2412,47 +1874,32 @@ class CompanySettings extends Settings
         //SQL statement to get the company state
         $sql = "SELECT company_state FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the company state
+        $companyState = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the company_state is set or not
-                    if (isset($row['company_state'])) {
-                        //Return the company_state
-                        return $row['company_state'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the company_state is set or not
+            if (isset($row['company_state'])) {
+                //Set the company state
+                $companyState = $row['company_state'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the company state
+        return $companyState;
     }
 
     /**
@@ -2460,76 +1907,58 @@ class CompanySettings extends Settings
      *
      * Set the company state in the settings table
      *
-     * @param string $company_state //the company state
+     * @param string $companyState //the company state
      * @return bool //true if the company state was set, false if not
      */
-    public function setCompanyState($company_state = null)
+    public function setCompanyState($companyState = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the company state is set in the settings table already
+        if ($this->getCompanyState() != '' || $this->getCompanyState() != null) {
+            //SQL statement to update the company state
+            $sql = "UPDATE settings SET company_state = $companyState WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the company state is set in the settings table already
-                if ($this->getCompanyState() != '' || $this->getCompanyState() != null) {
-                    //SQL statement to update the company state
-                    $sql = "UPDATE settings SET company_state = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_state);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company State Changed', 'The company state was changed to ' . $company_state . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the company state, where isSet is SET
-                    $sql = "UPDATE settings SET company_state = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_state);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company State Changed', 'The company state was changed to ' . $company_state . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Company State Changed', 'The company state was changed to ' . $companyState . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the company state, where isSet is SET
+        $sql = "UPDATE settings SET company_state = $companyState WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Company State Changed', 'The company state was changed to ' . $companyState . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -2544,47 +1973,32 @@ class CompanySettings extends Settings
         //SQL statement to get the company zip
         $sql = "SELECT company_zip FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the company zip
+        $companyZip = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the company_zip is set or not
-                    if (isset($row['company_zip'])) {
-                        //Return the company_zip
-                        return $row['company_zip'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the company_zip is set or not
+            if (isset($row['company_zip'])) {
+                //Set the company zip
+                $companyZip = $row['company_zip'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the company zip
+        return $companyZip;
     }
 
     /**
@@ -2592,76 +2006,58 @@ class CompanySettings extends Settings
      *
      * Set the company zip in the settings table
      *
-     * @param string $company_zip //the company zip
+     * @param string $companyZip //the company zip
      * @return bool //true if the company zip was set, false if not
      */
-    public function setCompanyZip($company_zip = null)
+    public function setCompanyZip($companyZip = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the company zip is set in the settings table already
+        if ($this->getCompanyZip() != '' || $this->getCompanyZip() != null) {
+            //SQL statement to update the company zip
+            $sql = "UPDATE settings SET company_zip = $companyZip WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the company zip is set in the settings table already
-                if ($this->getCompanyZip() != '' || $this->getCompanyZip() != null) {
-                    //SQL statement to update the company zip
-                    $sql = "UPDATE settings SET company_zip = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_zip);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Zip Changed', 'The company zip was changed to ' . $company_zip . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the company zip, where isSet is SET
-                    $sql = "UPDATE settings SET company_zip = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_zip);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Zip Changed', 'The company zip was changed to ' . $company_zip . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Company Zip Changed', 'The company zip was changed to ' . $companyZip . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the company zip, where isSet is SET
+        $sql = "UPDATE settings SET company_zip = $companyZip WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Company Zip Changed', 'The company zip was changed to ' . $companyZip . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -2676,47 +2072,32 @@ class CompanySettings extends Settings
         //SQL statement to get the company phone
         $sql = "SELECT company_phone FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the company phone
+        $companyPhone = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the company_phone is set or not
-                    if (isset($row['company_phone'])) {
-                        //Return the company_phone
-                        return $row['company_phone'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the company_phone is set or not
+            if (isset($row['company_phone'])) {
+                //Set the company phone
+                $companyPhone = $row['company_phone'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the company phone
+        return $companyPhone;
     }
 
     /**
@@ -2724,76 +2105,58 @@ class CompanySettings extends Settings
      *
      * Set the company phone in the settings table
      *
-     * @param string $company_phone //the company phone
+     * @param string $companyPhone //the company phone
      * @return bool //true if the company phone was set, false if not
      */
-    public function setCompanyPhone($company_phone = null)
+    public function setCompanyPhone($companyPhone = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the company phone is set in the settings table already
+        if ($this->getCompanyPhone() != '' || $this->getCompanyPhone() != null) {
+            //SQL statement to update the company phone
+            $sql = "UPDATE settings SET company_phone = $companyPhone WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the company phone is set in the settings table already
-                if ($this->getCompanyPhone() != '' || $this->getCompanyPhone() != null) {
-                    //SQL statement to update the company phone
-                    $sql = "UPDATE settings SET company_phone = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_phone);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Phone Changed', 'The company phone was changed to ' . $company_phone . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the company phone, where isSet is SET
-                    $sql = "UPDATE settings SET company_phone = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_phone);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company Phone Changed', 'The company phone was changed to ' . $company_phone . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Company Phone Changed', 'The company phone was changed to ' . $companyPhone . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the company phone, where isSet is SET
+        $sql = "UPDATE settings SET company_phone = $companyPhone WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Company Phone Changed', 'The company phone was changed to ' . $companyPhone . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -2808,47 +2171,32 @@ class CompanySettings extends Settings
         //SQL statement to get the company URL
         $sql = "SELECT company_url FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //Placeholder for the company URL
+        $companyURL = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the company_url is set or not
-                    if (isset($row['company_url'])) {
-                        //Return the company_url
-                        return $row['company_url'];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
+        //Check if the row exists
+        if ($row) {
+            //check if the company_url is set or not
+            if (isset($row['company_url'])) {
+                //Set the company URL
+                $companyURL = $row['company_url'];
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
         }
+
+        //Return the company URL
+        return $companyURL;
     }
 
     /**
@@ -2856,76 +2204,58 @@ class CompanySettings extends Settings
      *
      * Set the company URL in the settings table
      *
-     * @param string $company_url //the company URL
+     * @param string $companyURL //the company URL
      * @return bool //true if the company URL was set, false if not
      */
-    public function setCompanyURL($company_url = null)
+    public function setCompanyURL($companyURL = null)
     {
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
+        //Check if the company URL is set in the settings table already
+        if ($this->getCompanyURL() != '' || $this->getCompanyURL() != null) {
+            //SQL statement to update the company URL
+            $sql = "UPDATE settings SET company_url = $companyURL WHERE isSet = 'SET'";
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Check if the company URL is set in the settings table already
-                if ($this->getCompanyURL() != '' || $this->getCompanyURL() != null) {
-                    //SQL statement to update the company URL
-                    $sql = "UPDATE settings SET company_url = ? WHERE isSet = 'SET'";
+            //Prepare the SQL statement for execution
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
+            //Execute the statement
+            $stmt->execute();
 
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_url);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company URL Changed', 'The company URL was changed to ' . $company_url . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                } else {
-                    //SQL statement to update the company URL, where isSet is SET
-                    $sql = "UPDATE settings SET company_url = ? WHERE isSet = 'SET'";
-
-                    //Prepare the SQL statement for execution
-                    $stmt = prepareStatement($this->mysqli, $sql);
-
-                    //Bind the parameters
-                    $stmt->bind_param('s', $company_url);
-
-                    //Execute the statement
-                    $stmt->execute();
-
-                    //Check if the statement was executed successfully
-                    if ($stmt->affected_rows > 0) {
-                        //log the activity
-                        $activity = new Activity();
-                        $activity->logActivity(intval($_SESSION['user_id']), 'Company URL Changed', 'The company URL was changed to ' . $company_url . '.');
-                        //Return true
-                        return true;
-                    } else {
-                        //Return false
-                        return false;
-                    }
-                }
+            //Check if the statement was executed successfully
+            if ($stmt->affected_rows > 0) {
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity($userID, 'Company URL Changed', 'The company URL was changed to ' . $companyURL . '.');
+                //Return true
+                return true;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+
+            //Return false
+            return false;
         }
+        //SQL statement to update the company URL, where isSet is SET
+        $sql = "UPDATE settings SET company_url = $companyURL WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, 'Company URL Changed', 'The company URL was changed to ' . $companyURL . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 }
 
@@ -2938,13 +2268,13 @@ class CompanySettings extends Settings
 class TrackerSettings extends Settings
 {
     //The tracker id e.g. UA-123456789-1 for google analytics or 1234567 for hotjar
-    protected $tracker_id;
+    protected $trackerID;
     //The tracker name to identify the tracker e.g. Google Analytics, Hotjar, etc.
-    protected $tracker_name;
+    protected $trackerName;
     //The tracker type e.g. ga, hotjar, etc. used for the column names in the settings table
-    protected $tracker_type;
+    protected $trackerType;
     //The tracker status e.g. true or false to enable or disable the tracker
-    protected $tracker_status;
+    protected $trackerStatus;
 
     /**
      * Get Tracker ID
@@ -2956,7 +2286,7 @@ class TrackerSettings extends Settings
     public function getTrackerID()
     {
         //SQL statement to get the tracker id
-        $sql = "SELECT " . $this->tracker_type . "_id FROM settings WHERE isSet = 'SET'";
+        $sql = "SELECT " . $this->trackerType . "_id FROM settings WHERE isSet = 'SET'";
 
         //Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
@@ -2970,20 +2300,20 @@ class TrackerSettings extends Settings
         //Get the row
         $row = $result->fetch_assoc();
 
+        //Placeholder for the tracker id
+        $trackerID = '';
+
         //Check if the row exists
         if ($row) {
             //check if the tracker_id is set or not
-            if (isset($row[$this->tracker_type . '_id'])) {
-                //Return the tracker_id
-                return $row[$this->tracker_type . '_id'];
-            } else {
-                //Return an empty string
-                return '';
+            if (isset($row[$this->trackerType . '_id'])) {
+                //Set the tracker id
+                $trackerID = $row[$this->trackerType . '_id'];
             }
-        } else {
-            //Return an empty string
-            return '';
         }
+
+        //Return the tracker id
+        return $trackerID;
     }
 
     /**
@@ -2991,21 +2321,25 @@ class TrackerSettings extends Settings
      *
      * Set the tracker id in the settings table
      *
-     * @param string $tracker_id //the tracker id
+     * @param string $trackerID //the tracker id
      * @return bool //true if the tracker id was set, false if not
      */
-    public function setTrackerID($tracker_id = null)
+    public function setTrackerID($trackerID = null)
     {
+        //instance of the session class
+        $session = new Session();
+        //get the user id from the session
+        $userID = intval($session->get('user_id')) ?? null;
         //Check if the tracker id is set in the settings table already
         if ($this->getTrackerID() != '' || $this->getTrackerID() != null) {
             //SQL statement to update the tracker id
-            $sql = "UPDATE settings SET " . $this->tracker_type . "_id = ? WHERE isSet = 'SET'";
+            $sql = "UPDATE settings SET " . $this->trackerID . "_id = ? WHERE isSet = 'SET'";
 
             //Prepare the SQL statement for execution
             $stmt = prepareStatement($this->mysqli, $sql);
 
             //Bind the parameters
-            $stmt->bind_param('s', $tracker_id);
+            $stmt->bind_param('s', $trackerID);
 
             //Execute the statement
             $stmt->execute();
@@ -3014,38 +2348,37 @@ class TrackerSettings extends Settings
             if ($stmt->affected_rows > 0) {
                 //log the activity
                 $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), $this->tracker_name . ' ID Changed', 'The ' . $this->tracker_name . ' ID was changed to ' . $tracker_id . '.');
+                $activity->logActivity($userID, $this->trackerName . ' ID Changed', 'The ' . $this->trackerName . ' ID was changed to ' . $trackerID . '.');
                 //Return true
                 return true;
-            } else {
-                //Return false
-                return false;
             }
-        } else {
-            //SQL statement to update the tracker id, where isSet is SET
-            $sql = "UPDATE settings SET " . $this->tracker_type . "_id = ? WHERE isSet = 'SET'";
 
-            //Prepare the SQL statement for execution
-            $stmt = prepareStatement($this->mysqli, $sql);
-
-            //Bind the parameters
-            $stmt->bind_param('s', $tracker_id);
-
-            //Execute the statement
-            $stmt->execute();
-
-            //Check if the statement was executed successfully
-            if ($stmt->affected_rows > 0) {
-                //log the activity
-                $activity = new Activity();
-                $activity->logActivity(intval($_SESSION['user_id']), $this->tracker_name . ' ID Changed', 'The ' . $this->tracker_name . ' ID was changed to ' . $tracker_id . '.');
-                //Return true
-                return true;
-            } else {
-                //Return false
-                return false;
-            }
+            //Return false
+            return false;
         }
+        //SQL statement to update the tracker id, where isSet is SET
+        $sql = "UPDATE settings SET " . $this->trackerType . "_id = ? WHERE isSet = 'SET'";
+
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Bind the parameters
+        $stmt->bind_param('s', $trackerID);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($userID, $this->trackerName . ' ID Changed', 'The ' . $this->trackerName . ' ID was changed to ' . $trackerID . '.');
+            //Return true
+            return true;
+        }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -3057,7 +2390,7 @@ class TrackerSettings extends Settings
     public function getTrackerStatus()
     {
         //SQL statement to get the tracker status
-        $sql = "SELECT " . $this->tracker_type . "_enable FROM settings WHERE isSet = 'SET'";
+        $sql = "SELECT " . $this->trackerType . "_enable FROM settings WHERE isSet = 'SET'";
 
         //Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
@@ -3071,20 +2404,20 @@ class TrackerSettings extends Settings
         //Get the row
         $row = $result->fetch_assoc();
 
+        //Placeholder for the tracker status
+        $trackerStatus = false;
+
         //Check if the row exists
         if ($row) {
             //check if the tracker_enable is set or not
-            if (isset($row[$this->tracker_type . '_enable'])) {
-                //Return the tracker_enable
-                return boolval($row[$this->tracker_type . '_enable']);
-            } else {
-                //Return false
-                return false;
+            if (isset($row[$this->trackerType . '_enable'])) {
+                //Set the tracker status
+                $trackerStatus = boolval($row[$this->trackerType . '_enable']);
             }
-        } else {
-            //Return false
-            return false;
         }
+
+        //Return the tracker status
+        return $trackerStatus;
     }
 
     /**
@@ -3092,19 +2425,19 @@ class TrackerSettings extends Settings
      *
      * Set the tracker status in the settings table
      *
-     * @param bool $tracker_status //the tracker status
+     * @param bool $trackerStatus //the tracker status
      * @return bool //true if the tracker status was set, false if not
      */
-    public function setTrackerStatus($tracker_status = null)
+    public function setTrackerStatus($trackerStatus = null)
     {
         //SQL statement to update the tracker status
-        $sql = "UPDATE settings SET " . $this->tracker_type . "_enable = ? WHERE isSet = 'SET'";
+        $sql = "UPDATE settings SET " . $this->trackerType . "_enable = ? WHERE isSet = 'SET'";
 
         //Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters
-        $stmt->bind_param('i', $tracker_status);
+        $stmt->bind_param('i', $trackerStatus);
 
         //Execute the statement
         $stmt->execute();
@@ -3113,13 +2446,17 @@ class TrackerSettings extends Settings
         if ($stmt->affected_rows > 0) {
             //log the activity
             $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), $this->tracker_name . ' Status Changed', 'The ' . $this->tracker_name . ' status was changed to ' . $tracker_status . '.');
+            //instance of the session class
+            $session = new Session();
+            //get the user id from the session
+            $userID = intval($session->get('user_id')) ?? null;
+            $activity->logActivity($userID, $this->trackerName . ' Status Changed', 'The ' . $this->trackerName . ' status was changed to ' . $trackerStatus . '.');
             //Return true
             return true;
-        } else {
-            //Return false
-            return false;
         }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -3151,18 +2488,12 @@ class TrackerSettings extends Settings
                 if ($row['ga_enable'] == 1 || $row['hotjar_enable'] == 1) {
                     //Return true
                     return true;
-                } else {
-                    //Return false
-                    return false;
                 }
-            } else {
-                //Return false
-                return false;
             }
-        } else {
-            //Return false
-            return false;
         }
+
+        //Return false
+        return false;
     }
 }
 
@@ -3173,9 +2504,9 @@ class TrackerSettings extends Settings
 class HotjarTracker extends TrackerSettings
 {
     //The tracker name to identify the tracker e.g. Google Analytics, Hotjar, etc.
-    protected $tracker_name = 'Hotjar';
+    protected $trackerName = 'Hotjar';
     //The tracker type e.g. ga, hotjar, etc. used for the column names in the settings table
-    protected $tracker_type = 'hotjar';
+    protected $trackerType = 'hotjar';
 
     /**
      * Get Hotjar ID
@@ -3194,12 +2525,12 @@ class HotjarTracker extends TrackerSettings
      *
      * Set the hotjar id in the settings table
      *
-     * @param string $hotjar_id //the hotjar id
+     * @param string $hotjarID //the hotjar id
      * @return bool //true if the hotjar id was set, false if not
      */
-    public function setHotjarID($hotjar_id = null)
+    public function setHotjarID($hotjarID = null)
     {
-        return $this->setTrackerID($hotjar_id);
+        return $this->setTrackerID($hotjarID);
     }
 
     /**
@@ -3226,20 +2557,20 @@ class HotjarTracker extends TrackerSettings
         //Get the row
         $row = $result->fetch_assoc();
 
+        //Placeholder for the hotjar version
+        $hotjarVersion = null;
+
         //Check if the row exists
         if ($row) {
             //check if the hotjar_version is set or not
             if (isset($row['hotjar_version'])) {
-                //Return the hotjar_version
-                return intval($row['hotjar_version']);
-            } else {
-                //Return null
-                return null;
+                //Set the hotjar version
+                $hotjarVersion = intval($row['hotjar_version']);
             }
-        } else {
-            //Return null
-            return null;
         }
+
+        //Return the hotjar version
+        return $hotjarVersion;
     }
 
     /**
@@ -3247,10 +2578,10 @@ class HotjarTracker extends TrackerSettings
      *
      * Set the hotjar version in the settings table
      *
-     * @param int $hotjar_version //the hotjar version
+     * @param int $hotjarVersion //the hotjar version
      * @return bool //true if the hotjar version was set, false if not
      */
-    public function setHotjarVersion($hotjar_version = null)
+    public function setHotjarVersion($hotjarVersion = null)
     {
         //SQL statement to update the hotjar version
         $sql = "UPDATE settings SET hotjar_version = ? WHERE isSet = 'SET'";
@@ -3259,7 +2590,7 @@ class HotjarTracker extends TrackerSettings
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters
-        $stmt->bind_param('i', $hotjar_version);
+        $stmt->bind_param('i', $hotjarVersion);
 
         //Execute the statement
         $stmt->execute();
@@ -3268,13 +2599,17 @@ class HotjarTracker extends TrackerSettings
         if ($stmt->affected_rows > 0) {
             //log the activity
             $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Hotjar Version Changed', 'The hotjar version was changed to ' . $hotjar_version . '.');
+            //instance of the session class
+            $session = new Session();
+            //get the user id from the session
+            $userID = intval($session->get('user_id')) ?? null;
+            $activity->logActivity($userID, 'Hotjar Version Changed', 'The hotjar version was changed to ' . $hotjarVersion . '.');
             //Return true
             return true;
-        } else {
-            //Return false
-            return false;
         }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -3294,12 +2629,12 @@ class HotjarTracker extends TrackerSettings
      *
      * Set the hotjar status in the settings table
      *
-     * @param bool $hotjar_status //the hotjar status
+     * @param bool $hotjarStatus //the hotjar status
      * @return bool //true if the hotjar status was set, false if not
      */
-    public function setHotjarStatus($hotjar_status = null)
+    public function setHotjarStatus($hotjarStatus = null)
     {
-        return $this->setTrackerStatus($hotjar_status);
+        return $this->setTrackerStatus($hotjarStatus);
     }
 }
 
@@ -3310,9 +2645,9 @@ class HotjarTracker extends TrackerSettings
 class GoogleAnalyticsTracker extends TrackerSettings
 {
     //The tracker name to identify the tracker e.g. Google Analytics, Hotjar, etc.
-    protected $tracker_name = 'Google Analytics';
+    protected $trackerName = 'Google Analytics';
     //The tracker type e.g. ga, hotjar, etc. used for the column names in the settings table
-    protected $tracker_type = 'ga';
+    protected $trackerType = 'ga';
 
     /**
      * Get Google Analytics ID
@@ -3331,12 +2666,12 @@ class GoogleAnalyticsTracker extends TrackerSettings
      *
      * Set the google analytics id in the settings table
      *
-     * @param string $google_analytics_id //the google analytics id
+     * @param string $gaID //the google analytics id
      * @return bool //true if the google analytics id was set, false if not
      */
-    public function setGoogleAnalyticsID($google_analytics_id = null)
+    public function setGoogleAnalyticsID($gaID = null)
     {
-        return $this->setTrackerID($google_analytics_id);
+        return $this->setTrackerID($gaID);
     }
 
     /**
@@ -3356,11 +2691,11 @@ class GoogleAnalyticsTracker extends TrackerSettings
      *
      * Set the google analytics status in the settings table
      *
-     * @param bool $google_analytics_status //the google analytics status
+     * @param bool $gaStatus //the google analytics status
      * @return bool //true if the google analytics status was set, false if not
      */
-    public function setGoogleAnalyticsStatus($google_analytics_status = null)
+    public function setGoogleAnalyticsStatus($gaStatus = null)
     {
-        return $this->setTrackerStatus($google_analytics_status);
+        return $this->setTrackerStatus($gaStatus);
     }
 }
