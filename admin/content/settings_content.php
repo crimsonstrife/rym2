@@ -54,6 +54,9 @@ if (!isset($hasViewDashboardPermission)) {
         // include the media class
         $media = new Media();
 
+        //include the session class
+        $session = new Session();
+
         // create an array of available media
         $mediaArray = $media->getMedia();
 
@@ -80,7 +83,7 @@ if (!isset($hasViewDashboardPermission)) {
         $readPermission_id = $permissions->getPermissionIdByName('READ SETTINGS');
 
         // boolean value for if the user has the read settings permission
-        $hasReadSettingsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readPermission_id);
+        $hasReadSettingsPermission = $auth->checkUserPermission(intval($session->get('user_id')), $readPermission_id);
 
         // only show the settings if the user has the read settings permission
         if (!$hasReadSettingsPermission) {
@@ -95,7 +98,7 @@ if (!isset($hasViewDashboardPermission)) {
             $updatePermission_id = $permissions->getPermissionIdByName('UPDATE SETTINGS');
 
             // boolean value for if the user has the update settings permission
-            $hasUpdateSettingsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermission_id);
+            $hasUpdateSettingsPermission = $auth->checkUserPermission(intval($session->get('user_id')), $updatePermission_id);
 
             // check if the form has been submitted
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -499,7 +502,7 @@ if (!isset($hasViewDashboardPermission)) {
                             error_log('app_logo is array: ' . $app_logo);
 
                             // upload the app logo, and get the media id
-                            $appLogo_media_id = $media->uploadMedia($app_logo, intval($_SESSION['user_id']));
+                            $appLogo_media_id = $media->uploadMedia($app_logo, intval($session->get('user_id')));
 
                             // get the file name
                             $target_file_appLogo = $media->getMediaFileName($appLogo_media_id);
@@ -536,7 +539,7 @@ if (!isset($hasViewDashboardPermission)) {
                         // check if the company logo is an array
                         if (is_array($company_logo)) {
                             // upload the company logo, and get the media id
-                            $companyLogo_media_id = $media->uploadMedia($company_logo, intval($_SESSION['user_id']));
+                            $companyLogo_media_id = $media->uploadMedia($company_logo, intval($session->get('user_id')));
 
                             // get the file name
                             $target_file_companyLogo = $media->getMediaFileName($companyLogo_media_id);
@@ -702,7 +705,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                         } ?>>
                                                                     <option value="">Select a Logo</option>
                                                                     <?php  /* check if the user has permission to upload media */
-                                                                    if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissions->getPermissionIdByName('CREATE MEDIA'))) {
+                                                                    if ($auth->checkUserPermission(intval($session->get('user_id')), $permissions->getPermissionIdByName('CREATE MEDIA'))) {
                                                                     ?>
                                                                         <option value="0">Upload a New Logo</option>
                                                                     <?php } ?>
@@ -721,7 +724,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                                     a New Logo" from the dropdown. To use an existing file, select the
                                                                     filename.</small>
                                                                 <?php } else if (empty($mediaArray)) {  // if there are no media files, show the file upload input if the user has upload permissions
-                                                                if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissions->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                                if ($auth->checkUserPermission(intval($session->get('user_id')), $permissions->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                                                     <label for="app-logo-upload">Upload a New Logo:</label>
                                                                     <input type="file" id="app-logo-upload" name="app_logoUpload" class="form-control" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                             echo 'disabled';
@@ -832,7 +835,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                 } ?>>
                                                                     <option value="">Select a Logo</option>
                                                                     <?php  /* check if the user has permission to upload media */
-                                                                    if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissions->getPermissionIdByName('CREATE MEDIA'))) {
+                                                                    if ($auth->checkUserPermission(intval($session->get('user_id')), $permissions->getPermissionIdByName('CREATE MEDIA'))) {
                                                                     ?>
                                                                         <option value="0">Upload a New Logo</option>
                                                                     <?php } ?>
@@ -853,7 +856,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                                     the
                                                                     filename.</small>
                                                                 <?php } else if (empty($mediaArray)) {  // if there are no media files, show the file upload input if the user has upload permissions
-                                                                if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissions->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                                if ($auth->checkUserPermission(intval($session->get('user_id')), $permissions->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                                                     <label for="company-logo-upload">Upload a New Logo:</label>
                                                                     <input type="file" id="company-logo-upload" name="company_logoUpload" class="form-control" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                     echo 'disabled';
