@@ -9,9 +9,6 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
-use MailerSettings;
-use Session;
-
 /**
  * The Contact Class
  *
@@ -498,7 +495,7 @@ class Contact
             $activity = new Activity();
             //instance of the session class
             $session = new Session();
-            $userID = intval($session->sessionVars['user_id']) ?? null;
+            $userID = intval($session->get('user_id')) ?? null;
             $activity->logActivity($userID, 'Error Sending Account Creation Email', $mail->ErrorInfo);
             //if there is an error, return false
             return false;
@@ -508,7 +505,7 @@ class Contact
         $activity = new Activity();
         //instance of the session class
         $session = new Session();
-        $userID = intval($session->sessionVars['user_id']) ?? null;
+        $userID = intval($session->get('user_id')) ?? null;
         $activity->logActivity($userID, 'Account Creation Email Sent', $email);
         //if there is no error, return true
         return true;
