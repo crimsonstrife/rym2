@@ -9,14 +9,18 @@ require_once(__DIR__ . '/config/app.php');
 // Include the helpers file
 require_once(__DIR__ . '/includes/utils/helpers.php');
 
+//instance of the session class
+$session = new Session();
+
 // Check if the user is already logged in, if yes redirect to the admin dashboard
-if (isset($_SESSION["logged_in"])) {
+if ($session->check('logged_in') === true) {
     //if the user is logged in, redirect to the admin dashboard
-    if ($_SESSION["logged_in"] === true) {
+    if ($session->get('logged_in') === true) {
         //is the user set?
-        if (isset($_SESSION['user_id'])) {
+        if
+        ($session->check('user_id') === true) {
             //get the user id
-            $user_id = $_SESSION['user_id'];
+            $user_id = $session->get('user_id');
             //redirect to the admin dashboard
             performRedirect('/admin/dashboard.php?login=success&u=' . base64_encode($user_id));
             exit;
