@@ -33,6 +33,9 @@ if (!isset($hasViewDashboardPermission)) {
 
         //auth class
         $auth = new Authenticator();
+
+        //session class
+        $session = new Session();
 ?>
         <style>
             a.datatable-sorter {
@@ -55,7 +58,7 @@ if (!isset($hasViewDashboardPermission)) {
                     $readEventsPermissionId = $permissionsObject->getPermissionIdByName('READ EVENT');
 
                     //boolean to check if the user has the read events permission
-                    $hasReadEventsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readEventsPermissionId);
+                    $hasReadEventsPermission = $auth->checkUserPermission(intval($session->get('user_id')), $readEventsPermissionId);
 
                     //only display the events table if the user has the read events permission
                     if ($hasReadEventsPermission) {
@@ -104,7 +107,7 @@ if (!isset($hasViewDashboardPermission)) {
                     $readStudentsPermissionId = $permissionsObject->getPermissionIdByName('READ STUDENT');
 
                     //boolean to check if the user has the read students permission
-                    $hasReadStudentsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readStudentsPermissionId);
+                    $hasReadStudentsPermission = $auth->checkUserPermission(intval($session->get('user_id')), $readStudentsPermissionId);
 
                     //only display the students table if the user has the read students permission
                     if ($hasReadStudentsPermission) {
@@ -159,7 +162,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                                 $readStudentsPermissionId = $permissionsObject->getPermissionIdByName('READ STUDENT');
 
                                                                 //boolean to check if the user has the read students permission
-                                                                $hasReadStudentsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readStudentsPermissionId);
+                                                                $hasReadStudentsPermission = $auth->checkUserPermission(intval($session->get('user_id')), $readStudentsPermissionId);
 
                                                                 //only display the students table if the user has the read students permission
                                                                 if ($hasReadStudentsPermission) {
@@ -171,7 +174,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                                 $deleteStudentsPermissionId = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
 
                                                                 //boolean to check if the user has the delete students permission
-                                                                $hasDeleteStudentsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $deleteStudentsPermissionId);
+                                                                $hasDeleteStudentsPermission = $auth->checkUserPermission(intval($session->get('user_id')), $deleteStudentsPermissionId);
 
                                                                 //only display the students table if the user has the delete students permission
                                                                 if ($hasDeleteStudentsPermission) {
@@ -196,7 +199,7 @@ if (!isset($hasViewDashboardPermission)) {
                                     $exportStudentsPermissionId = $permissionsObject->getPermissionIdByName('EXPORT STUDENT');
 
                                     //boolean to check if the user has the export student permission
-                                    $hasExportStudentsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $exportStudentsPermissionId);
+                                    $hasExportStudentsPermission = $auth->checkUserPermission(intval($session->get('user_id')), $exportStudentsPermissionId);
 
                                     if ($hasExportStudentsPermission) {
                                         //prepare the user array for download
