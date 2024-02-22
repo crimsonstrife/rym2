@@ -30,7 +30,7 @@ class Search {
         $studentData = new StudentSearch();
 
         //include the school class
-        $schoolData = new School();
+        $schoolData = new SchoolSearch();
 
         //include the event class
         $eventData = new EventSearch();
@@ -116,5 +116,138 @@ class Search {
 
         //return the results array
         return $results;
+    }
+}
+
+/**
+ * Student Search Class
+ * This class is used to search for students
+ */
+class StudentSearch extends Student
+{
+    /**
+     * Search Students
+     * Search for students by their first name, last name, email, or phone number using a search term
+     *
+     * @param string $searchTerm
+     * @return array
+     */
+    public function searchStudents(string $searchTerm): array
+    {
+        //SQL statement to search for students by their first name, last name, email, or phone number using a search term
+        $sql = "SELECT * FROM student WHERE first_name LIKE ? OR last_name LIKE ? OR email LIKE ? OR phone LIKE ?";
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+        //setup the search term
+        $searchTerm = "%" . $searchTerm . "%";
+        //bind the parameters
+        $stmt->bind_param("ssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the students
+        $students = array();
+
+        //if the result has rows
+        if ($result->num_rows > 0) {
+            //loop through the rows
+            while ($row = $result->fetch_assoc()) {
+                //add the row to the students array
+                $students[] = $row;
+            }
+        }
+
+        //Return the students array
+        return $students;
+    }
+}
+
+/**
+ * School Search Class
+ * This class is used to search for schools
+ */
+class SchoolSearch extends School
+{
+    /**
+     * Search Schools
+     * Search the schools table for a school name, address, city, state, or zip code using a search term
+     *
+     * @param string $searchTerm
+     *
+     * @return array $schools
+     */
+    public function searchSchools(string $searchTerm): array
+    {
+        //SQL statement to search for a school name, address, city, state, or zip code using a search term
+        $sql = "SELECT * FROM school WHERE name LIKE ? OR address LIKE ? OR city LIKE ? OR state LIKE ? OR zipcode LIKE ?";
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+        //setup the search term
+        $searchTerm = "%" . $searchTerm . "%";
+        //bind the parameters
+        $stmt->bind_param("sssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to store the schools
+        $schools = array();
+
+        //if there are schools in the database, add them to the array
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                array_push($schools, $row);
+            }
+        }
+
+        //return the schools array
+        return $schools;
+    }
+}
+
+/**
+ * Event Search Class
+ * Contains functions for searching the events in the database
+ */
+class EventSearch extends Event
+{
+    /**
+     * Search Events
+     * Search events by name, date, or location, gets the location name from the school database
+     *
+     * @param string $searchTerm search string
+     *
+     * @return array
+     */
+    public function searchEvents(string $searchTerm): array
+    {
+        //SQL statement to search events, cross referencing the location with the school database id
+        $sql = "SELECT event.id, event.name, event.event_date, school.name AS location FROM event INNER JOIN school ON event.location = school.id WHERE event.name LIKE ? OR event.event_date LIKE ? OR school.name LIKE ?";
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+        //setup the search term
+        $searchTerm = "%" . $searchTerm . "%";
+        //bind the parameters
+        $stmt->bind_param("sss", $searchTerm, $searchTerm, $searchTerm);
+        //execute the statement
+        $stmt->execute();
+        //get the result
+        $result = $stmt->get_result();
+
+        //array to hold the events
+        $events = array();
+
+        //if the result has rows, loop through the rows and add them to the events array
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $events[] = $row;
+            }
+        }
+
+        //return the events array
+        return $events;
     }
 }
