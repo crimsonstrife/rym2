@@ -9,10 +9,6 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
-use Session;
-use User;
-use Roles;
-
 class Authenticator extends User
 {
     //Instantiate the database connection
@@ -43,7 +39,7 @@ class Authenticator extends User
         $session = new Session();
 
         //get the logged in status from the session
-        $isLoggedIn = $session->sessionVars["logged_in"] ?? false;
+        $isLoggedIn = $session->get("logged_in") ?? false;
 
         // Check if the user is logged in, if not then redirect them to the login page
         if (!isset($isLoggedIn) || $isLoggedIn !== true) {
