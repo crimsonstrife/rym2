@@ -23,10 +23,6 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
-use User;
-use Activity;
-use Session;
-
 class Job
 {
     //Reference to the database
@@ -605,7 +601,7 @@ class Job
         if ($result) {
             $activity = new Activity();
             $session = new Session();
-            $userID = $session->sessionVars['user_id'];
+            $userID = $session->get('user_id');
             $activity->logActivity(intval($userID), 'Deleted Job', 'Job ID: ' . $jobID . ' Job Name: ' . $jobName);
         }
 
