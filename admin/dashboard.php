@@ -19,23 +19,26 @@ $auth = new Authenticator();
 //user class
 $user = new User();
 
+//session class
+$session = new Session();
+
 //check post request for login status and uid.
 if (isset($_GET['login']) && isset($_GET['u'])) {
     switch ($_GET['login']) {
         case 'success':
             //set the login status to true
-            $_SESSION['logged_in'] = true;
+            $session->set('logged_in', true);
             //set the user id
-            $_SESSION['user_id'] = base64_decode($_GET['u']);
+            $session->set('user_id', base64_decode($_GET['u']));
             break;
         default:
             //set the login status to false
-            $_SESSION['logged_in'] = false;
+            $session->set('logged_in', false);
             //set the user id to null
-            $_SESSION['user_id'] = null;
+            $session->set('user_id', null);
             break;
     }
-    if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+    if ($session->check('logged_in') === true && $session->get('logged_in') === true) {
         //include the validation file
         require_once(__DIR__ . '../../includes/validateCookieSession.inc.php');
         $logged_in = true;
@@ -44,8 +47,8 @@ if (isset($_GET['login']) && isset($_GET['u'])) {
     }
 }
 
-//if the user is not logged in, redirect to the login page
-if (isset($_SESSION['user_id'])) {
+// Check if the user is already logged in, if yes redirect to the admin dashboard
+if ($session->check('user_id') === true) {
     // Define a constant to control the access of the include files
     define('ISVALIDUSER', true); // idea from https://stackoverflow.com/a/409515 (user UnkwnTech)
 
@@ -53,7 +56,7 @@ if (isset($_SESSION['user_id'])) {
     $viewDashboardPermissionId = $permissionsObject->getPermissionIdByName('VIEW DASHBOARD');
 
     //boolean to check if the user has the view dashboard permission
-    $hasViewDashboardPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $viewDashboardPermissionId);
+    $hasViewDashboardPermission = $auth->checkUserPermission(intval($session->get('user_id')), $viewDashboardPermissionId);
 
     //if the user does not have the view dashboard permission, prevent access to the dashboard
     if (!$hasViewDashboardPermission) {

@@ -83,7 +83,7 @@ class Roles
     }
 
     //Get a role by ID
-    public function getRoleById(int $id): array
+    public function getRoleById(int $roleID): array
     {
         //SQL statement to get the role by ID
         $sql = "SELECT * FROM roles WHERE id = ?";
@@ -92,7 +92,7 @@ class Roles
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters to the SQL statement
-        $stmt->bind_param("i", $id);
+        $stmt->bind_param("i", $roleID);
 
         //Execute the statement
         $stmt->execute();
@@ -113,7 +113,7 @@ class Roles
     }
 
     //Get a role name by ID
-    public function getRoleNameById(int $id): string
+    public function getRoleNameById(int $roleID): string
     {
         //SQL statement to get the role by ID
         $sql = "SELECT name FROM roles WHERE id = ?";
@@ -122,7 +122,7 @@ class Roles
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters to the SQL statement
-        $stmt->bind_param("i", $id);
+        $stmt->bind_param("i", $roleID);
 
         //Execute the statement
         $stmt->execute();
@@ -146,10 +146,10 @@ class Roles
      * Get Role Permissions
      * Get a list of permission IDs for a role by role ID
      *
-     * @param int $id The ID of the role to get the permissions for
+     * @param int $roleID The ID of the role to get the permissions for
      * @return array An array of permissions for the role
      */
-    private function getPermissionsIdByRoleId(int $id): array
+    private function getPermissionsIdByRoleId(int $roleID): array
     {
         //SQL statement to get the permissions by role ID
         $sql = "SELECT permission_id FROM role_has_permission WHERE role_id = ?";
@@ -158,7 +158,7 @@ class Roles
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters to the SQL statement
-        $stmt->bind_param("i", $id);
+        $stmt->bind_param("i", $roleID);
 
         //Execute the statement
         $stmt->execute();
@@ -180,16 +180,16 @@ class Roles
 
     /**
      * Get Role Permissions
-     * @param int $id
+     * @param int $roleID
      * @return array
      */
-    public function getRolePermissions(int $id): array
+    public function getRolePermissions(int $roleID): array
     {
         //new permissions array
         $permissions = array();
 
         //get the permissions IDs by role ID
-        $permissions = $this->getPermissionsIdByRoleId($id);
+        $permissions = $this->getPermissionsIdByRoleId($roleID);
 
         //new permission class
         $permission = new Permission();
@@ -412,9 +412,9 @@ class Roles
         if ($result) {
             $this->logRoleActivity($stmt->insert_id, "Role Created", $createdBy);
             return $stmt->insert_id;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -477,9 +477,9 @@ class Roles
         //If the statement was successful, return true
         if ($stmt) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -545,11 +545,11 @@ class Roles
 
         // Set the role permissions if not empty
         if (!empty($permissions)) {
-            $rolePermissionsSetArray = $this->setRolePermissions($roleId, $userId, $permissions);
+            $rolePermSetArray = $this->setRolePermissions($roleId, $userId, $permissions);
 
             // Check if the role permissions were set
-            if (!empty($rolePermissionsSetArray['not_set']['permissions'])) {
-                $this->reportPermissionsSetFailure($rolePermissionsSetArray['not_set']['permissions']);
+            if (!empty($rolePermSetArray['not_set']['permissions'])) {
+                $this->reportPermissionsSetFailure($rolePermSetArray['not_set']['permissions']);
             }
         }
 
@@ -566,8 +566,11 @@ class Roles
      */
     private function reportPermissionsSetFailure(array $permissionsSet): void
     {
+        //instance of the session class
+        $session = new Session();
+
         //set the session variable
-        $_SESSION['permissions_set_failed'] = $permissionsSet;
+        $session->set('permissions_set_failed', $permissionsSet);
     }
 
     /**
@@ -575,9 +578,9 @@ class Roles
      *
      * @param string $roleName The name of the role to get
      *
-     * @return int The ID of the role
+     * @return ?int The ID of the role
      */
-    public function getRoleByName(string $roleName): int
+    public function getRoleByName(string $roleName): ?int
     {
         //SQL statement to get the role by name
         $sql = "SELECT id FROM roles WHERE name = ?";
@@ -595,15 +598,15 @@ class Roles
         $result = $stmt->get_result();
 
         //Create a variable to hold the role ID
-        $roleId = 0;
+        $roleId = null;
 
         //Loop through the results and add them to the array
         while ($row = $result->fetch_assoc()) {
-            $roleId = $row['id'];
+            $roleId = intval($row['id']);
         }
 
         //Return the role ID
-        return intval($roleId);
+        return $roleId;
     }
 
     /**
@@ -616,14 +619,19 @@ class Roles
      */
     public function deleteRole(int $roleId): bool
     {
-        // Check if the role exists
+        //instance of the session class
+        $session = new Session();
+
+        //instance of the authenticator class
         $auth = new Authenticator();
+
+        // Check if the role exists
         if (!$auth->validateRoleById($roleId)) {
             return false;
         }
 
         // Get the current user ID
-        $userId = intval($_SESSION['user_id']);
+        $userId = $session->get('user_id') ?? null;
 
         // Get the permissions for the role
         $permissions = $this->getPermissionsIdByRoleId($roleId);

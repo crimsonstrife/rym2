@@ -81,7 +81,7 @@ class Permission
     }
 
     //Get permission by ID
-    public function getPermissionById(int $id): array
+    public function getPermissionById(int $permissionID): array
     {
         //SQL statement to get the permission by ID
         $sql = "SELECT * FROM permissions WHERE id = ?";
@@ -90,7 +90,7 @@ class Permission
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the ID to the statement
-        $stmt->bind_param("i", $id);
+        $stmt->bind_param("i", $permissionID);
 
         //Execute the statement
         $stmt->execute();
@@ -111,7 +111,7 @@ class Permission
     }
 
     //get permission name by ID
-    public function getPermissionNameById(int $id): string
+    public function getPermissionNameById(int $permissionID): string
     {
         //SQL statement to get the permission name by ID
         $sql = "SELECT name FROM permissions WHERE id = ?";
@@ -120,7 +120,7 @@ class Permission
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the ID to the statement
-        $stmt->bind_param("i", $id);
+        $stmt->bind_param("i", $permissionID);
 
         //Execute the statement
         $stmt->execute();
@@ -129,15 +129,15 @@ class Permission
         $result = $stmt->get_result();
 
         //Create a variable to hold the permission name
-        $permission_name = "";
+        $permissionName = "";
 
         //Loop through the results and add them to the array
         while ($row = $result->fetch_assoc()) {
-            $permission_name = $row['name'];
+            $permissionName = $row['name'];
         }
 
         //Return the permission name
-        return $permission_name;
+        return $permissionName;
     }
 
     /**
@@ -165,14 +165,14 @@ class Permission
         $result = $stmt->get_result();
 
         //Create a variable to hold the permission ID
-        $permission_id = null;
+        $permissionID = null;
 
         //Loop through the results and add them to the array
         while ($row = $result->fetch_assoc()) {
-            $permission_id = $row['id'];
+            $permissionID = $row['id'];
         }
 
         //Return the permission ID
-        return intval($permission_id);
+        return intval($permissionID);
     }
 }

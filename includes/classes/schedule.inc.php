@@ -30,9 +30,6 @@ require_once(BASEPATH . '/includes/connector.inc.php');
  */
 class Schedule extends Event
 {
-    //Reference to the database
-    private $mysqli;
-
     //Instantiate the database connection
     public function __construct()
     {
@@ -51,6 +48,39 @@ class Schedule extends Event
     }
 
     /**
+     * Get event date
+     *
+     * @param int $eventID event id
+     * @return string
+     */
+    public function getEventDate(int $eventID): string
+    {
+        //SQL statement to get a single event by ID
+        $sql = "SELECT event_date FROM event WHERE id = $eventID";
+
+        //Prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the result
+        $result = $stmt->get_result();
+
+        //placeholder for the event date
+        $eventDate = "";
+
+        //If the query returns a result
+        if ($result) {
+            //Return the event
+            $eventDate = $result->fetch_assoc()['event_date'];
+        }
+
+        //return the event date
+        return $eventDate;
+    }
+
+    /**
      * Get the most recent event
      *
      * @return Event
@@ -64,10 +94,11 @@ class Schedule extends Event
         $events = $event->getEvents();
 
         //sort the events by event_date
-        usort($events, function ($a,
-            $b
+        usort($events, function (
+            $eventA,
+            $eventB
         ) {
-            return strtotime($a['event_date']) - strtotime($b['event_date']);
+            return strtotime($eventA['event_date']) - strtotime($eventB['event_date']);
         });
 
         //return compare the dates to the current date, get the most recent passed event
@@ -93,10 +124,11 @@ class Schedule extends Event
         //get all events
         $events = $event->getEvents();
         //sort the events by event_date
-        usort($events, function ($a,
-            $b
+        usort($events, function (
+            $eventA,
+            $eventB
         ) {
-            return strtotime($a['event_date']) - strtotime($b['event_date']);
+            return strtotime($eventA['event_date']) - strtotime($eventB['event_date']);
         });
         //array to hold upcoming events
         $upcomingEvents = array();
@@ -108,8 +140,8 @@ class Schedule extends Event
         }
         //if not empty, sort the upcoming events by event_date to make sure they are in order by soonest to current date
         if (!empty($upcomingEvents)) {
-            usort($upcomingEvents, function ($a, $b) {
-                return strtotime($a['event_date']) - strtotime($b['event_date']);
+            usort($upcomingEvents, function ($eventA, $eventB) {
+                return strtotime($eventA['event_date']) - strtotime($eventB['event_date']);
             });
         }
         //return the upcoming events
@@ -129,10 +161,11 @@ class Schedule extends Event
         //get all events
         $events = $event->getEvents();
         //sort the events by event_date
-        usort($events, function ($a,
-            $b
+        usort($events, function (
+            $eventA,
+            $eventB
         ) {
-            return strtotime($a['event_date']) - strtotime($b['event_date']);
+            return strtotime($eventA['event_date']) - strtotime($eventB['event_date']);
         });
         //compare the dates to the current date, get the any that have not occurred yet
         foreach ($events as $event) {

@@ -27,6 +27,24 @@ if (!isset($hasViewDashboardPermission)) {
         // include the application class
         $APP = new Application();
 
+        // include the settings class
+        $settings = new Settings();
+
+        // include the mailer settings class
+        $mailSettings = new MailerSettings();
+
+        // include the company settings class
+        $companySettings = new CompanySettings();
+
+        //include the tracker settings class
+        $trackerSettings = new TrackerSettings();
+
+        //include the hotjar settings class
+        $hotjarSettings = new HotjarTracker();
+
+        //include the google analytics settings class
+        $googleAnalyticsSettings = new GoogleAnalyticsTracker();
+
         // include the authenticator class
         $auth = new Authenticator();
 
@@ -35,6 +53,9 @@ if (!isset($hasViewDashboardPermission)) {
 
         // include the media class
         $media = new Media();
+
+        //include the session class
+        $session = new Session();
 
         // create an array of available media
         $mediaArray = $media->getMedia();
@@ -62,7 +83,7 @@ if (!isset($hasViewDashboardPermission)) {
         $readPermission_id = $permissions->getPermissionIdByName('READ SETTINGS');
 
         // boolean value for if the user has the read settings permission
-        $hasReadSettingsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readPermission_id);
+        $hasReadSettingsPermission = $auth->checkUserPermission(intval($session->get('user_id')), $readPermission_id);
 
         // only show the settings if the user has the read settings permission
         if (!$hasReadSettingsPermission) {
@@ -77,7 +98,7 @@ if (!isset($hasViewDashboardPermission)) {
             $updatePermission_id = $permissions->getPermissionIdByName('UPDATE SETTINGS');
 
             // boolean value for if the user has the update settings permission
-            $hasUpdateSettingsPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermission_id);
+            $hasUpdateSettingsPermission = $auth->checkUserPermission(intval($session->get('user_id')), $updatePermission_id);
 
             // check if the form has been submitted
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -100,10 +121,10 @@ if (!isset($hasViewDashboardPermission)) {
                         // trim whitespace from the app name
                         $_POST['app_name'] = trim($_POST['app_name']);
                         // set the app name
-                        $APP->setAppName($_POST['app_name']);
+                        $settings->setAppName($_POST['app_name']);
                     } else {
                         // set the app name to null
-                        $APP->setAppName(null);
+                        $settings->setAppName(null);
                     }
 
                     // check if the app url is set
@@ -113,10 +134,10 @@ if (!isset($hasViewDashboardPermission)) {
                         // trim whitespace from the app url
                         $_POST['app_url'] = trim($_POST['app_url']);
                         // set the app url
-                        $APP->setAppURL($_POST['app_url']);
+                        $settings->setAppURL($_POST['app_url']);
                     } else {
                         // set the app url to null
-                        $APP->setAppURL(null);
+                        $settings->setAppURL(null);
                     }
 
                     // get the app logo from the form
@@ -161,10 +182,10 @@ if (!isset($hasViewDashboardPermission)) {
                         // trim whitespace from the contact email
                         $_POST['contact_email'] = trim($_POST['contact_email']);
                         // set the contact email
-                        $APP->setContactEmail($_POST['contact_email']);
+                        $settings->setContactEmail($_POST['contact_email']);
                     } else {
                         // set the contact email to null
-                        $APP->setContactEmail(null);
+                        $settings->setContactEmail(null);
                     }
 
                     // check if the company name is set
@@ -176,10 +197,10 @@ if (!isset($hasViewDashboardPermission)) {
                         // trim whitespace from the company name
                         $_POST['company_name'] = trim($_POST['company_name']);
                         // set the company name
-                        $APP->setCompanyName($_POST['company_name']);
+                        $companySettings->setCompanyName($_POST['company_name']);
                     } else {
                         // set the company name to null
-                        $APP->setCompanyName(null);
+                        $companySettings->setCompanyName(null);
                     }
 
                     // get the company logo from the form
@@ -226,10 +247,10 @@ if (!isset($hasViewDashboardPermission)) {
                         // trim whitespace from the company address
                         $_POST['company_address'] = trim($_POST['company_address']);
                         // set the company address
-                        $APP->setCompanyAddress($_POST['company_address']);
+                        $companySettings->setCompanyAddress($_POST['company_address']);
                     } else {
                         // set the company address to null
-                        $APP->setCompanyAddress(null);
+                        $companySettings->setCompanyAddress(null);
                     }
 
                     // check if the company city is set
@@ -241,10 +262,10 @@ if (!isset($hasViewDashboardPermission)) {
                         // trim whitespace from the company city
                         $_POST['company_city'] = trim($_POST['company_city']);
                         // set the company city
-                        $APP->setCompanyCity($_POST['company_city']);
+                        $companySettings->setCompanyCity($_POST['company_city']);
                     } else {
                         // set the company city to null
-                        $APP->setCompanyCity(null);
+                        $companySettings->setCompanyCity(null);
                     }
 
                     // check if the company state is set
@@ -256,10 +277,10 @@ if (!isset($hasViewDashboardPermission)) {
                         // trim whitespace from the company state
                         $_POST['company_state'] = trim($_POST['company_state']);
                         // set the company state
-                        $APP->setCompanyState($_POST['company_state']);
+                        $companySettings->setCompanyState($_POST['company_state']);
                     } else {
                         // set the company state to null
-                        $APP->setCompanyState(null);
+                        $companySettings->setCompanyState(null);
                     }
 
                     // check if the company zip is set
@@ -271,10 +292,10 @@ if (!isset($hasViewDashboardPermission)) {
                         // trim whitespace from the company zip
                         $_POST['company_zip'] = trim($_POST['company_zip']);
                         // set the company zip
-                        $APP->setCompanyZip($_POST['company_zip']);
+                        $companySettings->setCompanyZip($_POST['company_zip']);
                     } else {
                         // set the company zip to null
-                        $APP->setCompanyZip(null);
+                        $companySettings->setCompanyZip(null);
                     }
 
                     // check if the company url is set
@@ -286,10 +307,10 @@ if (!isset($hasViewDashboardPermission)) {
                         // trim whitespace from the company url
                         $_POST['company_url'] = trim($_POST['company_url']);
                         // set the company url
-                        $APP->setCompanyURL($_POST['company_url']);
+                        $companySettings->setCompanyURL($_POST['company_url']);
                     } else {
                         // set the company url to null
-                        $APP->setCompanyURL(null);
+                        $companySettings->setCompanyURL(null);
                     }
 
                     // check if the company phone is set
@@ -301,10 +322,10 @@ if (!isset($hasViewDashboardPermission)) {
                         // trim whitespace from the company phone
                         $_POST['company_phone'] = trim($_POST['company_phone']);
                         // set the company phone
-                        $APP->setCompanyPhone($_POST['company_phone']);
+                        $companySettings->setCompanyPhone($_POST['company_phone']);
                     } else {
                         // set the company phone to null
-                        $APP->setCompanyPhone(null);
+                        $companySettings->setCompanyPhone(null);
                     }
 
                     // check if the mailer is set
@@ -314,7 +335,7 @@ if (!isset($hasViewDashboardPermission)) {
                             // make sure the mailer is not null or none
                             if ($_POST['mail_mailer'] != '' && $_POST['mail_mailer'] != 'none' && $_POST['mail_mailer'] != null && $_POST['mail_mailer'] != 'NONE') {
                                 // set the mailer
-                                $APP->setMailerType($_POST['mail_mailer']);
+                                $mailSettings->setMailerType($_POST['mail_mailer']);
 
                                 // check if the mail host is set
                                 if (isset($_POST['mail_host']) && $_POST['mail_host'] != '') {
@@ -323,7 +344,7 @@ if (!isset($hasViewDashboardPermission)) {
                                     // trim whitespace from the mail host
                                     $_POST['mail_host'] = trim($_POST['mail_host']);
                                     // set the mail host
-                                    $APP->setMailerHost($_POST['mail_host']);
+                                    $mailSettings->setMailerHost($_POST['mail_host']);
                                 }
 
                                 // check if the mail port is set
@@ -333,7 +354,7 @@ if (!isset($hasViewDashboardPermission)) {
                                     // trim whitespace from the mail port
                                     $_POST['mail_port'] = trim($_POST['mail_port']);
                                     // set the mail port
-                                    $APP->setMailerPort($_POST['mail_port']);
+                                    $mailSettings->setMailerPort($_POST['mail_port']);
                                 }
 
                                 // check if the mail auth req is set
@@ -341,7 +362,7 @@ if (!isset($hasViewDashboardPermission)) {
                                     // filter the mail auth req as a boolean
                                     $_POST['mail_auth_req'] = filter_var($_POST['mail_auth_req'], FILTER_VALIDATE_BOOLEAN);
                                     // set the mail auth req
-                                    $APP->setMailerAuthRequired($_POST['mail_auth_req']);
+                                    $mailSettings->setMailerAuthRequired($_POST['mail_auth_req']);
                                 }
 
                                 // check if the mail username is set
@@ -353,7 +374,7 @@ if (!isset($hasViewDashboardPermission)) {
                                     // prepare the mail username
                                     $_POST['mail_username'] = htmlspecialchars($_POST['mail_username']);
                                     // set the mail username
-                                    $APP->setMailerUsername($_POST['mail_username']);
+                                    $mailSettings->setMailerUsername($_POST['mail_username']);
                                 }
 
                                 // check if the mail password is set
@@ -365,7 +386,7 @@ if (!isset($hasViewDashboardPermission)) {
                                     // prepare the mail password
                                     $_POST['mail_password'] = htmlspecialchars($_POST['mail_password']);
                                     // set the mail password
-                                    $APP->setMailerPassword($_POST['mail_password']);
+                                    $mailSettings->setMailerPassword($_POST['mail_password']);
                                 }
 
                                 // check if the mail encryption is set
@@ -375,7 +396,7 @@ if (!isset($hasViewDashboardPermission)) {
                                         // make sure the mail encryption is not null or none
                                         if ($_POST['mail_encryption'] != '' && $_POST['mail_encryption'] != 'none' && $_POST['mail_encryption'] != null && $_POST['mail_encryption'] != 'NONE') {
                                             // set the mail encryption
-                                            $APP->setMailerEncryption($_POST['mail_encryption']);
+                                            $mailSettings->setMailerEncryption($_POST['mail_encryption']);
                                         }
                                     }
                                 }
@@ -387,7 +408,7 @@ if (!isset($hasViewDashboardPermission)) {
                                     // trim whitespace from the mail from address
                                     $_POST['mail_from_address'] = trim($_POST['mail_from_address']);
                                     // set the mail from address
-                                    $APP->setMailerFromAddress($_POST['mail_from_address']);
+                                    $mailSettings->setMailerFromAddress($_POST['mail_from_address']);
                                 }
 
                                 // check if the mail from name is set
@@ -399,7 +420,7 @@ if (!isset($hasViewDashboardPermission)) {
                                     // prepare the mail from name
                                     $_POST['mail_from_name'] = htmlspecialchars($_POST['mail_from_name']);
                                     // set the mail from name
-                                    $APP->setMailerFromName($_POST['mail_from_name']);
+                                    $mailSettings->setMailerFromName($_POST['mail_from_name']);
                                 }
                             }
                         }
@@ -428,7 +449,7 @@ if (!isset($hasViewDashboardPermission)) {
                     // check if  enable hotjar is set
                     if (isset($_POST['hotjar_enable'])) {
                         // set the enable hotjar
-                        $APP->setHotjarEnabled(true);
+                        $hotjarSettings->setHotjarStatus(true);
 
                         // check if the hotjar site id is set
                         if (isset($_POST['hotjar_siteid']) && $_POST['hotjar_siteid'] != '') {
@@ -437,7 +458,7 @@ if (!isset($hasViewDashboardPermission)) {
                             // trim whitespace from the hotjar site id
                             $_POST['hotjar_siteid'] = trim($_POST['hotjar_siteid']);
                             // set the hotjar site id
-                            $APP->setHotjarSiteId($_POST['hotjar_siteid']);
+                            $hotjarSettings->setHotjarID($_POST['hotjar_siteid']);
                         }
 
                         // check if the hotjar version is set
@@ -447,17 +468,17 @@ if (!isset($hasViewDashboardPermission)) {
                             // trim whitespace from the hotjar version
                             $_POST['hotjar_version'] = trim($_POST['hotjar_version']);
                             // set the hotjar version
-                            $APP->setHotjarVersion(intval($_POST['hotjar_version']));
+                            $hotjarSettings->setHotjarVersion(intval($_POST['hotjar_version']));
                         }
                     } else {
                         // set the enable hotjar to false
-                        $APP->setHotjarEnabled(false);
+                        $hotjarSettings->setHotjarStatus(false);
                     }
 
                     // check if  enable google analytics is set
                     if (isset($_POST['ga_enable'])) {
                         // set the enable google analytics
-                        $APP->setGoogleAnalyticsEnabled(true);
+                        $googleAnalyticsSettings->setGoogleAnalyticsStatus(true);
 
                         // check if the google analytics tag is set
                         if (isset($_POST['ga_tracking_tag']) && $_POST['ga_tracking_tag'] != '') {
@@ -466,11 +487,11 @@ if (!isset($hasViewDashboardPermission)) {
                             // trim whitespace from the google analytics tag
                             $_POST['ga_tracking_tag'] = trim($_POST['ga_tracking_tag']);
                             // set the google analytics tag
-                            $APP->setGoogleAnalyticsTag($_POST['ga_tracking_tag']);
+                            $googleAnalyticsSettings->setGoogleAnalyticsID($_POST['ga_tracking_tag']);
                         }
                     } else {
                         // set the enable google analytics to false
-                        $APP->setGoogleAnalyticsEnabled(false);
+                        $googleAnalyticsSettings->setGoogleAnalyticsStatus(false);
                     }
 
                     // if there are files to upload for the app, upload them
@@ -481,7 +502,7 @@ if (!isset($hasViewDashboardPermission)) {
                             error_log('app_logo is array: ' . $app_logo);
 
                             // upload the app logo, and get the media id
-                            $appLogo_media_id = $media->uploadMedia($app_logo, intval($_SESSION['user_id']));
+                            $appLogo_media_id = $media->uploadMedia($app_logo, intval($session->get('user_id')));
 
                             // get the file name
                             $target_file_appLogo = $media->getMediaFileName($appLogo_media_id);
@@ -518,7 +539,7 @@ if (!isset($hasViewDashboardPermission)) {
                         // check if the company logo is an array
                         if (is_array($company_logo)) {
                             // upload the company logo, and get the media id
-                            $companyLogo_media_id = $media->uploadMedia($company_logo, intval($_SESSION['user_id']));
+                            $companyLogo_media_id = $media->uploadMedia($company_logo, intval($session->get('user_id')));
 
                             // get the file name
                             $target_file_companyLogo = $media->getMediaFileName($companyLogo_media_id);
@@ -546,14 +567,14 @@ if (!isset($hasViewDashboardPermission)) {
 
                     if (!empty($app_logo) || $app_logo != null || isset($app_logo)) {
                         // set the app logo
-                        $appLogoSet = $APP->setAppLogo($appLogo_media_id);
+                        $appLogoSet = $settings->setAppLogo($appLogo_media_id);
                     } else {
                         $appLogoSet = false;
                     }
 
                     if (!empty($company_logo) || $company_logo != null || isset($company_logo)) {
                         // set the company logo
-                        $companyLogoSet = $APP->setCompanyLogo($companyLogo_media_id);
+                        $companyLogoSet = $companySettings->setCompanyLogo($companyLogo_media_id);
                     } else {
                         $companyLogoSet = false;
                     }
@@ -562,7 +583,7 @@ if (!isset($hasViewDashboardPermission)) {
                     header('Location: ' . htmlspecialchars($_SERVER['PHP_SELF']) . '?view=' . $_GET['view']);
                 } else if (isset($_POST['btnReset'])) {
                     // reset the settings
-                    $APP->resetSettings();
+                    $settings->resetSettings();
 
                     // refresh the page
                     header('Location: ' . htmlspecialchars($_SERVER['PHP_SELF']) . '?view=' . $_GET['view']);
@@ -613,10 +634,10 @@ if (!isset($hasViewDashboardPermission)) {
                                             <div id="main-app-settings">
                                                 <?php
                                                 // get the general application settings from the database
-                                                $app_name = $APP->getAppName();
-                                                $app_url = $APP->getAppURL();
-                                                $app_logo = $APP->getAppLogo();
-                                                $contact_email = $APP->getContactEmail();
+                                                $app_name = $settings->getAppName();
+                                                $app_url = $settings->getAppURL();
+                                                $app_logo = $settings->getAppLogo();
+                                                $contact_email = $settings->getContactEmail();
                                                 ?>
                                                 <div class="form-group">
                                                     <div class="form-row">
@@ -631,13 +652,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                             ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                     echo 'disabled';
                                                                                                                                                 } ?> value="<?php
-                        // if app_name is set and not blank
-                        if (isset($app_name) && $app_name != '') {
-                            echo $app_name;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                            // if app_name is set and not blank
+                                                                                                                                                            if (isset($app_name) && $app_name != '') {
+                                                                                                                                                                echo $app_name;
+                                                                                                                                                            } else {
+                                                                                                                                                                echo '';
+                                                                                                                                                            }
+                                                                                                                                                            ?>">
                                                     </div>
                                                     <div class="form-row">
                                                         <label for="app-url">Application URL</label>
@@ -651,13 +672,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                             ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                     echo 'disabled';
                                                                                                                                                 } ?> value="<?php
-                        // if app_url is set and not blank
-                        if (isset($app_url) && $app_url != '') {
-                            echo $app_url;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                            // if app_url is set and not blank
+                                                                                                                                                            if (isset($app_url) && $app_url != '') {
+                                                                                                                                                                echo $app_url;
+                                                                                                                                                            } else {
+                                                                                                                                                                echo '';
+                                                                                                                                                            }
+                                                                                                                                                            ?>">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -667,7 +688,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                             <br />
                                                             <!-- if there is an existing logo, show the file -->
                                                             <?php
-                                                            if (!empty($APP->getAppLogo())) {
+                                                            if (!empty($settings->getAppLogo())) {
                                                                 // render the file as an image
                                                                 echo '<div><img src="' . getUploadPath() . $media->getMediaFileName(intval($app_logo)) . '" alt="Application Logo" style="max-width: 200px; max-height: auto;"></div>';
                                                                 // show the file name
@@ -684,7 +705,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                         } ?>>
                                                                     <option value="">Select a Logo</option>
                                                                     <?php  /* check if the user has permission to upload media */
-                                                                    if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissions->getPermissionIdByName('CREATE MEDIA'))) {
+                                                                    if ($auth->checkUserPermission(intval($session->get('user_id')), $permissions->getPermissionIdByName('CREATE MEDIA'))) {
                                                                     ?>
                                                                         <option value="0">Upload a New Logo</option>
                                                                     <?php } ?>
@@ -703,7 +724,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                                     a New Logo" from the dropdown. To use an existing file, select the
                                                                     filename.</small>
                                                                 <?php } else if (empty($mediaArray)) {  // if there are no media files, show the file upload input if the user has upload permissions
-                                                                if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissions->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                                if ($auth->checkUserPermission(intval($session->get('user_id')), $permissions->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                                                     <label for="app-logo-upload">Upload a New Logo:</label>
                                                                     <input type="file" id="app-logo-upload" name="app_logoUpload" class="form-control" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                             echo 'disabled';
@@ -740,13 +761,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                         ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                 echo 'disabled';
                                                                                                                                                             } ?> value="<?php
-                        // if contact_email is set and not blank
-                        if (isset($contact_email) && $contact_email != '') {
-                            echo $contact_email;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                        // if contact_email is set and not blank
+                                                                                                                                                                        if (isset($contact_email) && $contact_email != '') {
+                                                                                                                                                                            echo $contact_email;
+                                                                                                                                                                        } else {
+                                                                                                                                                                            echo '';
+                                                                                                                                                                        }
+                                                                                                                                                                        ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -760,15 +781,15 @@ if (!isset($hasViewDashboardPermission)) {
                                             <div id="company-settings">
                                                 <?php
                                                 // get the company settings from the database
-                                                $company_name = $APP->getCompanyName();
-                                                $company_logo = $APP->getCompanyLogo();
-                                                $company_address = $APP->getCompanyAddress();
-                                                $company_city = $APP->getCompanyCity();
-                                                $company_state = $APP->getCompanyState();
-                                                $company_zip = $APP->getCompanyZip();
-                                                $company_formattedAddress = $APP->getFormattedCompanyAddress();
-                                                $company_url = $APP->getCompanyURL();
-                                                $company_phone = $APP->getCompanyPhone();
+                                                $company_name = $companySettings->getCompanyName();
+                                                $company_logo = $companySettings->getCompanyLogo();
+                                                $company_address = $companySettings->getCompanyAddress();
+                                                $company_city = $companySettings->getCompanyCity();
+                                                $company_state = $companySettings->getCompanyState();
+                                                $company_zip = $companySettings->getCompanyZip();
+                                                $company_formattedAddress = formatAddress($company_address, $company_city, $company_state, $company_zip);
+                                                $company_url = $companySettings->getCompanyURL();
+                                                $company_phone = $companySettings->getCompanyPhone();
                                                 ?>
                                                 <div class="form-group">
                                                     <div class="form-row">
@@ -783,13 +804,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                             echo 'disabled';
                                                                                                                                                         } ?> value="<?php
-                        // if company_name is set and not blank
-                        if (isset($company_name) && $company_name != '') {
-                            echo $company_name;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                    // if company_name is set and not blank
+                                                                                                                                                                    if (isset($company_name) && $company_name != '') {
+                                                                                                                                                                        echo $company_name;
+                                                                                                                                                                    } else {
+                                                                                                                                                                        echo '';
+                                                                                                                                                                    }
+                                                                                                                                                                    ?>">
                                                     </div>
                                                     <div class=" form-row">
                                                         <div class="form-group">
@@ -797,7 +818,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                             <br />
                                                             <!-- if there is an existing logo, show the file -->
                                                             <?php
-                                                            if (!empty($APP->getCompanyLogo())) {
+                                                            if (!empty($companySettings->getCompanyLogo())) {
                                                                 // render the file as an image
                                                                 echo '<div><img src="' . getUploadPath() . $media->getMediaFileName(intval($company_logo)) . '" alt="Company Logo" style="max-width: 200px; max-height: auto;"></div>';
                                                                 // show the file name
@@ -814,7 +835,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                 } ?>>
                                                                     <option value="">Select a Logo</option>
                                                                     <?php  /* check if the user has permission to upload media */
-                                                                    if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissions->getPermissionIdByName('CREATE MEDIA'))) {
+                                                                    if ($auth->checkUserPermission(intval($session->get('user_id')), $permissions->getPermissionIdByName('CREATE MEDIA'))) {
                                                                     ?>
                                                                         <option value="0">Upload a New Logo</option>
                                                                     <?php } ?>
@@ -835,7 +856,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                                     the
                                                                     filename.</small>
                                                                 <?php } else if (empty($mediaArray)) {  // if there are no media files, show the file upload input if the user has upload permissions
-                                                                if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissions->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                                if ($auth->checkUserPermission(intval($session->get('user_id')), $permissions->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                                                     <label for="company-logo-upload">Upload a New Logo:</label>
                                                                     <input type="file" id="company-logo-upload" name="company_logoUpload" class="form-control" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                     echo 'disabled';
@@ -879,13 +900,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                             ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                     echo 'disabled';
                                                                                                                                                                 } ?> value="<?php
-                        // if company_address is set and not blank
-                        if (isset($company_address) && $company_address != '') {
-                            echo $company_address;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                            // if company_address is set and not blank
+                                                                                                                                                                            if (isset($company_address) && $company_address != '') {
+                                                                                                                                                                                echo $company_address;
+                                                                                                                                                                            } else {
+                                                                                                                                                                                echo '';
+                                                                                                                                                                            }
+                                                                                                                                                                            ?>">
                                                     </div>
                                                     <div class=" form-row">
                                                         <label for="company-city">City</label>
@@ -899,13 +920,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                             echo 'disabled';
                                                                                                                                                         } ?> value="<?php
-                        // if company_city is set and not blank
-                        if (isset($company_city) && $company_city != '') {
-                            echo $company_city;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                    // if company_city is set and not blank
+                                                                                                                                                                    if (isset($company_city) && $company_city != '') {
+                                                                                                                                                                        echo $company_city;
+                                                                                                                                                                    } else {
+                                                                                                                                                                        echo '';
+                                                                                                                                                                    }
+                                                                                                                                                                    ?>">
                                                     </div>
                                                     <div class="form-row">
                                                         <label for="company-state">State</label>
@@ -940,13 +961,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                             echo 'disabled';
                                                                                                                                                         } ?> value="<?php
-                        // if company_zip is set and not blank
-                        if (isset($company_zip) && $company_zip != '') {
-                            echo $company_zip;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                    // if company_zip is set and not blank
+                                                                                                                                                                    if (isset($company_zip) && $company_zip != '') {
+                                                                                                                                                                        echo $company_zip;
+                                                                                                                                                                    } else {
+                                                                                                                                                                        echo '';
+                                                                                                                                                                    }
+                                                                                                                                                                    ?>">
                                                     </div>
                                                     <div class="form-row">
                                                         <label for="company-url">Company URL</label>
@@ -960,13 +981,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                             echo 'disabled';
                                                                                                                                                         } ?> value="<?php
-                        // if company_url is set and not blank
-                        if (isset($company_url) && $company_url != '') {
-                            echo $company_url;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                    // if company_url is set and not blank
+                                                                                                                                                                    if (isset($company_url) && $company_url != '') {
+                                                                                                                                                                        echo $company_url;
+                                                                                                                                                                    } else {
+                                                                                                                                                                        echo '';
+                                                                                                                                                                    }
+                                                                                                                                                                    ?>">
                                                     </div>
                                                     <div class="form-row">
                                                         <label for="company-phone">Company Phone</label>
@@ -980,13 +1001,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                             echo 'disabled';
                                                                                                                                                         } ?> value="<?php
-                        // if company_phone is set and not blank
-                        if (isset($company_phone) && $company_phone != '') {
-                            echo $company_phone;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                    // if company_phone is set and not blank
+                                                                                                                                                                    if (isset($company_phone) && $company_phone != '') {
+                                                                                                                                                                        echo $company_phone;
+                                                                                                                                                                    } else {
+                                                                                                                                                                        echo '';
+                                                                                                                                                                    }
+                                                                                                                                                                    ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1000,15 +1021,15 @@ if (!isset($hasViewDashboardPermission)) {
                                             <div id="mailer-settings">
                                                 <?php
                                                 // get the mailer settings from the database
-                                                $mail_host = $APP->getMailerHost();
-                                                $mail_port = $APP->getMailerPort();
-                                                $mail_username = $APP->getMailerUsername();
-                                                $mail_password = $APP->getMailerPassword();
-                                                $mail_encryption = $APP->getMailerEncryption();
-                                                $mail_from_address = $APP->getMailerFromAddress();
-                                                $mail_from_name = $APP->getMailerFromName();
-                                                $mail_auth_req = $APP->getMailerAuthRequired();
-                                                $mail_mailer = $APP->getMailerType();
+                                                $mail_host = $mailSettings->getMailerHost();
+                                                $mail_port = $mailSettings->getMailerPort();
+                                                $mail_username = $mailSettings->getMailerUsername();
+                                                $mail_password = $mailSettings->getMailerPassword();
+                                                $mail_encryption = $mailSettings->getMailerEncryption();
+                                                $mail_from_address = $mailSettings->getMailerFromAddress();
+                                                $mail_from_name = $mailSettings->getMailerFromName();
+                                                $mail_auth_req = $mailSettings->getMailerAuthRequired();
+                                                $mail_mailer = $mailSettings->getMailerType();
                                                 // the mailer options are defined in includes/constants.php
                                                 // setup the mailer options array
                                                 $mailer_options = MAILER;
@@ -1058,13 +1079,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                         ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                                 echo 'disabled';
                                                                                                                                                                             } ?> value="<?php
-                        // if mail_host is set and not blank
-                        if (isset($mail_host) && $mail_host != '') {
-                            echo $mail_host;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                                        // if mail_host is set and not blank
+                                                                                                                                                                                        if (isset($mail_host) && $mail_host != '') {
+                                                                                                                                                                                            echo $mail_host;
+                                                                                                                                                                                        } else {
+                                                                                                                                                                                            echo '';
+                                                                                                                                                                                        }
+                                                                                                                                                                                        ?>">
                                                     </div>
                                                     <div id="mail-port-row" class="form-row">
                                                         <label for="mail-port">Port</label>
@@ -1078,13 +1099,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                         ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                                 echo 'disabled';
                                                                                                                                                                             } ?> value="<?php
-                        // if mail_port is set and not blank
-                        if (isset($mail_port) && $mail_port != '') {
-                            echo $mail_port;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                                        // if mail_port is set and not blank
+                                                                                                                                                                                        if (isset($mail_port) && $mail_port != '') {
+                                                                                                                                                                                            echo $mail_port;
+                                                                                                                                                                                        } else {
+                                                                                                                                                                                            echo '';
+                                                                                                                                                                                        }
+                                                                                                                                                                                        ?>">
                                                     </div>
                                                     <div id="mail-auth-req-row" class="form-row">
                                                         <label for="mail-auth-req">Authentication Required</label>
@@ -1110,13 +1131,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                                 ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                                         echo 'disabled';
                                                                                                                                                                                     } ?> value="<?php
-                        // if mail_username is set and not blank
-                        if (isset($mail_username) && $mail_username != '') {
-                            echo $mail_username;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                                                // if mail_username is set and not blank
+                                                                                                                                                                                                if (isset($mail_username) && $mail_username != '') {
+                                                                                                                                                                                                    echo $mail_username;
+                                                                                                                                                                                                } else {
+                                                                                                                                                                                                    echo '';
+                                                                                                                                                                                                }
+                                                                                                                                                                                                ?>">
                                                     </div>
                                                     <div id="mail-password-row" class="form-row">
                                                         <label for="mail-password">Password</label>
@@ -1124,21 +1145,21 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                                     // if mail_password is set and not blank
                                                                                                                                                                                     if (isset($mail_password) && $mail_password != '') {
                                                                                                                                                                                         // mask the password with asterisks
-                                                                                                                                                                                        echo str_repeat('*', strlen($APP->getMailerPassword()));
+                                                                                                                                                                                        echo str_repeat('*', strlen($mailSettings->getMailerPassword()));
                                                                                                                                                                                     } else {
                                                                                                                                                                                         echo 'password';
                                                                                                                                                                                     }
                                                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                                             echo 'disabled';
                                                                                                                                                                                         } ?> value="<?php
-                        // if mail_password is set and not blank
-                        if (isset($mail_password) && $mail_password != '') {
-                            // mask the password with asterisks
-                            echo str_repeat('*', strlen($APP->getMailerPassword()));
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                                                    // if mail_password is set and not blank
+                                                                                                                                                                                                    if (isset($mail_password) && $mail_password != '') {
+                                                                                                                                                                                                        // mask the password with asterisks
+                                                                                                                                                                                                        echo str_repeat('*', strlen($mailSettings->getMailerPassword()));
+                                                                                                                                                                                                    } else {
+                                                                                                                                                                                                        echo '';
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                    ?>">
                                                     </div>
                                                     <div id="mail-encryption-row" class="form-row">
                                                         <label for="mail-encryption">Encryption</label>
@@ -1187,13 +1208,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                                     ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                                             echo 'disabled';
                                                                                                                                                                                         } ?> value="<?php
-                        // if mail_from_address is set and not blank
-                        if (isset($mail_from_address) && $mail_from_address != '') {
-                            echo $mail_from_address;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                                                    // if mail_from_address is set and not blank
+                                                                                                                                                                                                    if (isset($mail_from_address) && $mail_from_address != '') {
+                                                                                                                                                                                                        echo $mail_from_address;
+                                                                                                                                                                                                    } else {
+                                                                                                                                                                                                        echo '';
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                    ?>">
                                                     </div>
                                                     <div id="mail-from-name-row" class="form-row">
                                                         <label for="mail-from-name">From Name</label>
@@ -1207,13 +1228,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                             ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                                     echo 'disabled';
                                                                                                                                                                                 } ?> value="<?php
-                        // if mail_from_name is set and not blank
-                        if (isset($mail_from_name) && $mail_from_name != '') {
-                            echo $mail_from_name;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                                            // if mail_from_name is set and not blank
+                                                                                                                                                                                            if (isset($mail_from_name) && $mail_from_name != '') {
+                                                                                                                                                                                                echo $mail_from_name;
+                                                                                                                                                                                            } else {
+                                                                                                                                                                                                echo '';
+                                                                                                                                                                                            }
+                                                                                                                                                                                            ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1241,11 +1262,11 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                         ?>' <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                                 echo 'disabled';
                                                                                                                                                                             } ?>><?php
-                    // if privacy_policy is set and not blank
-                    if (isset($privacy_policy) && $privacy_policy != '') {
-                        echo $privacy_policy;
-                    }
-                    ?></textarea>
+                                                                                                                                                                                    // if privacy_policy is set and not blank
+                                                                                                                                                                                    if (isset($privacy_policy) && $privacy_policy != '') {
+                                                                                                                                                                                        echo $privacy_policy;
+                                                                                                                                                                                    }
+                                                                                                                                                                                    ?></textarea>
                                                         <small id="privacy-policy-help" class="form-text text-muted">Create the
                                                             Privacy
                                                             Policy style, using the WYSIWYG Editor</small>
@@ -1276,11 +1297,11 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                             ?>' <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                                     echo 'disabled';
                                                                                                                                                                                 } ?>><?php
-                    // if terms_conditions is set and not blank
-                    if (isset($terms_conditions) && $terms_conditions != '') {
-                        echo $terms_conditions;
-                    }
-                    ?></textarea>
+                                                                                                                                                                                        // if terms_conditions is set and not blank
+                                                                                                                                                                                        if (isset($terms_conditions) && $terms_conditions != '') {
+                                                                                                                                                                                            echo $terms_conditions;
+                                                                                                                                                                                        }
+                                                                                                                                                                                        ?></textarea>
                                                         <small id="terms-conditions-help" class="form-text text-muted">Create
                                                             the
                                                             Terms
@@ -1297,9 +1318,9 @@ if (!isset($hasViewDashboardPermission)) {
                                             </label>
                                             <div id="hotjar_settings">
                                                 <?php  // get the hotjar tracking settings
-                                                $enableHotjar = $APP->getHotjarEnabled();
-                                                $hotjarSiteId = $APP->getSetting('hotjar_siteid');
-                                                $hotjarVersion = $APP->getSetting('hotjar_version');
+                                                $enableHotjar = $hotjarSettings->getHotjarStatus();
+                                                $hotjarSiteId = $hotjarSettings->getHotjarID();
+                                                $hotjarVersion = $hotjarSettings->getHotjarVersion();
                                                 ?>
                                                 <div class="form-group">
                                                     <div class="form-row">
@@ -1316,8 +1337,8 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                                         echo 'checked';
                                                                                                                                                                     }
                                                                                                                                                                 } ?> <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                echo ' disabled';
-                                                                                                            } ?>>
+                                                                                                                                                                            echo ' disabled';
+                                                                                                                                                                        } ?>>
                                                         </div>
                                                     </div>
                                                     <div id="hotjar-siteid-row" class="form-row">
@@ -1332,13 +1353,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                         ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                 echo 'disabled';
                                                                                                                                                             } ?> value="<?php
-                        // if hotjarSiteId is set and not blank
-                        if (isset($hotjarSiteId) && $hotjarSiteId != '') {
-                            echo $hotjarSiteId;
-                        } else {
-                            echo '';
-                        }
-                        ?>">
+                                                                                                                                                                        // if hotjarSiteId is set and not blank
+                                                                                                                                                                        if (isset($hotjarSiteId) && $hotjarSiteId != '') {
+                                                                                                                                                                            echo $hotjarSiteId;
+                                                                                                                                                                        } else {
+                                                                                                                                                                            echo '';
+                                                                                                                                                                        }
+                                                                                                                                                                        ?>">
                                                     </div>
                                                     <div id="hotjar-version-row" class="form-row">
                                                         <label for="hotjar-version">Hotjar Version</label>
@@ -1352,13 +1373,13 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                                                         ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                 echo 'disabled';
                                                                                                                                                             } ?> value="<?php
-                        // if hotjarVersion is set and not blank
-                        if (isset($hotjarVersion) && $hotjarVersion != '') {
-                            echo $hotjarVersion;
-                        } else {
-                            echo '6';
-                        }
-                        ?>">
+                                                                                                                                                                        // if hotjarVersion is set and not blank
+                                                                                                                                                                        if (isset($hotjarVersion) && $hotjarVersion != '') {
+                                                                                                                                                                            echo $hotjarVersion;
+                                                                                                                                                                        } else {
+                                                                                                                                                                            echo '6';
+                                                                                                                                                                        }
+                                                                                                                                                                        ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1371,8 +1392,8 @@ if (!isset($hasViewDashboardPermission)) {
                                             </label>
                                             <div id="google_analytics">
                                                 <?php  // get the google analytics tracking settings
-                                                $enableGA = $APP->getGoogleAnalyticsEnabled();
-                                                $gaTrackingTag = $APP->getGoogleAnalyticsTag();
+                                                $enableGA = $googleAnalyticsSettings->getGoogleAnalyticsStatus();
+                                                $gaTrackingTag = $googleAnalyticsSettings->getGoogleAnalyticsID();
                                                 ?>
                                                 <div class="form-group">
                                                     <div class="form-row">
@@ -1385,51 +1406,51 @@ if (!isset($hasViewDashboardPermission)) {
                                                                                                                         echo '';
                                                                                                                     }
                                                                                                                 } ?>" id="ga-enable" name="ga_enable" <?php if (isset($enableGA) && $enableGA != '') {
-                                                                                                                                                                if ($enableGA = true) {
-                                                                                                                                                                    echo 'checked';
-                                                                                                                                                                }
-                                                                                                                                                            } ?> <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                            echo ' disabled';
-                                                                                                        } ?>>
+                                                                                                                                                            if ($enableGA = true) {
+                                                                                                                                                                echo 'checked';
+                                                                                                                                                            }
+                                                                                                                                                        } ?> <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                                                                        echo ' disabled';
+                                                                                                                                                                    } ?>>
                                                         </div>
-                                                                                                    </div>
-                                                                                                    <div id="ga_tracking_tag-row" class="form-row">
-                                                                                                        <label for="ga_tracking_tag">Google Analytics Tracking Tag</label>
-                                                                                                        <input type="text" class="form-control" id="ga_tracking_tag" name="ga_tracking_tag" placeholder="<?php
-                                                                                                                                                                                        // if gaTrackingTag is set and not blank
-                                                                                                                                                                                        if (isset($gaTrackingTag) && $gaTrackingTag != '') {
-                                                                                                                                                                                            echo $gaTrackingTag;
-                                                                                                                                                                                        } else {
-                                                                                                                                                                                            echo 'G-XXXXXXXXXX';
-                                                                                                                                                                                        }
-                                                                                                                                                                                        ?>" <?php if (!$hasUpdateSettingsPermission) {
+                                                    </div>
+                                                    <div id="ga_tracking_tag-row" class="form-row">
+                                                        <label for="ga_tracking_tag">Google Analytics Tracking Tag</label>
+                                                        <input type="text" class="form-control" id="ga_tracking_tag" name="ga_tracking_tag" placeholder="<?php
+                                                                                                                                                            // if gaTrackingTag is set and not blank
+                                                                                                                                                            if (isset($gaTrackingTag) && $gaTrackingTag != '') {
+                                                                                                                                                                echo $gaTrackingTag;
+                                                                                                                                                            } else {
+                                                                                                                                                                echo 'G-XXXXXXXXXX';
+                                                                                                                                                            }
+                                                                                                                                                            ?>" <?php if (!$hasUpdateSettingsPermission) {
                                                                                                                                                                                                 echo 'disabled';
                                                                                                                                                                                             } ?> value="<?php if (isset($gaTrackingTag) && $gaTrackingTag != '') {
-                                                                                                                                                                                                                echo $gaTrackingTag;
-                                                                                                                                                                                                            } ?>">
-                                                                                                                                                                                                            </div>
-                                                                                                    </div>
+                                                                                                                                                                                                            echo $gaTrackingTag;
+                                                                                                                                                                                                        } ?>">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <button id="submit-btn" name="btnSubmit" type="submit" class="btn btn-primary" <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                    echo 'disabled';
-                                                                                                                                } ?>>Save</button>
-                                                <button id="reset-btn" name="btnReset" type="reset" class="btn btn-secondary" <?php if (!$hasUpdateSettingsPermission) {
-                                                                                                                                    echo 'disabled';
-                                                                                                                                } ?>>Reset</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
                             </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <div class="form-row">
+                                        <button id="submit-btn" name="btnSubmit" type="submit" class="btn btn-primary" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                            echo 'disabled';
+                                                                                                                        } ?>>Save</button>
+                                        <button id="reset-btn" name="btnReset" type="reset" class="btn btn-secondary" <?php if (!$hasUpdateSettingsPermission) {
+                                                                                                                            echo 'disabled';
+                                                                                                                        } ?>>Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
                         </div>
                     </div>
-                </main>
+            </div>
+            </main>
             </div>
             <script>
                 //hide or show the file upload input based on the user selection

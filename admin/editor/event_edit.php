@@ -17,6 +17,9 @@ $permissionsObject = new Permission();
 //event class
 $event = new Event();
 
+//schedule class
+$schedule = new Schedule();
+
 //school class
 $school = new School();
 
@@ -31,6 +34,9 @@ $media = new Media();
 
 //include the event media class
 $eventMedia = new EventMedia();
+
+//include the session class
+$session = new Session();
 
 //create an array of available media
 $mediaArray = $media->getMedia();
@@ -61,7 +67,7 @@ if (isset($_GET['action'])) {
         $updateEventPermissionID = $permissionsObject->getPermissionIdByName('UPDATE EVENT');
 
         //boolean to track if the user has the update event permission
-        $hasEventUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updateEventPermissionID);
+        $hasEventUpdatePermission = $auth->checkUserPermission(intval($session->get('user_id')), $updateEventPermissionID);
 
         //prevent the user from accessing the page if they do not have the relevant permission
         if (!$hasEventUpdatePermission) {
@@ -169,8 +175,8 @@ if (isset($_GET['action'])) {
                                 <p><strong><label for="eventDate">Event Date: <strong><span
                                                     class="required">*</span></strong></label></strong></p>
                                 <p><input type="date" id="eventDate" name="event_date" class="form-control"
-                                        value="<?php echo $event->getEventDate($event_id); ?>"
-                                        placeholder="<?php echo $event->getEventDate($event_id); ?>" required></p>
+                                        value="<?php echo $schedule->getEventDate($event_id); ?>"
+                                        placeholder="<?php echo $schedule->getEventDate($event_id); ?>" required></p>
                                 <p><small id="eventDateHelp" class="form-text text-muted">Enter the date of the event,
                                         must
                                         be
@@ -251,7 +257,7 @@ if (isset($_GET['action'])) {
                                     <select id="eventLogoSelect" name="event_logoSelect" class="form-control">
                                         <option value="">Select a Logo</option>
                                         <?php /* check if the user has permission to upload media */
-                                                                if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                                if ($auth->checkUserPermission(intval($session->get('user_id')), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                         <option value="0">Upload a New Logo</option>
                                         <?php } ?>
                                         <?php foreach ($mediaArray as $key => $value) { ?>
@@ -276,7 +282,7 @@ if (isset($_GET['action'])) {
                                 </div>
                                 <p></p>
                                 <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
-                                                        if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                        if ($auth->checkUserPermission(intval($session->get('user_id')), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                 <p><strong><label for="eventLogo">Upload a New Logo:</label></strong></p>
                                 <p><input type="file" id="eventLogoUpload" name="event_logoUpload" class="form-control"
                                         required></p>
@@ -308,7 +314,7 @@ if (isset($_GET['action'])) {
                                     <select id="eventBannerSelect" name="event_bannerSelect" class="form-control">
                                         <option value="">Select a Banner</option>
                                         <?php /* check if the user has permission to upload media */
-                                                                if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                                if ($auth->checkUserPermission(intval($session->get('user_id')), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                         <option value="0">Upload a New Banner</option>
                                         <?php } ?>
                                         <?php foreach ($mediaArray as $key => $value) { ?>
@@ -322,7 +328,7 @@ if (isset($_GET['action'])) {
                                         class="form-control" disabled hidden>
                                 </p>
                                 <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
-                                                        if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                        if ($auth->checkUserPermission(intval($session->get('user_id')), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                 <p><strong><label for="eventBanner">Upload a New Banner:</label></strong></p>
                                 <p><input type="file" id="eventBannerUpload" name="event_bannerUpload"
                                         class="form-control" required></p>
@@ -367,7 +373,7 @@ if (isset($_GET['action'])) {
         $createEventPermissionID = $permissionsObject->getPermissionIdByName('CREATE EVENT');
 
         //boolean to track if the user has the create event permission
-        $hasEventCreatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $createEventPermissionID);
+        $hasEventCreatePermission = $auth->checkUserPermission(intval($session->get('user_id')), $createEventPermissionID);
 
         //prevent the user from accessing the page if they do not have the relevant permission
         if (!$hasEventCreatePermission) {
@@ -494,7 +500,7 @@ if (isset($_GET['action'])) {
                                     <select id="eventLogoSelect" name="event_logoSelect" class="form-control">
                                         <option value="">Select a Logo</option>
                                         <?php /* check if the user has permission to upload media */
-                                                            if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                            if ($auth->checkUserPermission(intval($session->get('user_id')), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                         <option value="0">Upload a New Logo</option>
                                         <?php } ?>
                                         <?php foreach ($mediaArray as $key => $value) { ?>
@@ -508,7 +514,7 @@ if (isset($_GET['action'])) {
                                         disabled hidden>
                                 </p>
                                 <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
-                                                    if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                    if ($auth->checkUserPermission(intval($session->get('user_id')), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                 <p><strong><label for="eventLogo">Upload a New Logo:</label></strong></p>
                                 <p><input type="file" id="eventLogoUpload" name="event_logoUpload" class="form-control"
                                         required></p>
@@ -539,7 +545,7 @@ if (isset($_GET['action'])) {
                                     <select id="eventBannerSelect" name="event_bannerSelect" class="form-control">
                                         <option value="">Select a Banner</option>
                                         <?php /* check if the user has permission to upload media */
-                                                            if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                            if ($auth->checkUserPermission(intval($session->get('user_id')), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                         <option value="0">Upload a New Banner</option>
                                         <?php } ?>
                                         <?php foreach ($mediaArray as $key => $value) { ?>
@@ -553,7 +559,7 @@ if (isset($_GET['action'])) {
                                         class="form-control" disabled hidden>
                                 </p>
                                 <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
-                                                    if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                    if ($auth->checkUserPermission(intval($session->get('user_id')), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                 <p><strong><label for="eventBanner">Upload a New Banner:</label></strong></p>
                                 <p><input type="file" id="eventBannerUpload" name="event_bannerUpload"
                                         class="form-control" required></p>

@@ -43,8 +43,6 @@ interface Major
 
     public function getMajorUpdatedBy(int $major_id): User;
 
-    public function getMajorCount(): int;
-
     public function setMajorCreatedDate(int $major_id, string $created_at): bool;
 
     public function setMajorCreatedBy(int $major_id, int $user_id): bool;

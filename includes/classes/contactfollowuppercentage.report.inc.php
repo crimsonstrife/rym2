@@ -67,7 +67,7 @@ class ContactFollowUpPercentageReport extends Report
         //loop through the result to format the data
         while ($row = $result->fetch_assoc()) {
             //get the report id
-            $id = $row['id'];
+            $reportID = $row['id'];
 
             //get the report data
             $data = $row['data'];
@@ -89,7 +89,7 @@ class ContactFollowUpPercentageReport extends Report
 
             //assemble a new array with the report id and the report data and the user id of the user that created the report
             $reports[] = array(
-                'id' => $id,
+                'id' => $reportID,
                 'report_type' => 'Contact Follow-Up Percentage',
                 'data' => $data,
                 'created_by' => $createdByName,
@@ -106,11 +106,11 @@ class ContactFollowUpPercentageReport extends Report
     /**
      * Get a single report by id
      *
-     * @param int $id - the id of the report to get
+     * @param int $reportID - the id of the report to get
      *
      * @return array
      */
-    public function getReportById(int $id): array
+    public function getReportById(int $reportID): array
     {
         //include the user class, so we can get the user name of the user that requested the report
         $userObject = new User();
@@ -122,7 +122,7 @@ class ContactFollowUpPercentageReport extends Report
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
-        $stmt->bind_param('i', $id);
+        $stmt->bind_param('i', $reportID);
 
         //execute the statement
         $stmt->execute();
@@ -134,7 +134,7 @@ class ContactFollowUpPercentageReport extends Report
         $row = $result->fetch_assoc();
 
         //get the report id
-        $id = $row['id'];
+        $reportID = $row['id'];
 
         //get the report data
         $data = $row['data'];
@@ -156,7 +156,7 @@ class ContactFollowUpPercentageReport extends Report
 
         //assemble a new array with the report id and the report data and the user id of the user that created the report
         $report = array(
-            'id' => $id,
+            'id' => $reportID,
             'report_type' => 'Contact Follow-Up Percentage',
             'data' => $data,
             'created_by' => $createdByName,
@@ -203,7 +203,7 @@ class ContactFollowUpPercentageReport extends Report
         //loop through the result to format the data
         while ($row = $result->fetch_assoc()) {
             //get the report id
-            $id = $row['id'];
+            $reportID = $row['id'];
 
             //get the report data
             $data = $row['data'];
@@ -225,7 +225,7 @@ class ContactFollowUpPercentageReport extends Report
 
             //assemble a new array with the report id and the report data and the user id of the user that created the report
             $reports[] = array(
-                'id' => $id,
+                'id' => $reportID,
                 'report_type' => 'Contact Follow-Up Percentage',
                 'data' => $data,
                 'created_by' => $createdByName,
@@ -243,11 +243,11 @@ class ContactFollowUpPercentageReport extends Report
      * Store the report in the database
      *
      * @param string $report - the report data to store
-     * @param int $created_by - the id of the user that created the report
+     * @param int $createdBy - the id of the user that created the report
      *
      * @return int
      */
-    public function storeReport(string $report, int $created_by): int
+    public function storeReport(string $report, int $createdBy): int
     {
         //get the current date and time
         $date = date("Y-m-d H:i:s");
@@ -259,7 +259,7 @@ class ContactFollowUpPercentageReport extends Report
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
-        $stmt->bind_param('sisis', $report, $created_by, $date, $created_by, $date);
+        $stmt->bind_param('sisis', $report, $createdBy, $date, $createdBy, $date);
 
         //execute the statement
         $stmt->execute();
@@ -275,19 +275,13 @@ class ContactFollowUpPercentageReport extends Report
      * Generate Contact Follow-Up Percentage Report
      * Generates a new report with the percentage of students that were sent automatic email (indicated by the sender being NULL in the contact_log table),
      * who were then followed up with by a staff member (indicated by the sender being NOT NULL in the contact_log table).
-     * @param int $created_by // the user id of the user that requested the report
+     * @param int $createdBy // the user id of the user that requested the report
      * @return int The id of the report that was generated
      */
-    public function generateReport(int $created_by): int
+    public function generateReport(int $createdBy): int
     {
         //include the user class, so we can get the user name of the user that requested the report
         $userObject = new User();
-
-        //include the student class, so we can get the student name of the student that was contacted
-        $studentObject = new Student();
-
-        //include the contact log class, so we can get the contact log data
-        $contactLogObject = new Contact();
 
         //create an array to store the report
         $report = array();
@@ -338,16 +332,16 @@ class ContactFollowUpPercentageReport extends Report
         $report = json_encode($report);
 
         //store the report in the database
-        $reportId = $this->storeReport($report, $created_by);
+        $reportId = $this->storeReport($report, $createdBy);
 
         //log the report activity
-        $this->logReportActivity($reportId, 'Generated Contact Follow-Up Percentage Report', $created_by);
+        $this->logReportActivity($reportId, 'Generated Contact Follow-Up Percentage Report', $createdBy);
 
         //return the id of the report that was generated
         return $reportId;
     }
 
-    public function logReportActivity(int $report_id, string $action, int $user_id = null): bool
+    public function logReportActivity(int $reportID, string $action, int $userID = null): bool
     {
         //string to hold the report "title"
         $reportTitle = '';
@@ -356,7 +350,7 @@ class ContactFollowUpPercentageReport extends Report
         $reportDate = '';
 
         //get the report data
-        $report = $this->getReportById($report_id);
+        $report = $this->getReportById($reportID);
 
         $reportDate = formatDate($report['created_at']);
 
@@ -365,7 +359,7 @@ class ContactFollowUpPercentageReport extends Report
 
         //log the report activity
         $activity = new Activity();
-        $activity->logActivity($user_id, $action, 'Report:  ' . $reportTitle . ' - ID: ' . strval($report_id) . ' Date: ' . $reportDate);
+        $activity->logActivity($userID, $action, 'Report:  ' . $reportTitle . ' - ID: ' . strval($reportID) . ' Date: ' . $reportDate);
 
         //return true
         return true;
@@ -374,17 +368,17 @@ class ContactFollowUpPercentageReport extends Report
     /**
      * Delete a report by id
      *
-     * @param int $id - the id of the report to delete
+     * @param int $reportID - the id of the report to delete
      *
      * @return bool
      */
-    public function deleteReport(int $id): bool
+    public function deleteReport(int $reportID): bool
     {
-        //get the current date and time
-        $date = date("Y-m-d H:i:s");
+        //instance of the session class
+        $session = new Session();
 
         //current user id
-        $user_id = intval($_SESSION['user_id']);
+        $userID = intval($session->get('user_id'));
 
         //boolean to track if the report was deleted
         $result = false;
@@ -396,7 +390,7 @@ class ContactFollowUpPercentageReport extends Report
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
-        $stmt->bind_param('i', $id);
+        $stmt->bind_param('i', $reportID);
 
         //execute the statement
         $stmt->execute();
@@ -404,36 +398,34 @@ class ContactFollowUpPercentageReport extends Report
         //check the result
         if ($stmt->affected_rows > 0) {
             $result = true;
-        } else {
-            $result = false;
         }
 
         //log the report activity and return the result
         if ($result) {
             //log the report activity
             $activity = new Activity();
-            $activity->logActivity($user_id, 'Deleted Report', 'Report ' . strval($id));
+            $activity->logActivity($userID, 'Deleted Report', 'Report ' . strval($reportID));
 
             //return result
             return $result;
-        } else {
-            //return result
-            return $result;
         }
+
+        //return result
+        return $result;
     }
 
     /**
      * Get the report data for the chart
      * Create a pie chart with the percentage of students that were sent automatic email (indicated by the sender being NULL in the contact_log table),
      *
-     * @param int $id - the id of the report to get the chart data for
+     * @param int $reportID - the id of the report to get the chart data for
      *
      * @return array
      */
-    public function getChartableReportData(int $id): array
+    public function getChartableReportData(int $reportID): array
     {
         //get the report
-        $report = $this->getReportById($id);
+        $report = $this->getReportById($reportID);
 
         //get the report data
         $reportData = $report['data'][0];
@@ -443,12 +435,6 @@ class ContactFollowUpPercentageReport extends Report
 
         //get the percentage of students that were not followed up with
         $notFollowedUpWith = 100 - intval($percentage);
-
-        //get the total number of contact attempts
-        $total = $reportData['total'];
-
-        //get the top sending user - that is not the automatic email sender
-        $topSendingUser = $reportData['top_sending_user'];
 
         //declare the chart type
         $chartType = 'pie';

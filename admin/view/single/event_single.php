@@ -14,6 +14,9 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 //event class
 $event = new Event();
 
+//schedule class
+$schedule = new Schedule();
+
 //school class
 $school = new School();
 
@@ -155,7 +158,7 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
                                         target="_blank" class="btn btn-info btn-sm">QRCode Display Page <i
                                             class="fa-solid fa-arrow-up-right-from-square"></i></a></span>
                             </p>
-                            <p><strong>Event Date:</strong> <?php echo $event->getEventDate($event_id); ?></p>
+                            <p><strong>Event Date:</strong> <?php echo $schedule->getEventDate($event_id); ?></p>
                             <p><strong>Event Location:</strong> <?php echo $location; ?></p>
                             <!-- Formatted School address -->
                             <div>

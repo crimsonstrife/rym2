@@ -20,6 +20,9 @@ $degree = new Degree();
 //user class
 $user = new User();
 
+//session class
+$session = new Session();
+
 //check that action is set in the URL parameters
 if (isset($_GET['action'])) {
     //get the action from the URL parameters
@@ -31,7 +34,7 @@ if (isset($_GET['action'])) {
         $updateDegreePermissionID = $permissionsObject->getPermissionIdByName('UPDATE DEGREE');
 
         //boolean to check if the user has the update degree permission
-        $hasUpdateDegreePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updateDegreePermissionID);
+        $hasUpdateDegreePermission = $auth->checkUserPermission(intval($session->get('user_id')), $updateDegreePermissionID);
 
         //if the user does not have the update degree permission, prevent access to the editor
         if (!$hasUpdateDegreePermission) {
@@ -136,7 +139,7 @@ if (isset($_GET['action'])) {
         $createDegreePermissionID = $permissionsObject->getPermissionIdByName('CREATE DEGREE');
 
         //boolean to check if the user has the create degree permission
-        $hasCreateDegreePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $createDegreePermissionID);
+        $hasCreateDegreePermission = $auth->checkUserPermission(intval($session->get('user_id')), $createDegreePermissionID);
 
         //if the user does not have the create degree permission, prevent access to the editor
         if (!$hasCreateDegreePermission) {

@@ -32,6 +32,14 @@ require_once(BASEPATH . '/includes/utils/helpers.php');
 /* include the application class */
 $APP = new Application();
 
+/* include the settings class */
+$settings = new Settings();
+$mailSettings = new MailerSettings();
+$companySettings = new CompanySettings();
+$trackerSettings = new TrackerSettings();
+$googleAnalyticsSettings = new GoogleAnalyticsTracker();
+$hotjarSettings = new HotjarTracker();
+
 if (file_exists(BASEPATH . '/.env')) {
     /* Use the phpdotenv package to read the .env file */
     $dotenv = Dotenv\Dotenv::createImmutable(BASEPATH);
@@ -47,7 +55,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $app_url = null;
     //try to get the app_url
     try {
-        $app_url = $APP->getAppUrl();
+        $app_url = $settings->getAppUrl();
     } catch (Exception $e) {
         $app_url = null;
     }
@@ -69,7 +77,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $app_name = null;
     //try to get the app_name
     try {
-        $app_name = $APP->getAppName();
+        $app_name = $settings->getAppName();
     } catch (Exception $e) {
         $app_name = null;
     }
@@ -89,7 +97,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $company_name = null;
     //try to get the company_name
     try {
-        $company_name = $APP->getCompanyName();
+        $company_name = $companySettings->getCompanyName();
     } catch (Exception $e) {
         $company_name = null;
     }
@@ -105,7 +113,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_type = null;
     //try to get the mailer_type
     try {
-        $mailer_type = $APP->getMailerType();
+        $mailer_type = $mailSettings->getMailerType();
     } catch (Exception $e) {
         $mailer_type = null;
     }
@@ -120,7 +128,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_host = null;
     //try to get the mailer_host
     try {
-        $mailer_host = $APP->getMailerHost();
+        $mailer_host = $mailSettings->getMailerHost();
     } catch (Exception $e) {
         $mailer_host = null;
     }
@@ -135,7 +143,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_port = null;
     //try to get the mailer_port
     try {
-        $mailer_port = $APP->getMailerPort();
+        $mailer_port = $mailSettings->getMailerPort();
     } catch (Exception $e) {
         $mailer_port = null;
     }
@@ -150,7 +158,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_auth_required = null;
     //try to get the mailer_auth_required
     try {
-        $mailer_auth_required = $APP->getMailerAuthRequired();
+        $mailer_auth_required = $mailSettings->getMailerAuthRequired();
     } catch (Exception $e) {
         $mailer_auth_required = null;
     }
@@ -171,7 +179,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_encryption = null;
     //try to get the mailer_encryption
     try {
-        $mailer_encryption = $APP->getMailerEncryption();
+        $mailer_encryption = $mailSettings->getMailerEncryption();
     } catch (Exception $e) {
         $mailer_encryption = null;
     }
@@ -186,7 +194,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_username = null;
     //try to get the mailer_username
     try {
-        $mailer_username = $APP->getMailerUsername();
+        $mailer_username = $mailSettings->getMailerUsername();
     } catch (Exception $e) {
         $mailer_username = null;
     }
@@ -201,7 +209,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_password = null;
     //try to get the mailer_password
     try {
-        $mailer_password = $APP->getMailerPassword();
+        $mailer_password = $mailSettings->getMailerPassword();
     } catch (Exception $e) {
         $mailer_password = null;
     }
@@ -216,7 +224,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_from_address = null;
     //try to get the mailer_from_address
     try {
-        $mailer_from_address = $APP->getMailerFromAddress();
+        $mailer_from_address = $mailSettings->getMailerFromAddress();
     } catch (Exception $e) {
         $mailer_from_address = null;
     }
@@ -231,7 +239,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_from_name = null;
     //try to get the mailer_from_name
     try {
-        $mailer_from_name = $APP->getMailerFromName();
+        $mailer_from_name = $mailSettings->getMailerFromName();
     } catch (Exception $e) {
         $mailer_from_name = null;
     }
@@ -252,7 +260,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $app_url = null;
     //try to get the app_url
     try {
-        $app_url = $APP->getAppUrl();
+        $app_url = $settings->getAppUrl();
     } catch (Exception $e) {
         $app_url = null;
     }
@@ -274,7 +282,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $app_name = null;
     //try to get the app_name
     try {
-        $app_name = $APP->getAppName();
+        $app_name = $settings->getAppName();
     } catch (Exception $e) {
         $app_name = null;
     }
@@ -294,7 +302,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $company_name = null;
     //try to get the company_name
     try {
-        $company_name = $APP->getCompanyName();
+        $company_name = $companySettings->getCompanyName();
     } catch (Exception $e) {
         $company_name = null;
     }
@@ -310,7 +318,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_type = null;
     //try to get the mailer_type
     try {
-        $mailer_type = $APP->getMailerType();
+        $mailer_type = $mailSettings->getMailerType();
     } catch (Exception $e) {
         $mailer_type = null;
     }
@@ -325,7 +333,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_host = null;
     //try to get the mailer_host
     try {
-        $mailer_host = $APP->getMailerHost();
+        $mailer_host = $mailSettings->getMailerHost();
     } catch (Exception $e) {
         $mailer_host = null;
     }
@@ -340,7 +348,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_port = null;
     //try to get the mailer_port
     try {
-        $mailer_port = $APP->getMailerPort();
+        $mailer_port = $mailSettings->getMailerPort();
     } catch (Exception $e) {
         $mailer_port = null;
     }
@@ -355,7 +363,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_auth_required = null;
     //try to get the mailer_auth_required
     try {
-        $mailer_auth_required = $APP->getMailerAuthRequired();
+        $mailer_auth_required = $mailSettings->getMailerAuthRequired();
     } catch (Exception $e) {
         $mailer_auth_required = null;
     }
@@ -376,7 +384,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_encryption = null;
     //try to get the mailer_encryption
     try {
-        $mailer_encryption = $APP->getMailerEncryption();
+        $mailer_encryption = $mailSettings->getMailerEncryption();
     } catch (Exception $e) {
         $mailer_encryption = null;
     }
@@ -391,7 +399,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_username = null;
     //try to get the mailer_username
     try {
-        $mailer_username = $APP->getMailerUsername();
+        $mailer_username = $mailSettings->getMailerUsername();
     } catch (Exception $e) {
         $mailer_username = null;
     }
@@ -406,7 +414,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_password = null;
     //try to get the mailer_password
     try {
-        $mailer_password = $APP->getMailerPassword();
+        $mailer_password = $mailSettings->getMailerPassword();
     } catch (Exception $e) {
         $mailer_password = null;
     }
@@ -421,7 +429,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_from_address = null;
     //try to get the mailer_from_address
     try {
-        $mailer_from_address = $APP->getMailerFromAddress();
+        $mailer_from_address = $mailSettings->getMailerFromAddress();
     } catch (Exception $e) {
         $mailer_from_address = null;
     }
@@ -436,7 +444,7 @@ if (file_exists(BASEPATH . '/.env')) {
     $mailer_from_name = null;
     //try to get the mailer_from_name
     try {
-        $mailer_from_name = $APP->getMailerFromName();
+        $mailer_from_name = $mailSettings->getMailerFromName();
     } catch (Exception $e) {
         $mailer_from_name = null;
     }
@@ -460,7 +468,7 @@ if (file_exists(BASEPATH . '/.env')) {
 $hotjar_enabled = null;
 //try to get the hotjar_enabled setting
 try {
-    $hotjar_enabled = $APP->getHotjarEnabled();
+    $hotjar_enabled = $hotjarSettings->getHotjarStatus();
 } catch (Exception $e) {
     $hotjar_enabled = null;
 }
@@ -478,8 +486,8 @@ $hotjar_version = null;
 //if hotjar is enabled, try to get the hotjar_id and hotjar_version
 if (HOTJAR_ENABLED == true) {
     try {
-        $hotjar_id = $APP->getHotjarSiteID();
-        $hotjar_version = $APP->getHotjarVersion();
+        $hotjar_id = $hotjarSettings->getHotjarId();
+        $hotjar_version = $hotjarSettings->getHotjarVersion();
     } catch (Exception $e) {
         $hotjar_id = null;
         $hotjar_version = null;
@@ -506,7 +514,7 @@ if ($hotjar_version != null || $hotjar_version != '') {
 $google_analytics_enabled = null;
 //try to get the google_analytics_enabled setting
 try {
-    $google_analytics_enabled = $APP->getGoogleAnalyticsEnabled();
+    $google_analytics_enabled = $googleAnalyticsSettings->getGoogleAnalyticsStatus();
 } catch (Exception $e) {
     $google_analytics_enabled = null;
 }
@@ -523,7 +531,7 @@ $google_analytics_tag = null;
 //if google analytics is enabled, try to get the google_analytics_tag
 if (GOOGLE_ANALYTICS_ENABLED == true) {
     try {
-        $google_analytics_tag = $APP->getGoogleAnalyticsTag();
+        $google_analytics_tag = $googleAnalyticsSettings->getGoogleAnalyticsID();
     } catch (Exception $e) {
         $google_analytics_tag = null;
     }

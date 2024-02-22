@@ -1,8 +1,10 @@
 <?php
+//instance of the session class
+$session = new Session();
 //prevent direct access to this file
-if (!isset($_SESSION['user_id'])) {
+if ($session->check('user_id') === false) {
     //check if the user is logged in
-    if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    if ($session->check('logged_in') === false || $session->get('logged_in') === false) {
         //redirect to the login page
         header('Location: ' . APP_URL . '/login.php');
         exit;
@@ -19,6 +21,9 @@ $permissionsObject = new Permission();
 
 //include the auth class
 $auth = new Authenticator();
+
+//include the search class
+$search = new Search();
 
 //verify the url parameter
 if (isset($_GET['view'])) {
@@ -53,7 +58,7 @@ if (isset($_GET['view'])) {
                 $eventData = new Event();
 
                 //perform the search
-                $searchResults = $APP->search($searchTerm);
+                $searchResults = $search->search($searchTerm);
             ?>
                 <!-- main content -->
                 <div id="layout_content" class="w-95 mx-auto">
@@ -88,7 +93,7 @@ if (isset($_GET['view'])) {
                                                             $readStudentPermissionID = $permissionsObject->getPermissionIdByName('READ STUDENT');
 
                                                             //boolean to check if the user has the read student permission
-                                                            $hasReadStudentPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readStudentPermissionID);
+                                                            $hasReadStudentPermission = $auth->checkUserPermission(intval($session->get('user_id')), $readStudentPermissionID);
 
                                                             //prevent the user from seeing the results of the student search if they do not have the read student permission
                                                             if ($hasReadStudentPermission) { ?>
@@ -123,7 +128,7 @@ if (isset($_GET['view'])) {
                                                             $readSchoolPermissionID = $permissionsObject->getPermissionIdByName('READ SCHOOL');
 
                                                             //boolean to check if the user has the read school permission
-                                                            $hasReadSchoolPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readSchoolPermissionID);
+                                                            $hasReadSchoolPermission = $auth->checkUserPermission(intval($session->get('user_id')), $readSchoolPermissionID);
 
                                                             //prevent the user from seeing the results of the school search if they do not have the read school permission
                                                             if ($hasReadSchoolPermission) { ?>
@@ -153,7 +158,7 @@ if (isset($_GET['view'])) {
                                                             $readEventPermissionID = $permissionsObject->getPermissionIdByName('READ EVENT');
 
                                                             //boolean to check if the user has the read event permission
-                                                            $hasReadEventPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $readEventPermissionID);
+                                                            $hasReadEventPermission = $auth->checkUserPermission(intval($session->get('user_id')), $readEventPermissionID);
 
                                                             //prevent the user from seeing the results of the event search if they do not have the read event permission
                                                             if ($hasReadEventPermission) { ?>

@@ -33,7 +33,7 @@ require_once(BASEPATH . '/includes/connector.inc.php');
 class User
 {
     //Reference to the database
-    private $mysqli;
+    protected $mysqli;
 
     //Instantiate the database connection
     public function __construct()
@@ -76,63 +76,55 @@ class User
         //return the result
         if ($isValid) {
             return true;
-        } else {
-            return false;
         }
+
+        //return false if the password is not valid
+        return false;
     }
 
     /**
      * Get just the IDs of the roles for a specific user, returns an array of role IDs
-     * @param int $id
-     * @throws \Exception
+     * @param int $userID
      * @return array
      */
-    private function getRoleIDsByUserID(int $id): array
+    private function getRoleIDsByUserID(int $userID): array
     {
         //SQL statement to get the role IDs by user ID
-        $sql = "SELECT role_id FROM user_has_role WHERE user_id = ?";
+        $sql = "SELECT role_id FROM user_has_role WHERE user_id = $userID";
 
         //new array to hold the role IDs
-        $role_ids = [];
-
-        //Check that mysqli is set
-        if (!$this->mysqli) {
-            throw new Exception("Failed to connect to the database.");
-        }
+        $roleIDArray = [];
 
         //Prepare the SQL statement for execution
-        $role_statement = prepareStatement($this->mysqli, $sql);
-
-        //Bind the user ID to the statement
-        $role_statement->bind_param("i", $id);
+        $stmt = prepareStatement($this->mysqli, $sql);
 
         //Execute the statement
-        $role_statement->execute();
+        $stmt->execute();
 
         //Get the results
-        $result = $role_statement->get_result();
+        $result = $stmt->get_result();
 
         //Loop through the results and add them to the array
         while ($row = $result->fetch_assoc()) {
-            $role_ids[] = $row['role_id'];
+            $roleIDArray[] = $row['role_id'];
         }
 
         //return the role IDs
-        return $role_ids;
+        return $roleIDArray;
     }
 
     /**
      * Get the provided user's roles, returns an array of role objects
-     * @param int $id
+     * @param int $userID
      * @return array
      */
-    public function getUserRoles(int $id): array
+    public function getUserRoles(int $userID): array
     {
         //new roles array
         $roles = array();
 
         //get the role IDs by user ID
-        $roles = $this->getRoleIDsByUserID($id);
+        $roles = $this->getRoleIDsByUserID($userID);
 
         //new roles class
         $role = new Roles();
@@ -154,18 +146,12 @@ class User
     /**
      * Get all users from the database
      *
-     * @throws \Exception
      * @return array
      */
     public function getAllUsers(): array
     {
         //SQL statement to get all users
         $sql = "SELECT * FROM users";
-
-        //Check that mysqli is set
-        if (!$this->mysqli) {
-            throw new Exception("Failed to connect to the database.");
-        }
 
         //Prepare the SQL statement for execution
         $stmt = preparestatement($this->mysqli, $sql);
@@ -191,25 +177,16 @@ class User
     /**
      * Get a user by ID
      *
-     * @param int $id
-     * @throws \Exception
+     * @param int $userID
      * @return array
      */
-    public function getUserById(int $id): array
+    public function getUserById(int $userID): array
     {
         // SQL statement to get the user by ID
-        $sql = "SELECT * FROM users WHERE id = ?";
-
-        //Check that mysqli is set
-        if (!$this->mysqli) {
-            throw new Exception("Failed to connect to the database.");
-        }
+        $sql = "SELECT * FROM users WHERE id = $userID";
 
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
-
-        // Bind the ID to the statement
-        $stmt->bind_param("i", $id);
 
         // Execute the statement
         $stmt->execute();
@@ -227,25 +204,16 @@ class User
     /**
      * Get a user's email by ID
      *
-     * @param int $id
-     * @throws \Exception
+     * @param int $userID
      * @return string
      */
-    public function getUserEmail(int $id): string
+    public function getUserEmail(int $userID): string
     {
         // SQL statement to get the user's email by ID
-        $sql = "SELECT email FROM users WHERE id = ?";
-
-        //Check that mysqli is set
-        if (!$this->mysqli) {
-            throw new Exception("Failed to connect to the database.");
-        }
+        $sql = "SELECT email FROM users WHERE id = $userID";
 
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
-
-        // Bind the ID to the statement
-        $stmt->bind_param("i", $id);
 
         // Execute the statement
         $stmt->execute();
@@ -255,6 +223,8 @@ class User
 
         // Fetch the user's email
         $row = $result->fetch_assoc();
+
+        // Set the user's email
         $email = $row['email'] ?? '';
 
         // Return the user's email
@@ -265,18 +235,12 @@ class User
      * Get user by email
      *
      * @param string $email
-     * @return int $user_id
-     * @throws \Exception
+     * @return ?int $userID
      */
-    public function getUserByEmail(string $email): int
+    public function getUserByEmail(string $email): ?int
     {
         // SQL statement to get the user's ID by email
         $sql = "SELECT id FROM users WHERE email = ?";
-
-        //Check that mysqli is set
-        if (!$this->mysqli) {
-            throw new Exception("Failed to connect to the database.");
-        }
 
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
@@ -292,34 +256,25 @@ class User
 
         // Fetch the user's ID
         $row = $result->fetch_assoc();
-        $user_id = $row['id'] ?? 0;
+        $userID = $row['id'] ?? null;
 
         // Return the user's ID
-        return intval($user_id);
+        return intval($userID);
     }
 
     /**
      * Get a user's (hashed) password by ID
      *
-     * @param int $id
+     * @param int $userID
      * @return string
-     * @throws Exception
      */
-    public function getUserPassword(int $id): string
+    public function getUserPassword(int $userID): string
     {
         // SQL statement to get the user's password by ID
-        $sql = "SELECT password FROM users WHERE id = ?";
-
-        //Check that mysqli is set
-        if (!$this->mysqli) {
-            throw new Exception("Failed to connect to the database.");
-        }
+        $sql = "SELECT password FROM users WHERE id = $userID";
 
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
-
-        // Bind the ID to the statement
-        $stmt->bind_param("i", $id);
 
         // Execute the statement
         $stmt->execute();
@@ -337,25 +292,16 @@ class User
     /**
      * Get a user's username by ID
      *
-     * @param int $id
-     * @throws \Exception
+     * @param int $userID
      * @return string
      */
-    public function getUserUsername(int $id): string
+    public function getUserUsername(int $userID): string
     {
         // SQL statement to get the user's username by ID
-        $sql = "SELECT username FROM users WHERE id = ?";
-
-        //Check that mysqli is set
-        if (!$this->mysqli) {
-            throw new Exception("Failed to connect to the database.");
-        }
+        $sql = "SELECT username FROM users WHERE id = $userID";
 
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
-
-        // Bind the ID to the statement
-        $stmt->bind_param("i", $id);
 
         // Execute the statement
         $stmt->execute();
@@ -374,18 +320,12 @@ class User
      * Get a user's ID by username
      *
      * @param string $username
-     * @return int
-     * @throws \Exception
+     * @return ?int
      */
-    public function getUserIdByUsername(string $username): int
+    public function getUserIdByUsername(string $username): ?int
     {
         // SQL statement to get the user's ID by username
         $sql = "SELECT id FROM users WHERE username = ? LIMIT 1";
-
-        //Check that mysqli is set
-        if (!$this->mysqli) {
-            throw new Exception("Failed to connect to the database.");
-        }
 
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
@@ -402,49 +342,44 @@ class User
         // Fetch the first row from the result
         $row = $result->fetch_assoc();
 
-        // Return the user's ID or 0 if not found
-        return $row['id'] ?? 0;
+        // Return the user's ID or null if not found
+        return $row['id'] ?? null;
     }
 
     /**
      * Set a user's email
-     * @param int $id
+     * @param int $userID
      * @param string $email
-     * @throws \Exception
      * @return void
      */
-    public function setUserEmail(int $id, string $email): void
+    public function setUserEmail(int $userID, string $email): void
     {
         // SQL statement to set the user's email by ID
         $sql = "UPDATE users SET email = ? WHERE id = ?";
-
-        //Check that mysqli is set
-        if (!$this->mysqli) {
-            throw new Exception("Failed to connect to the database.");
-        }
 
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
 
         // Bind the parameters to the SQL statement
-        $stmt->bind_param("si", $email, $id);
+        $stmt->bind_param("si", $email, $userID);
 
         // Execute the statement
         $stmt->execute();
 
         // Log the activity
         $activity = new Activity();
-        $activity->logActivity(intval($_SESSION['user_id']), 'Updated User Email', 'User ID: ' . strval($id) . ' User Name: ' . $this->getUserUsername($id) . ' Email: ' . $email);
+        $session = new Session();
+        $sessionUserID = $session->get('user_id');
+        $activity->logActivity(intval($sessionUserID), 'Updated User Email', 'User ID: ' . strval($userID) . ' User Name: ' . $this->getUserUsername($userID) . ' Email: ' . $email);
     }
 
     /**
      * Set a user's password to a new value
-     * @param int $id
+     * @param int $userID
      * @param string $password
-     * @throws \Exception
      * @return void
      */
-    public function setUserPassword(int $id, string $password): void
+    public function setUserPassword(int $userID, string $password): void
     {
         // Hash the password
         $password = $this->hashPassword($password);
@@ -452,57 +387,50 @@ class User
         // SQL statement to set the user's password by ID
         $sql = "UPDATE users SET password = ? WHERE id = ?";
 
-        //Check that mysqli is set
-        if (!$this->mysqli) {
-            throw new Exception("Failed to connect to the database.");
-        }
-
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
 
         // Bind the parameters to the SQL statement
-        $stmt->bind_param("si", $password, $id);
+        $stmt->bind_param("si", $password, $userID);
 
         // Execute the statement
         $stmt->execute();
 
         // Log the activity
         $activity = new Activity();
-        $activity->logActivity(intval($_SESSION['user_id']), 'Updated User Password', 'User ID: ' . strval($id) . ' User Name: ' . $this->getUserUsername($id));
+        $session = new Session();
+        $sessionUserID = $session->get('user_id');
+        $activity->logActivity(intval($sessionUserID), 'Updated User Password', 'User ID: ' . strval($userID) . ' User Name: ' . $this->getUserUsername($userID));
     }
 
     /**
      * Set a user's username to a new value
-     * @param int $id
+     * @param int $userID
      * @param string $username
-     * @throws \Exception
      * @return void
      */
-    public function setUserUsername(int $id, string $username): void
+    public function setUserUsername(int $userID, string $username): void
     {
         // SQL statement to set the user's username by ID
         $sql = "UPDATE users SET username = ? WHERE id = ?";
 
         // Get the old username
-        $old_username = $this->getUserUsername($id);
-
-        //Check that mysqli is set
-        if (!$this->mysqli) {
-            throw new Exception("Failed to connect to the database.");
-        }
+        $old_username = $this->getUserUsername($userID);
 
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
 
         // Bind the parameters to the SQL statement
-        $stmt->bind_param("si", $username, $id);
+        $stmt->bind_param("si", $username, $userID);
 
         // Execute the statement
         $stmt->execute();
 
         // Log the activity
         $activity = new Activity();
-        $activity->logActivity(intval($_SESSION['user_id']), 'Updated User Username', 'User ID: ' . strval($id) . ' User Name: ' . $username . ' Old Username: ' . $old_username);
+        $session = new Session();
+        $sessionUserID = $session->get('user_id');
+        $activity->logActivity(intval($sessionUserID), 'Updated User Username', 'User ID: ' . strval($userID) . ' User Name: ' . $username . ' Old Username: ' . $old_username);
     }
 
     /**
@@ -510,19 +438,13 @@ class User
      * @param string $email
      * @param string $password
      * @param string $username
-     * @param int $created_by
-     * @throws \Exception
-     * @return int
+     * @param int $createdBy
+     * @return int|bool The user ID if the user was created, false if not
      */
-    private function addUser(string $email, string $password, string $username, int $created_by = null): int
+    private function addUser(string $email, string $password, string $username, int $createdBy = null): int | bool
     {
         // Hash the password
         $password = $this->hashPassword($password);
-
-        // Check that mysqli is set
-        if (!isset($this->mysqli)) {
-            throw new Exception("Failed to connect to the database");
-        }
 
         // SQL statement to add a user
         $sql = "INSERT INTO users (email, password, username, created_at, updated_at, created_by, updated_by)
@@ -532,36 +454,30 @@ class User
         $stmt = prepareStatement($this->mysqli, $sql);
 
         // Bind the parameters to the SQL statement
-        $stmt->bind_param("sssii", $email, $password, $username, $created_by, $created_by);
+        $stmt->bind_param("sssii", $email, $password, $username, $createdBy, $createdBy);
 
         // Execute the statement
         $stmt->execute();
 
-        // Return the user ID
-        return $stmt->insert_id;
+        // Get the user ID
+        $userID = $stmt->insert_id;
+
+        // Return the user ID if the user was created, false if not
+        return $userID ?: false;
     }
 
     /**
      * Delete a user by ID
-     * @param int $user_id
+     * @param int $userID
      * @return bool
-     * @throws \Exception
      */
-    public function deleteUser(int $user_id): bool
+    public function deleteUser(int $userID): bool
     {
-        // Check that mysqli is set
-        if (!isset($this->mysqli)) {
-            throw new Exception("Failed to connect to the database");
-        }
-
         // Prepare the SQL statement
-        $sql = "DELETE FROM users WHERE id = ?";
+        $sql = "DELETE FROM users WHERE id = $userID";
 
         // prepare the sql statement for execution
         $stmt = preparestatement($this->mysqli, $sql);
-
-        // Bind the parameter
-        $stmt->bind_param("i", $user_id);
 
         // Execute the statement
         $stmt->execute();
@@ -572,7 +488,9 @@ class User
         // Log the user activity if the user was deleted
         if ($result) {
             $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted User', 'User ID: ' . $user_id . ' User Name: ' . $this->getUserUsername($user_id));
+            $session = new Session();
+            $sessionUserID = $session->get('user_id');
+            $activity->logActivity(intval($sessionUserID), 'Deleted User', 'User ID: ' . $userID . ' User Name: ' . $this->getUserUsername($userID));
         }
 
         // Return the result
@@ -581,25 +499,24 @@ class User
 
     /**
      * Set the user's information
-     * @param int $id
+     * @param int $userID
      * @param string $email
      * @param string $password
      * @param string $username
-     * @param int $updated_by
-     * @throws \Exception
+     * @param int $updatedBy
      * @return void
      */
-    public function setUserInfo(int $id, string $email = null, string $password = null, string $username = null, int $updated_by): void
+    public function setUserInfo(int $userID, string $email = null, string $password = null, string $username = null, int $updatedBy): void
     {
         // Get the current user information if the corresponding parameter is null
-        $email = $this->getEmailIfNull($email, $id);
-        $username = $this->getUsernameIfNull($username, $id);
+        $email = $this->getEmailIfNull($email, $userID);
+        $username = $this->getUsernameIfNull($username, $userID);
 
         //does the password need to be hashed?
         if ($password != null) {
             $password = $this->hashPassword($password);
         } else {
-            $password = $this->getPasswordIfNull($password, $id);
+            $password = $this->getPasswordIfNull($password, $userID);
         }
 
         // Get the current date and time
@@ -608,44 +525,33 @@ class User
         // Prepare the SQL statement
         $sql = "UPDATE users SET email = ?, password = ?, username = ?, updated_at = ?, updated_by = ? WHERE id = ?";
 
-        // Check that mysqli is set
-        if (!isset($this->mysqli)) {
-            throw new Exception("Failed to connect to the database");
-        }
-
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
 
         // Bind the parameters to the SQL statement
-        $stmt->bind_param("ssssii", $email, $password, $username, $date, $updated_by, $id);
+        $stmt->bind_param("ssssii", $email, $password, $username, $date, $updatedBy, $userID);
 
         // Execute the statement
         $stmt->execute();
 
         // Log the activity
-        $this->logUpdateActivity($updated_by, $username);
+        $this->logUpdateActivity($updatedBy, $username);
     }
 
     /**
      * Assign a role to a user by ID
-     * @param int $user_id
-     * @param int $role_id
-     * @throws \Exception
+     * @param int $userID
+     * @param int $roleID
      * @return void
      */
-    private function giveRoleToUser(int $user_id, int $role_id): void
+    private function giveRoleToUser(int $userID, int $roleID): void
     {
         // Get current date and time
         $date = date("Y-m-d H:i:s");
 
-        // Check that mysqli is set
-        if (!isset($this->mysqli)) {
-            throw new Exception("Failed to connect to the database");
-        }
-
         // Validate if the role exists by ID
         $auth = new Authenticator();
-        if (!$auth->validateRoleById($role_id)) {
+        if (!$auth->validateRoleById($roleID)) {
             throw new Exception("Role does not exist.");
         }
 
@@ -656,7 +562,7 @@ class User
         $stmt = preparestatement($this->mysqli, $sql);
 
         // Bind the parameters to the SQL statement
-        $stmt->bind_param("iiss", $user_id, $role_id, $date, $date);
+        $stmt->bind_param("iiss", $userID, $roleID, $date, $date);
 
         // Execute the statement
         $stmt->execute();
@@ -664,24 +570,20 @@ class User
         // Log the activity
         $role = new Roles();
         $activity = new Activity();
-        $activity->logActivity(null, "User Updated", "Role ID: " . strval($role_id) . " Role Name: " . $role->getRoleNameById($role_id) . " added to User ID: " . strval($user_id) . " User Name: " . $this->getUserUsername($user_id));
+        $session = new Session();
+        $sessionUserID = intval($session->get('user_id')) ?? null;
+        $activity->logActivity($sessionUserID, "User Updated", "Role ID: " . strval($roleID) . " Role Name: " . $role->getRoleNameById($roleID) . " added to User ID: " . strval($userID) . " User Name: " . $this->getUserUsername($userID));
     }
 
     /**
      * Remove a role from a user
      *
-     * @param int $user_id The user ID
-     * @param int $role_id The role ID
-     * @throws \Exception
+     * @param int $userID The user ID
+     * @param int $roleID The role ID
      * @return void
      */
-    private function removeRoleFromUser(int $user_id, int $role_id): void
+    private function removeRoleFromUser(int $userID, int $roleID): void
     {
-        // Check that mysqli is set
-        if (!isset($this->mysqli)) {
-            throw new Exception("Failed to connect to the database.");
-        }
-
         // SQL statement to remove a role from a user
         $sql = "DELETE FROM user_has_role WHERE user_id = ? AND role_id = ?";
 
@@ -689,14 +591,16 @@ class User
         $stmt = prepareStatement($this->mysqli, $sql);
 
         // Bind the parameters to the SQL statement
-        $stmt->bind_param("ii", $user_id, $role_id);
+        $stmt->bind_param("ii", $userID, $roleID);
 
         // Execute the statement
         $stmt->execute();
 
         // Log the activity
         $activity = new Activity();
-        $activity->logActivity(null, "User Updated", "Role ID: " . strval($role_id) . " removed from User ID: " . strval($user_id) . " User Name: " . $this->getUserUsername($user_id) . "");
+        $session = new Session();
+        $sessionUserID = intval($session->get('user_id')) ?? null;
+        $activity->logActivity($sessionUserID, "User Updated", "Role ID: " . strval($roleID) . " removed from User ID: " . strval($userID) . " User Name: " . $this->getUserUsername($userID) . "");
     }
 
     /**
@@ -705,22 +609,22 @@ class User
      * @param string $email The user's email
      * @param string $username The user's username
      * @param string $password The user's password
-     * @param int $created_by The user ID of the user who created the user, default is null which will set the user ID to the system, or null
+     * @param int $createdBy The user ID of the user who created the user, default is null which will set the user ID to the system, or null
      * @param array $roles The roles to assign to the user, default is an empty array which will assign the user no roles
      *
      * @return bool True if the user was created, false if not
      */
-    public function createUser(string $email, string $username, string $password, int $created_by = null, array $roles = array()): bool
+    public function createUser(string $email, string $username, string $password, int $createdBy = null, array $roles = array()): bool
     {
         $email = trim($email);
         $username = trim($username);
         $contact = new Contact();
-        $user_id = $this->addUser($email, $password, $username, $created_by);
+        $user_id = $this->addUser($email, $password, $username, $createdBy);
 
         if ($user_id > 0 && !empty($user_id) && $user_id != null) {
             $this->assignRoles($user_id, $roles);
             $contact->notifyUserCreated($email, $username, $password);
-            $this->logUserCreationActivity($created_by, $username);
+            $this->logUserCreationActivity($createdBy, $username);
             return true;
         }
 
@@ -730,37 +634,37 @@ class User
     /**
      * Log the user creation activity
      *
-     * @param int $created_by The user ID of the user who created the user
+     * @param int $createdBy The user ID of the user who created the user
      * @param string $username The user's username
      */
-    private function logUserCreationActivity(int $created_by, string $username): void
+    private function logUserCreationActivity(int $createdBy, string $username): void
     {
         $activity = new Activity();
-        $activity->logActivity($created_by, "User Created.", 'User ' . $username);
+        $activity->logActivity($createdBy, "User Created.", 'User ' . $username);
     }
 
     /**
      * Modify a user and or their roles
      *
-     * @param int $id The user ID of the user to modify
+     * @param int $userID The user ID of the user to modify
      * @param string $email The user's email
      * @param string $username The user's username
      * @param string $password The user's password
-     * @param int $updated_by The user ID of the user who updated the user, default is null which will set the user ID to the system, or null
+     * @param int $updatedBy The user ID of the user who updated the user, default is null which will set the user ID to the system, or null
      * @param array $roles The roles to assign to the user, default is an empty array which will assign the user no roles
      *
      * @return bool True if the user was modified, false if not
      */
-    public function modifyUser(int $id, string $email = null, string $username = null, string $password = null, int $updated_by = null, array $roles = array()): bool
+    public function modifyUser(int $userID, string $email = null, string $username = null, string $password = null, int $updatedBy = null, array $roles = array()): bool
     {
-        $email = $this->getEmailIfNull($email, $id);
-        $username = $this->getUsernameIfNull($username, $id);
-        $password = $this->getPasswordIfNull($password, $id);
+        $email = $this->getEmailIfNull($email, $userID);
+        $username = $this->getUsernameIfNull($username, $userID);
+        $password = $this->getPasswordIfNull($password, $userID);
 
-        $this->setUserInfo($id, $email, $password, $username, $updated_by);
-        $this->assignOrRemoveRoles($id, $roles);
+        $this->setUserInfo($userID, $email, $password, $username, $updatedBy);
+        $this->assignOrRemoveRoles($userID, $roles);
 
-        $this->logUpdateActivity($updated_by, $username);
+        $this->logUpdateActivity($updatedBy, $username);
 
         return true;
     }
@@ -768,14 +672,14 @@ class User
     /**
      * Get a user's email
      *
-     * @param int $id The user ID of the user to get the email for
+     * @param int $userID The user ID of the user to get the email for
      *
      * @return string The user's email
      */
-    private function getEmailIfNull(?string $email, int $id): string
+    private function getEmailIfNull(?string $email, int $userID): string
     {
         if ($email === null || empty($email) || $email === "") {
-            return $this->getUserEmail($id);
+            return $this->getUserEmail($userID);
         }
 
         return trim($email);
@@ -784,14 +688,14 @@ class User
     /**
      * Get a user's username
      *
-     * @param int $id The user ID of the user to get the username for
+     * @param int $userID The user ID of the user to get the username for
      *
      * @return string The user's username
      */
-    private function getUsernameIfNull(?string $username, int $id): string
+    private function getUsernameIfNull(?string $username, int $userID): string
     {
         if ($username === null || empty($username) || $username === "") {
-            return $this->getUserUsername($id);
+            return $this->getUserUsername($userID);
         }
 
         return trim($username);
@@ -800,14 +704,14 @@ class User
     /**
      * Get a user's password
      *
-     * @param int $id The user ID of the user to get the password for
+     * @param int $userID The user ID of the user to get the password for
      *
      * @return string The user's password
      */
-    private function getPasswordIfNull(?string $password, int $id): string
+    private function getPasswordIfNull(?string $password, int $userID): string
     {
         if ($password === null || empty($password) || $password === "") {
-            return $this->getUserPassword($id);
+            return $this->getUserPassword($userID);
         }
 
         return $password;
@@ -816,39 +720,39 @@ class User
     /**
      * Assign or remove roles from a user
      *
-     * @param int $id The user ID of the user to assign or remove roles from
+     * @param int $userID The user ID of the user to assign or remove roles from
      * @param array $roles The roles to assign to the user
      */
-    private function assignOrRemoveRoles(int $id, array $roles): void
+    private function assignOrRemoveRoles(int $userID, array $roles): void
     {
-        $currentRoleIDs = $this->getRoleIDsByUserID($id);
+        $currentRoleIDs = $this->getRoleIDsByUserID($userID);
 
         if (!empty($roles)) {
-            $this->assignRoles($id, $roles, $currentRoleIDs);
-            $this->removeRoles($id, $roles, $currentRoleIDs);
+            $this->assignRoles($userID, $roles, $currentRoleIDs);
+            $this->removeRoles($userID, $roles, $currentRoleIDs);
         } else {
-            $this->removeAllRoles($id, $currentRoleIDs);
+            $this->removeAllRoles($userID, $currentRoleIDs);
         }
     }
 
     /**
      * Assign roles to a user
      *
-     * @param int $id The user ID of the user to assign roles to
+     * @param int $userID The user ID of the user to assign roles to
      * @param array $roles The roles to assign to the user
      * @param array $currentRoleIDs The current roles for the user, null for new users
      */
-    private function assignRoles(int $id, array $roles, array $currentRoleIDs = null ): void
+    private function assignRoles(int $userID, array $roles, array $currentRoleIDs = null ): void
     {
         //check if there are any current roles
         if ($currentRoleIDs === null) {
             foreach ($roles as $role) {
-                $this->giveRoleToUser($id, intval($role));
+                $this->giveRoleToUser($userID, intval($role));
             }
         } else {
             foreach ($roles as $role) {
                 if (!in_array($role, $currentRoleIDs)) {
-                    $this->giveRoleToUser($id, intval($role));
+                    $this->giveRoleToUser($userID, intval($role));
                 }
             }
         }
@@ -857,15 +761,15 @@ class User
     /**
      * Remove roles from a user
      *
-     * @param int $id The user ID of the user to remove roles from
+     * @param int $userID The user ID of the user to remove roles from
      * @param array $roles The roles to remove from the user
      * @param array $currentRoleIDs The current roles for the user
      */
-    private function removeRoles(int $id, array $roles, array $currentRoleIDs): void
+    private function removeRoles(int $userID, array $roles, array $currentRoleIDs): void
     {
         foreach ($currentRoleIDs as $currentRole) {
             if (!in_array($currentRole, $roles)) {
-                $this->removeRoleFromUser($id, intval($currentRole));
+                $this->removeRoleFromUser($userID, intval($currentRole));
             }
         }
     }
@@ -873,25 +777,25 @@ class User
     /**
      * Remove all roles from a user
      *
-     * @param int $id The user ID of the user to remove all roles from
+     * @param int $userID The user ID of the user to remove all roles from
      * @param array $currentRoleIDs The current roles for the user
      */
-    private function removeAllRoles(int $id, array $currentRoleIDs): void
+    private function removeAllRoles(int $userID, array $currentRoleIDs): void
     {
         foreach ($currentRoleIDs as $currentRole) {
-            $this->removeRoleFromUser($id, intval($currentRole));
+            $this->removeRoleFromUser($userID, intval($currentRole));
         }
     }
 
     /**
      * Log the user update activity
      *
-     * @param int $updated_by The user ID of the user who updated the user
+     * @param int $updatedBy The user ID of the user who updated the user
      * @param string $username The username of the user who was updated
      */
-    private function logUpdateActivity(?int $updated_by, string $username): void
+    private function logUpdateActivity(?int $updatedBy, string $username): void
     {
         $activity = new Activity();
-        $activity->logActivity($updated_by, "User Updated.", 'User: ' . $username . ' updated by User: ' . strval($updated_by));
+        $activity->logActivity($updatedBy, "User Updated.", 'User: ' . $username . ' updated by User: ' . strval($updatedBy));
     }
 }

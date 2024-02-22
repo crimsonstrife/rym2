@@ -2,8 +2,11 @@
 // Initialize the session
 session_start();
 
+//instance of the session class
+$session = new Session();
+
 // Check if the user is logged in, otherwise redirect to login page
-if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] !== true) {
+if ($session->check('logged_in') !== true || $session->get('logged_in') !== true){
     header("location: login.php");
     exit;
 }
@@ -57,18 +60,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $userLogin = new UserLogin();
 
         // Get the user's information from the database
-        $user->getUserById($_SESSION["id"]);
+        $currentUser = $user->getUserById(intval($session->get('user_id')));
 
         // Check if the password entered matches the current hashed password in the database
-        if ($userLogin->validateUserPassword($_SESSION["id"], $current_password)) {
+        if ($userLogin->validateUserPassword(intval($session->get('user_id')), $current_password)) {
             // Password is correct, update the database with the new password
-            $user->setUserPassword($_SESSION["id"], $new_password);
+            $user->setUserPassword(intval($session->get('user_id')), $new_password);
 
             // Log the user out
             $userLogin->logout();
 
             // Redirect the user to the login page
-            redirectUser(APP_URL . "/login.php");
+            performRedirect(APP_URL . "/login.php");
             exit();
         } else {
             // Display an error message if the password entered does not match the current password in the database
