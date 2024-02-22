@@ -1,7 +1,4 @@
 <?php
-
-use Activity;
-
 class StudentReports extends Report
 {
     public function getReports(): array
