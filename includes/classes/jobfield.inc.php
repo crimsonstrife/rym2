@@ -69,14 +69,14 @@ class JobField extends Subject
     /**
      * Get a single subject from the database
      *
-     * @param int $aoi_id //id from the areas of interest table
+     * @param int $subjectID //id from the areas of interest table
      * @return array
      */
-    public function getSubject(int $aoi_id): array
+    public function getSubject(int $subjectID): array
     {
         $sql = "SELECT * FROM aoi WHERE id = ?";
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param("i", $aoi_id);
+        $stmt->bind_param("i", $subjectID);
         $stmt->execute();
         $result = $stmt->get_result();
         $subject = [];
@@ -91,63 +91,70 @@ class JobField extends Subject
     /**
      * Add a subject to the database
      *
-     * @param string $aoi_name //name of the subject
-     * @param int $user_id //id from the users table
+     * @param string $subjectName //name of the subject
+     * @param int $userID //id from the users table
      * @return bool
      */
-    public function addSubject(string $aoi_name, int $user_id): bool
+    public function addSubject(string $subjectName, int $userID): bool
     {
+        //create the sql statement
         $sql = "INSERT INTO aoi (name) VALUES (?)";
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param("s", $aoi_name);
+        //bind the parameters
+        $stmt->bind_param("s", $subjectName);
+        //execute the statement
         $stmt->execute();
+        //check the result
         if ($stmt->affected_rows > 0) {
             //log the activity
             $activity = new Activity();
-            $activity->logActivity($user_id, "Subject Added", "Subject " . $aoi_name . " was added to the database.");
+            $activity->logActivity($userID, "Subject Added", "Subject " . $subjectName . " was added to the database.");
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
      * Update a subject in the database
      *
-     * @param int $aoi_id //id from the areas of interest table
-     * @param string $aoi_name //name of the subject
-     * @param int $user_id //id from the users table
+     * @param int $subjectID //id from the areas of interest table
+     * @param string $subjectName //name of the subject
+     * @param int $userID //id from the users table
      * @return bool
      */
-    public function updateSubject(int $aoi_id, string $aoi_name, int $user_id): bool
+    public function updateSubject(int $subjectID, string $subjectName, int $userID): bool
     {
+        //create the sql statement
         $sql = "UPDATE aoi SET name = ? WHERE id = ?";
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param("si", $aoi_name, $aoi_id);
+        //bind the parameters
+        $stmt->bind_param("si", $subjectName, $subjectID);
+        //execute the statement
         $stmt->execute();
+        //check the result
         if ($stmt->affected_rows > 0) {
             //log the activity
             $activity = new Activity();
-            $activity->logActivity($user_id, "Subject Updated", "Subject " . $aoi_name . " was updated in the database.");
+            $activity->logActivity($userID, "Subject Updated", "Subject " . $subjectName . " was updated in the database.");
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
      * Delete a subject from the database
      *
-     * @param int $field_id //id from the areas of interest table
+     * @param int $subjectID //id from the areas of interest table
      * @return bool
      */
-    public function deleteSubject(int $field_id): bool
+    public function deleteSubject(int $subjectID): bool
     {
-        //get the current date and time
-        $date = date("Y-m-d H:i:s");
-
         //get the name of the subject
-        $subject_name = $this->getSubjectName($field_id);
+        $subjectName = $this->getSubjectName($subjectID);
 
         //set the placeholder for the result
         $result = false;
@@ -159,7 +166,7 @@ class JobField extends Subject
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
-        $stmt->bind_param("i", $field_id);
+        $stmt->bind_param("i", $subjectID);
 
         //execute the statement
         $stmt->execute();
@@ -167,14 +174,17 @@ class JobField extends Subject
         //check the result
         if ($stmt->affected_rows > 0) {
             $result = true;
-        } else {
-            $result = false;
         }
 
         //log the subject activity if the subject was deleted
         if ($result) {
+            //instantiate the activity and session classes
             $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Deleted Subject', 'Subject ID: ' . $field_id . ' Subject Name: ' . $subject_name);
+            $session = new Session();
+            //get the user id from the session
+            $userID = intval($session->get('user_id'));
+            //log the activity
+            $activity->logActivity($userID, 'Deleted Subject', 'Subject ID: ' . $subjectID . ' Subject Name: ' . $subjectName);
         }
 
         //return the result
@@ -184,92 +194,127 @@ class JobField extends Subject
     /**
      * Get Subject Name by ID
      *
-     * @param int $aoi_id //id from the areas of interest table
+     * @param int $subjectID //id from the areas of interest table
      * @return string
      */
-    public function getSubjectName(int $aoi_id): string
+    public function getSubjectName(int $subjectID): string
     {
+        //create the sql statement
         $sql = "SELECT name FROM aoi WHERE id = ?";
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param("i", $aoi_id);
+        //bind the parameters
+        $stmt->bind_param("i", $subjectID);
+        //execute the statement
         $stmt->execute();
+        //get the result
         $result = $stmt->get_result();
+        //set the subject name
         $subject = "";
+        //check the result
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
+                //set the subject name
                 $subject = $row['name'];
             }
         }
+        //return the subject name
         return $subject;
     }
 
     /**
      * Get the created date of a subject
      *
-     * @param int $aoi_id //id from the areas of interest table
+     * @param int $subjectID //id from the areas of interest table
      * @return string
      */
-    public function getSubjectCreatedDate(int $aoi_id): string
+    public function getSubjectCreatedDate(int $subjectID): string
     {
+        //create the sql statement
         $sql = "SELECT created_at FROM aoi WHERE id = ?";
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param("i", $aoi_id);
+        //bind the parameters
+        $stmt->bind_param("i", $subjectID);
+        //execute the statement
         $stmt->execute();
+        //get the result
         $result = $stmt->get_result();
-        $created_at = "";
+        //set the created date
+        $createdAt = "";
+        //check the result
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $created_at = $row['created_at'];
+                //set the created date
+                $createdAt = $row['created_at'];
             }
         }
-        return $created_at;
+        //return the created date
+        return $createdAt;
     }
 
     /**
      * Get the last updated date of a subject
      *
-     * @param int $aoi_id //id from the areas of interest table
+     * @param int $subjectID //id from the areas of interest table
      * @return string
      */
-    public function getSubjectLastUpdatedDate(int $aoi_id): string
+    public function getSubjectLastUpdatedDate(int $subjectID): string
     {
+        //create the sql statement
         $sql = "SELECT updated_at FROM aoi WHERE id = ?";
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param("i", $aoi_id);
+        //bind the parameters
+        $stmt->bind_param("i", $subjectID);
+        //execute the statement
         $stmt->execute();
+        //get the result
         $result = $stmt->get_result();
-        $updated_at = "";
+        //set the updated date
+        $updatedAt = "";
+        //check the result
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $updated_at = $row['updated_at'];
+                //set the updated date
+                $updatedAt = $row['updated_at'];
             }
         }
-        return $updated_at;
+        //return the updated date
+        return $updatedAt;
     }
 
     /**
      * Get the created by user of a subject
      *
-     * @param int $aoi_id //id from the areas of interest table
+     * @param int $subjectID //id from the areas of interest table
      * @return User //user object
      */
-    public function getSubjectCreatedBy(int $aoi_id): User
+    public function getSubjectCreatedBy(int $subjectID): User
     {
+        //create the sql statement
         $sql = "SELECT created_by FROM aoi WHERE id = ?";
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param("i", $aoi_id);
+        //bind the parameters
+        $stmt->bind_param("i", $subjectID);
+        //execute the statement
         $stmt->execute();
+        //get the result
         $result = $stmt->get_result();
-        $created_by = 0;
+        //set the created by user id
+        $createdBy = null;
+        //check the result
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $created_by = $row['created_by'];
+                //set the created by user id
+                $createdBy = $row['created_by'];
             }
         }
         //Instantiate the user class
         $user = new User();
         //Get User by id
-        $userArray = $user->getUserById($created_by);
+        $userArray = $user->getUserById($createdBy);
         //Get the first user in the array, should only be one match
         $user = $userArray[0];
         //Return the user object
@@ -279,26 +324,34 @@ class JobField extends Subject
     /**
      * Get the last updated by user of a subject
      *
-     * @param int $aoi_id //id from the areas of interest table
+     * @param int $subjectID //id from the areas of interest table
      * @return User //user object
      */
-    public function getSubjectLastUpdatedBy(int $aoi_id): User
+    public function getSubjectLastUpdatedBy(int $subjectID): User
     {
+        //create the sql statement
         $sql = "SELECT updated_by FROM aoi WHERE id = ?";
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param("i", $aoi_id);
+        //bind the parameters
+        $stmt->bind_param("i", $subjectID);
+        //execute the statement
         $stmt->execute();
+        //get the result
         $result = $stmt->get_result();
-        $updated_by = 0;
+        //set the updated by user id
+        $updatedBy = null;
+        //check the result
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $updated_by = $row['updated_by'];
+                //set the updated by user id
+                $updatedBy = $row['updated_by'];
             }
         }
         //Instantiate the user class
         $user = new User();
         //Get User by id
-        $userArray = $user->getUserById($updated_by);
+        $userArray = $user->getUserById($updatedBy);
         //Get the first user in the array, should only be one match
         $user = $userArray[0];
         //Return the user object
@@ -312,76 +365,104 @@ class JobField extends Subject
      */
     public function getSubjectsCount(): int
     {
+        //create the sql statement
         $sql = "SELECT COUNT(*) FROM aoi";
+        //execute the statement
         $result = $this->mysqli->query($sql);
+        //set the count
         $count = 0;
+        //check the result
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
+                //set the count
                 $count = $row['COUNT(*)'];
             }
         }
+        //return the count
         return $count;
     }
 
     /**
      * Set the updated by user of a subject
      *
-     * @param int $aoi_id //id from the areas of interest table
-     * @param int $user_id //id from the users table
+     * @param int $subjectID //id from the areas of interest table
+     * @param int $userID //id from the users table
      * @return bool
      */
-    public function setSubjectLastUpdatedBy(int $aoi_id, int $user_id): bool
+    public function setSubjectLastUpdatedBy(int $subjectID, int $userID): bool
     {
+        //create the sql statement
         $sql = "UPDATE aoi SET updated_by = ? WHERE id = ?";
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param("ii", $user_id, $aoi_id);
+        //bind the parameters
+        $stmt->bind_param("ii", $userID, $subjectID);
+        //execute the statement
         $stmt->execute();
+        //get the result
         $result = $stmt->get_result();
         if ($result) {
+            //return true if the result is true
             return true;
-        } else {
-            return false;
         }
+
+        //return false if the result is false
+        return false;
     }
 
     /**
      * Set the created by user of a subject
      *
-     * @param int $aoi_id //id from the areas of interest table
-     * @param int $user_id //id from the users table
+     * @param int $subjectID //id from the areas of interest table
+     * @param int $userID //id from the users table
      * @return bool
      */
-    public function setSubjectCreatedBy(int $aoi_id, int $user_id): bool
+    public function setSubjectCreatedBy(int $subjectID, int $userID): bool
     {
+        //create the sql statement
         $sql = "UPDATE aoi SET created_by = ? WHERE id = ?";
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param("ii", $user_id, $aoi_id);
+        //bind the parameters
+        $stmt->bind_param("ii", $userID, $subjectID);
+        //execute the statement
         $stmt->execute();
+        //get the result
         $result = $stmt->get_result();
         if ($result) {
+            //return true if the result is true
             return true;
-        } else {
-            return false;
         }
+
+        //return false if the result is false
+        return false;
     }
 
     /**
      * Check if a subject exists in the database
      *
-     * @param int $aoi_id //id from the areas of interest table
+     * @param int $subjectID //id from the areas of interest table
      * @return bool
      */
-    public function subjectExists(int $aoi_id): bool
+    public function subjectExists(int $subjectID): bool
     {
+        //create the sql statement
         $sql = "SELECT * FROM aoi WHERE id = ?";
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
-        $stmt->bind_param("i", $aoi_id);
+        //bind the parameters
+        $stmt->bind_param("i", $subjectID);
+        //execute the statement
         $stmt->execute();
+        //get the result
         $result = $stmt->get_result();
+        //check the result
         if ($result->num_rows > 0) {
+            //return true if the result is true
             return true;
-        } else {
-            return false;
         }
+
+        //return false if the result is false
+        return false;
     }
 };
