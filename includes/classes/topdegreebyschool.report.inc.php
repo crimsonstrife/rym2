@@ -66,7 +66,7 @@ class TopDegreeBySchoolReport extends Report
         //loop through the result to format the data
         while ($row = $result->fetch_assoc()) {
             //get the report id
-            $id = $row['id'];
+            $reportID = $row['id'];
 
             //get the report data
             $data = $row['data'];
@@ -88,7 +88,7 @@ class TopDegreeBySchoolReport extends Report
 
             //assemble a new array with the report id and the report data and the user id of the user that created the report
             $reports[] = array(
-                'id' => $id,
+                'id' => $reportID,
                 'report_type' => 'Top Degree by School',
                 'data' => $data,
                 'created_by' => $createdByName,
@@ -104,10 +104,10 @@ class TopDegreeBySchoolReport extends Report
 
     /**
      * Get report by id
-     * @param int $id
+     * @param int $reportID
      * @return array
      */
-    public function getReportById(int $id): array
+    public function getReportById(int $reportID): array
     {
         //include the user class, so we can get the user name of the user that requested the report
         $userObject = new User();
@@ -119,7 +119,7 @@ class TopDegreeBySchoolReport extends Report
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
-        $stmt->bind_param('i', $id);
+        $stmt->bind_param('i', $reportID);
 
         //execute the statement
         $stmt->execute();
@@ -133,7 +133,7 @@ class TopDegreeBySchoolReport extends Report
         //loop through the result to format the data
         while ($row = $result->fetch_assoc()) {
             //get the report id
-            $id = $row['id'];
+            $reportID = $row['id'];
 
             //get the report data
             $data = $row['data'];
@@ -155,7 +155,7 @@ class TopDegreeBySchoolReport extends Report
 
             //assemble a new array with the report id and the report data and the user id of the user that created the report
             $report = array(
-                'id' => $id,
+                'id' => $reportID,
                 'report_type' => 'Top Degree by School',
                 'data' => $data,
                 'created_by' => $createdByName,
@@ -173,10 +173,10 @@ class TopDegreeBySchoolReport extends Report
      * Store report
      * Stores the report as a JSON string in the database reports table
      * @param string $report
-     * @param int $created_by
+     * @param int $createdBy
      * @return int The id of the report that was stored.
      */
-    public function storeReport(string $report, int $created_by): int
+    public function storeReport(string $report, int $createdBy): int
     {
         //get the current date and time
         $date = date("Y-m-d H:i:s");
@@ -188,7 +188,7 @@ class TopDegreeBySchoolReport extends Report
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
-        $stmt->bind_param('sisis', $report, $created_by, $date, $created_by, $date);
+        $stmt->bind_param('sisis', $report, $createdBy, $date, $createdBy, $date);
 
         //execute the statement
         $stmt->execute();
@@ -203,19 +203,16 @@ class TopDegreeBySchoolReport extends Report
     /**
      * Generate Top Degree by School Report
      * Generates a new report based on the data for the degree levels, majors, and schools using the student counts.
-     * @param int $created_by // the user id of the user that requested the report
+     * @param int $createdBy // the user id of the user that requested the report
      * @return int The id of the report that was generated
      */
-    public function generateReport(int $created_by): int
+    public function generateReport(int $createdBy): int
     {
         //include the degree class
         $degreesObject = new Degree(); //contains the degree levels and majors
 
         //include the school class
         $schoolsObject = new School();
-
-        //include the user class, so we can get the user name of the user that requested the report
-        $userObject = new User();
 
         //create an array to store the report
         $report = array();
@@ -266,18 +263,18 @@ class TopDegreeBySchoolReport extends Report
         }
 
         //ensure the report is still sorted by student count in descending order
-        usort($report, function ($a, $b) {
-            return $b['student_count'] <=> $a['student_count'];
+        usort($report, function ($reportA, $reportB) {
+            return $reportB['student_count'] <=> $reportA['student_count'];
         });
 
         //prepare the report for JSON encoding
         $report = json_encode($report);
 
         //store the report and get the id of the report that was stored
-        $reportId = $this->storeReport($report, $created_by);
+        $reportId = $this->storeReport($report, $createdBy);
 
         //log the report activity
-        $this->logReportActivity($reportId, 'Generated Top Degree by School Report', $created_by);
+        $this->logReportActivity($reportId, 'Generated Top Degree by School Report', $createdBy);
 
         //return the id of the report that was generated
         return $reportId;
@@ -315,7 +312,7 @@ class TopDegreeBySchoolReport extends Report
         //loop through the result to format the data
         while ($row = $result->fetch_assoc()) {
             //get the report id
-            $id = $row['id'];
+            $reportID = $row['id'];
 
             //get the report data
             $data = $row['data'];
@@ -331,7 +328,7 @@ class TopDegreeBySchoolReport extends Report
 
             //assemble a new array with the report id and the report data and the user id of the user that created the report
             $reports[] = array(
-                'id' => $id,
+                'id' => $reportID,
                 'report_type' => 'Top Degree by School',
                 'data' => $data,
                 'created_by' => $createdByName,
@@ -344,12 +341,12 @@ class TopDegreeBySchoolReport extends Report
 
     /**
      * Log report activity
-     * @param int $report_id
+     * @param int $reportID
      * @param string $action
-     * @param int $user_id
+     * @param int $userID
      * @return bool
      */
-    public function logReportActivity(int $report_id, string $action, int $user_id = null): bool
+    public function logReportActivity(int $reportID, string $action, int $userID = null): bool
     {
         //string to hold the report "title"
         $reportTitle = '';
@@ -358,7 +355,7 @@ class TopDegreeBySchoolReport extends Report
         $reportDate = '';
 
         //get the report data
-        $report = $this->getReportById($report_id);
+        $report = $this->getReportById($reportID);
 
         $reportDate = formatDate($report['created_at']);
 
@@ -367,7 +364,7 @@ class TopDegreeBySchoolReport extends Report
 
         //log the report activity
         $activity = new Activity();
-        $activity->logActivity($user_id, $action, 'Report:  ' . $reportTitle . ' - ID: ' . strval($report_id) . ' Date: ' . $reportDate);
+        $activity->logActivity($userID, $action, 'Report:  ' . $reportTitle . ' - ID: ' . strval($reportID) . ' Date: ' . $reportDate);
 
         //return true
         return true;
@@ -376,17 +373,17 @@ class TopDegreeBySchoolReport extends Report
     /**
      * Delete a report by id
      *
-     * @param int $id - the id of the report to delete
+     * @param int $reportID - the id of the report to delete
      *
      * @return bool
      */
-    public function deleteReport(int $id): bool
+    public function deleteReport(int $reportID): bool
     {
-        //get the current date and time
-        $date = date("Y-m-d H:i:s");
+        //instance of the session class
+        $session = new Session();
 
         //current user id
-        $user_id = intval($_SESSION['user_id']);
+        $userID = intval($session->get('user_id'));
 
         //boolean to track if the report was deleted
         $result = false;
@@ -398,7 +395,7 @@ class TopDegreeBySchoolReport extends Report
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //bind the parameters
-        $stmt->bind_param('i', $id);
+        $stmt->bind_param('i', $reportID);
 
         //execute the statement
         $stmt->execute();
@@ -406,38 +403,33 @@ class TopDegreeBySchoolReport extends Report
         //check the result
         if ($stmt->affected_rows > 0) {
             $result = true;
-        } else {
-            $result = false;
         }
 
         //log the report activity and return the result
         if ($result) {
             //log the report activity
             $activity = new Activity();
-            $activity->logActivity($user_id, 'Deleted Report', 'Report ' . strval($id));
+            $activity->logActivity($userID, 'Deleted Report', 'Report ' . strval($reportID));
 
             //return result
             return $result;
-        } else {
-            //return result
-            return $result;
         }
+
+        //return result
+        return $result;
     }
 
     /**
      * Get chartable report data
      * formats the report data into a format that can be used by chart.js for a chart
      * this report is a pie chart
-     * @param int $id - the id of the report to get the data for
+     * @param int $reportID - the id of the report to get the data for
      * @return array
      */
-    public function getChartableReportData(int $id): array
+    public function getChartableReportData(int $reportID): array
     {
-        //include the school class
-        $schoolsObject = new School();
-
         //get the report by id
-        $report = $this->getReportById($id);
+        $report = $this->getReportById($reportID);
 
         //get the report data
         $reportData = $report['data'];
@@ -476,15 +468,6 @@ class TopDegreeBySchoolReport extends Report
 
             //add the student count to the data array
             $data[] = $studentCount;
-
-            //get the school id
-            $schoolId = $schoolsObject->getSchoolIdByName($school);
-
-            //get the school color
-            $color = $schoolsObject->getSchoolColor($schoolId);
-
-            //add the school color to the colors array
-            //$colors[] = $color;
 
             //add a random hex color to the colors array
             $colors[] = getRandomHexColor();
