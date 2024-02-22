@@ -14,6 +14,9 @@ require_once(__DIR__ . '../../includes/validateCookieSession.inc.php');
 //include the authenticator class
 $authenticator = new Authenticator();
 
+//include the session class
+$session = new Session();
+
 // Define variables and initialize with empty values
 $username = $password = "";
 $username_error = $password_error = $login_error = "";
@@ -100,7 +103,7 @@ if (isset($_GET['login'])) {
 
                 if ($auth_flag === true) {
                     //set the SESSION variables
-                    $_SESSION["user_id"] = $user_id;
+                    $session->set('user_id', $user_id);
 
                     //if the remember me checkbox is checked, set the cookies
                     if (!empty($_POST["remember"])) {
@@ -130,14 +133,14 @@ if (isset($_GET['login'])) {
                         //clear the cookies
                         clearCookies();
                     }
-                    $_SESSION["user_id"] = $user_id;
-                    $_SESSION["logged_in"] = true;
+                    $session->set('logged_in', true);
+                    $session->set('user_id', $user_id);
                     performRedirect('/admin/dashboard.php?login=success&u=' . base64_encode($user_id));
                 } else {
                     //set the login error
                     $login_error = "Auth Flag is false.";
                 }
-            } else if ($_SESSION['logged_in'] === true) {
+            } else if ($session->check('logged_in') === true && $session->get('logged_in') === true) {
                 //check if the user is already logged in, if so redirect to the admin dashboard
                 performRedirect('/admin/dashboard.php');
             } else {

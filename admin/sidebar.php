@@ -1,4 +1,6 @@
 <?php
+//include the session class
+$session = new Session();
 
 //get the view parameter from the URL
 isset($_GET['view']) ? $view = $_GET['view'] : $view = 'dashboard';
@@ -172,13 +174,13 @@ isset($_GET['view']) ? $view = $_GET['view'] : $view = 'dashboard';
                                 <div class="small">Logged in as:</div>
                                 <?php
                                 //check if the user is logged in, using the session variable we set on login if it exists
-                                if (isset($_SESSION['username'])) {
-                                    echo htmlspecialchars($_SESSION["username"]);
+                                if ($session->check('username') === true) {
+                                    echo htmlspecialchars($session->get('username'));
                                 } else {
                                     //check if there is a user id set in the session
-                                    if (isset($_SESSION['user_id'])) {
+                                    if ($session->check('user_id') === true) {
                                         //if there is a user id set, get the username from the database
-                                        $username = $user->getUserUsername(intval($_SESSION['user_id']));
+                                        $username = $user->getUserUsername(intval($session->get('user_id')));
                                         echo htmlspecialchars($username);
                                     } else {
                                         //if there is no user id set, display anonymous, followed by an error message

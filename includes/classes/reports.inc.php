@@ -39,10 +39,10 @@ abstract class Report
 
     /**
      * Get report by id
-     * @param int $id
+     * @param int $reportID
      * @return array
      */
-    public abstract function getReportById(int $id): array;
+    public abstract function getReportById(int $reportID): array;
 
     /**
      * Find report
@@ -55,41 +55,41 @@ abstract class Report
      * Store report
      * Stores the report as a JSON string in the database reports table
      * @param string $report
-     * @param int $created_by
+     * @param int $createdBy
      * @return int The id of the report that was stored
      */
-    public abstract function storeReport(string $report, int $created_by): int;
+    public abstract function storeReport(string $report, int $createdBy): int;
 
     /**
      * Generate report
      * Returns the id of the report that was generated
      *
-     * @param int $created_by
+     * @param int $createdBy
      * @return int The id of the report that was generated
      */
-    public abstract function generateReport(int $created_by): int;
+    public abstract function generateReport(int $createdBy): int;
 
     /**
      * Log report activity
-     * @param int $report_id
+     * @param int $reportID
      * @param string $action
-     * @param int $user_id
+     * @param int $userID
      * @return bool
      */
-    public abstract function logReportActivity(int $report_id, string $action, int $user_id = null): bool;
+    public abstract function logReportActivity(int $reportID, string $action, int $userID = null): bool;
 
     /**
      * Delete report
-     * @param int $id
+     * @param int $reportID
      * @return bool
      */
-    public abstract function deleteReport(int $id): bool;
+    public abstract function deleteReport(int $reportID): bool;
 
     /**
      * Get chartable report data
      * formats the report data into a format that can be used by chart.js for a bar chart
-     * @param int $id - the id of the report to get the data for
+     * @param int $reportID - the id of the report to get the data for
      * @return array
      */
-    public abstract function getChartableReportData(int $id): array;
+    public abstract function getChartableReportData(int $reportID): array;
 }

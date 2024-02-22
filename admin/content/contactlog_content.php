@@ -14,6 +14,9 @@ $permissionsObject = new Permission();
 //auth class
 $auth = new Authenticator();
 
+//session class
+$session = new Session();
+
 //check that the view dashboard permission is set
 if (!isset($hasViewDashboardPermission)) {
     //set the error type
@@ -36,7 +39,7 @@ if (!isset($hasViewDashboardPermission)) {
         $relevantPermissionID = $permissionsObject->getPermissionIdByName('READ CONTACT');
 
         //boolean to track if the user has the read contact permission
-        $hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+        $hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
         //prevent the user from accessing the page if they do not have the relevant permission
         if (!$hasPermission) {

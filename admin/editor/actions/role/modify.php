@@ -26,6 +26,9 @@ $users = $user->getAllUsers();
 //permission class
 $permission = new Permission();
 
+//session class
+$session = new Session();
+
 //get the permissions
 $permissionsArray = $permission->getAllPermissions();
 
@@ -66,19 +69,19 @@ $permissionsWarning = '';
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('UPDATE ROLE');
 
 //boolean to track if the user has the update role permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //get the is admin permission id
 $isAdminPermissionID = $permissionsObject->getPermissionIdByName('IS ADMIN');
 
 //boolean to check if the user has the is admin permission
-$hasIsAdminPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $isAdminPermissionID);
+$hasIsAdminPermission = $auth->checkUserPermission(intval($session->get('user_id')), $isAdminPermissionID);
 
 //get the is super admin permission id
 $isSuperAdminPermissionID = $permissionsObject->getPermissionIdByName('IS SUPERADMIN');
 
 //boolean to check if the user has the is super admin permission
-$hasIsSuperAdminPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $isSuperAdminPermissionID);
+$hasIsSuperAdminPermission = $auth->checkUserPermission(intval($session->get('user_id')), $isSuperAdminPermissionID);
 
 //get all users
 $usersArray = $users;
@@ -294,29 +297,29 @@ if (!$hasPermission) {
                 if ((!$roleNameError == '' or !$roleNameError == NULL) || (!$permissionsError == '' or !$permissionsError == NULL) || (!$permissionsWarning == '' or !$permissionsWarning == NULL)) {
                     if ($canUpdate && $override == 'true') {
                         //update the role
-                        $roleUpdated = $role->updateRole($roleId, intval($_SESSION['user_id']), $role_name, $role_permissions);
+                        $roleUpdated = $role->updateRole($roleId, intval($session->get('user_id')), $role_name, $role_permissions);
                     } elseif ($canUpdate && !$override == 'true') {
                         //update the role
-                        $roleUpdated = $role->updateRole($roleId, intval($_SESSION['user_id']), $role_name, $role_permissions);
+                        $roleUpdated = $role->updateRole($roleId, intval($session->get('user_id')), $role_name, $role_permissions);
                     } elseif ($canUpdate) {
                         //update the role
-                        $roleUpdated = $role->updateRole($roleId, intval($_SESSION['user_id']), $role_name, $role_permissions);
+                        $roleUpdated = $role->updateRole($roleId, intval($session->get('user_id')), $role_name, $role_permissions);
                     } else {
                         //set the role updated boolean to false
                         $roleUpdated = false;
                     }
                 } elseif (!$permissionsWarning == '' && $override == 'true') {
                     //update the role
-                    $roleUpdated = $role->updateRole($roleId, intval($_SESSION['user_id']), $role_name, $role_permissions);
+                    $roleUpdated = $role->updateRole($roleId, intval($session->get('user_id')), $role_name, $role_permissions);
                 } elseif (!$permissionsWarning == '' && !$override == 'true') {
                     //set the role updated boolean to false
                     $roleUpdated = false;
                 } elseif (!$permissionsWarning == '' or !$permissionsError == '' or !$roleNameError == '') {
                     //set the role updated boolean to false
-                    $roleUpdated = $role->updateRole($roleId, intval($_SESSION['user_id']), $role_name, $role_permissions);
+                    $roleUpdated = $role->updateRole($roleId, intval($session->get('user_id')), $role_name, $role_permissions);
                 } elseif (($roleNameError == '' || $roleNameError == NULL) && ($permissionsError == '' || $permissionsError == NULL) && ($permissionsWarning == '' || $permissionsWarning == NULL)) {
                     //update the role
-                    $roleUpdated = $role->updateRole($roleId, intval($_SESSION['user_id']), $role_name, $role_permissions);
+                    $roleUpdated = $role->updateRole($roleId, intval($session->get('user_id')), $role_name, $role_permissions);
                 } else {
                     //set the role updated boolean to false
                     $roleUpdated = false;
@@ -347,8 +350,8 @@ if (!$hasPermission) {
                                 echo '<i class="fa-solid fa-x"></i>';
                                 echo 'Error: Role Not Updated';
                                 //get any failed permission changes from the session variable if it is set
-                                if (isset($_SESSION['permissions_set_failed'])) {
-                                    $failedPermissions = $_SESSION['permissions_set_failed'];
+                                if ($session->check('permissions_set_failed') === true) {
+                                    $failedPermissions = $session->get('permissions_set_failed');
 
                                     //if the failed permissions array is not empty, display the failed permissions
                                     if (!empty($failedPermissions)) {

@@ -19,7 +19,7 @@ require_once(BASEPATH . '/includes/connector.inc.php');
 class Activity
 {
     //Reference to the database
-    private $mysqli;
+    protected $mysqli;
 
     //Instantiate the database connection
     public function __construct()
@@ -45,154 +45,146 @@ class Activity
      */
     public function getAllActivity(): array
     {
+        //sql statement to get all activity
         $sql = "SELECT * FROM activity_log ORDER BY action_date DESC";
-        $result = $this->mysqli->query($sql);
+
+        //prepare the sql statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the activity
         $activity = [];
+
+        //if there are rows in the result, loop through them and add them to the activity array
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $activity[] = $row;
             }
         }
+
+        //return the activity
         return $activity;
     }
 
     /**
      * Get all activity by user
      *
-     * @param int $user_id
+     * @param int $userID
      * @return array
      */
-    public function getAllActivityByUser(int $user_id): array
+    public function getAllActivityByUser(int $userID): array
     {
+        //sql statement to get all activity by user
         $sql = "SELECT * FROM activity_log WHERE user_id = ? ORDER BY action_date DESC";
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-                print_r($this->mysqli->connect_error);
-                //log the error
-                error_log('Error: ' . $this->mysqli->connect_error);
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                $stmt = prepareStatement($this->mysqli, $sql);
-                $stmt->bind_param('i', $user_id);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $activity = [];
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        $activity[] = $row;
-                    }
-                }
-                return $activity;
+
+        //prepare the sql statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the user id to the statement
+        $stmt->bind_param('i', $userID);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the activity
+        $activity = [];
+
+        //loop through the result and add each row to the activity array
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $activity[] = $row;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is null');
-            //throw an exception
-            throw new Exception('Error: The database connection is null');
         }
+
+        //return the activity
+        return $activity;
     }
 
     /**
      * Get all activity by user last 30 days
      *
-     * @param int $user_id
+     * @param int $userID
      *
      * @return array
      */
-    public function getLast30DaysByUser(int $user_id): array
+    public function getLast30DaysByUser(int $userID): array
     {
+        //sql statement to get all activity by user in the last 30 days
         $sql = "SELECT * FROM activity_log WHERE user_id = ? AND action_date >= DATE_SUB(NOW(), INTERVAL 30 DAY) ORDER BY action_date DESC";
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-                print_r($this->mysqli->connect_error);
-                //log the error
-                error_log('Error: ' . $this->mysqli->connect_error);
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                $stmt = prepareStatement($this->mysqli, $sql);
-                $stmt->bind_param('i', $user_id);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $activity = [];
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        $activity[] = $row;
-                    }
-                }
-                return $activity;
+
+        //prepare the sql statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the user id to the statement
+        $stmt->bind_param('i', $userID);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //create an array to hold the activity
+        $activity = [];
+
+        //loop through the result and add each row to the activity array
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $activity[] = $row;
             }
-        } else {
-            //log the error
-            error_log('Error: The database connection is null');
-            //throw an exception
-            throw new Exception('Error: The database connection is null');
         }
+
+        //return the activity
+        return $activity;
     }
 
     /**
      * Log activity
      *
-     * @param int $user_id, can be null
+     * @param int $userID, can be null
      * @param string $action, the action performed
-     * @param string $performed_on, the item the action was performed on
+     * @param string $performedOn, the item the action was performed on
      */
-    public function logActivity(int $user_id = null, string $action, string $performed_on): void
+    public function logActivity(int $userID = null, string $action, string $performedOn): void
     {
         //get the current date and time
-        $action_date = date('Y-m-d H:i:s');
+        $actionDate = date('Y-m-d H:i:s');
 
         //simplify the action to an enum, if a string is found in the action
         $action = $this->simplifyActionEnum($action);
 
-        //keep the performed_on under 535 characters
-        if (strlen($performed_on) > 535) {
-            $performed_on = substr($performed_on, 0, 535);
+        //keep the performedOn under 535 characters
+        if (strlen($performedOn) > 535) {
+            $performedOn = substr($performedOn, 0, 535);
         }
 
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
-                print_r($this->mysqli->connect_error);
-                //log the error
-                error_log('Error: ' . $this->mysqli->connect_error);
-            } else {
-                //check if the user id is null
-                if ($user_id == null) {
-                    //prepare the sql statement
-                    $sql = "INSERT INTO activity_log (action_date, action, performed_on) VALUES (?, ?, ?)";
-                    $stmt = prepareStatement($this->mysqli, $sql);
-                    $stmt->bind_param('sss', $action_date, $action, $performed_on);
-                    $stmt->execute();
-                } else {
-                    //prepare the sql statement
-                    $sql = "INSERT INTO activity_log (user_id, action_date, action, performed_on) VALUES (?, ?, ?, ?)";
-                    $stmt = prepareStatement($this->mysqli, $sql);
-                    $stmt->bind_param('isss', $user_id, $action_date, $action, $performed_on);
-                    $stmt->execute();
-                }
+        // Prepare the SQL statement
+        $sql = "INSERT INTO activity_log (user_id, action_date, action, performed_on) VALUES (($userID == null ? null : $userID), ?, ?, ?)";
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //close the statement
-                $stmt->close();
+        // Bind the parameters based on the user ID
+        $stmt->bind_param('sss' , $actionDate, $action, $performedOn);
 
-                //log the activity
-                error_log('Activity Logged: ' . $action . ' ' . $performed_on);
+        // Execute the statement
+        $stmt->execute();
 
-                //if the action is an error, throw an exception
-                if ($action == 'ERROR') {
-                    throw new Exception('Error: ' . $action . ' ' . $performed_on);
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is null');
-            //throw an exception
-            throw new Exception('Error: The database connection is null');
+        //close the statement
+        $stmt->close();
+
+        //log the activity
+        error_log('Activity Logged: ' . $action . ' ' . $performedOn);
+
+        //if the action is an error, throw an exception
+        if ($action == 'ERROR') {
+            throw new Exception('Error: ' . $action . ' ' . $performedOn);
         }
     }
 
@@ -202,7 +194,8 @@ class Activity
      * @param string $action
      * @return string $enum
      */
-    private function simplifyActionEnum(string $action): string {
+    private function simplifyActionEnum(string $action): string
+    {
         $action = strtolower($action); //convert the action to lowercase for easier comparison
         $enum = 'OTHER'; //default enum
         $actionArray = LOGGING_ACTIONS_ARRAY; //get the array of logging actions from the config file

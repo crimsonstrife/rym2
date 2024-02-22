@@ -1,5 +1,4 @@
 <?php
-
 class StudentReports extends Report
 {
     public function getReports(): array
@@ -8,7 +7,7 @@ class StudentReports extends Report
         return array();
     }
 
-    public function getReportById(int $id): array
+    public function getReportById(int $reportID): array
     {
         // implementation goes here
         return array();
@@ -20,13 +19,13 @@ class StudentReports extends Report
         return array();
     }
 
-    public function storeReport(string $report, int $created_by): int
+    public function storeReport(string $report, int $createdBy): int
     {
         // implementation goes here
         return 0;
     }
 
-    public function generateReport(int $created_by): int
+    public function generateReport(int $createdBy): int
     {
         // implementation goes here
         return 0;
@@ -34,28 +33,28 @@ class StudentReports extends Report
 
     /**
      * Log report activity
-     * @param int $report_id
+     * @param int $reportID
      * @param string $action
-     * @param int $user_id
+     * @param int $userID
      * @return bool
      */
-    public function logReportActivity(int $report_id, string $action, int $user_id = null): bool
+    public function logReportActivity(int $reportID, string $action, int $userID = null): bool
     {
         //log the report activity
         $activity = new Activity();
-        $activity->logActivity($user_id, $action, 'Report ' . strval($report_id));
+        $activity->logActivity($userID, $action, 'Report ' . strval($reportID));
 
         //return true
         return true;
     }
 
-    public function deleteReport(int $id): bool
+    public function deleteReport(int $reportID): bool
     {
         // implementation goes here
         return false;
     }
 
-    public function getChartableReportData(int $id): array
+    public function getChartableReportData(int $reportID): array
     {
         // implementation goes here
         return array();

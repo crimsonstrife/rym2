@@ -23,6 +23,9 @@ $school = new School();
 //include the media class
 $media = new Media();
 
+//include the session class
+$session = new Session();
+
 //create an array of available media
 $mediaArray = $media->getMedia();
 
@@ -41,7 +44,7 @@ if (isset($_GET['action'])) {
         $updateSchoolPermissionID = $permissionsObject->getPermissionIdByName('UPDATE SCHOOL');
 
         //boolean to check if the user has the update school permission
-        $hasUpdateSchoolPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updateSchoolPermissionID);
+        $hasUpdateSchoolPermission = $auth->checkUserPermission(intval($session->get('user_id')), $updateSchoolPermissionID);
 
         //if the user does not have the update school permission, prevent access to the editor
         if (!$hasUpdateSchoolPermission) {
@@ -196,7 +199,7 @@ if (isset($_GET['action'])) {
                                                         <select id="schoolLogoSelect" name="school_logoSelect" class="form-control">
                                                             <option value="">Select a Logo</option>
                                                             <?php /* check if the user has permission to upload media */
-                                                            if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                            if ($auth->checkUserPermission(intval($session->get('user_id')), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                                                 <option value="0">Upload a New Logo</option>
                                                             <?php } ?>
                                                             <?php foreach ($mediaArray as $key => $value) { ?>
@@ -215,7 +218,7 @@ if (isset($_GET['action'])) {
                                                     </p>
                                                     </p>
                                                     <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
-                                                    if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                    if ($auth->checkUserPermission(intval($session->get('user_id')), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                                         <p><strong><label for="schoolLogo">Upload a New Logo:</label></strong></p>
                                                         <p><input type="file" id="schoolLogoUpload" name="school_logoUpload" class="form-control" required></p>
                                                         <p>
@@ -284,7 +287,7 @@ if (isset($_GET['action'])) {
         $createSchoolPermissionID = $permissionsObject->getPermissionIdByName('CREATE SCHOOL');
 
         //boolean to check if the user has the create school permission
-        $hasCreateSchoolPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $createSchoolPermissionID);
+        $hasCreateSchoolPermission = $auth->checkUserPermission(intval($session->get('user_id')), $createSchoolPermissionID);
 
         //if the user does not have the create school permission, prevent access to the editor
         if (!$hasCreateSchoolPermission) {
@@ -392,7 +395,7 @@ if (isset($_GET['action'])) {
                                                         <select id="schoolLogoSelect" name="school_logoSelect" class="form-control">
                                                             <option value="">Select a Logo</option>
                                                             <?php /* check if the user has permission to upload media */
-                                                            if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                            if ($auth->checkUserPermission(intval($session->get('user_id')), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                                                 <option value="0">Upload a New Logo</option>
                                                             <?php } ?>
                                                             <?php foreach ($mediaArray as $key => $value) { ?>
@@ -412,7 +415,7 @@ if (isset($_GET['action'])) {
                                                             filename.</small>
                                                     </p>
                                                     <?php } else if (empty($mediaArray)) { //if there are no media files, show the file upload input if the user has upload permissions
-                                                    if ($auth->checkUserPermission(intval($_SESSION['user_id']), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
+                                                    if ($auth->checkUserPermission(intval($session->get('user_id')), $permissionsObject->getPermissionIdByName('CREATE MEDIA'))) { ?>
                                                         <p><strong><label for="schoolLogo">Upload a New Logo:</label></strong></p>
                                                         <p><input type="file" id="schoolLogoUpload" name="school_logoUpload" class="form-control" required></p>
                                                         <p>

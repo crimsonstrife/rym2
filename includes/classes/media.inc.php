@@ -63,31 +63,40 @@ class Media
     {
         //SQL statement to get all media
         $sql = "SELECT * FROM media";
-        //Query the database
-        $result = $this->mysqli->query($sql);
+
+        //prepare the statement
+        $stmt = $this->mysqli->prepare($sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //placeholder for the media array
+        $media = array();
+
         //If the query returns a result
         if ($result) {
             //Loop through the result and add each row to the media array
             while ($row = $result->fetch_assoc()) {
                 $media[] = $row;
             }
-            //Return the media array
-            return $media;
-        } else {
-            //If the query fails, return an empty array
-            return array();
         }
+
+        //return the media array
+        return $media;
     }
 
     /**
      * Get Media By ID
      * Returns the media object for the given media id
      *
-     * @param int $media_id The media id
+     * @param int $mediaID The media id
      *
      * @return array The media object
      */
-    public function getMediaByID(int $media_id): array
+    public function getMediaByID(int $mediaID): array
     {
         //placeholder for the media object
         $media = [];
@@ -99,7 +108,7 @@ class Media
         $stmt = $this->mysqli->prepare($query);
 
         //bind the media id to the query
-        $stmt->bind_param('i', $media_id);
+        $stmt->bind_param('i', $mediaID);
 
         //execute the query
         $stmt->execute();
@@ -120,11 +129,11 @@ class Media
      * Get the file name for the media
      * Returns the file name for the given media id
      *
-     * @param int $media_id The media id
+     * @param int $mediaID The media id
      *
      * @return string The file name
      */
-    public function getMediaFileName(int $media_id): string
+    public function getMediaFileName(int $mediaID): string
     {
         //placeholder for the file name
         $filename = '';
@@ -136,7 +145,7 @@ class Media
         $stmt = $this->mysqli->prepare($query);
 
         //bind the media id to the query
-        $stmt->bind_param('i', $media_id);
+        $stmt->bind_param('i', $mediaID);
 
         //execute the query
         $stmt->execute();
@@ -157,18 +166,18 @@ class Media
      * Update the file name for the media
      * Updates the file name for the given media id
      *
-     * @param int $media_id The media id
-     * @param string $file_name The file name
+     * @param int $mediaID The media id
+     * @param string $fileName The file name
      *
      * @return bool True if the file name was updated, false if it was not
      */
-    private function updateMediaFileName(int $media_id, string $file_name = NULL): bool
+    private function updateMediaFileName(int $mediaID, string $fileName = NULL): bool
     {
         //placeholder for the result
         $result = false;
 
         //if the new file name is null, do not update the file name
-        if ($file_name === NULL) {
+        if ($fileName === NULL) {
             return $result;
         }
 
@@ -179,7 +188,7 @@ class Media
         $stmt = $this->mysqli->prepare($query);
 
         //bind the file name and media id to the query
-        $stmt->bind_param('si', $file_name, $media_id);
+        $stmt->bind_param('si', $fileName, $mediaID);
 
         //execute the query
         $stmt->execute();
@@ -197,11 +206,11 @@ class Media
      * Get the file type for the media
      * Returns the file type for the given media id
      *
-     * @param int $media_id The media id
+     * @param int $mediaID The media id
      *
      * @return string The file type
      */
-    public function getMediaFileType(int $media_id): string
+    public function getMediaFileType(int $mediaID): string
     {
         //placeholder for the file type
         $filetype = '';
@@ -213,7 +222,7 @@ class Media
         $stmt = $this->mysqli->prepare($query);
 
         //bind the media id to the query
-        $stmt->bind_param('i', $media_id);
+        $stmt->bind_param('i', $mediaID);
 
         //execute the query
         $stmt->execute();
@@ -234,18 +243,18 @@ class Media
      * Update the file size for the media
      * Updates the file size for the given media id
      *
-     * @param int $media_id The media id
-     * @param int $file_size The file size
+     * @param int $mediaID The media id
+     * @param int $fileSize The file size
      *
      * @return bool True if the file size was updated, false if it was not
      */
-    private function updateMediaFileSize(int $media_id, int $file_size = NULL): bool
+    private function updateMediaFileSize(int $mediaID, int $fileSize = NULL): bool
     {
         //placeholder for the result
         $result = false;
 
         //if the new file size is null, do not update the file size
-        if ($file_size === NULL) {
+        if ($fileSize === NULL) {
             return $result;
         }
 
@@ -256,7 +265,7 @@ class Media
         $stmt = $this->mysqli->prepare($query);
 
         //bind the file size and media id to the query
-        $stmt->bind_param('ii', $file_size, $media_id);
+        $stmt->bind_param('ii', $fileSize, $mediaID);
 
         //execute the query
         $stmt->execute();
@@ -274,11 +283,11 @@ class Media
      * Get the full file path for the media
      * Returns the file path for the given media id
      *
-     * @param int $media_id The media id
+     * @param int $mediaID The media id
      *
      * @return string The file path
      */
-    public function getMediaFilePath(int $media_id): string
+    public function getMediaFilePath(int $mediaID): string
     {
         //placeholder for the file path
         $filepath = '';
@@ -293,7 +302,7 @@ class Media
         $stmt = $this->mysqli->prepare($query);
 
         //bind the media id to the query
-        $stmt->bind_param('i', $media_id);
+        $stmt->bind_param('i', $mediaID);
 
         //execute the query
         $stmt->execute();
@@ -319,14 +328,14 @@ class Media
      * @param string $filename The file name
      * @param string $filetype The file type
      * @param int $filesize The file size
-     * @param int $user_id The user id for the user uploading the media
+     * @param int $userID The user id for the user uploading the media
      *
      * @return int The media id
      */
-    public function addMedia(string $filename, string $filetype, int $filesize, int $user_id = NULL): int
+    public function addMedia(string $filename, string $filetype, int $filesize, int $userID = NULL): int
     {
         //placeholder for the media id
-        $media_id = 0;
+        $mediaID = 0;
 
         //get current date and time
         $date = date('Y-m-d H:i:s');
@@ -338,18 +347,18 @@ class Media
         $stmt = $this->mysqli->prepare($query);
 
         //bind the file name, file type, file size, date, and user id to the query
-        $stmt->bind_param('ssisisi', $filename, $filetype, $filesize, $date, $user_id, $date, $user_id);
+        $stmt->bind_param('ssisisi', $filename, $filetype, $filesize, $date, $userID, $date, $userID);
 
         //execute the query
         $stmt->execute();
 
         //if the query was successful, get the media id
         if ($stmt->affected_rows > 0) {
-            $media_id = intval($stmt->insert_id);
+            $mediaID = intval($stmt->insert_id);
         }
 
         //return the media id
-        return $media_id;
+        return $mediaID;
     }
 
     /**
@@ -363,7 +372,7 @@ class Media
     public function getMediaIDByFileName(string $filename): int
     {
         //placeholder for the media id
-        $media_id = 0;
+        $mediaID = 0;
 
         //query to get the media id by file name
         $query = "SELECT id FROM media WHERE filename = ?";
@@ -382,11 +391,11 @@ class Media
 
         //if there is a result, get the media id
         if ($result->num_rows > 0) {
-            $media_id = intval($result->fetch_assoc()['id']);
+            $mediaID = intval($result->fetch_assoc()['id']);
         }
 
         //return the media id
-        return $media_id;
+        return $mediaID;
     }
 
     /**
@@ -394,66 +403,66 @@ class Media
      * Uploads the media file to the server and adds the media object to the database, returns the media id if successful
      *
      * @param array $file The file array from the $_FILES superglobal
-     * @param int $user_id The user id for the user uploading the media
+     * @param int $userID The user id for the user uploading the media
      */
-    public function uploadMedia(array $file, int $user_id = null): int
+    public function uploadMedia(array $file, int $userID = null): int
     {
+        //include the activity class
+        $activity = new Activity();
+
         // Placeholder for the media id
-        $media_id = 0;
+        $mediaID = 0;
 
         // Local path to the upload directory
-        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+        $uploadPath = dirname(__DIR__, 2) . '/public/content/uploads/';
 
         // Validate the file
         $upload_error = validateFile($file);
         if ($upload_error !== '') {
-            $activity = new Activity();
-            $activity->logActivity($user_id, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
-            return $media_id;
+            $activity->logActivity($userID, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
+            return $mediaID;
         }
 
         // Move the file to the upload directory
-        if (moveFile($file, $upload_path)) {
-            $media_id = $this->addMediaToDatabase($file, $user_id);
-            $activity = new Activity();
-            if ($media_id === 0) {
+        if (moveFile($file, $uploadPath)) {
+            $mediaID = $this->addMediaToDatabase($file, $userID);
+            if ($mediaID === 0) {
                 $upload_error = 'Error adding media to the database';
-                $activity->logActivity($user_id, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
-            } else {
-                $activity->logActivity($user_id, 'Upload Success', 'Media Uploaded: ' . $file['name']);
+                $activity->logActivity($userID, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
             }
-        } else {
             $upload_error = 'Error moving file to upload directory';
-            $activity = new Activity();
-            $activity->logActivity($user_id, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
+            $activity->logActivity($userID, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
         }
 
-        // Generate thumbnails for the new file
-        $this->generateMediaThumbs($media_id);
+        // Log the activity
+        $activity->logActivity($userID, 'Upload', 'Media Uploaded: ' . $file['name']);
 
-        return $media_id;
+        // Generate thumbnails for the new file
+        $this->generateMediaThumbs($mediaID);
+
+        return $mediaID;
     }
 
-    private function addMediaToDatabase(array $file, int $user_id = null): int
+    private function addMediaToDatabase(array $file, int $userID = null): int
     {
         // Get the file name, type, size, and extension
         $filename = $file['name'];
-        $file_extension = pathinfo($filename, PATHINFO_EXTENSION);
+        $fileExtension = pathinfo($filename, PATHINFO_EXTENSION);
         $filesize = $file['size'];
 
         // Add the media object to the database
-        return $this->addMedia($filename, $file_extension, intval($filesize), $user_id);
+        return $this->addMedia($filename, $fileExtension, intval($filesize), $userID);
     }
 
     /**
      * Get media usage by media id
      * Returns the ids of the school or event that is using the media
      *
-     * @param int $media_id The media id
+     * @param int $mediaID The media id
      *
      * @return array The ids of the school or event that is using the media
      */
-    public function getMediaUsage(int $media_id): array
+    public function getMediaUsage(int $mediaID): array
     {
         //placeholder array for the media usage
         $mediaUsage = array(
@@ -471,10 +480,10 @@ class Media
         $eventMedia = new EventMedia();
 
         //get the ids of the schools that are using the media
-        $schoolsArray = $school->getSchoolsByMediaID($media_id);
+        $schoolsArray = $school->getSchoolsByMediaID($mediaID);
 
         //get the ids of the events that are using the media
-        $eventsArray = $eventMedia->getEventsByMediaID($media_id);
+        $eventsArray = $eventMedia->getEventsByMediaID($mediaID);
 
         //if there are schools using the media, add the school ids to the media usage array
         if (count($schoolsArray) > 0) {
@@ -499,19 +508,19 @@ class Media
      * Rename Media File
      * Renames the media file on the server and updates the media object in the database
      *
-     * @param int $media_id The media id
+     * @param int $mediaID The media id
      * @param string $new_filename The new file name
-     * @param int $user_id The user id for the user updating the media
+     * @param int $userID The user id for the user updating the media
      *
      * @return bool True if the media file was renamed, false if it was not
      */
-    public function renameMedia(int $media_id, string $new_filename, int $user_id = NULL): bool
+    public function renameMedia(int $mediaID, string $new_filename, int $userID = NULL): bool
     {
         //placeholder for the result
         $result = false;
 
         //local path to the upload directory
-        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+        $uploadPath = dirname(__DIR__, 2) . '/public/content/uploads/';
 
         //placeholder boolean for if there is an error
         $error = false;
@@ -520,18 +529,18 @@ class Media
         $upload_error = '';
 
         //get the current file name
-        $current_filename = $this->getMediaFileName($media_id);
+        $current_filename = $this->getMediaFileName($mediaID);
 
         //if the file name is different, rename the file
         if ($new_filename !== $current_filename) {
             //if the file exists, rename the file
-            if (file_exists($upload_path . $current_filename)) {
+            if (file_exists($uploadPath . $current_filename)) {
                 //create a backup of the current file
-                if (copy($upload_path . $current_filename, $upload_path . 'backup_' . $current_filename)) {
+                if (copy($uploadPath . $current_filename, $uploadPath . 'backup_' . $current_filename)) {
                     //rename the new file
-                    if (rename($upload_path . $current_filename, $upload_path . $new_filename)) {
+                    if (rename($uploadPath . $current_filename, $uploadPath . $new_filename)) {
                         //update the file name in the database
-                        $this->updateMediaFileName($media_id, $new_filename);
+                        $this->updateMediaFileName($mediaID, $new_filename);
                     } else {
                         //set the upload error
                         $upload_error = 'Error renaming file';
@@ -554,13 +563,13 @@ class Media
             //if there is an error, log the activity
             if ($error === true) {
                 $activity = new Activity();
-                $activity->logActivity($user_id, "Upload Error", "Error Renaming Media File: " . $upload_error . " - " . $current_filename . " to " . $new_filename);
+                $activity->logActivity($userID, "Upload Error", "Error Renaming Media File: " . $upload_error . " - " . $current_filename . " to " . $new_filename);
 
                 //set the result to false
                 $result = false;
             } else {
                 //delete the backup file
-                unlink($upload_path . 'backup_' . $current_filename);
+                unlink($uploadPath . 'backup_' . $current_filename);
 
                 //set the result to true
                 $result = true;
@@ -579,19 +588,19 @@ class Media
      * Update Media File
      * Replaces the media file on the server (if the name of the new file is different, renames it) and updates the media object in the database
      *
-     * @param int $media_id The media id
+     * @param int $mediaID The media id
      * @param array $file The file array from the $_FILES superglobal
-     * @param int $user_id The user id for the user updating the media
+     * @param int $userID The user id for the user updating the media
      *
      * @return bool True if the media file was updated, false if it was not
      */
-    public function updateMediaFile(int $media_id, array $file, int $user_id = NULL): bool
+    public function updateMediaFile(int $mediaID, array $file, int $userID = NULL): bool
     {
         //placeholder for the result
         $result = false;
 
         //local path to the upload directory
-        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+        $uploadPath = dirname(__DIR__, 2) . '/public/content/uploads/';
 
         //placeholder boolean for if there is an error
         $error = false;
@@ -611,20 +620,20 @@ class Media
         $filesize = $file['size'];
 
         //get the current file name
-        $current_filename = $this->getMediaFileName($media_id);
+        $current_filename = $this->getMediaFileName($mediaID);
 
         //if the file name is different, rename the file
         if ($filename !== $current_filename) {
             //if the file exists, rename the file
-            if (file_exists($upload_path . $filename)) {
+            if (file_exists($uploadPath . $filename)) {
                 //create a backup of the current file
-                if (copy($upload_path . $current_filename, $upload_path . 'backup_' . $current_filename)) {
+                if (copy($uploadPath . $current_filename, $uploadPath . 'backup_' . $current_filename)) {
                     //rename the new file
-                    if (rename($upload_path . $filename, $upload_path . $current_filename)) {
+                    if (rename($uploadPath . $filename, $uploadPath . $current_filename)) {
                         //update the file name in the database
-                        $this->updateMediaFileName($media_id, $current_filename);
+                        $this->updateMediaFileName($mediaID, $current_filename);
                         //update the file size in the database
-                        $this->updateMediaFileSize($media_id, $filesize);
+                        $this->updateMediaFileSize($mediaID, $filesize);
                     } else {
                         //set the upload error
                         $upload_error = 'Error renaming file';
@@ -647,13 +656,13 @@ class Media
             //if there is an error, log the activity
             if ($error === true) {
                 $activity = new Activity();
-                $activity->logActivity($user_id, "Upload Error", "Error Updating Media File: " . $upload_error . " - " . $current_filename . " from " . $filename);
+                $activity->logActivity($userID, "Upload Error", "Error Updating Media File: " . $upload_error . " - " . $current_filename . " from " . $filename);
 
                 //set the result to false
                 $result = false;
             } else {
                 //delete the backup file
-                unlink($upload_path . 'backup_' . $current_filename);
+                unlink($uploadPath . 'backup_' . $current_filename);
 
                 //set the result to true
                 $result = true;
@@ -661,7 +670,7 @@ class Media
         }
 
         //generate thumbnails for the new file
-        $this->generateMediaThumbs($media_id);
+        $this->generateMediaThumbs($mediaID);
 
         //return the result
         return $result;
@@ -671,18 +680,18 @@ class Media
      * Delete Media
      * Deletes the media file from the server and removes the media object from the database
      *
-     * @param int $media_id The media id
-     * @param int $user_id The user id for the user deleting the media
+     * @param int $mediaID The media id
+     * @param int $userID The user id for the user deleting the media
      *
      * @return bool True if the media was deleted, false if it was not
      */
-    public function deleteMedia(int $media_id, int $user_id = NULL): bool
+    public function deleteMedia(int $mediaID, int $userID = NULL): bool
     {
         //placeholder for the result
         $result = false;
 
         //local path to the upload directory
-        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+        $uploadPath = dirname(__DIR__, 2) . '/public/content/uploads/';
 
         //placeholder boolean for if there is an error
         $error = false;
@@ -694,12 +703,12 @@ class Media
         $error_message = '';
 
         //get the file name
-        $filename = $this->getMediaFileName($media_id);
+        $filename = $this->getMediaFileName($mediaID);
 
         //if the file exists, delete the file
-        if (file_exists($upload_path . $filename)) {
+        if (file_exists($uploadPath . $filename)) {
             //delete the file
-            if (unlink($upload_path . $filename)) {
+            if (unlink($uploadPath . $filename)) {
                 $deleted = true;
             } else {
                 //set the error boolean to true
@@ -715,11 +724,11 @@ class Media
         }
 
         //delete thumbnails if they exist
-        if (file_exists($upload_path . 'thumb_600_' . $filename)) {
-            unlink($upload_path . 'thumb_600_' . $filename);
+        if (file_exists($uploadPath . 'thumb_600_' . $filename)) {
+            unlink($uploadPath . 'thumb_600_' . $filename);
         }
-        if (file_exists($upload_path . 'thumb_200_' . $filename)) {
-            unlink($upload_path . 'thumb_200_' . $filename);
+        if (file_exists($uploadPath . 'thumb_200_' . $filename)) {
+            unlink($uploadPath . 'thumb_200_' . $filename);
         }
 
         //if the file was deleted, delete the media object from the database
@@ -731,7 +740,7 @@ class Media
             $stmt = $this->mysqli->prepare($query);
 
             //bind the media id to the query
-            $stmt->bind_param('i', $media_id);
+            $stmt->bind_param('i', $mediaID);
 
             //execute the query
             $stmt->execute();
@@ -752,7 +761,7 @@ class Media
         //if there is an error, log the activity
         if ($error === true) {
             $activity = new Activity();
-            $activity->logActivity($user_id, "Delete Error", "Error Deleting Media: " . $error_message . " - " . $filename);
+            $activity->logActivity($userID, "Delete Error", "Error Deleting Media: " . $error_message . " - " . $filename);
         }
 
         //return the result
@@ -764,11 +773,11 @@ class Media
      * Generates thumbnails for the given media id, one for the list page and one for the modal/detail page.
      * Requires Imagick to be installed on the server.
      *
-     * @param int $media_id The media id
+     * @param int $mediaID The media id
      *
      * @return void
      */
-    public function generateMediaThumbs(int $media_id)
+    public function generateMediaThumbs(int $mediaID)
     {
         //max width and height for the thumbnails
         $modalMaxWidth = 600;
@@ -777,14 +786,14 @@ class Media
         $listMaxHeight = 200;
 
         //get the file name and type
-        $filename = $this->getMediaFileName($media_id);
-        $filetype = $this->getMediaFileType($media_id);
+        $filename = $this->getMediaFileName($mediaID);
+        $filetype = $this->getMediaFileType($mediaID);
 
         //base path to the upload directory
-        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+        $uploadPath = dirname(__DIR__, 2) . '/public/content/uploads/';
 
         //file path to the original file
-        $originalFile = $upload_path . $filename;
+        $originalFile = $uploadPath . $filename;
 
         //create an Imagick object
         $image = new Imagick();
@@ -797,7 +806,7 @@ class Media
             //resize and compress the image for modal thumbnail
             $modalThumbnail = $this->resizeAndCompressImage($image, $modalMaxWidth, $modalMaxHeight, $filetype);
             if ($modalThumbnail !== null) {
-                $modalThumbnail->writeImage($upload_path . 'thumb_600_' . $filename);
+                $modalThumbnail->writeImage($uploadPath . 'thumb_600_' . $filename);
                 $modalThumbnail->destroy();
             }
 
@@ -807,7 +816,7 @@ class Media
             //resize and compress the image for list thumbnail
             $listThumbnail = $this->resizeAndCompressImage($image, $listMaxWidth, $listMaxHeight, $filetype);
             if ($listThumbnail !== null) {
-                $listThumbnail->writeImage($upload_path . 'thumb_200_' . $filename);
+                $listThumbnail->writeImage($uploadPath . 'thumb_200_' . $filename);
                 $listThumbnail->destroy();
             }
         }
@@ -864,27 +873,27 @@ class Media
     /**
      * Get Media Thumbnail
      *
-     * @param int $media_id The media id
+     * @param int $mediaID The media id
      * @param string $size The size of the thumbnail (list or modal)
      *
      * @return string The filename for the thumbnail, or the original file if the thumbnail does not exist
      */
-    public function getMediaThumbnail(int $media_id, string $size = 'list'): string
+    public function getMediaThumbnail(int $mediaID, string $size = 'list'): string
     {
         //placeholder for the filename
         $filename = '';
 
         //the upload path
-        $upload_path = dirname(__DIR__, 2) . '/public/content/uploads/';
+        $uploadPath = dirname(__DIR__, 2) . '/public/content/uploads/';
 
         //get the file name
-        $original_filename = $this->getMediaFileName($media_id);
+        $original_filename = $this->getMediaFileName($mediaID);
 
         //if the size is modal, get the modal thumbnail
         switch ($size) {
             case 'modal':
                 //if the modal thumbnail exists, get the modal thumbnail
-                if (file_exists($upload_path . 'thumb_600_' . $original_filename)) {
+                if (file_exists($uploadPath . 'thumb_600_' . $original_filename)) {
                     $filename = 'thumb_600_' . $original_filename;
                 } else {
                     //if the modal thumbnail does not exist, get the original file
@@ -894,7 +903,7 @@ class Media
                 return $filename;
             case 'list':
                 //if the list thumbnail exists, get the list thumbnail
-                if (file_exists($upload_path . 'thumb_200_' . $original_filename)) {
+                if (file_exists($uploadPath . 'thumb_200_' . $original_filename)) {
                     $filename = 'thumb_200_' . $original_filename;
                 } else {
                     //if the list thumbnail does not exist, get the original file

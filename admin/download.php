@@ -1,6 +1,8 @@
 <?php
+//instance of the session class
+$session = new Session();
 //prevent direct access to this file, if there is no user id set in the session - i.e. the user is not logged in
-if (isset($_SESSION['user_id'])) {
+if ($session->check('user_id') === false){
     //set the error type
     $thisError = 'AUTHENTICATION_ERROR';
 ?>

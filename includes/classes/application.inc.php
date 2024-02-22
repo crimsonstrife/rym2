@@ -49,41 +49,25 @@ class Application
         //SQL statement to get all the settings
         $sql = "SELECT * FROM settings";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
+        //Execute the statement
+        $stmt->execute();
 
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Execute the statement
-                $stmt->execute();
+        //Create an array to hold the settings
+        $settings = array();
 
-                //Get the results
-                $result = $stmt->get_result();
-
-                //Create an array to hold the settings
-                $settings = array();
-
-                //Loop through the results and add them to the array
-                while ($row = $result->fetch_assoc()) {
-                    $settings[] = $row;
-                }
-
-                //Return the array of settings
-                return $settings;
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+        //Loop through the results and add them to the array
+        while ($row = $result->fetch_assoc()) {
+            $settings[] = $row;
         }
+
+        //Return the array of settings
+        return $settings;
     }
 
     /**
@@ -99,47 +83,29 @@ class Application
         //SQL statement to get the setting
         $sql = "SELECT $setting FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //placeholder for the setting
+        $settingValue = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the setting is set or not
-                    if (isset($row[$setting])) {
-                        //Return the setting
-                        return $row[$setting];
-                    } else {
-                        //Return an empty string
-                        return '';
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+        //check if the setting is set or not
+        if (isset($row[$setting])) {
+            //set the setting
+            $settingValue = $row[$setting];
         }
+
+        //Return the setting
+        return $settingValue;
     }
 
     /**
@@ -154,63 +120,36 @@ class Application
         //SQL statement to get the privacy policy content
         $sql = "SELECT privacy_policy FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //placeholder for the privacy policy
+        $privacyPolicy = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the privacy_policy is set or not
-                    if (isset($row['privacy_policy'])) {
-                        //set the privacy policy
-                        $privacy_policy = $row['privacy_policy'];
+        //check if the privacy policy is set or not
+        $privacyPolicy = $row['privacy_policy'] ?? strval(PRIVACY_POLICY) ?? '';
 
-                        //Return the privacy_policy
-                        return $privacy_policy;
-                    } else {
-                        //get the default privacy policy
-                        $privacy_policy = strval(PRIVACY_POLICY);
-
-                        //Return the privacy_policy
-                        return $privacy_policy;
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
+        //Return the privacy policy
+        return $privacyPolicy;
     }
 
     /**
      * Set the Privacy Policy Content
      * Set the privacy policy content in the settings table
      *
-     * @param string $privacy_policy //the privacy policy content, passed in as Markdown
+     * @param string $privacyPolicy //the privacy policy content
      * @return bool //true if the privacy policy content was set, false if not
      */
-    public function setPrivacyPolicy($privacy_policy = null)
+    public function setPrivacyPolicy($privacyPolicy = null)
     {
         //SQL statement to update the privacy policy content
         $sql = "UPDATE settings SET privacy_policy = ? WHERE isSet = 'SET'";
@@ -219,7 +158,7 @@ class Application
         $stmt = prepareStatement($this->mysqli, $sql);
 
         //Bind the parameters
-        $stmt->bind_param('s', $privacy_policy);
+        $stmt->bind_param('s', $privacyPolicy);
 
         //Execute the statement
         $stmt->execute();
@@ -228,13 +167,15 @@ class Application
         if ($stmt->affected_rows > 0) {
             //log the activity
             $activity = new Activity();
-            $activity->logActivity(intval($_SESSION['user_id']), 'Privacy Policy Updated', 'The privacy policy was changed.');
+            $session = new Session();
+            $userID = intval($session->get('user_id')) ?? null;
+            $activity->logActivity(intval($userID), 'Privacy Policy Updated', 'The privacy policy was changed.');
             //Return true
             return true;
-        } else {
-            //Return false
-            return false;
         }
+
+        //Return false
+        return false;
     }
 
     /**
@@ -249,53 +190,26 @@ class Application
         //SQL statement to get the terms and conditions content
         $sql = "SELECT terms_conditions FROM settings WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
+        //Get the results
+        $result = $stmt->get_result();
 
-                //Get the results
-                $result = $stmt->get_result();
+        //Get the row
+        $row = $result->fetch_assoc();
 
-                //Get the row
-                $row = $result->fetch_assoc();
+        //placeholder for the terms
+        $terms = '';
 
-                //Check if the row exists
-                if ($row) {
-                    //check if the terms_conditions is set or not
-                    if (isset($row['terms_conditions'])) {
-                        //set the terms
-                        $terms = $row['terms_conditions'];
+        //check if the privacy policy is set or not
+        $terms = $row['terms_conditions'] ?? strval(TERMS_CONDITIONS) ?? '';
 
-                        //Return the terms
-                        return $terms;
-                    } else {
-                        //get the default terms and conditions
-                        $terms = strval(TERMS_CONDITIONS);
-
-                        //Return the terms
-                        return $terms;
-                    }
-                } else {
-                    //Return an empty string
-                    return '';
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
-        }
+        //Return the terms
+        return $terms;
     }
 
     /**
@@ -310,40 +224,27 @@ class Application
         //SQL statement to update the terms and conditions content
         $sql = "UPDATE settings SET terms_conditions = ? WHERE isSet = 'SET'";
 
-        //Check that mysqli is set
-        if (isset($this->mysqli)) {
-            //check that the mysqli object is not null
-            if ($this->mysqli->connect_error) {
+        //Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
 
-                //throw an exception
-                throw new Exception("Failed to connect to the database: (" . $this->mysqli->connect_errno . ")" . $this->mysqli->connect_error);
-            } else {
-                //Prepare the SQL statement for execution
-                $stmt = prepareStatement($this->mysqli, $sql);
+        //Bind the parameters
+        $stmt->bind_param('s', $terms);
 
-                //Bind the parameters
-                $stmt->bind_param('s', $terms);
+        //Execute the statement
+        $stmt->execute();
 
-                //Execute the statement
-                $stmt->execute();
-
-                //Check if the statement was executed successfully
-                if ($stmt->affected_rows > 0) {
-                    //log the activity
-                    $activity = new Activity();
-                    $activity->logActivity(intval($_SESSION['user_id']), 'Terms and Conditions Updated', 'The terms and conditions were changed.');
-                    //Return true
-                    return true;
-                } else {
-                    //Return false
-                    return false;
-                }
-            }
-        } else {
-            //log the error
-            error_log('Error: The database connection is not set.');
-            //throw an exception
-            throw new Exception("The database connection is not set.");
+        //Check if the statement was executed successfully
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $session = new Session();
+            $userID = $session->get('user_id');
+            $activity->logActivity(intval($userID), 'Terms and Conditions Updated', 'The terms and conditions were changed.');
+            //Return true
+            return true;
         }
+
+        //Return false
+        return false;
     }
 }
