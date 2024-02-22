@@ -23,10 +23,6 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
-use Student;
-use StudentAddress;
-use StudentEducation;
-
 /**
  * Class StudentData
  * This class is used to store student data
