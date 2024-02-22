@@ -23,12 +23,6 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
-use Roles;
-use Activity;
-use Contact;
-use Session;
-use Authenticator;
-
 /**
  * User Class
  * Contains all the functions for the User Class and handles all the user related tasks with the database.
@@ -375,7 +369,7 @@ class User
         // Log the activity
         $activity = new Activity();
         $session = new Session();
-        $sessionUserID = $session->sessionVars['user_id'];
+        $sessionUserID = $session->get('user_id');
         $activity->logActivity(intval($sessionUserID), 'Updated User Email', 'User ID: ' . strval($userID) . ' User Name: ' . $this->getUserUsername($userID) . ' Email: ' . $email);
     }
 
@@ -405,7 +399,7 @@ class User
         // Log the activity
         $activity = new Activity();
         $session = new Session();
-        $sessionUserID = $session->sessionVars['user_id'];
+        $sessionUserID = $session->get('user_id');
         $activity->logActivity(intval($sessionUserID), 'Updated User Password', 'User ID: ' . strval($userID) . ' User Name: ' . $this->getUserUsername($userID));
     }
 
@@ -435,7 +429,7 @@ class User
         // Log the activity
         $activity = new Activity();
         $session = new Session();
-        $sessionUserID = $session->sessionVars['user_id'];
+        $sessionUserID = $session->get('user_id');
         $activity->logActivity(intval($sessionUserID), 'Updated User Username', 'User ID: ' . strval($userID) . ' User Name: ' . $username . ' Old Username: ' . $old_username);
     }
 
@@ -495,7 +489,7 @@ class User
         if ($result) {
             $activity = new Activity();
             $session = new Session();
-            $sessionUserID = $session->sessionVars['user_id'];
+            $sessionUserID = $session->get('user_id');
             $activity->logActivity(intval($sessionUserID), 'Deleted User', 'User ID: ' . $userID . ' User Name: ' . $this->getUserUsername($userID));
         }
 
@@ -577,7 +571,7 @@ class User
         $role = new Roles();
         $activity = new Activity();
         $session = new Session();
-        $sessionUserID = intval($session->sessionVars['user_id']) ?? null;
+        $sessionUserID = intval($session->get('user_id')) ?? null;
         $activity->logActivity($sessionUserID, "User Updated", "Role ID: " . strval($roleID) . " Role Name: " . $role->getRoleNameById($roleID) . " added to User ID: " . strval($userID) . " User Name: " . $this->getUserUsername($userID));
     }
 
@@ -605,7 +599,7 @@ class User
         // Log the activity
         $activity = new Activity();
         $session = new Session();
-        $sessionUserID = intval($session->sessionVars['user_id']) ?? null;
+        $sessionUserID = intval($session->get('user_id')) ?? null;
         $activity->logActivity($sessionUserID, "User Updated", "Role ID: " . strval($roleID) . " removed from User ID: " . strval($userID) . " User Name: " . $this->getUserUsername($userID) . "");
     }
 
