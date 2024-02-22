@@ -23,10 +23,6 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
-use Activity;
-use Session;
-use User;
-
 /**
  * Area of Interests Class, extends the Subjects Class, contains relevant functions.
  */
@@ -224,7 +220,7 @@ class AreaOfInterest extends Subject
         if ($result) {
             $activity = new Activity();
             $session = new Session();
-            $userID = $session->sessionVars['user_id'];
+            $userID = $session->get('user_id');
             $activity->logActivity(intval($userID), 'Deleted Subject', 'Subject ID: ' . $subjectId . ' Subject Name: ' . $subjectName);
         }
 
