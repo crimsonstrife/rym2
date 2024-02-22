@@ -9,10 +9,6 @@ require_once(__DIR__ . '/../../config/database.php');
 // include the database connector file
 require_once(BASEPATH . '/includes/connector.inc.php');
 
-use Exception;
-use Activity;
-use Session;
-
 /**
  * The Application Class
  *
@@ -172,7 +168,7 @@ class Application
             //log the activity
             $activity = new Activity();
             $session = new Session();
-            $userID = intval($session->sessionVars['user_id']);
+            $userID = intval($session->get('user_id')) ?? null;
             $activity->logActivity(intval($userID), 'Privacy Policy Updated', 'The privacy policy was changed.');
             //Return true
             return true;
@@ -242,7 +238,7 @@ class Application
             //log the activity
             $activity = new Activity();
             $session = new Session();
-            $userID = $session->sessionVars['user_id'];
+            $userID = $session->get('user_id');
             $activity->logActivity(intval($userID), 'Terms and Conditions Updated', 'The terms and conditions were changed.');
             //Return true
             return true;
