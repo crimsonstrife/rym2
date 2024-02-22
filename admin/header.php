@@ -17,6 +17,9 @@ $companySettings = new CompanySettings();
 /* include the media class */
 $media_class = new Media();
 
+/* include the session class */
+$session = new Session();
+
 //placeholder variables
 $author = 'Patrick Barnhardt';
 
@@ -97,12 +100,12 @@ if (!empty($companyName) && $companyName != null && $companyName != '') {
                         data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-circle-user"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item"
-                                href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $_SESSION["user_id"]; ?>">Profile</a>
+                                href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $session->get('user_id'); ?>">Profile</a>
                         </li>
                         <li><a class="dropdown-item"
                                 href="<?php echo APP_URL . '/admin/dashboard.php?view=settings' ?>">Settings</a></li>
                         <li><a class="dropdown-item"
-                                href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $_SESSION["user_id"] . '#activity_log'; ?>">Activity
+                                href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $session->get('user_id') . '#activity_log'; ?>">Activity
                                 Log</a></li>
                         <li>
                             <hr class="dropdown-divider" />
