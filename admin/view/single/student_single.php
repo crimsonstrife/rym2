@@ -175,11 +175,11 @@ if (!$hasPermission) {
                                         $city = $studentAddress->getStudentCity($student_id);
                                         $state = $studentAddress->getStudentState($student_id);
                                         $zip = $studentAddress->getStudentZip($student_id);
-                                        $address = formatAddress($street, $city, $state, $zip);
-                                        $address = urlencode($address);
+                                        $formattedAddress = formatAddress($street, $city, $state, $zip);
+                                        $address = urlencode($formattedAddress);
                                         ?>
                                 <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
-                                    target="_blank"><?php echo $address; ?></a>
+                                    target="_blank"><?php echo $formattedAddress; ?></a>
                             </p>
                             <p>
                                 <strong>Field of Study/Area of Interest:</strong>
