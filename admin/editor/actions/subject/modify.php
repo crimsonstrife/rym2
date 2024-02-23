@@ -17,8 +17,11 @@ $auth = new Authenticator();
 //subject class
 $subject = new AreaOfInterest();
 
-//user class
+//include the user class
 $user = new User();
+
+//include the session class
+$session = new Session();
 
 //get the action from the url parameter
 $action = $_GET['action'];
@@ -33,7 +36,7 @@ if ($action == 'edit') {
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('UPDATE SUBJECT');
 
 //boolean to track if the user has the update subject permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -56,7 +59,7 @@ if (!$hasPermission) {
         //if the action is edit, edit the subject
         if ($action == 'edit') {
             //get current user ID
-            $user_id = intval($_SESSION['user_id']);
+            $user_id = intval($session->get('user_id'));
 
             //edit the subject
             $subjectUpdated = $subject->updateSubject($subject_id, $subject_name, $user_id);
