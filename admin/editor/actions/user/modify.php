@@ -17,8 +17,11 @@ $auth = new Authenticator();
 //include the roles class
 $role = new Roles();
 
-//user class
+//include the user class
 $user = new User();
+
+//include the session class
+$session = new Session();
 
 //get all the users
 $users = $user->getAllUsers();
@@ -56,19 +59,19 @@ if ($action == 'edit') {
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('UPDATE USER');
 
 //boolean to track if the user has the update user permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //get the is admin permission id
 $isAdminPermissionID = $permissionsObject->getPermissionIdByName('IS ADMIN');
 
 //boolean to check if the user has the is admin permission
-$hasIsAdminPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $isAdminPermissionID);
+$hasIsAdminPermission = $auth->checkUserPermission(intval($session->get('user_id')), $isAdminPermissionID);
 
 //get the is super admin permission id
 $isSuperAdminPermissionID = $permissionsObject->getPermissionIdByName('IS SUPERADMIN');
 
 //boolean to check if the user has the is super admin permission
-$hasIsSuperAdminPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $isSuperAdminPermissionID);
+$hasIsSuperAdminPermission = $auth->checkUserPermission(intval($session->get('user_id')), $isSuperAdminPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -239,9 +242,9 @@ if (!$hasPermission) {
             if ($action == 'edit') {
                 //if the password is empty, update the user without updating the password
                 if ($password == "" && $passwordConfirm == "") {
-                    $userUpdated = $user->modifyUser($userId, $email, $username, null, intval($_SESSION['user_id']), $rolesArray);
+                    $userUpdated = $user->modifyUser($userId, $email, $username, null, intval($session->get('user_id')), $rolesArray);
                 } else {
-                    $userUpdated = $user->modifyUser($userId, $email, $username, $password, intval($_SESSION['user_id']), $rolesArray);
+                    $userUpdated = $user->modifyUser($userId, $email, $username, $password, intval($session->get('user_id')), $rolesArray);
                 }
             }
         } else if ($usernameTaken || $emailTaken || $passwordError || $roleIssue) {
@@ -266,7 +269,7 @@ if (!$hasPermission) {
                 //if the array still has the super admin role, update the user
                 if ($arrayHasSuperAdmin) {
                     $roleIssue = false;
-                    $userUpdated = $user->modifyUser($userId, $email, $username, $password, intval($_SESSION['user_id']), $rolesArray);
+                    $userUpdated = $user->modifyUser($userId, $email, $username, $password, intval($session->get('user_id')), $rolesArray);
                 } else {
                     $userUpdated = false;
                 }
