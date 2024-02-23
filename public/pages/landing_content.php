@@ -529,8 +529,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $newStudent = new StudentData();
 
                 //set the student object properties
-                $newStudent->first_name = $student_firstName;
-                $newStudent->last_name = $student_lastName;
+                $newStudent->firstName = $student_firstName;
+                $newStudent->lastName = $student_lastName;
                 $newStudent->email = $student_email;
                 $newStudent->phone = $student_phone;
                 $newStudent->studentAddress = $newStudentAddress;
