@@ -14,24 +14,27 @@ $permissionsObject = new Permission();
 //include the authenticator class
 $auth = new Authenticator();
 
+//include the session class
+$session = new Session();
+
 /*confirm user has a role with delete role permissions*/
 //get the id of the delete role permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('DELETE ROLE');
 
 //boolean to track if the user has the delete role permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //get the is admin permission id
 $isAdminPermissionID = $permissionsObject->getPermissionIdByName('IS ADMIN');
 
 //boolean to check if the user has the is admin permission
-$hasIsAdminPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $isAdminPermissionID);
+$hasIsAdminPermission = $auth->checkUserPermission(intval($session->get('user_id')), $isAdminPermissionID);
 
 //get the is super admin permission id
 $isSuperAdminPermissionID = $permissionsObject->getPermissionIdByName('IS SUPERADMIN');
 
 //boolean to check if the user has the is super admin permission
-$hasIsSuperAdminPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $isSuperAdminPermissionID);
+$hasIsSuperAdminPermission = $auth->checkUserPermission(intval($session->get('user_id')), $isSuperAdminPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -113,6 +116,7 @@ if (!$hasPermission) {
 ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $role_name; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -131,22 +135,61 @@ if (!$hasPermission) {
                             }
                             ?>
                         </div>
-                        <div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
                             <?php
                             if ($action == 'delete') {
-                                if ($canDelete && !$roleDeleted) {
+                                if ($roleDeleted) {
+                                    echo '<p>The role: ' . $role_name . ' has been deleted.</p>';
+                                } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo 'The role: ' . $role_name . ', could not be deleted because of an unknown error.';
-                                } else if (!$canDelete && !$roleDeleted) {
-                                    echo 'The role: ' . $role_name . ', could not be deleted because of an error: ';
-                                    echo '<ul>';
-                                    if ($usersWithRole > 0) {
-                                        echo '<li>There are ' . strval($usersWithRole) . ' users associated with the role</li>';
-                                    }
-                                    echo '</ul>';
+                                    echo '<p>The role: ' . $role_name . ' could not be deleted.</p>';
                                 }
                             }
                             ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'delete') {
+                                if (!$canDelete) {
+                                    echo '<p>The role: ' . $role_name . ' cannot be deleted because they have associated records in the system.</p>';
+                                    echo '<p>Please delete the role\'s associated user records or re-associated them to other roles before attempting to delete this one.</p>';
+                                    echo '<ul>';
+                                    if ($usersWithRole > 0) {
+                                        echo '<li>There are ' . strval($usersWithRole) . ' users associated with the role.</li>';
+                                    }
+                                    echo '</ul>';
+                                } else if ($canDelete && !$roleDeleted) {
+                                    echo '<p>The role: ' . $role_name . ' could not be deleted, due to an unknown error.</p>';
+                                } else {
+                                    echo '<p>All associated records for the role: ' . $role_name . ' have been deleted.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'delete') {
+                                    if ($roleDeleted) {
+                                        echo '<a href="' . APP_URL . '/admin/dashboard.php?view=roles&role=list" class="btn btn-primary">Return to Role List</a>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=roles&role=list" class="btn btn-primary">Return to Role List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=roles&role=single&id=' . $role_id . '" class="btn btn-secondary">Return to Role</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
                         </div>
                     </div>
                 </div>
