@@ -54,7 +54,7 @@ if (!$hasPermission) {
         //if the action is create, create the degree
         if ($action == 'create') {
             //get current user ID
-            $user_id = intval($_SESSION['user_id']);
+            $user_id = intval($session->get('user_id'));
 
             //boolean to track if the degree can be created
             $canCreate = true;
@@ -92,7 +92,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $degree->getGradeNameById($degree_id); ?></h1>
+        <h1 class="mt-4"><?php echo $degree_name; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
