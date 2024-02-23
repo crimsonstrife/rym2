@@ -59,7 +59,7 @@ if (!$hasPermission) {
         //if the action is edit, edit the degree
         if ($action == 'edit') {
             //get current user ID
-            $user_id = intval($_SESSION['user_id']);
+            $user_id = intval($session->get('user_id'));
 
             //boolean to track if the degree can be updated.
             $canEdit = true;
