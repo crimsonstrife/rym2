@@ -17,8 +17,11 @@ $auth = new Authenticator();
 //subject class
 $subject = new AreaOfInterest();
 
-//user class
+//include the user class
 $user = new User();
+
+//include the session class
+$session = new Session();
 
 //get the action from the url parameter
 $action = $_GET['action'];
@@ -28,7 +31,7 @@ $action = $_GET['action'];
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('CREATE SCHOOL');
 
 //boolean to track if the user has the create school permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -51,7 +54,7 @@ if (!$hasPermission) {
         //if the action is create, create the subject
         if ($action == 'create') {
             //get current user ID
-            $user_id = intval($_SESSION['user_id']);
+            $user_id = intval($session->get('user_id'));
 
             //create the subject
             $subjectCreated = $subject->addSubject($subject_name, $user_id);
