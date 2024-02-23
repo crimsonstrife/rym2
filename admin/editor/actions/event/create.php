@@ -182,7 +182,7 @@ if (!$hasPermission) {
             if (!empty($event_logo) && $event_logo != null) {
                 //if the event logo is an array, upload the file
                 if (is_array($event_logo)) {
-                    $logoMedia_id = $media->uploadMedia($event_logo, intval($_SESSION['user_id']));
+                    $logoMedia_id = $media->uploadMedia($event_logo, intval($session->get('user_id')));
                 } else {
                     //if the event logo is not an array, set the media id to the event logo int
                     $logoMedia_id = $event_logo;
@@ -193,7 +193,7 @@ if (!$hasPermission) {
             if (!empty($event_banner) && $event_banner != null) {
                 //if the event banner is an array, upload the file
                 if (is_array($event_banner)) {
-                    $bannerMedia_id = $media->uploadMedia($event_banner, intval($_SESSION['user_id']));
+                    $bannerMedia_id = $media->uploadMedia($event_banner, intval($session->get('user_id')));
                 } else {
                     //if the event banner is not an array, set the media id to the event banner int
                     $bannerMedia_id = $event_banner;
@@ -216,7 +216,7 @@ if (!$hasPermission) {
         //if the action is create, create the event
         if ($action == 'create') {
             //get current user ID
-            $user_id = intval($_SESSION['user_id']);
+            $user_id = intval($session->get('user_id'));
             //create the event
             $eventCreated = $event->createEvent($event_name, $event_date, $event_location, $user_id);
             //if the event was created, get the event id
