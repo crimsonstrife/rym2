@@ -20,12 +20,15 @@ $job = new Job();
 //user class
 $user = new User();
 
+//session class
+$session = new Session();
+
 /*confirm user has a role with create job permissions*/
 //get the id of the create job permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('CREATE JOB');
 
 //boolean to track if the user has the create job permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -38,11 +41,6 @@ if (!$hasPermission) {
 
     //get the action from the url parameter
     $action = $_GET['action'];
-
-    //if the action is edit, get the job id from the url parameter
-    if ($action == 'edit') {
-        $job_id = $_GET['id'];
-    }
 
     // Processing form data when form is submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -115,29 +113,96 @@ if (!$hasPermission) {
         //if the action is create, create the job
         if ($action == 'create') {
             //get current user ID
-            $user_id = intval($_SESSION['user_id']);
+            $user_id = intval($session->get('user_id'));
 
             //create the job
             $jobCreated = $job->addJob($job_title, $job_info, $job_type, intval($job_field), intval($job_education), $job_skills, $user_id);
         }
+
+        //placeholder for the job id
+        $job_id = null;
+
+        //if the job was created, get the job id
+        if ($jobCreated) {
+            //get all jobs
+            $jobs = $job->getAllJobs();
+            //get the job id by finding the job with the same information as the created job
+            foreach ($jobs as $job) {
+                if ($job['title'] == $job_title && $job['summary'] == $job_summary && $job['description'] == $job_description) {
+                    $job_id = $job['id'];
+                }
+            }
+        }
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $job_title; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
                 <div class="card-header">
                     <div class="card-title">
-                        <i class="fa-solid fa-check"></i>
-                        <?php
-                        if ($action == 'create') {
-                            if ($jobCreated) {
-                                echo 'Job Created';
-                            } else {
-                                echo 'Error: Job Not Created';
+                        <div>
+                            <?php
+                            if ($action == 'create') {
+                                if ($jobCreated) {
+                                    echo '<i class="fa-solid fa-check"></i>';
+                                    echo 'Job Created';
+                                } else {
+                                    echo '<i class="fa-solid fa-x"></i>';
+                                    echo 'Error: Job Not Created';
+                                }
                             }
-                        }
-                        ?>
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'create') {
+                                if ($jobCreated) {
+                                    echo '<p>The job: ' . $job_title . ' has been created.</p>';
+                                } else {
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
+                                    echo '<p>The job: ' . $job_title . ' could not be created.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'create') {
+                                if (!$canCreate) {
+                                    echo '<p>The job: ' . $job_title . ' could not be created due to an error.</p>';
+                                } else {
+                                    echo '<p>The job: ' . $job_title . ' has been created.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'create') {
+                                    if ($jobCreated) {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=jobs&job=list" class="btn btn-primary">Return to Job List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=jobs&job=single&id=' . $job_id . '" class="btn btn-secondary">Go to Job</a></span>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=jobs&job=list" class="btn btn-primary">Return to Job List</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
