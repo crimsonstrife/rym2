@@ -23,6 +23,9 @@ $user = new User();
 //permission class
 $permission = new Permission();
 
+//include the session class
+$session = new Session();
+
 //get the permissions
 $permissionsArray = $permission->getAllPermissions();
 
@@ -34,7 +37,7 @@ $action = $_GET['action'];
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('CREATE ROLE');
 
 //boolean to track if the user has the create role permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -83,7 +86,7 @@ if (!$hasPermission) {
             //check for errors
             if (!$roleNameError == '') {
                 //create the role
-                $roleCreated = $role->createRole($role_name, intval($_SESSION['user_id']), $role_permissions);
+                $roleCreated = $role->createRole($role_name, intval($session->get('user_id')), $role_permissions);
             } else {
                 //set the role created boolean to false
                 $roleCreated = false;
@@ -92,42 +95,74 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $role_name; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
                 <div class="card-header">
                     <div class="card-title">
-                        <i class="fa-solid fa-check"></i>
-                        <?php
-                        if ($action == 'create') {
-                            if ($roleCreated) {
-                                echo 'Role Created';
-                            } else {
-                                echo 'Error: Role Not Created';
+                        <div>
+                            <?php
+                            if ($action == 'create') {
+                                if ($roleCreated) {
+                                    echo '<i class="fa-solid fa-check"></i>';
+                                    echo 'Role Created';
+                                } else {
+                                    echo '<i class="fa-solid fa-x"></i>';
+                                    echo 'Error: Role Not Created';
+                                }
                             }
-                        }
-                        ?>
+                            ?>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <?php
-                    if ($action == 'create') {
-                        if ($roleCreated) {
-                            echo '<p>The role was created successfully.</p>';
-                        } else {
-                            echo '<p>There was an error creating the role.</p>';
-                        }
-                    }
-                    ?>
-                    <br>
-                    <!-- error message -->
-                    <?php
-                    if ($roleNameError != '') {
-                        echo '<div class="alert alert-danger" role="alert">';
-                        echo $roleNameError;
-                        echo '</div>';
-                    }
-                    ?>
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'create') {
+                                if ($roleCreated) {
+                                    echo '<p>The role: ' . $role_name . ' has been created.</p>';
+                                } else {
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
+                                    echo '<p>The role: ' . $role_name . ' could not be created.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'create') {
+                                if ($roleNameError != '') {
+                                    echo '<div class="alert alert-danger" role="alert">';
+                                    echo $roleNameError;
+                                    echo '</div>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'create') {
+                                    if ($roleCreated) {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=roles&role=list" class="btn btn-primary">Return to Role List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=roles&role=single&id=' . $role_id . '" class="btn btn-secondary">Go to Role</a></span>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=roles&role=list" class="btn btn-primary">Return to Role List</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
