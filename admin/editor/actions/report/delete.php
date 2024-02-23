@@ -96,6 +96,9 @@ if (!$hasPermission) {
             $canDelete = false;
         }
 
+        //get the report data
+        $reportData = $reportClass->getReportById($reportId);
+
         //create a report name
         $report_name = $reportType . ' Report ' . $reportId . ' Dated: ' . $reportData['created_at'];
 
