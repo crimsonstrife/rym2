@@ -10,12 +10,15 @@ $permissionsObject = new Permission();
 //include the authenticator class
 $auth = new Authenticator();
 
+//include the session class
+$session = new Session();
+
 /*confirm user has a role with delete media permissions*/
 //get the id of the delete media permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('DELETE MEDIA');
 
 //boolean to track if the user has the delete media permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -82,15 +85,15 @@ if (!$hasPermission) {
         }
     }
 ?>
-<!-- Completion page content -->
-<div class="container-fluid px-4">
-    <div class="row">
-        <div class="card mb-4">
-            <!-- show completion message -->
-            <div class="card-header">
-                <div class="card-title">
-                    <div>
-                        <?php
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <div>
+                            <?php
                             if ($action == 'delete') {
                                 if ($mediaDeleted) {
                                     echo '<i class="fa-solid fa-check"></i>';
@@ -101,14 +104,14 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <!-- show completion message -->
-                    <div class="col-md-12">
-                        <?php
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
                             if ($action == 'delete') {
                                 if ($mediaDeleted) {
                                     echo '<p>The media ' . $media_name . ' has been deleted.</p>';
@@ -117,12 +120,12 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
-                </div>
-                <!-- show error messages -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <?php
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
                             if ($action == 'delete') {
                                 if (!$canDelete) {
                                     echo '<p>The media ' . $media_name . ' cannot be deleted because it has associated records in the system.</p>';
@@ -138,12 +141,12 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
-                </div>
-                <!-- present option to delete all associated records if necessary -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <?php
+                    <!-- present option to delete all associated records if necessary -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
                             if ($action == 'delete') {
                                 if (!$canDelete) {
                                     echo '<p>If you would like to delete all associated records, click the button below.</p>';
@@ -154,24 +157,27 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <!-- show back buttons -->
-                    <div class="col-md-12">
-                        <?php
-                            if ($action == 'delete') {
-                                if ($mediaDeleted) {
-                                    echo '<a href="' . APP_URL . '/admin/dashboard.php?view=media&media=list" class="btn btn-primary">Return to Media List</a>';
-                                } else {
-                                    echo '<a href="' . APP_URL . '/admin/dashboard.php?view=media&media=list" class="btn btn-primary">Return to Media List</a>';
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'delete') {
+                                    if ($mediaDeleted) {
+                                        echo '<a href="' . APP_URL . '/admin/dashboard.php?view=media&media=list" class="btn btn-primary">Return to Media List</a>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=list" class="btn btn-primary">Return to Media List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=single&id=' . $media_id . '" class="btn btn-secondary">Return to Media</a></span>';
+                                    }
                                 }
-                            }
-                            ?>
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 <?php } ?>
