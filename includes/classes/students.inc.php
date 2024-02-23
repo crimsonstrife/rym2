@@ -510,19 +510,25 @@ class Student
      */
     public function addStudent(StudentData $studentData): bool
     {
+        //get the student address object from the student data
+        $studentAddress = $studentData->studentAddress;
+
+        //get the student education object from the student data
+        $studentEducation = $studentData->studentEducation;
+
         //get the student data, escape the strings to prevent SQL injection
         $firstName = $studentData->getEscapedString('firstName');
         $lastName = $studentData->getEscapedString('lastName');
         $email = $studentData->getEscapedString('email');
         $phone = $studentData->getEscapedString('phone');
-        $address = $studentData->getEscapedString('studentAddress->address');
-        $city = $studentData->getEscapedString('studentAddress->city');
-        $state = $studentData->getEscapedString('studentAddress->state');
-        $zip = $studentData->getEscapedString('studentAddress->zipcode');
+        $address = $studentAddress->getEscapedString('address');
+        $city = $studentAddress->getEscapedString('city');
+        $state = $studentAddress->getEscapedString('state');
+        $zip = $studentAddress->getEscapedString('zipcode');
         $degreeID = intval($studentData->studentEducation->degree);
         $majorID = intval($studentData->studentEducation->major);
         $school = intval($studentData->studentEducation->school);
-        $graduation = $studentData->getEscapedString('studentEducation->graduation');
+        $graduation = $studentEducation->getEscapedString('graduation');
         $position = $studentData->getEscapedString('position');
         $areaID = intval($studentData->interest);
 

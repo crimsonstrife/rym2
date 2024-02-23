@@ -197,4 +197,21 @@ class StudentAddress extends Student
         //Return the student zip code
         return $zip;
     }
+
+    /**
+     * Get the escaped string of a student data property
+     * @param string $property
+     * @return string
+     */
+    public function getEscapedString(string $property): string
+    {
+        //get the value of the property
+        $value = $this->$property;
+
+        //escape the string
+        $escapedString = $this->mysqli->real_escape_string($value);
+
+        //return the escaped string
+        return $escapedString;
+    }
 }
