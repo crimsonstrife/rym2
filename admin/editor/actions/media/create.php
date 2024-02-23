@@ -151,8 +151,6 @@ if (!$hasPermission) {
                                     echo '<p>Please enter a different media name and try again.</p>';
                                 } else if (!$mediaExists && !$mediaCreated) {
                                     echo '<p>The media: ' . $media_name . ' could not be created due to an unknown error.</p>';
-                                } else {
-                                    echo '<p>The media: ' . $media_name . ' has been created.</p>';
                                 }
                             }
                             ?>
