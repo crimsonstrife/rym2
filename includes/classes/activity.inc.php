@@ -167,11 +167,11 @@ class Activity
         }
 
         // Prepare the SQL statement
-        $sql = "INSERT INTO activity_log (user_id, action_date, action, performed_on) VALUES (($userID == null ? null : $userID), ?, ?, ?)";
+        $sql = "INSERT INTO activity_log (user_id, action_date, action, performed_on) VALUES (?, ?, ?, ?)";
         $stmt = prepareStatement($this->mysqli, $sql);
 
         // Bind the parameters based on the user ID
-        $stmt->bind_param('sss' , $actionDate, $action, $performedOn);
+        $stmt->bind_param('isss' , $userID, $actionDate, $action, $performedOn);
 
         // Execute the statement
         $stmt->execute();
