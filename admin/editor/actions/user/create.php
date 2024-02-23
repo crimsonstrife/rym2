@@ -119,37 +119,93 @@ if (!$hasPermission) {
             //create the user
             $userCreated = $user->createUser($email, $username, $password, intval($session->get('user_id')), $rolesArray);
         }
+
+        //placeholder for the user id
+        $user_id = null;
+
+        //if the user is created, get the user id
+        if ($userCreated) {
+            $user_id = $user->getUserIdByUsername($username);
+        }
     }
 ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $username; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
                 <div class="card-header">
                     <div class="card-title">
-                        <i class="fa-solid fa-check"></i>
-                        <?php
-                        if ($action == 'create') {
-                            if ($userCreated) {
-                                echo 'User Created';
-                            } else {
-                                echo 'Error: User Not Created';
-                                //if the username is taken, display the error
-                                if ($usernameTaken) {
-                                    echo '<br>' . $usernameError;
-                                }
-                                //if the email is taken, display the error
-                                if ($emailTaken) {
-                                    echo '<br>' . $emailError;
-                                }
-                                //if the passwords do not match, display the error
-                                if ($passwordError) {
-                                    echo '<br>' . $passwordError;
+                        <div>
+                            <?php
+                            if ($action == 'create') {
+                                if ($userCreated) {
+                                    echo '<i class="fa-solid fa-check"></i>';
+                                    echo 'User Created';
+                                } else {
+                                    echo '<i class="fa-solid fa-x"></i>';
+                                    echo 'Error: User Not Created';
                                 }
                             }
-                        }
-                        ?>
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'create') {
+                                if ($userCreated) {
+                                    echo '<p>The user: ' . $username . ' has been created.</p>';
+                                } else {
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
+                                    echo '<p>The user: ' . $username . ' could not be created.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'create') {
+                                if (!$userCreated) {
+                                    if ($usernameTaken) {
+                                        echo '<br>' . $usernameError;
+                                    }
+                                    //if the email is taken, display the error
+                                    if ($emailTaken) {
+                                        echo '<br>' . $emailError;
+                                    }
+                                    //if the passwords do not match, display the error
+                                    if ($passwordError) {
+                                        echo '<br>' . $passwordError;
+                                    }
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'create') {
+                                    if ($userCreated) {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=list" class="btn btn-primary">Return to User List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $user_id . '" class="btn btn-secondary">Go to User</a></span>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=list" class="btn btn-primary">Return to User List</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
