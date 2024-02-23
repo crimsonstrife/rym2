@@ -167,9 +167,9 @@ if (!$hasPermission) {
                                 <?php
                                 if ($action == 'delete') {
                                     if ($reportDeleted) {
-                                        echo '<a href="' . APP_URL . '/admin/dashboard.php?view=reports&report=list" class="btn btn-primary">Return to Report List</a>';
+                                        echo '<a href="' . APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType) . '" class="btn btn-primary">Return to Report List</a>';
                                     } else {
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=reports&report=list" class="btn btn-primary">Return to Report List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType) . '" class="btn btn-primary">Return to Report List</a></span>';
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=reports&report=single&type=' . urlencode($reportType) .'&id=' . $report_id . '" class="btn btn-secondary">Return to Report</a></span>';
                                     }
                                 }
