@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Feb 13, 2024 at 12:45 PM
+-- Generation Time: Feb 23, 2024 at 06:38 PM
 -- Server version: 5.7.39
 -- PHP Version: 7.4.33
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `talentflow`
+-- Database: `capstone`
 --
 
 -- --------------------------------------------------------
@@ -408,7 +408,89 @@ INSERT INTO `activity_log` (`id`, `user_id`, `action`, `performed_on`, `action_d
 (366, 1, 'MODIFY', 'The application logo was changed.', '2024-02-09 22:33:48'),
 (367, 1, 'MODIFY', 'The company logo was changed.', '2024-02-09 22:33:48'),
 (368, 1, 'MODIFY', 'The privacy policy was changed.', '2024-02-09 23:57:38'),
-(369, 1, 'MODIFY', 'The company URL was changed to https://www.pipecompany.example.', '2024-02-10 00:02:44');
+(369, 1, 'MODIFY', 'The company URL was changed to https://www.pipecompany.example.', '2024-02-10 00:02:44'),
+(370, NULL, 'LOGIN', 'User admin', '2024-02-15 21:40:18'),
+(371, 1, 'MODIFY', 'User: admin updated by User: 1', '2024-02-16 00:09:57'),
+(372, 1, 'MODIFY', 'User: admin updated by User: 1', '2024-02-16 00:09:57'),
+(373, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:38:44'),
+(374, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:43:15'),
+(375, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:43:56'),
+(376, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:44:46'),
+(377, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:46:47'),
+(378, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:47:52'),
+(379, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:49:09'),
+(380, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=1', '2024-02-16 00:49:58'),
+(381, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:58:06'),
+(382, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:59:23'),
+(383, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 01:00:03'),
+(384, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 01:01:11'),
+(385, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 01:03:41'),
+(386, 1, 'MODIFY', 'The hotjar site ID was changed to 3867800.', '2024-02-16 21:11:24'),
+(387, 1, 'MODIFY', 'The hotjar version was changed to 6.', '2024-02-16 21:11:24'),
+(388, 1, 'MODIFY', 'The hotjar site ID was changed to 3867800.', '2024-02-17 01:04:38'),
+(389, 1, 'MODIFY', 'The hotjar version was changed to 6.', '2024-02-17 01:04:38'),
+(390, 1, 'MODIFY', 'The hotjar site ID was changed to 3867800.', '2024-02-17 01:05:58'),
+(391, 1, 'MODIFY', 'The hotjar version was changed to 6.', '2024-02-17 01:05:58'),
+(392, 1, 'MODIFY', 'The hotjar enabled status was changed to1.', '2024-02-17 01:19:45'),
+(393, 1, 'MODIFY', 'The hotjar enabled status was changed to1.', '2024-02-17 01:20:15'),
+(394, NULL, 'LOGIN', 'User admin', '2024-02-19 20:06:45'),
+(395, NULL, 'OTHER', 'Role ID: 1 Role Name: Admin added to User ID: 3 User Name: stakeholder', '2024-02-20 22:19:36'),
+(396, NULL, 'OTHER', 'stakeholder@example.com', '2024-02-20 22:19:37'),
+(397, 1, 'OTHER', 'User stakeholder', '2024-02-20 22:19:37'),
+(398, 1, 'OTHER', 'Student ID: 12 Student Name: Patrick Barnhardt', '2024-02-21 01:20:14'),
+(399, 1, 'OTHER', 'Student ID: 13 Student Name: Patrick Barnhardt', '2024-02-21 01:51:55'),
+(400, 1, 'OTHER', 'Student ID: 11 Student Name: John Doe', '2024-02-21 01:55:08'),
+(401, 1, 'OTHER', 'Student ID: 14 Student Name: Patrick Barnhardt', '2024-02-21 01:56:29'),
+(402, NULL, 'OTHER', 'Student ID: 15 Student Name: Patrick Barnhardt', '2024-02-21 02:00:40'),
+(403, NULL, 'OTHER', 'Sent Patrick Barnhardt @ contact@patrickbarnhardt.info - Subject: Thank you Patrick, for registering! by SYSTEM', '2024-02-21 02:00:40'),
+(404, 1, 'OTHER', 'Student ID: 15 Student Name: Patrick Barnhardt', '2024-02-21 02:01:03'),
+(405, 1, 'OTHER', 'Student ID: 15 Student Name: Patrick Barnhardt', '2024-02-21 02:01:03'),
+(406, 1, 'OTHER', 'Student ID: 5 Student Name: Sam Smith', '2024-02-21 02:01:25'),
+(407, 1, 'OTHER', 'Student ID: 5 Student Name: Sam Smith', '2024-02-21 02:01:25'),
+(408, 1, 'OTHER', 'Role 1 was Permission Added', '2024-02-21 02:20:45'),
+(409, 1, 'OTHER', 'Role 1 was Permission Added', '2024-02-21 02:20:45'),
+(410, 1, 'OTHER', 'Role 1 was Permission Added', '2024-02-21 02:20:45'),
+(411, 1, 'OTHER', 'Role 1 was Permission Added', '2024-02-21 02:20:45'),
+(412, 1, 'OTHER', 'Role 1 was Permission Added', '2024-02-21 02:20:45'),
+(413, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 08:53:34'),
+(414, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 09:03:42'),
+(415, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 09:08:11'),
+(416, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 09:10:00'),
+(417, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 09:10:58'),
+(418, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 09:15:05'),
+(419, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 09:16:24'),
+(420, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 19:06:07'),
+(421, 1, 'OTHER', 'The Hotjar status was changed to 1.', '2024-02-21 23:35:53'),
+(422, 1, 'OTHER', 'The Hotjar status was changed to 1.', '2024-02-21 23:39:07'),
+(423, 1, 'OTHER', 'The Hotjar ID was changed to 5435436.', '2024-02-21 23:39:07'),
+(424, 1, 'OTHER', 'The hotjar version was changed to 6.', '2024-02-21 23:39:07'),
+(425, 1, 'OTHER', 'The Google Analytics status was changed to 1.', '2024-02-21 23:39:07'),
+(426, 1, 'OTHER', 'The Google Analytics ID was changed to G-22222222.', '2024-02-21 23:39:07'),
+(427, 1, 'OTHER', 'The Hotjar status was changed to .', '2024-02-21 23:39:25'),
+(428, 1, 'OTHER', 'The Google Analytics status was changed to .', '2024-02-21 23:39:25'),
+(429, 1, 'OTHER', 'degree_lvl', '2024-02-23 20:15:48'),
+(430, 1, 'OTHER', 'degree_lvl', '2024-02-23 20:19:05'),
+(431, NULL, 'OTHER', 'Student ID: 11 Student Name: Patrick Barnhardt', '2024-02-23 21:05:24'),
+(432, NULL, 'OTHER', 'Sent Patrick Barnhardt @ thecrimsonstrife@gmail.com - Subject: Thank you Patrick, for registering! by SYSTEM', '2024-02-23 21:05:25'),
+(433, 1, 'OTHER', 'Report:  Top Degree by School - ID: 68 Date: 02/23/2024', '2024-02-23 21:24:39'),
+(434, 1, 'OTHER', 'Report 4', '2024-02-23 21:24:53'),
+(435, 1, 'OTHER', 'Student ID: 11 Student Name: Patrick Barnhardt', '2024-02-23 21:25:18'),
+(436, 1, 'OTHER', 'Student ID: 11 Student Name: Patrick Barnhardt', '2024-02-23 21:25:18'),
+(437, 1, 'OTHER', 'Degree Level ID: 13 Degree Level Name: BFA - Bachelor of Fine Arts', '2024-02-23 21:48:58'),
+(438, 1, 'OTHER', 'Report 25', '2024-02-24 01:43:51'),
+(439, 1, 'OTHER', 'Report 24', '2024-02-24 01:45:33'),
+(440, 1, 'OTHER', 'Error Uploading Media: Error moving file to upload directory - image-placeholder-500x500.jpg', '2024-02-24 01:46:17'),
+(441, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-24 01:46:17'),
+(442, 1, 'OTHER', 'Report 32', '2024-02-24 02:00:32'),
+(443, 1, 'OTHER', 'Report 22', '2024-02-24 02:02:16'),
+(444, 1, 'OTHER', 'Role ID: 11 Role Name: standard user added to User ID: 4 User Name: user', '2024-02-24 02:02:43'),
+(445, 1, 'OTHER', 'user@example.com', '2024-02-24 02:02:43'),
+(446, 1, 'OTHER', 'User user', '2024-02-24 02:02:43'),
+(447, 1, 'ERROR', 'CODE: [SASQUATCH]- AT: /admin/dashboard.php?view=users&user=single&id=', '2024-02-24 02:02:46'),
+(448, 1, 'OTHER', 'User ID: 2 User Name: SYSTEM', '2024-02-24 02:04:11'),
+(449, 1, 'OTHER', 'Role ID: 1 Role Name: Admin added to User ID: 5 User Name: evaluator', '2024-02-24 02:04:59'),
+(450, 1, 'OTHER', 'evaluator@email.com', '2024-02-24 02:04:59'),
+(451, 1, 'OTHER', 'User evaluator', '2024-02-24 02:04:59');
 
 -- --------------------------------------------------------
 
@@ -459,25 +541,15 @@ CREATE TABLE `contact_log` (
 --
 
 INSERT INTO `contact_log` (`id`, `student`, `auto`, `sender`, `send_date`, `subject`, `message`) VALUES
-(2, 5, 1, NULL, '2023-12-16 01:02:37', 'Thank you Sam, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
 (5, 6, 1, NULL, '2024-01-16 20:34:21', 'Thank you Emily, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
 (6, 7, 1, NULL, '2024-01-16 20:39:12', 'Thank you Alex, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
 (7, 8, 1, NULL, '2024-01-16 20:42:21', 'Thank you Olivia, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
 (8, 9, 1, NULL, '2024-01-16 20:47:01', 'Thank you Sophia, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
 (9, 10, 1, NULL, '2024-01-16 20:48:33', 'Thank you Michael, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
-(11, 5, 0, 1, '2024-01-17 21:28:43', 'test', 'this is a test'),
 (12, 10, 0, 1, '2024-01-17 21:30:15', 'test', 'test message'),
-(13, 5, 0, 1, '2024-01-17 21:35:09', 'test1', 'tgeaeta'),
 (14, 6, 0, 1, '2024-01-17 21:36:13', 'gaelhJf', 'gaefafe'),
-(15, 5, 0, 1, '2024-01-17 21:45:19', 'tests', 'testeste'),
-(16, 5, 0, 1, '2024-01-17 21:47:28', 'tests', 'testeste'),
-(17, 5, 0, 1, '2024-01-17 21:47:37', 'test', 'test'),
-(18, 5, 0, 1, '2024-01-17 21:52:02', 'test', 'test'),
-(19, 5, 0, 1, '2024-01-17 21:52:50', 'test', 'fawdadwa'),
 (20, 10, 0, 1, '2024-01-17 21:53:35', 'any of the R710 left?', 'test'),
-(22, 10, 0, 1, '2024-01-17 23:17:55', 'any of the R710 left?', 'test'),
-(23, NULL, 1, NULL, '2024-02-05 23:34:43', 'Thank you Patrick, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
-(24, NULL, 1, NULL, '2024-02-05 23:36:03', 'Thank you Patrick, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.');
+(22, 10, 0, 1, '2024-01-17 23:17:55', 'any of the R710 left?', 'test');
 
 -- --------------------------------------------------------
 
@@ -508,7 +580,9 @@ INSERT INTO `degree_lvl` (`id`, `name`, `created_at`, `updated_at`, `created_by`
 (7, 'BScIT - Bachelor of Science in Information Technology', '2023-10-18 17:05:14', '2023-12-12 19:40:49', 1, 1),
 (8, 'MA - Master of Arts', '2023-10-18 17:06:00', '2023-10-18 17:06:00', 1, 1),
 (9, 'MS - Master of Science', '2023-10-18 17:06:40', '2023-10-18 17:06:40', 1, 1),
-(11, 'BS - Bachelor of Science', '2023-12-15 21:14:29', '2023-12-15 21:14:29', 1, 1);
+(11, 'BS - Bachelor of Science', '2023-12-15 21:14:29', '2023-12-15 21:14:29', 1, 1),
+(12, 'BBA - Bachelor of Business Administration', '2024-02-23 20:09:47', '2024-02-23 20:09:47', 1, 1),
+(14, 'DBA - Doctor of Business Administration', '2024-02-23 20:19:05', '2024-02-23 20:19:05', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -678,7 +752,8 @@ INSERT INTO `media` (`id`, `filename`, `filetype`, `filesize`, `created_at`, `cr
 (21, 'TalentFlow-Logo.png', 'png', 19205, '2024-02-09 01:32:52', 1, '2024-02-09 01:32:52', 1),
 (22, 'company-logo.png', 'png', 13833, '2024-02-09 19:57:25', 1, '2024-02-09 19:57:25', 1),
 (23, 'company-logo.svg', 'svg', 3769, '2024-02-09 19:57:49', 1, '2024-02-09 19:57:49', 1),
-(24, 'TalentFlow-Logo.svg', 'svg', 2230, '2024-02-09 20:00:28', 1, '2024-02-09 20:00:28', 1);
+(24, 'TalentFlow-Logo.svg', 'svg', 2230, '2024-02-09 20:00:28', 1, '2024-02-09 20:00:28', 1),
+(25, 'image-placeholder-500x500.jpg', 'jpg', 9482, '2024-02-24 01:46:17', 1, '2024-02-24 01:46:17', 1);
 
 -- --------------------------------------------------------
 
@@ -782,7 +857,6 @@ CREATE TABLE `reports` (
 INSERT INTO `reports` (`id`, `report_type`, `data`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
 (1, 'Top Degree by School', '[{\"major\": \"Accounting\", \"degree\": \"AA - Associate of Arts\", \"school\": \"Rowan-Cabarrus Community College - RCCC\", \"student_count\": 2}, {\"major\": \"Software Development\", \"degree\": \"BScIT - Bachelor of Science in Information Technology\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Business Administration\", \"degree\": \"BA - Bachelor of Arts\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"AAS - Associate of Applied Science\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1}]', 1, '2023-12-20 00:36:04', 1, '2023-12-20 00:36:04'),
 (2, 'Top Degree by School', '[{\"major\": \"Accounting\", \"degree\": \"AA - Associate of Arts\", \"school\": \"Rowan-Cabarrus Community College - RCCC\", \"student_count\": 2}, {\"major\": \"Software Development\", \"degree\": \"BScIT - Bachelor of Science in Information Technology\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Business Administration\", \"degree\": \"BA - Bachelor of Arts\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"AAS - Associate of Applied Science\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1}]', 1, '2023-12-20 00:41:49', 1, '2023-12-20 00:41:49'),
-(4, 'Top Field by School', '[{\"school\": \"Rowan-Cabarrus Community College - RCCC\", \"student_count\": 2, \"field_of_study\": \"Finance\"}, {\"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1, \"field_of_study\": \"Programming\"}, {\"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1, \"field_of_study\": \"Supply Chain\"}, {\"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1, \"field_of_study\": \"IT\"}, {\"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1, \"field_of_study\": \"IT\"}]', 1, '2023-12-20 20:27:05', 1, '2023-12-20 20:27:05'),
 (5, 'Top Degree by School', '[{\"major\": \"Accounting\", \"degree\": \"AA - Associate of Arts\", \"school\": \"Rowan-Cabarrus Community College - RCCC\", \"student_count\": 2}, {\"major\": \"Software Development\", \"degree\": \"BScIT - Bachelor of Science in Information Technology\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Business Administration\", \"degree\": \"BA - Bachelor of Arts\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"AAS - Associate of Applied Science\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1}]', 1, '2023-12-20 20:27:37', 1, '2023-12-20 20:27:37'),
 (6, 'Major to Field Ratio by School', '[{\"ratio\": 1, \"school\": \"Western Governor&#039;s University - WGU\"}, {\"ratio\": 1, \"school\": \"University of North Carolina at Charlotte - UNCC\"}, {\"ratio\": 1, \"school\": \"Rowan-Cabarrus Community College - RCCC\"}]', 1, '2023-12-20 21:50:45', 1, '2023-12-20 21:50:45'),
 (7, 'Major to Field Ratio by School', '[{\"ratio\": 1, \"school\": \"Western Governor&#039;s University - WGU\"}, {\"ratio\": 1, \"school\": \"University of North Carolina at Charlotte - UNCC\"}, {\"ratio\": 1, \"school\": \"Rowan-Cabarrus Community College - RCCC\"}]', 1, '2023-12-20 21:52:58', 1, '2023-12-20 21:52:58'),
@@ -795,16 +869,12 @@ INSERT INTO `reports` (`id`, `report_type`, `data`, `created_by`, `created_at`, 
 (16, 'Jobs by Field', '[{\"jobs\": \"[\\\"Lorem Ipsum 2\\\",\\\"Job\\\"]\", \"job_count\": 2, \"job_field_name\": \"Cybersecurity\"}, {\"jobs\": \"[\\\"Packaging Operator\\\",\\\"lorem\\\"]\", \"job_count\": 2, \"job_field_name\": \"Supply Chain\"}, {\"jobs\": \"[\\\"Helpdesk\\\"]\", \"job_count\": 1, \"job_field_name\": \"IT\"}, {\"jobs\": \"[\\\"Business Analyst\\\"]\", \"job_count\": 1, \"job_field_name\": \"Analytics\"}, {\"jobs\": \"[\\\"Lorem Ipsum\\\"]\", \"job_count\": 1, \"job_field_name\": \"Finance\"}]', 1, '2023-12-21 19:40:46', 1, '2023-12-21 19:40:46'),
 (17, 'Jobs by Field', '{\"IT\": {\"jobs\": \"[\\\"Helpdesk\\\"]\", \"job_count\": 1, \"job_field_name\": \"IT\"}, \"Finance\": {\"jobs\": \"[\\\"Lorem Ipsum\\\"]\", \"job_count\": 1, \"job_field_name\": \"Finance\"}, \"Analytics\": {\"jobs\": \"[\\\"Business Analyst\\\"]\", \"job_count\": 1, \"job_field_name\": \"Analytics\"}, \"Supply Chain\": {\"jobs\": \"[\\\"Packaging Operator\\\",\\\"lorem\\\"]\", \"job_count\": 2, \"job_field_name\": \"Supply Chain\"}, \"Cybersecurity\": {\"jobs\": \"[\\\"Lorem Ipsum 2\\\",\\\"Job\\\"]\", \"job_count\": 2, \"job_field_name\": \"Cybersecurity\"}}', 1, '2023-12-21 19:42:15', 1, '2023-12-21 19:42:15'),
 (19, 'Jobs by Field', '[{\"jobs\": \"[\\\"Helpdesk\\\"]\", \"job_count\": 1, \"job_field_name\": \"IT\"}, {\"jobs\": \"[\\\"Business Analyst\\\"]\", \"job_count\": 1, \"job_field_name\": \"Analytics\"}, {\"jobs\": \"[\\\"Lorem Ipsum 2\\\",\\\"Job\\\"]\", \"job_count\": 2, \"job_field_name\": \"Cybersecurity\"}, {\"jobs\": \"[\\\"Lorem Ipsum\\\"]\", \"job_count\": 1, \"job_field_name\": \"Finance\"}, {\"jobs\": \"[\\\"Packaging Operator\\\",\\\"lorem\\\"]\", \"job_count\": 2, \"job_field_name\": \"Supply Chain\"}]', 1, '2023-12-21 19:42:48', 1, '2023-12-21 19:42:48'),
-(22, 'Jobs by Field', '[{\"jobs\": \"Lorem Ipsum 2, Job\", \"job_count\": 2, \"job_field_name\": \"Cybersecurity\"}, {\"jobs\": \"Packaging Operator, lorem\", \"job_count\": 2, \"job_field_name\": \"Supply Chain\"}, {\"jobs\": \"Helpdesk\", \"job_count\": 1, \"job_field_name\": \"IT\"}, {\"jobs\": \"Business Analyst\", \"job_count\": 1, \"job_field_name\": \"Analytics\"}, {\"jobs\": \"Lorem Ipsum\", \"job_count\": 1, \"job_field_name\": \"Finance\"}]', 1, '2023-12-21 19:50:29', 1, '2023-12-21 19:50:29'),
-(24, 'Contact Follow-Up Percentage', '[{\"total\": 3, \"percentage\": \"33.33333\", \"top_sending_user\": \"admin\"}]', 1, '2023-12-21 21:12:35', 1, '2023-12-21 21:12:35'),
-(25, 'Contact Follow-Up Percentage', '[{\"total\": 4, \"percentage\": \"50.00000\", \"top_sending_user\": \"admin\"}]', 1, '2023-12-21 21:58:51', 1, '2023-12-21 21:58:51'),
 (26, 'Major to Field Ratio by School', '[{\"field\": \"Programming\", \"major\": \"Software Development\", \"ratio\": 0.33, \"school\": \"Western Governor&#039;s University - WGU\"}, {\"field\": \"Supply Chain\", \"major\": \"Business Administration\", \"ratio\": 0.33, \"school\": \"Western Governor&#039;s University - WGU\"}, {\"field\": \"IT\", \"major\": \"Computer Science\", \"ratio\": 0.33, \"school\": \"Western Governor&#039;s University - WGU\"}, {\"field\": \"IT\", \"major\": \"Computer Science\", \"ratio\": 1, \"school\": \"University of North Carolina at Charlotte - UNCC\"}, {\"field\": \"Finance\", \"major\": \"Accounting\", \"ratio\": 1, \"school\": \"Rowan-Cabarrus Community College - RCCC\"}]', 1, '2023-12-22 01:13:09', 1, '2023-12-22 01:13:09'),
 (27, 'Top Degree by School', '[{\"major\": \"Accounting\", \"degree\": \"AA - Associate of Arts\", \"school\": \"Rowan-Cabarrus Community College - RCCC\", \"student_count\": 2}, {\"major\": \"Software Development\", \"degree\": \"BScIT - Bachelor of Science in Information Technology\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Business Administration\", \"degree\": \"BA - Bachelor of Arts\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"AAS - Associate of Applied Science\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1}]', 1, '2023-12-29 00:04:42', 1, '2023-12-29 00:04:42'),
 (28, 'Jobs by Field', '[{\"jobs\": \"Helpdesk\", \"job_count\": 1, \"job_field_name\": \"IT\"}, {\"jobs\": \"Business Analyst\", \"job_count\": 1, \"job_field_name\": \"Analytics\"}, {\"jobs\": \"Job\", \"job_count\": 1, \"job_field_name\": \"Cybersecurity\"}, {\"jobs\": \"Packaging Operator\", \"job_count\": 1, \"job_field_name\": \"Supply Chain\"}]', 1, '2024-01-09 00:57:49', 1, '2024-01-09 00:57:49'),
 (29, 'Top Field by School', '[{\"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1, \"field_of_study\": \"Programming\"}, {\"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1, \"field_of_study\": \"Supply Chain\"}, {\"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1, \"field_of_study\": \"IT\"}]', 1, '2024-01-16 20:07:19', 1, '2024-01-16 20:07:19'),
 (30, 'Top Degree by School', '[{\"major\": \"Software Development\", \"degree\": \"BScIT - Bachelor of Science in Information Technology\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Business Administration\", \"degree\": \"BA - Bachelor of Arts\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"Duke University\", \"student_count\": 1}]', 1, '2024-01-16 20:34:49', 1, '2024-01-16 20:34:49'),
 (31, 'Top Field by School', '[{\"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1, \"field_of_study\": \"Programming\"}, {\"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1, \"field_of_study\": \"Supply Chain\"}, {\"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1, \"field_of_study\": \"IT\"}, {\"school\": \"Duke University\", \"student_count\": 1, \"field_of_study\": \"IT\"}]', 1, '2024-01-16 20:35:03', 1, '2024-01-16 20:35:03'),
-(32, 'Contact Follow-Up Percentage', '[{\"total\": 4, \"percentage\": \"50.00000\", \"top_sending_user\": \"admin\"}]', 1, '2024-01-16 20:35:13', 1, '2024-01-16 20:35:13'),
 (33, 'Top Degree by School', '[{\"major\": \"Software Development\", \"degree\": \"BScIT - Bachelor of Science in Information Technology\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Business Administration\", \"degree\": \"BA - Bachelor of Arts\", \"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1}, {\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"Duke University\", \"student_count\": 1}, {\"major\": \"Electrical Engineering\", \"degree\": \"MS - Master of Science\", \"school\": \"Stanford University\", \"student_count\": 1}]', 1, '2024-01-16 20:39:43', 1, '2024-01-16 20:39:43'),
 (34, 'Top Field by School', '[{\"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1, \"field_of_study\": \"Programming\"}, {\"school\": \"Western Governor&#039;s University - WGU\", \"student_count\": 1, \"field_of_study\": \"Supply Chain\"}, {\"school\": \"University of North Carolina at Charlotte - UNCC\", \"student_count\": 1, \"field_of_study\": \"IT\"}, {\"school\": \"Duke University\", \"student_count\": 1, \"field_of_study\": \"IT\"}, {\"school\": \"Stanford University\", \"student_count\": 1, \"field_of_study\": \"Cybersecurity\"}]', 1, '2024-01-16 20:40:00', 1, '2024-01-16 20:40:00'),
 (35, 'Contact Follow-Up Percentage', '[{\"total\": 5, \"percentage\": \"40.00000\", \"top_sending_user\": \"admin\"}]', 1, '2024-01-16 20:40:08', 1, '2024-01-16 20:40:08'),
@@ -839,7 +909,8 @@ INSERT INTO `reports` (`id`, `report_type`, `data`, `created_by`, `created_at`, 
 (64, 'Major to Field Ratio by School', '[{\"field\": \"IT\", \"major\": \"Computer Science\", \"ratio\": 1, \"school\": \"University of North Carolina at Charlotte - UNCC\"}, {\"field\": \"Cybersecurity\", \"major\": \"Electrical Engineering\", \"ratio\": 1, \"school\": \"Stanford University\"}, {\"field\": \"IT\", \"major\": \"Computer Science\", \"ratio\": 0.67, \"school\": \"Duke University\"}, {\"field\": \"Finance\", \"major\": \"Economics\", \"ratio\": 0.33, \"school\": \"Duke University\"}, {\"field\": \"Sales\", \"major\": \"Psychology\", \"ratio\": 1, \"school\": \"Wake Forest University\"}]', 1, '2024-02-01 01:31:12', 1, '2024-02-01 01:31:12'),
 (65, 'Jobs by Field', '[{\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Programming\"}, {\"jobs\": \"Intern\", \"job_count\": 1, \"job_field_name\": \"Cybersecurity\"}]', 1, '2024-02-01 22:03:39', 1, '2024-02-01 22:03:39'),
 (66, 'Contact Follow-Up Percentage', '[{\"total\": 17, \"percentage\": \"64.70588\", \"top_sending_user\": \"admin\"}]', 1, '2024-02-02 20:43:58', 1, '2024-02-02 20:43:58'),
-(67, 'Contact Follow-Up Percentage', '[{\"total\": 18, \"percentage\": \"61.11111\", \"top_sending_user\": \"admin\"}]', 1, '2024-02-05 10:02:59', 1, '2024-02-05 10:02:59');
+(67, 'Contact Follow-Up Percentage', '[{\"total\": 18, \"percentage\": \"61.11111\", \"top_sending_user\": \"admin\"}]', 1, '2024-02-05 10:02:59', 1, '2024-02-05 10:02:59'),
+(68, 'Top Degree by School', '[{\"major\": \"Computer Science\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"Duke University\", \"student_count\": 2}, {\"major\": \"Electrical Engineering\", \"degree\": \"MS - Master of Science\", \"school\": \"Stanford University\", \"student_count\": 1}, {\"major\": \"Psychology\", \"degree\": \"MA - Master of Arts\", \"school\": \"Wake Forest University\", \"student_count\": 1}, {\"major\": \"Economics\", \"degree\": \"BS - Bachelor of Science\", \"school\": \"Duke University\", \"student_count\": 1}, {\"major\": \"Accounting\", \"degree\": \"AA - Associate of Arts\", \"school\": \"Columbia University\", \"student_count\": 1}]', 1, '2024-02-23 21:24:39', 1, '2024-02-23 21:24:39');
 
 -- --------------------------------------------------------
 
@@ -1041,7 +1112,12 @@ INSERT INTO `role_has_permission` (`id`, `role_id`, `permission_id`, `created_at
 (155, 3, 59, '2024-01-23 19:05:31', 1, '2024-01-23 19:05:31', 1),
 (156, 3, 60, '2024-01-23 19:05:31', 1, '2024-01-23 19:05:31', 1),
 (157, 3, 61, '2024-01-23 19:05:31', 1, '2024-01-23 19:05:31', 1),
-(158, 3, 62, '2024-01-23 19:05:31', 1, '2024-01-23 19:05:31', 1);
+(158, 3, 62, '2024-01-23 19:05:31', 1, '2024-01-23 19:05:31', 1),
+(159, 1, 58, '2024-02-21 02:20:45', 1, '2024-02-21 02:20:45', 1),
+(160, 1, 59, '2024-02-21 02:20:45', 1, '2024-02-21 02:20:45', 1),
+(161, 1, 60, '2024-02-21 02:20:45', 1, '2024-02-21 02:20:45', 1),
+(162, 1, 61, '2024-02-21 02:20:45', 1, '2024-02-21 02:20:45', 1),
+(163, 1, 62, '2024-02-21 02:20:45', 1, '2024-02-21 02:20:45', 1);
 
 -- --------------------------------------------------------
 
@@ -1149,15 +1225,20 @@ CREATE TABLE `settings` (
   `mail_password` varchar(500) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `mail_encryption` enum('ssl','tls') COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `privacy_policy` longtext COLLATE utf8mb4_unicode_520_ci,
-  `terms_conditions` longtext COLLATE utf8mb4_unicode_520_ci
+  `terms_conditions` longtext COLLATE utf8mb4_unicode_520_ci,
+  `hotjar_enable` tinyint(1) DEFAULT NULL,
+  `hotjar_id` varchar(20) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `hotjar_version` int(11) DEFAULT NULL,
+  `ga_enable` tinyint(1) DEFAULT NULL,
+  `ga_id` varchar(20) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `settings`
 --
 
-INSERT INTO `settings` (`isSet`, `app_name`, `app_url`, `company_name`, `company_url`, `company_logo`, `company_address`, `company_city`, `company_state`, `company_zip`, `company_phone`, `app_logo`, `contact_email`, `mail_from_address`, `mail_from_name`, `mail_mailer`, `mail_host`, `mail_port`, `mail_auth_req`, `mail_username`, `mail_password`, `mail_encryption`, `privacy_policy`, `terms_conditions`) VALUES
-('SET', 'TalentFlow', NULL, 'Pipe and Foundry Company', 'https://www.pipecompany.example', 23, '1234 Main St', 'Anyplace', 'NC', '123456', '123-456-1234', 24, 'contact@talentflow.email', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>', '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>');
+INSERT INTO `settings` (`isSet`, `app_name`, `app_url`, `company_name`, `company_url`, `company_logo`, `company_address`, `company_city`, `company_state`, `company_zip`, `company_phone`, `app_logo`, `contact_email`, `mail_from_address`, `mail_from_name`, `mail_mailer`, `mail_host`, `mail_port`, `mail_auth_req`, `mail_username`, `mail_password`, `mail_encryption`, `privacy_policy`, `terms_conditions`, `hotjar_enable`, `hotjar_id`, `hotjar_version`, `ga_enable`, `ga_id`) VALUES
+('SET', 'TalentFlow', NULL, 'Pipe and Foundry Company', 'https://www.pipecompany.example', 23, '1234 Main St', 'Anyplace', 'NC', '123456', '123-456-1234', 24, 'contact@talentflow.email', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>', '<h2>Test Header</h2><p>test paragraph</p><blockquote><p>test quote</p></blockquote><ul><li>test list item 1</li><li>test list item 2</li></ul>', 0, NULL, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -1190,7 +1271,6 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`id`, `first_name`, `last_name`, `email`, `phone`, `address`, `city`, `state`, `zipcode`, `interest`, `degree`, `major`, `school`, `position`, `graduation`, `created_at`, `updated_at`) VALUES
-(5, 'Sam', 'Smith', 'ssmith@example.com', '223-432-5454', '2221 Devon Dr', 'Dallas', 'NC', '28034', 1, 11, 6, 2, 'FULL', '2023-12-31', '2023-12-16 01:02:37', '2023-12-16 01:02:37'),
 (6, 'Emily', 'Johnson', 'emily.johnson@email.com', '(555) 123-4567', '123 College Avenue', 'Durham', 'NC', '27708', 1, 11, 6, 13, 'FULL', '2025-05-31', '2024-01-16 20:34:21', '2024-01-16 20:34:21'),
 (7, 'Alex', 'Davis', 'alex.davis@email.com', '(555) 234-5678', '456 University Street', 'Stanford', 'CA', '94305', 4, 9, 8, 7, 'FULL', '2024-05-30', '2024-01-16 20:39:12', '2024-01-16 20:39:12'),
 (8, 'Olivia', 'Thompson', 'olivia.thompson@email.com', '(555) 567-8901', '234 Elm Street', 'Winston-Salem', 'NC', '27109', 7, 8, 9, 16, 'FULL', '2024-12-31', '2024-01-16 20:42:21', '2024-01-16 20:42:21'),
@@ -1241,8 +1321,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 'admin', 'admin@capstone.hostedprojects.net', '$2y$10$54/SM02sd2HOoui0sVxbzeUzwRDPpxUKgvQQsdOAc2i.3Yay8Gnd.', '2023-10-12 18:34:47', NULL, '2024-01-11 01:14:19', 1),
-(2, 'test', 'test@email.com', '$2y$10$aTrqh2Bjt0Zj0b3L706NpuMCBnnhALLrdy8Ba1XCCWaNvyhPJIfQy', '2024-01-17 02:29:03', 1, '2024-01-17 02:29:03', 1);
+(1, 'admin', 'admin@capstone.hostedprojects.net', '$2y$10$bueKn7DZtN7mNMa6vkVKNegMbjdceXmFR.KI/.xjgU8pHBjXo/g2S', '2023-10-12 18:34:47', NULL, '2024-02-16 00:09:57', 1),
+(3, 'stakeholder', 'stakeholder@example.com', '$2y$10$GxfFK9TJhuv1TjSXMpJxdOsWD1fAtM.vGGTim0OU14EdkPivy4Q0a', '2024-02-20 17:19:36', 1, '2024-02-20 17:19:36', 1),
+(4, 'user', 'user@example.com', '$2y$10$4hOj6ujmWf5iYuxUhxjkceQGP4p00l6dwq4Vz8j1mkcIXTl2Vjaf2', '2024-02-23 21:02:43', 1, '2024-02-23 21:02:43', 1),
+(5, 'evaluator', 'evaluator@email.com', '$2y$10$hsvAcwjY2CrdU1q.xIW96.GsnkbCFeccNJtJXvElYXwyKdKYdH8/m', '2024-02-23 21:04:59', 1, '2024-02-23 21:04:59', 1);
 
 -- --------------------------------------------------------
 
@@ -1266,7 +1348,9 @@ CREATE TABLE `user_has_role` (
 
 INSERT INTO `user_has_role` (`id`, `user_id`, `role_id`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
 (7, 1, 3, '2024-01-11 01:14:19', NULL, '2024-01-11 01:14:19', NULL),
-(8, 2, 11, '2024-01-17 02:29:03', NULL, '2024-01-17 02:29:03', NULL);
+(9, 3, 1, '2024-02-20 22:19:36', NULL, '2024-02-20 22:19:36', NULL),
+(10, 4, 11, '2024-02-24 02:02:43', NULL, '2024-02-24 02:02:43', NULL),
+(11, 5, 1, '2024-02-24 02:04:59', NULL, '2024-02-24 02:04:59', NULL);
 
 -- --------------------------------------------------------
 
@@ -1301,8 +1385,7 @@ INSERT INTO `user_token_auth` (`id`, `user_id`, `user_name`, `password_hash`, `s
 (10, 1, 'admin', '$2y$10$M0HPJcV79C1.2koi2fTw4OGDN9M17HR/x3FUehTupdrwMs/Z2E.Ya', '$2y$10$SsvZmduDnQ22r5x/HLUY4uDibkGUAe/11IwZisuAUPSgbSu5/GL86', 1, '2024-01-12 14:44:47'),
 (11, 1, 'admin', '$2y$10$k73UYboDHcKBeUF2DR556Oteivl4IhdW3tSax0R3z2lEiFeKTXzUS', '$2y$10$0RGknWVv80mvF13A8J/at.ZfqK38GSBU5Cqxu911vkW0tqhGVujIy', 1, '2024-01-15 20:37:18'),
 (12, 1, 'admin', '$2y$10$LvJsCTVOYqUYO3HCNjJpDut.5rPnM7mIkO/wi59uUtEI9ttEuQVqK', '$2y$10$US85Jb1kbg5/PddUPsC4xOy2eVuDg5UeqE5JTXeCWxbBbEnYG5d7G', 1, '2024-01-16 15:57:58'),
-(13, 1, 'admin', '$2y$10$5zg9mZqQGbOIt7dmo.lmeOZuZNrwMGMW1VZEv2FrsFvXG9oLkCHBG', '$2y$10$SjvtW3coyIHg1lOW0ZConeCt/YrlCxakPt84l2zgSKpNZiynyqDx2', 1, '2024-01-17 14:30:40'),
-(14, 2, 'test', '$2y$10$VK1qmYCv5Ry1tJg6xgAZIeMBmi3qfIh2FMZWHRP1Oc7gmr3sPGC5e', '$2y$10$fHYlrz.l8.cE4xbb074REuP.arA/W.AZ7qRn8nMnSnxym1AxkB29y', 1, '2024-01-31 19:50:50');
+(13, 1, 'admin', '$2y$10$5zg9mZqQGbOIt7dmo.lmeOZuZNrwMGMW1VZEv2FrsFvXG9oLkCHBG', '$2y$10$SjvtW3coyIHg1lOW0ZConeCt/YrlCxakPt84l2zgSKpNZiynyqDx2', 1, '2024-01-17 14:30:40');
 
 --
 -- Indexes for dumped tables
@@ -1450,7 +1533,7 @@ ALTER TABLE `school_branding`
 -- Indexes for table `settings`
 --
 ALTER TABLE `settings`
-  ADD PRIMARY KEY (`isSet`),
+  ADD UNIQUE KEY `IsSet` (`isSet`),
   ADD KEY `companyLogo` (`company_logo`),
   ADD KEY `appLogo` (`app_logo`);
 
@@ -1506,7 +1589,7 @@ ALTER TABLE `user_token_auth`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=370;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=452;
 
 --
 -- AUTO_INCREMENT for table `aoi`
@@ -1518,13 +1601,13 @@ ALTER TABLE `aoi`
 -- AUTO_INCREMENT for table `contact_log`
 --
 ALTER TABLE `contact_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `degree_lvl`
 --
 ALTER TABLE `degree_lvl`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `event`
@@ -1560,7 +1643,7 @@ ALTER TABLE `major`
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1572,7 +1655,7 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -1584,7 +1667,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `role_has_permission`
 --
 ALTER TABLE `role_has_permission`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
 
 --
 -- AUTO_INCREMENT for table `school`
@@ -1614,19 +1697,19 @@ ALTER TABLE `student_at_event`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `user_has_role`
 --
 ALTER TABLE `user_has_role`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `user_token_auth`
 --
 ALTER TABLE `user_token_auth`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
