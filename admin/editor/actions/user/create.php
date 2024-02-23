@@ -17,8 +17,11 @@ $auth = new Authenticator();
 //include the roles class
 $role = new Roles();
 
-//user class
+//include the user class
 $user = new User();
+
+//include the session class
+$session = new Session();
 
 //get all the users
 $users = $user->getAllUsers();
@@ -41,7 +44,7 @@ $usernameTaken = false;
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('CREATE USER');
 
 //boolean to track if the user has the create user permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -114,7 +117,7 @@ if (!$hasPermission) {
         //if no errors, create the user
         if (!$usernameTaken && !$emailTaken && !$passwordError) {
             //create the user
-            $userCreated = $user->createUser($email, $username, $password, intval($_SESSION['user_id']), $rolesArray);
+            $userCreated = $user->createUser($email, $username, $password, intval($session->get('user_id')), $rolesArray);
         }
     }
 ?>

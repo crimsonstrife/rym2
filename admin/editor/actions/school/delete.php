@@ -17,12 +17,15 @@ $auth = new Authenticator();
 //include the user class
 $user = new User();
 
+//include the session class
+$session = new Session();
+
 /*confirm user has a role with delete school permissions*/
 //get the id of the delete school permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('DELETE SCHOOL');
 
 //boolean to track if the user has the delete school permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {

@@ -342,7 +342,7 @@ if (!$hasPermission) {
                             if ($roleUpdated) {
                                 echo '<i class="fa-solid fa-check"></i>';
                                 echo 'Role Updated';
-                            } else if ($permissionsWarning != '') {
+                            } else if (!$roleUpdated && $permissionsWarning != '') {
                                 echo '<i class="fa-solid fa-triangle-exclamation"></i>';
                                 echo 'Notice: Role Not Updated';
                                 echo '<br><br><strong>Warning:</strong><br>';

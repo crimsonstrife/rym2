@@ -14,13 +14,15 @@ $permissionsObject = new Permission();
 //include the auth class
 $auth = new Authenticator();
 
+//include the session class
+$session = new Session();
 
 /*confirm user has a role with create media permissions*/
 //get the id of the create media permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('CREATE MEDIA');
 
 //boolean to track if the user has the create media permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -83,7 +85,7 @@ if (!$hasPermission) {
                 include_once(__DIR__ . '/../../../../includes/errors/errorMessage.inc.php');
             } else {
                 //try to upload the media
-                $uploaded = $media->uploadMedia($mediaFile, intval($_SESSION['user_id']));
+                $uploaded = $media->uploadMedia($mediaFile, intval($session->get('user_id')));
 
                 //if the media was uploaded, set the media id
                 if (isset($uploaded) && ($uploaded != null || $uploaded != 0)) {
@@ -98,22 +100,75 @@ if (!$hasPermission) {
         $mediaCreated = false;
     } else {
         $mediaCreated = true;
+    }
 ?>
-        <!-- Completion page content -->
-        <div class="container-fluid px-4">
-            <div class="row">
-                <div class="card mb-4">
-                    <!-- show completion message -->
-                    <div class="card-header">
-                        <div class="card-title">
-                            <div>
-                                <i class="fa-solid fa-check"></i>
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $media_name; ?></h1>
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <div>
+                            <?php
+                            if ($action == 'create') {
+                                if ($mediaCreated) {
+                                    echo '<i class="fa-solid fa-check"></i>';
+                                    echo 'Media Created';
+                                } else {
+                                    echo '<i class="fa-solid fa-x"></i>';
+                                    echo 'Error: Media Not Created';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'create') {
+                                if ($mediaCreated) {
+                                    echo '<p>The media: ' . $media_name . ' has been created.</p>';
+                                } else {
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
+                                    echo '<p>The media: ' . $media_name . ' could not be created.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'create') {
+                                if ($mediaExists && !$mediaCreated) {
+                                    echo '<p>The media: ' . $media_name . ' cannot be created because a media with the same name already exists.</p>';
+                                    echo '<p>Please enter a different media name and try again.</p>';
+                                } else if (!$mediaExists && !$mediaCreated) {
+                                    echo '<p>The media: ' . $media_name . ' could not be created due to an unknown error.</p>';
+                                } else {
+                                    echo '<p>The media: ' . $media_name . ' has been created.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
                                 <?php
                                 if ($action == 'create') {
                                     if ($mediaCreated) {
-                                        echo 'Media Created';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=list" class="btn btn-primary">Return to Media List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=single&id=' . $media_id . '" class="btn btn-secondary">Go to Media</a></span>';
                                     } else {
-                                        echo 'Error: Media Not Created';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=list" class="btn btn-primary">Return to Media List</a></span>';
                                     }
                                 }
                                 ?>
@@ -123,5 +178,5 @@ if (!$hasPermission) {
                 </div>
             </div>
         </div>
-<?php }
-} ?>
+    </div>
+<?php } ?>
