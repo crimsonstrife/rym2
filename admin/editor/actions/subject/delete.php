@@ -14,12 +14,15 @@ $permissionsObject = new Permission();
 //include the authenticator class
 $auth = new Authenticator();
 
+//include the session class
+$session = new Session();
+
 /*confirm user has a role with delete subject permissions*/
 //get the id of the delete subject permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('DELETE SUBJECT');
 
 //boolean to track if the user has the delete subject permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
