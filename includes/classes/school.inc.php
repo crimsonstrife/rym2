@@ -721,19 +721,34 @@ class School
      * Get school ID by school name
      *
      * @param string $schoolName
-     * @return int $schoolID
+     * @return ?int $schoolID
      */
-    public function getSchoolIdByName(string $schoolName): int
+    public function getSchoolIdByName(string $schoolName): ?int
     {
-        $schoolID = 0;
+        //set the school id to null
+        $schoolID = null;
+
+        //sql to get the school id by the school name
         $sql = "SELECT id FROM school WHERE name = ?";
+
+        //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the parameters
         $stmt->bind_param("s", $schoolName);
+
+        //execute the statement
         $stmt->execute();
+
+        //get the result
         $result = $stmt->get_result();
+
+        //if the result has rows, get the school id
         if ($result->num_rows > 0) {
             $schoolID = intval($result->fetch_assoc()['id']);
         }
+
+        //return the school id
         return $schoolID;
     }
 
