@@ -14,12 +14,15 @@ $permissionsObject = new Permission();
 //include the authenticator class
 $auth = new Authenticator();
 
+//include the session class
+$session = new Session();
+
 /*confirm user has a role with delete report permissions*/
 //get the id of the delete report permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('DELETE REPORT');
 
 //boolean to track if the user has the delete report permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -93,6 +96,12 @@ if (!$hasPermission) {
             $canDelete = false;
         }
 
+        //get the report data
+        $reportData = $reportClass->getReportById($reportId);
+
+        //create a report name
+        $report_name = $reportType . ' Report ' . $reportId . ' Dated: ' . $reportData['created_at'];
+
         //if the canDelete boolean is true, delete the report
         if ($canDelete) {
             $reportDeleted = $reportClass->deleteReport($reportId);
@@ -103,6 +112,7 @@ if (!$hasPermission) {
 ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $report_name; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -121,15 +131,53 @@ if (!$hasPermission) {
                             }
                             ?>
                         </div>
-                        <div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
                             <?php
                             if ($action == 'delete') {
-                                if ($canDelete && !$reportDeleted) {
+                                if ($reportDeleted) {
+                                    echo '<p>The report: ' . $report_name . ' has been deleted.</p>';
+                                } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo 'The report with ID: ' . strval($reportId) . ', could not be deleted because of an unknown error.';
+                                    echo '<p>The report: ' . $report_name . ' could not be deleted.</p>';
                                 }
                             }
                             ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'delete') {
+                                if (!$reportDeleted) {
+                                    echo '<p>The report: ' . $report_name . ' could not be deleted, due to an error.</p>';
+                                } else {
+                                    echo '<p>All associated records for the report: ' . $report_name . ' have been deleted.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'delete') {
+                                    if ($reportDeleted) {
+                                        echo '<a href="' . APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType) . '" class="btn btn-primary">Return to Report List</a>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType) . '" class="btn btn-primary">Return to Report List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=reports&report=single&type=' . urlencode($reportType) .'&id=' . $report_id . '" class="btn btn-secondary">Return to Report</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
                         </div>
                     </div>
                 </div>

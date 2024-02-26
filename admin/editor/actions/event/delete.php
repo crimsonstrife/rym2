@@ -17,12 +17,15 @@ $auth = new Authenticator();
 //include the user class
 $user = new User();
 
+//include the session class
+$session = new Session();
+
 /*confirm user has a role with delete event permissions*/
 //get the id of the delete event permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('DELETE EVENT');
 
 //boolean to track if the user has the delete event permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -81,6 +84,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $event_name; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -99,22 +103,61 @@ if (!$hasPermission) {
                             }
                             ?>
                         </div>
-                        <div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
                             <?php
                             if ($action == 'delete') {
-                                if ($canDelete && !$eventDeleted) {
+                                if ($eventDeleted) {
+                                    echo '<p>The event: ' . $event_name . ' has been deleted.</p>';
+                                } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo 'The event: ' . $event_name . ', could not be deleted because of an unknown error.';
-                                } else if (!$canDelete && !$eventDeleted) {
-                                    echo 'The event: ' . $event_name . ', could not be deleted because of an error: ';
+                                    echo '<p>The event: ' . $event_name . ' could not be deleted.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'delete') {
+                                if (!$canDelete) {
+                                    echo '<p>The event: ' . $event_name . ' cannot be deleted because they have associated records in the system.</p>';
+                                    echo '<p>Please delete the event\'s associated student records or re-associated them to other events before attempting to delete this one.</p>';
                                     echo '<ul>';
                                     if (count($studentsAtEvent) > 0) {
                                         echo '<li>There are ' . strval(count($studentsAtEvent)) . ' students associated with the event</li>';
                                     }
                                     echo '</ul>';
+                                } else if ($canDelete && !$eventDeleted) {
+                                    echo '<p>The event: ' . $event_name . ' could not be deleted, due to an unknown error.</p>';
+                                } else {
+                                    echo '<p>All associated records for the event: ' . $event_name . ' have been deleted.</p>';
                                 }
                             }
                             ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'delete') {
+                                    if ($eventDeleted) {
+                                        echo '<a href="' . APP_URL . '/admin/dashboard.php?view=events&event=list" class="btn btn-primary">Return to Event List</a>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=events&event=list" class="btn btn-primary">Return to Event List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=events&event=single&id=' . $event_id . '" class="btn btn-secondary">Return to Event</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
                         </div>
                     </div>
                 </div>

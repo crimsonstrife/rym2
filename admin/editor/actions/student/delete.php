@@ -1,8 +1,5 @@
 <?php
 //Prevent direct access to this file by checking if the constant ISVALIDUSER is defined.
-
-use function PHPSTORM_META\override;
-
 if (!defined('ISVALIDUSER')) {
     //set the error type
     $thisError = 'INVALID_USER_REQUEST';
@@ -20,12 +17,15 @@ $auth = new Authenticator();
 //include the user class
 $user = new User();
 
+//include the session class
+$session = new Session();
+
 /*confirm user has a role with delete student permissions*/
 //get the id of the delete student permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
 
 //boolean to track if the user has the delete student permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -105,6 +105,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $student->getStudentFullName($student_id); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -134,6 +135,7 @@ if (!$hasPermission) {
                                 if ($studentDeleted) {
                                     echo '<p>The student ' . $student_name . ' has been deleted.</p>';
                                 } else {
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
                                     echo '<p>The student ' . $student_name . ' could not be deleted.</p>';
                                 }
                             }
@@ -150,12 +152,16 @@ if (!$hasPermission) {
                                     echo '<p>Please delete the student\'s event attendance records and contact log records before attempting to delete the student.</p>';
                                     echo '<ul>';
                                     if (count($studentHasEventAttendance) > 0) {
-                                        echo '<li>There are ' . strval(count($studentHasEventAttendance)) . ' events associated with the student</li>';
+                                        echo '<li>There are ' . strval(count($studentHasEventAttendance)) . ' events associated with the student.</li>';
                                     }
                                     if (count($studentHasContactLog) > 0) {
-                                        echo '<li>There are ' . strval(count($studentHasContactLog)) . ' contact records associated with the student</li>';
+                                        echo '<li>There are ' . strval(count($studentHasContactLog)) . ' contact records associated with the student.</li>';
                                     }
                                     echo '</ul>';
+                                } else if ($canDelete && !$studentDeleted) {
+                                    echo '<p>The student ' . $student_name . ' could not be deleted, due to an unknown error.</p>';
+                                } else if ($studentDeleted) {
+                                    echo '<p>All associated records for the student ' . $student_name . ' have been deleted.</p>';
                                 }
                             }
                             ?>
@@ -180,19 +186,22 @@ if (!$hasPermission) {
                     <div class="row">
                         <!-- show back buttons -->
                         <div class="col-md-12">
-                            <?php
-                            if ($action == 'delete') {
-                                if ($studentDeleted) {
-                                    echo '<a href="' . APP_URL . '/admin/dashboard.php?view=students&student=list" class="btn btn-primary">Return to Student List</a>';
-                                } else {
-                                    echo '<a href="' . APP_URL . '/admin/dashboard.php?view=students&student=list" class="btn btn-primary">Return to Student List</a>';
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'delete') {
+                                    if ($studentDeleted) {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=students&student=list" class="btn btn-primary">Return to Student List</a></span>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=students&student=list" class="btn btn-primary">Return to Student List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=students&student=single&id=' . $student_id . '" class="btn btn-secondary">Return to Student</a></span>';
+                                    }
                                 }
-                            }
-                            ?>
+                                ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-<?php } ?>
+    <?php } ?>

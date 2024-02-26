@@ -138,11 +138,11 @@ var address = "<?php echo formatAddress($schoolAddress, $schoolCity, $schoolStat
                                 <p><strong>School Address:</strong>
                                     <?php
                                             //encode the address as a url for google maps - this will be used to link to google maps per Google documentation https://developers.google.com/maps/documentation/urls/get-started
-                                            $address = formatAddress($schoolAddress, $schoolCity, $schoolState, $schoolZip);
-                                            $address = urlencode($address);
+                                            $formattedAddress = formatAddress($schoolAddress, $schoolCity, $schoolState, $schoolZip);
+                                            $address = urlencode($formattedAddress);
                                             ?>
                                     <a href="https://www.google.com/maps/search/?api=1&query=<?php echo $address; ?>"
-                                        target="_blank"><?php echo formatAddress($schoolAddress, $schoolCity, $schoolState, $schoolZip); ?></a>
+                                        target="_blank"><?php echo $formattedAddress; ?></a>
                                 </p>
                             </div>
                             <div id="map"></div>

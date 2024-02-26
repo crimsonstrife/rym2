@@ -20,12 +20,15 @@ $media = new Media();
 //include the event media class
 $eventMedia = new EventMedia();
 
+//include the session class
+$session = new Session();
+
 /*confirm user has a role with create event permissions*/
 //get the id of the create event permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('CREATE EVENT');
 
 //boolean to track if the user has the create event permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -74,19 +77,9 @@ if (!$hasPermission) {
     $event_logo = null;
     $event_banner = null;
     $eventCreated = false;
-
-    //if the action is edit, get the event id from the url parameter
-    if ($action == 'edit') {
-        $event_id = $_GET['id'];
-    }
-
-    //get the event location if this is an event edit page
-    if ($action == 'edit') {
-        $event_location = $school->getSchoolName($event->getEventLocationId($event_id));
-    } else {
-        //if this is not an event edit page, set the event location to null
-        $event_location = null;
-    }
+    $haslogo = false;
+    $hasbanner = false;
+    $uploaded_file = null;
 
     // Processing form data when form is submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -137,6 +130,11 @@ if (!$hasPermission) {
             }
         }
 
+        //reset the uploaded file to null if it is not
+        if ($uploaded_file != null) {
+            $uploaded_file = null;
+        }
+
         //if the event logo is empty, set the event logo to null
         if (empty($event_logo)) {
             $event_logo = null;
@@ -168,6 +166,11 @@ if (!$hasPermission) {
             }
         }
 
+        //reset the uploaded file to null if it is not
+        if ($uploaded_file != null) {
+            $uploaded_file = null;
+        }
+
         //if the event banner is empty, set the event banner to null
         if (empty($event_banner)) {
             $event_banner = null;
@@ -179,7 +182,7 @@ if (!$hasPermission) {
             if (!empty($event_logo) && $event_logo != null) {
                 //if the event logo is an array, upload the file
                 if (is_array($event_logo)) {
-                    $logoMedia_id = $media->uploadMedia($event_logo, intval($_SESSION['user_id']));
+                    $logoMedia_id = $media->uploadMedia($event_logo, intval($session->get('user_id')));
                 } else {
                     //if the event logo is not an array, set the media id to the event logo int
                     $logoMedia_id = $event_logo;
@@ -190,7 +193,7 @@ if (!$hasPermission) {
             if (!empty($event_banner) && $event_banner != null) {
                 //if the event banner is an array, upload the file
                 if (is_array($event_banner)) {
-                    $bannerMedia_id = $media->uploadMedia($event_banner, intval($_SESSION['user_id']));
+                    $bannerMedia_id = $media->uploadMedia($event_banner, intval($session->get('user_id')));
                 } else {
                     //if the event banner is not an array, set the media id to the event banner int
                     $bannerMedia_id = $event_banner;
@@ -213,7 +216,7 @@ if (!$hasPermission) {
         //if the action is create, create the event
         if ($action == 'create') {
             //get current user ID
-            $user_id = intval($_SESSION['user_id']);
+            $user_id = intval($session->get('user_id'));
             //create the event
             $eventCreated = $event->createEvent($event_name, $event_date, $event_location, $user_id);
             //if the event was created, get the event id
@@ -235,22 +238,89 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $event_name; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
                 <div class="card-header">
                     <div class="card-title">
-                        <?php
-                        if ($action == 'create') {
-                            if ($eventCreated) {
-                                echo '<i class="fa-solid fa-check"></i>';
-                                echo 'Event Created';
-                            } else {
-                                echo '<i class="fa-solid fa-x"></i>';
-                                echo 'Error: Event Not Created';
+                        <div>
+                            <?php
+                            if ($action == 'create') {
+                                if ($eventCreated) {
+                                    echo '<i class="fa-solid fa-check"></i>';
+                                    echo 'Event Created';
+                                } else {
+                                    echo '<i class="fa-solid fa-x"></i>';
+                                    echo 'Error: Event Not Created';
+                                }
                             }
-                        }
-                        ?>
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'create') {
+                                if ($eventCreated) {
+                                    echo '<p>The event: ' . $event_name . ' has been created.</p>';
+                                } else {
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
+                                    echo '<p>The event: ' . $event_name . ' could not be created.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'create') {
+                                if (!$eventCreated) {
+                                    echo '<p>The event: ' . $event_name . ' could not be created due to an error.</p>';
+                                } else {
+                                    echo '<p>The event: ' . $event_name . ' has been created.</p>';
+                                }
+                                //if the event was created and there are files to add, show the completion message
+                                if ($eventCreated && $addMediaToNewEvent) {
+                                    //check if the logo and banner were added
+                                    $haslogo = $eventMedia->getEventLogo($event_id);
+                                    $hasbanner = $eventMedia->getEventBanner($event_id);
+
+                                    if ($haslogo && $hasbanner) {
+                                        echo '<p>The event logo and banner have been added.</p>';
+                                    } else if ($haslogo) {
+                                        echo '<p>The event logo has been added.</p>';
+                                    } else if ($hasbanner) {
+                                        echo '<p>The event banner has been added.</p>';
+                                    } else {
+                                        echo '<p>The event logo and/or banner could not be added.</p>';
+                                    }
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'create') {
+                                    if ($eventCreated) {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=events&event=list" class="btn btn-primary">Return to Event List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=events&event=single&id=' . $event_id . '" class="btn btn-secondary">Go to Event</a></span>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=events&event=list" class="btn btn-primary">Return to Event List</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

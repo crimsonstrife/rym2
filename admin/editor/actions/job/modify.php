@@ -14,12 +14,15 @@ $permissionsObject = new Permission();
 //include the authenticator class
 $auth = new Authenticator();
 
+//session class
+$session = new Session();
+
 /*confirm user has a role with update school permissions*/
 //get the id of the update school permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('UPDATE SCHOOL');
 
 //boolean to track if the user has the update school permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -114,7 +117,7 @@ if (!$hasPermission) {
         //if the action is edit, update the job
         if ($action == 'edit') {
             //get current user ID
-            $user_id = intval($_SESSION['user_id']);
+            $user_id = intval($session->get('user_id'));
 
             //update the job
             $jobUpdated = $job->updateJob($job_id, $job_title, $job_info, $job_type, intval($job_field), intval($job_education), $job_skills, $user_id);
@@ -122,21 +125,73 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $job_title; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
                 <div class="card-header">
                     <div class="card-title">
-                        <i class="fa-solid fa-check"></i>
-                        <?php
-                        if ($action == 'edit') {
-                            if ($jobUpdated) {
-                                echo 'Job Updated';
-                            } else {
-                                echo 'Error: Job Not Updated';
+                        <div>
+                            <?php
+                            if ($action == 'edit') {
+                                if ($jobUpdated) {
+                                    echo '<i class="fa-solid fa-check"></i>';
+                                    echo 'Job Updated';
+                                } else {
+                                    echo '<i class="fa-solid fa-x"></i>';
+                                    echo 'Error: Job Not Updated';
+                                }
                             }
-                        }
-                        ?>
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'edit') {
+                                if ($jobUpdated) {
+                                    echo '<p>The job: ' . $job_title . ' has been updated.</p>';
+                                } else {
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
+                                    echo '<p>The job: ' . $job_title . ' could not be updated.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'edit') {
+                                if (!$canCreate) {
+                                    echo '<p>The job: ' . $job_title . ' could not be updated due to an error.</p>';
+                                } else {
+                                    echo '<p>The job: ' . $job_title . ' has been updated.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'edit') {
+                                    if ($jobUpdated) {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=jobs&job=list" class="btn btn-primary">Return to Job List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=jobs&job=single&id=' . $job_id . '" class="btn btn-secondary">Go to Job</a></span>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=jobs&job=list" class="btn btn-primary">Return to Job List</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

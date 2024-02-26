@@ -17,8 +17,11 @@ $auth = new Authenticator();
 //include the roles class
 $role = new Roles();
 
-//user class
+//include the user class
 $user = new User();
+
+//include the session class
+$session = new Session();
 
 //get all the users
 $users = $user->getAllUsers();
@@ -41,7 +44,7 @@ $usernameTaken = false;
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('CREATE USER');
 
 //boolean to track if the user has the create user permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -114,39 +117,95 @@ if (!$hasPermission) {
         //if no errors, create the user
         if (!$usernameTaken && !$emailTaken && !$passwordError) {
             //create the user
-            $userCreated = $user->createUser($email, $username, $password, intval($_SESSION['user_id']), $rolesArray);
+            $userCreated = $user->createUser($email, $username, $password, intval($session->get('user_id')), $rolesArray);
+        }
+
+        //placeholder for the user id
+        $user_id = null;
+
+        //if the user is created, get the user id
+        if ($userCreated) {
+            $user_id = $user->getUserIdByUsername($username);
         }
     }
 ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $username; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
                 <div class="card-header">
                     <div class="card-title">
-                        <i class="fa-solid fa-check"></i>
-                        <?php
-                        if ($action == 'create') {
-                            if ($userCreated) {
-                                echo 'User Created';
-                            } else {
-                                echo 'Error: User Not Created';
-                                //if the username is taken, display the error
-                                if ($usernameTaken) {
-                                    echo '<br>' . $usernameError;
-                                }
-                                //if the email is taken, display the error
-                                if ($emailTaken) {
-                                    echo '<br>' . $emailError;
-                                }
-                                //if the passwords do not match, display the error
-                                if ($passwordError) {
-                                    echo '<br>' . $passwordError;
+                        <div>
+                            <?php
+                            if ($action == 'create') {
+                                if ($userCreated) {
+                                    echo '<i class="fa-solid fa-check"></i>';
+                                    echo 'User Created';
+                                } else {
+                                    echo '<i class="fa-solid fa-x"></i>';
+                                    echo 'Error: User Not Created';
                                 }
                             }
-                        }
-                        ?>
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'create') {
+                                if ($userCreated) {
+                                    echo '<p>The user: ' . $username . ' has been created.</p>';
+                                } else {
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
+                                    echo '<p>The user: ' . $username . ' could not be created.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'create') {
+                                if (!$userCreated) {
+                                    if ($usernameTaken) {
+                                        echo '<br>' . $usernameError;
+                                    }
+                                    //if the email is taken, display the error
+                                    if ($emailTaken) {
+                                        echo '<br>' . $emailError;
+                                    }
+                                    //if the passwords do not match, display the error
+                                    if ($passwordError) {
+                                        echo '<br>' . $passwordError;
+                                    }
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'create') {
+                                    if ($userCreated) {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=list" class="btn btn-primary">Return to User List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $user_id . '" class="btn btn-secondary">Go to User</a></span>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=list" class="btn btn-primary">Return to User List</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

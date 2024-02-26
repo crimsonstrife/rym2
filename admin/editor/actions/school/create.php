@@ -20,12 +20,15 @@ $user = new User();
 //include the media class
 $media = new Media();
 
+//include the session class
+$session = new Session();
+
 /*confirm user has a role with create school permissions*/
 //get the id of the create school permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('CREATE SCHOOL');
 
 //boolean to track if the user has the create school permission
-$hasPermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $relevantPermissionID);
+$hasPermission = $auth->checkUserPermission(intval($session->get('user_id')), $relevantPermissionID);
 
 //prevent the user from accessing the page if they do not have the relevant permission
 if (!$hasPermission) {
@@ -97,7 +100,7 @@ if (!$hasPermission) {
         //if the action is create, create the school
         if ($action == 'create') {
             //get current user ID
-            $user_id = intval($_SESSION['user_id']);
+            $user_id = intval($session->get('user_id'));
             //create the school
             $schoolCreated = $school->createSchool($school_name, $school_address, $school_city, $school_state, $school_zip, $user_id);
         }
