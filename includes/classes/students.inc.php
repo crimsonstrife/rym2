@@ -535,8 +535,12 @@ class Student
         //get current timestamp to set the created_at and updated_at fields
         $timestamp = date('Y-m-d H:i:s');
 
+        //get current user id from session if available
+        $session = new Session();
+        $createdBy = intval($session->get('user_id')) ?? null; //if the session is not available, set the created_by to null
+
         //SQL statement to add a new student to the database
-        $sql = "INSERT INTO student (first_name, last_name, email, phone, address, city, state, zipcode, degree, major, school, graduation, position, interest, created_at, updated_at) VALUES ('$firstName', '$lastName', '$email', '$phone', '$address', '$city', '$state', '$zip', '$degreeID', '$majorID', '$school', '$graduation', '$position', '$areaID', '$timestamp', '$timestamp')";
+        $sql = "INSERT INTO student (first_name, last_name, email, phone, address, city, state, zipcode, degree, major, school, graduation, position, interest, created_at, updated_at, created_by) VALUES ('$firstName', '$lastName', '$email', '$phone', '$address', '$city', '$state', '$zip', '$degreeID', '$majorID', '$school', '$graduation', '$position', '$areaID', '$timestamp', '$timestamp', '$createdBy')";
 
         //Prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
@@ -551,7 +555,7 @@ class Student
         if (!empty($student) && $student != null && isset($student)) {
             //log the activity
             $activity = new Activity();
-            $activity->logActivity(null, 'Added Student', 'Student ID: ' . $student['id'] . ' Student Name: ' . $student['first_name'] . ' ' . $student['last_name']);
+            $activity->logActivity($createdBy, 'Added Student', 'Student ID: ' . $student['id'] . ' Student Name: ' . $student['first_name'] . ' ' . $student['last_name']);
 
             return true;
         }
