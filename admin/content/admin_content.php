@@ -169,6 +169,17 @@ if (!isset($hasViewDashboardPermission)) {
                                                                 ?>
                                                                     <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single' ?>&id=<?php echo $student['id']; ?>" class="btn btn-success">View</a>
                                                                 <?php } ?>
+                                                                <?php /*confirm user has a role with update student permissions*/
+                                                                //get the update student permission id
+                                                                $updatePermissionID = $permissionsObject->getPermissionIdByName('UPDATE STUDENT');
+
+                                                                //boolean to check if the user has the update student permission
+                                                                $hasUpdatePermission = $auth->checkUserPermission(intval($_SESSION['user_id']), $updatePermissionID);
+
+                                                                //only show the edit button if the user has the update student permission
+                                                                if ($hasUpdatePermission) { ?>
+                                                                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=edit&action=edit&id=' . $student['id']; ?>" class="btn btn-primary">Edit Student</a>
+                                                                <?php } ?>
                                                                 <?php /*check if the user has the delete students permission */
                                                                 //get the id of the delete students permission
                                                                 $deleteStudentsPermissionId = $permissionsObject->getPermissionIdByName('DELETE STUDENT');
