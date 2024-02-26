@@ -183,6 +183,11 @@ class Student
             $firstName = $result->fetch_assoc()['first_name'];
         }
 
+        //if the first name is empty or null, return an empty string
+        if (empty($firstName) || $firstName == null) {
+            $firstName = "";
+        }
+
         //return the student first name
         return $firstName;
     }
@@ -214,6 +219,11 @@ class Student
         if ($result) {
             //set the student last name
             $lastName = $result->fetch_assoc()['last_name'];
+        }
+
+        //if the last name is empty or null, return an empty string
+        if (empty($lastName) || $lastName == null) {
+            $lastName = "";
         }
 
         //return the student last name
