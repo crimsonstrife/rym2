@@ -66,6 +66,12 @@ if (!$hasPermission) {
     $target_file_logo = null;
     $imageFileType_logo = null;
     $media_id = null;
+    $schoolUpdated = false;
+    $schoolLogoSet = false;
+    $schoolColorSet = false;
+    $updatedSchoolBranding = false;
+    $existingSchool = null;
+    $canEdit = true;
 
     //if the action is edit, get the school id from the url parameter
     if ($action == 'edit') {
@@ -79,6 +85,21 @@ if (!$hasPermission) {
             $school_name = trim($_POST["school_name"]);
             //prepare the school name
             $school_name = prepareData($school_name);
+        }
+
+        //check if the school name already exists
+        $existingSchool = $school->getSchoolIdByName($school_name);
+        //if the existing school is not empty, see if the id matches the current school id
+        if (!empty($existingSchool) && $existingSchool != '' && $existingSchool != null) {
+            //if the ids match, do nothing
+            if ($existingSchool == $school_id) {
+                //ensure the canEdit boolean is true and set the existing school to null
+                $canEdit = true;
+                $existingSchool = null;
+            } else {
+                //if the ids do not match, set the canEdit boolean to false
+                $canEdit = false;
+            }
         }
 
         //get the school address from the form
@@ -152,117 +173,199 @@ if (!$hasPermission) {
             $school_color = '#000000';
         }
 
-        //if there are files to upload, upload them
-        if (!empty($school_logo)) {
-            //check if the school logo is an array
-            if (is_array($school_logo)) {
-                //get the file name
-                $target_file_logo = basename($school_logo["name"]);
-                //get the file type
-                $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
-                //get the media id
-                $media_id = $media->uploadMedia($school_logo, $imageFileType_logo);
-            } else {
-                //assume the school logo is an integer
-                $media_id = $school_logo;
+        //if the canEdit boolean is true, update the school
+        {
+            //if there are files to upload, upload them
+            if (!empty($school_logo)) {
+                //check if the school logo is an array
+                if (is_array($school_logo)) {
+                    //get the file name
+                    $target_file_logo = basename($school_logo["name"]);
+                    //get the file type
+                    $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
+                    //get the media id
+                    $media_id = $media->uploadMedia($school_logo, $imageFileType_logo);
+                } else {
+                    //assume the school logo is an integer
+                    $media_id = $school_logo;
 
-                //get the file name
-                $target_file_logo = $media->getMediaFileName($media_id);
+                    //get the file name
+                    $target_file_logo = $media->getMediaFileName($media_id);
 
-                //get the file type
-                $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
+                    //get the file type
+                    $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
+                }
+            }
+
+            //check if the school had an existing logo, if so, update the record
+            if ($action == 'edit') {
+                //if the logo is not empty, update the school logo
+                if (
+                    !empty($school_logo) && $school_logo != null && isset($school_logo) && $school_logo != ''
+                ) {
+                    $existing_logo = $school->getSchoolLogo($school_id);
+                    //if the existing logo is not empty, see if the id matches
+                    if (!empty($existing_logo) && $existing_logo != '' && $existing_logo != null) {
+                        //if the files match, do nothing
+                        if ($existing_logo == $media_id) {
+                            //do nothing
+                        } else {
+                            //if the file names do not match, set the logo
+                            $schoolLogoSet = $school->setSchoolLogo($school_id, $media_id);
+                            //set the updatedSchoolBranding boolean to true
+                            $updatedSchoolBranding = true;
+                        }
+                    } else {
+                        //if the existing logo is empty, set the logo
+                        $schoolLogoSet = $school->setSchoolLogo($school_id, $media_id);
+                        //set the updatedSchoolBranding boolean to true
+                        $updatedSchoolBranding = true;
+                    }
+                } else if (empty($school_logo) || $school_logo == null || $school_logo == '') {
+                    $existing_logo = $school->getSchoolLogo($school_id);
+                    if (!empty($existing_logo) && $existing_logo != '' && $existing_logo != null) {
+                        //if the files match, do nothing
+                        if ($existing_logo == $media_id) {
+                            //do nothing
+                        } else {
+                            //if the file names do not match, set the logo
+                            $schoolLogoSet = $school->setSchoolLogo($school_id, $media_id);
+                            //set the updatedSchoolBranding boolean to true
+                            $updatedSchoolBranding = true;
+                        }
+                    } else {
+                        $schoolLogoSet = $school->setSchoolLogo($school_id, $media_id);
+                        //set the updatedSchoolBranding boolean to true
+                        $updatedSchoolBranding = true;
+                    }
+                }
             }
         }
 
-        //check if the school had an existing logo, if so, update the record
+        //check if the school had an existing branding color, if so, update the record
         if ($action == 'edit') {
-            //if the logo is not empty, update the school logo
-            if (!empty($school_logo) && $school_logo != null && isset($school_logo) && $school_logo != '') {
-                $existing_logo = $school->getSchoolLogo($school_id);
-                //if the existing logo is not empty, see if the id matches
-                if (!empty($existing_logo) && $existing_logo != '' && $existing_logo != null) {
-                    //if the files match, do nothing
-                    if ($existing_logo == $media_id) {
-                        //do nothing
+            //if the color is empty, update the school color
+            if (!empty($school_color)) {
+                $existing_color = $school->getSchoolColor($school_id);
+                //if the existing color is not empty, see if the id matches
+                if (!empty($existing_color) || $existing_color != '' || $existing_color != null) {
+                    //if the colors match, update the color incase the color has changed
+                    if ($existing_color == $school_color) {
+                        //should not be needed, but just in case
+                        $schoolColorSet = $school->setSchoolColor($school_id, $school_color);
                     } else {
-                        //if the file names do not match, set the logo
-                        $school->setSchoolLogo($school_id, $media_id);
+                        //if the colors do not match, set the color
+                        $schoolColorSet = $school->setSchoolColor($school_id, $school_color);
                     }
                 } else {
-                    //if the existing logo is empty, set the logo
-                    $school->setSchoolLogo($school_id, $media_id);
+                    //if the existing color is empty, set the color
+                    $schoolColorSet = $school->setSchoolColor($school_id, $school_color);
                 }
-            } else if (empty($school_logo) || $school_logo == null || $school_logo == '') {
-                $existing_logo = $school->getSchoolLogo($school_id);
-                if (!empty($existing_logo) && $existing_logo != '' && $existing_logo != null) {
-                    //if the files match, do nothing
-                    if ($existing_logo == $media_id) {
-                        //do nothing
-                    } else {
-                        //if the file names do not match, set the logo
-                        $school->setSchoolLogo($school_id, $media_id);
-                    }
+            } else if (!empty($school_color)) {
+                $existing_color = $school->getSchoolColor($school_id);
+                if (!empty($existing_color) || $existing_color != '' || $existing_color != null) {
+                    $schoolColorSet = $school->setSchoolColor($school_id, $school_color);
                 } else {
-                    $school->setSchoolLogo($school_id, $media_id);
+                    $schoolColorSet = $school->setSchoolColor($school_id, $school_color);
                 }
             }
         }
-    }
 
-    //check if the school had an existing branding color, if so, update the record
-    if ($action == 'edit') {
-        //if the color is empty, update the school color
-        if (!empty($school_color)) {
-            $existing_color = $school->getSchoolColor($school_id);
-            //if the existing color is not empty, see if the id matches
-            if (!empty($existing_color) || $existing_color != '' || $existing_color != null) {
-                //if the colors match, update the color incase the color has changed
-                if ($existing_color == $school_color) {
-                    //should not be needed, but just in case
-                    $school->setSchoolColor($school_id, $school_color);
-                } else {
-                    //if the colors do not match, set the color
-                    $school->setSchoolColor($school_id, $school_color);
-                }
-            } else {
-                //if the existing color is empty, set the color
-                $school->setSchoolColor($school_id, $school_color);
-            }
-        } else if (!empty($school_color)) {
-            $existing_color = $school->getSchoolColor($school_id);
-            if (!empty($existing_color) || $existing_color != '' || $existing_color != null) {
-                $school->setSchoolColor($school_id, $school_color);
-            } else {
-                $school->setSchoolColor($school_id, $school_color);
-            }
+        //if the action is edit, update the event
+        if ($action == 'edit') {
+            //get current user ID
+            $user_id = intval($session->get('user_id'));
+            //update the event
+            $schoolUpdated = $school->updateSchool(intval($school_id), $school_name, $school_address, $school_city, $school_state, $school_zip, $user_id);
         }
     }
-
-    //if the action is edit, update the event
-    if ($action == 'edit') {
-        //get current user ID
-        $user_id = intval($session->get('user_id'));
-        //update the event
-        $schoolUpdated = $school->updateSchool(intval($school_id), $school_name, $school_address, $school_city, $school_state, $school_zip, $user_id);
-    } ?>
+?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $school_name; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
                 <div class="card-header">
                     <div class="card-title">
-                        <?php
-                        if ($action == 'edit') {
-                            if ($schoolUpdated) {
-                                echo '<i class="fa-solid fa-check"></i>';
-                                echo 'School Updated';
-                            } else {
-                                echo '<i class="fa-solid fa-x"></i>';
-                                echo 'Error: School Not Updated';
+                        <div>
+                            <?php
+                            if ($action == 'edit') {
+                                if ($schoolUpdated) {
+                                    echo '<i class="fa-solid fa-check"></i>';
+                                    echo 'School Updated';
+                                } else {
+                                    echo '<i class="fa-solid fa-x"></i>';
+                                    echo 'Error: School Not Updated';
+                                }
                             }
-                        }
-                        ?>
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'edit') {
+                                if ($schoolUpdated) {
+                                    echo '<p>The school: ' . $school_name . ' has been updated.</p>';
+                                } else {
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
+                                    echo '<p>The school: ' . $school_name . ' could not be updated.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'edit') {
+                                if (!$schoolUpdated) {
+                                    echo '<p>The school: ' . $school_name . ' could not be updated due to an error.</p>';
+                                } else {
+                                    echo '<p>The school: ' . $school_name . ' has been updated.</p>';
+                                }
+                                //if the school was updated and there are files to add, show the completion message
+                                if ($schoolUpdated && $updatedSchoolBranding) {
+                                    if ($schoolLogoSet && (!empty($school_logo) || $school_logo != null || isset($school_logo))) {
+                                        echo '<p>The school logo has been set.</p>';
+                                    } elseif (!$schoolLogoSet && (!empty($school_logo) || $school_logo != null || isset($school_logo))) {
+                                        echo '<p>The school logo could not be set.</p>';
+                                    }
+                                    if ($schoolColorSet && (!empty($school_color) || $school_color != null || isset($school_color))) {
+                                        echo '<p>The school color has been set.</p>';
+                                    } elseif (!$schoolColorSet && (!empty($school_color) || $school_color != null || isset($school_color))) {
+                                        echo '<p>The school color could not be set.</p>';
+                                    }
+                                }
+                                //if the school name already exists, show the error message
+                                if (!$canEdit && $existingSchool != null) {
+                                    echo '<p>The school: ' . $school_name . ' could not be updated because a school with that name already exists.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'edit') {
+                                    if ($schoolUpdated) {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=list" class="btn btn-primary">Return to School List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=single&id=' . $school_id . '" class="btn btn-secondary">Go to School</a></span>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=list" class="btn btn-primary">Return to School List</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
