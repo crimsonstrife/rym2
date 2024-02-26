@@ -63,6 +63,10 @@ if (!$hasPermission) {
     $school_logo = null;
     $imageFileType_logo = null;
     $media_id = null;
+    $addBrandingToNewSchool = false;
+    $existingSchool = null;
+    $canCreate = true;
+    $schoolCreated = false;
 
     // Processing form data when form is submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -72,24 +76,36 @@ if (!$hasPermission) {
             //prepare the school name
             $school_name = prepareData($school_name);
         }
+
+        //check if the school name already exists
+        $existingSchool = $school->getSchoolIdByName($school_name);
+
+        //if the school name already exists, set the canCreate boolean to false
+        if ($existingSchool != null) {
+            $canCreate = false;
+        }
+
         //get the school address from the form
         if (isset($_POST["school_address"])) {
             $school_address = trim($_POST["school_address"]);
             //prepare the school address
             $school_address = prepareData($school_address);
         }
+
         //get the school city from the form
         if (isset($_POST["school_city"])) {
             $school_city = trim($_POST["school_city"]);
             //prepare the school city
             $school_city = prepareData($school_city);
         }
+
         //get the school state from the form
         if (isset($_POST["school_state"])) {
             $school_state = trim($_POST["school_state"]);
             //prepare the school state
             $school_state = prepareData($school_state);
         }
+
         //get the school zip from the form
         if (isset($_POST["school_zip"])) {
             $school_zip = trim($_POST["school_zip"]);
@@ -97,12 +113,15 @@ if (!$hasPermission) {
             $school_zip = prepareData($school_zip);
         }
 
-        //if the action is create, create the school
-        if ($action == 'create') {
-            //get current user ID
-            $user_id = intval($session->get('user_id'));
-            //create the school
-            $schoolCreated = $school->createSchool($school_name, $school_address, $school_city, $school_state, $school_zip, $user_id);
+        //if canCreate is true, create the school
+        if ($canCreate) {
+            //if the action is create, create the school
+            if ($action == 'create') {
+                //get current user ID
+                $user_id = intval($session->get('user_id'));
+                //create the school
+                $schoolCreated = $school->createSchool($school_name, $school_address, $school_city, $school_state, $school_zip, $user_id);
+            }
         }
 
         //get the school logo from the form
@@ -128,6 +147,8 @@ if (!$hasPermission) {
                 $uploaded_file = null;
                 //set the school logo to the selection
                 $school_logo = intval($school_logoSelection);
+                //set the the addBrandingToNewSchool boolean to true
+                $addBrandingToNewSchool = true;
             }
         }
 
@@ -136,6 +157,8 @@ if (!$hasPermission) {
             $school_color = trim($_POST["school_color"]);
             //prepare the school branding color
             $school_color = prepareData($school_color);
+            //set the the addBrandingToNewSchool boolean to true
+            $addBrandingToNewSchool = true;
         }
 
         //if the school logo is empty, set the school logo to null
@@ -148,99 +171,140 @@ if (!$hasPermission) {
             $school_color = '#000000';
         }
 
-        //get the school id using the school name
-        $school_id = $school->getSchoolIdByName($school_name);
+        //if canCreate and schoolCreated are true, get the school id
+        if ($canCreate && $schoolCreated) {
+            //get the school id using the school name
+            $school_id = $school->getSchoolIdByName($school_name);
+        }
 
-        //if there are files to upload, upload them
-        if (!empty($school_logo) && $uploaded_file != null) {
-            //check if the school logo is an array
-            if (is_array($school_logo)) {
-                //upload the school logo, and get the media id
-                $media_id = $media->uploadMedia($school_logo, intval($_SESSION['user_id']));
+        if (($canCreate && $schoolCreated) && $school_id != null && isset($school_id)) {
+            //if there are files to upload, upload them
+            if (!empty($school_logo) && $uploaded_file != null) {
+                //check if the school logo is an array
+                if (is_array($school_logo)) {
+                    //upload the school logo, and get the media id
+                    $media_id = $media->uploadMedia($school_logo, intval($_SESSION['user_id']));
 
-                //get the file name
-                $target_file_logo = $media->getMediaFileName($media_id);
+                    //get the file name
+                    $target_file_logo = $media->getMediaFileName($media_id);
 
-                //get the file type
-                $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
-            } else if (!empty($school_logo) && $uploaded_file = null) {
-                //assume the school logo is an integer
-                $media_id = $school_logo;
+                    //get the file type
+                    $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
+                } else if (!empty($school_logo) && $uploaded_file = null) {
+                    //assume the school logo is an integer
+                    $media_id = $school_logo;
 
-                //get the file name
-                $target_file_logo = $media->getMediaFileName($media_id);
+                    //get the file name
+                    $target_file_logo = $media->getMediaFileName($media_id);
 
-                //get the file type
-                $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
+                    //get the file type
+                    $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
+                }
             }
-        }
 
-        if (!empty($school_logo) || $school_logo != null || isset($school_logo)) {
-            //set the school logo
-            $schoolLogoSet = $school->setSchoolLogo($school_id, $media_id);
-        } else {
-            $schoolLogoSet = false;
-        }
+            //if the addBrandingToNewSchool boolean is true, set the school logo and/or color
+            if ($addBrandingToNewSchool) {
+                if (!empty($school_logo) || $school_logo != null || isset($school_logo)) {
+                    //set the school logo
+                    $schoolLogoSet = $school->setSchoolLogo($school_id, $media_id);
+                } else {
+                    $schoolLogoSet = false;
+                }
 
-        if (!empty($school_color) || $school_color != null || isset($school_color)) {
-            //set the school color
-            $schoolColorSet = $school->setSchoolColor($school_id, $school_color);
-        } else {
-            $schoolColorSet = false;
+                if (!empty($school_color) || $school_color != null || isset($school_color)) {
+                    //set the school color
+                    $schoolColorSet = $school->setSchoolColor($school_id, $school_color);
+                } else {
+                    $schoolColorSet = false;
+                }
+            }
         }
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $school_name; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
                 <div class="card-header">
                     <div class="card-title">
                         <div>
-                            <i class="fa-solid fa-check"></i>
                             <?php
                             if ($action == 'create') {
                                 if ($schoolCreated) {
+                                    echo '<i class="fa-solid fa-check"></i>';
                                     echo 'School Created';
                                 } else {
+                                    echo '<i class="fa-solid fa-x"></i>';
                                     echo 'Error: School Not Created';
                                 }
                             }
                             ?>
                         </div>
-                        <div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
                             <?php
-                            if ($schoolLogoSet && !empty($school_logo)) {
-                                echo 'School Logo Set';
-                            } else {
-                                if ($school_logo == null || empty($school_logo)) {
-                                    //do nothing
+                            if ($action == 'create') {
+                                if ($schoolCreated) {
+                                    echo '<p>The school: ' . $school_name . ' has been created.</p>';
                                 } else {
-                                    if ($schoolLogoSet) {
-                                        echo 'School Logo Set';
-                                    } else {
-                                        echo 'Error: School Logo Not Set';
-                                    }
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
+                                    echo '<p>The school: ' . $school_name . ' could not be created.</p>';
                                 }
                             }
                             ?>
                         </div>
-                        <div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
                             <?php
-                            if ($schoolColorSet && !empty($school_color)) {
-                                echo 'School Color Set';
-                            } else {
-                                if ($school_color == null || empty($school_color)) {
-                                    //do nothing
+                            if ($action == 'create') {
+                                if (!$schoolCreated) {
+                                    echo '<p>The school: ' . $school_name . ' could not be created due to an error.</p>';
                                 } else {
-                                    if ($schoolColorSet) {
-                                        echo 'School Color Set';
-                                    } else {
-                                        echo 'Error: School Color Not Set';
+                                    echo '<p>The school: ' . $school_name . ' has been created.</p>';
+                                }
+                                //if the school was created and there are files to add, show the completion message
+                                if ($schoolCreated && $addBrandingToNewSchool) {
+                                    if ($schoolLogoSet && (!empty($school_logo) || $school_logo != null || isset($school_logo))) {
+                                        echo '<p>The school logo has been set.</p>';
+                                    } elseif (!$schoolLogoSet && (!empty($school_logo) || $school_logo != null || isset($school_logo))) {
+                                        echo '<p>The school logo could not be set.</p>';
                                     }
+                                    if ($schoolColorSet && (!empty($school_color) || $school_color != null || isset($school_color))) {
+                                        echo '<p>The school color has been set.</p>';
+                                    } elseif (!$schoolColorSet && (!empty($school_color) || $school_color != null || isset($school_color))) {
+                                        echo '<p>The school color could not be set.</p>';
+                                    }
+                                }
+                                //if the school name already exists, show the error message
+                                if (!$canCreate && $existingSchool != null) {
+                                    echo '<p>The school: ' . $school_name . ' could not be created because it already exists.</p>';
                                 }
                             }
                             ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'create') {
+                                    if ($schoolCreated) {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=list" class="btn btn-primary">Return to School List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=single&id=' . $school_id . '" class="btn btn-secondary">Go to School</a></span>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=list" class="btn btn-primary">Return to School List</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
                         </div>
                     </div>
                 </div>

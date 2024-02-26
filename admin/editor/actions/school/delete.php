@@ -91,6 +91,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $school_name; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -109,14 +110,32 @@ if (!$hasPermission) {
                             }
                             ?>
                         </div>
-                        <div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
                             <?php
                             if ($action == 'delete') {
-                                if ($canDelete && !$schoolDeleted) {
+                                if ($schoolDeleted) {
+                                    echo '<p>The school: ' . $school_name . ' has been deleted.</p>';
+                                } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo 'The school: ' . $school_name . ', could not be deleted because of an unknown error.';
-                                } else if (!$canDelete && !$schoolDeleted) {
-                                    echo 'The school: ' . $school_name . ', could not be deleted because of an error: ';
+                                    echo '<p>The school: ' . $school_name . ' could not be deleted.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'delete') {
+                                if (!$canDelete) {
+                                    echo '<p>The school: ' . $school_name . ' cannot be deleted because they have associated records in the system.</p>';
+                                    echo '<p>Please delete the school\'s associated student and event records or re-associated them to others before attempting to delete this one.</p>';
                                     echo '<ul>';
                                     if (count($studentsAtSchool) > 0) {
                                         echo '<li>There are ' . strval(count($studentsAtSchool)) . ' students associated with the school</li>';
@@ -125,9 +144,30 @@ if (!$hasPermission) {
                                         echo '<li>There are ' . strval(count($eventsAtSchool)) . ' events associated with the school</li>';
                                     }
                                     echo '</ul>';
+                                } else if ($canDelete && !$schoolDeleted) {
+                                    echo '<p>The school: ' . $school_name . ' could not be deleted, due to an unknown error.</p>';
+                                } else {
+                                    echo '<p>All associated records for the school: ' . $school_name . ' have been deleted.</p>';
                                 }
                             }
                             ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'delete') {
+                                    if ($schoolDeleted) {
+                                        echo '<a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=list" class="btn btn-primary">Return to School List</a>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=list" class="btn btn-primary">Return to School List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=single&id=' . $school_id . '" class="btn btn-secondary">Return to School</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
                         </div>
                     </div>
                 </div>
