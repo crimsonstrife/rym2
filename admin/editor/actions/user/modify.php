@@ -279,37 +279,85 @@ if (!$hasPermission) {
 ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $username; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
                 <div class="card-header">
                     <div class="card-title">
-                        <i class="fa-solid fa-check"></i>
-                        <?php
-                        if ($action == 'edit') {
-                            if ($userUpdated) {
-                                echo 'User Updated';
-                            } else {
-                                echo 'Error: User Not Updated';
-                                //if the username is taken, display the error
-                                if ($usernameTaken) {
-                                    echo '<br>' . $usernameError;
-                                }
-                                //if the email is taken, display the error
-                                if ($emailTaken) {
-                                    echo '<br>' . $emailError;
-                                }
-                                //if the passwords has an error, display the error
-                                if ($passwordError) {
-                                    echo '<br>' . $passwordError;
-                                }
-                                //if the role has an error, display the error
-                                if ($roleIssue) {
-                                    echo '<br>' . $roleError;
+                        <div>
+                            <?php
+                            if ($action == 'create') {
+                                if ($userUpdated) {
+                                    echo '<i class="fa-solid fa-check"></i>';
+                                    echo 'User Updated';
+                                } else {
+                                    echo '<i class="fa-solid fa-x"></i>';
+                                    echo 'Error: User Not Updated';
                                 }
                             }
-                        }
-                        ?>
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'edit') {
+                                if ($userUpdated) {
+                                    echo '<p>The user: ' . $username . ' has been updated.</p>';
+                                } else {
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
+                                    echo '<p>The user: ' . $username . ' could not be updated.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'edit') {
+                                if (!$userUpdated) {
+                                    if ($usernameTaken) {
+                                        echo '<br>' . $usernameError;
+                                    }
+                                    //if the email is taken, display the error
+                                    if ($emailTaken) {
+                                        echo '<br>' . $emailError;
+                                    }
+                                    //if the passwords do not match, display the error
+                                    if ($passwordError) {
+                                        echo '<br>' . $passwordError;
+                                    }
+                                    //if there is a role issue, display the error
+                                    if ($roleIssue) {
+                                        echo '<br>' . $roleError;
+                                    }
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'edit') {
+                                    if ($userUpdated) {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=list" class="btn btn-primary">Return to User List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $user_id . '" class="btn btn-secondary">Go to User</a></span>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=list" class="btn btn-primary">Return to User List</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
