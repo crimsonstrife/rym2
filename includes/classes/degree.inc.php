@@ -99,7 +99,7 @@ class Degree extends Grade implements Major
 
         //loop through the result and add the degree level to the array
         while ($row = $result->fetch_assoc()) {
-            $grade[] = $row;
+            $grade = $row;
         }
 
         //return the array of degree levels
@@ -157,7 +157,7 @@ class Degree extends Grade implements Major
 
         //loop through the result and add the major to the array
         while ($row = $result->fetch_assoc()) {
-            $major[] = $row;
+            $major = $row;
         }
 
         //return the array of majors
