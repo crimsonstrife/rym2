@@ -36,6 +36,13 @@ if (!isset($hasViewDashboardPermission)) {
                         case 'add':
                             if (isset($_GET['action'])) {
                                 switch ($_GET['action']) {
+                                    case 'create':
+                                        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                                            include_once('./editor/actions/student/create.php');
+                                        } else {
+                                            include_once('./editor/student_edit.php');
+                                        }
+                                        break;
                                     default:
                                         include_once('./view/list/student_list.php');
                                         break;
@@ -53,6 +60,7 @@ if (!isset($hasViewDashboardPermission)) {
                                         } else {
                                             include_once('./editor/student_edit.php');
                                         }
+                                        break;
                                     default:
                                         include_once('./view/list/student_list.php');
                                         break;
