@@ -29,6 +29,12 @@ $studentEducation = new StudentEducation();
 //include the student address class
 $studentAddress = new StudentAddress();
 
+//include the degree class
+$degrees = new Degree();
+
+//include the contact class
+$contact = new Contact();
+
 /*confirm user has a role with create student permissions*/
 //get the id of the create student permission
 $relevantPermissionID = $permissionsObject->getPermissionIdByName('CREATE STUDENT');
