@@ -61,27 +61,101 @@ if (!$hasPermission) {
             //get current user ID
             $user_id = intval($session->get('user_id'));
 
-            //edit the subject
-            $subjectUpdated = $subject->updateSubject($subject_id, $subject_name, $user_id);
+            //boolean to track if the subject can be edited
+            $canEdit = true;
+
+            //check if the degree name is being changed
+            if ($subject_name != $subject->getSubjectName($subject_id)) {
+                //check if the subject already exists by name
+                $existingSubjects = $subject->getAllSubjects(); //get all subjects currently in the database
+                foreach ($existingSubjects as $existingSubject) {
+                    //if the subject name already exists, set canEdit to false
+                    if ($existingSubject['name'] == $subject_name) {
+                        $canEdit = false;
+                    }
+                }
+            }
+
+            //if the subject can be edited, edit the subject
+            if ($canEdit) {
+                //update the subject
+                $subjectUpdated = $subject->updateSubject($subject_id, $subject_name, $user_id);
+            }
         }
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $subject_name ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
                 <div class="card-header">
                     <div class="card-title">
-                        <i class="fa-solid fa-check"></i>
-                        <?php
-                        if ($action == 'edit') {
-                            if ($subjectUpdated) {
-                                echo 'Subject Updated';
-                            } else {
-                                echo 'Error: Subject Not Updated';
+                        <div>
+                            <?php
+                            if ($action == 'edit') {
+                                if ($subjectUpdated) {
+                                    echo '<i class="fa-solid fa-check"></i>';
+                                    echo 'Subject Updated';
+                                } else {
+                                    echo '<i class="fa-solid fa-x"></i>';
+                                    echo 'Error: Subject Not Updated';
+                                }
                             }
-                        }
-                        ?>
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'edit') {
+                                if ($subjectUpdated) {
+                                    echo '<p>The subject: ' . $subject_name . ' has been updated.</p>';
+                                } else {
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
+                                    echo '<p>The subject: ' . $subject_name . ' could not be updated.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'edit') {
+                                if (!$canEdit) {
+                                    echo '<p>The subject: ' . $subject_name . ' cannot be updated because a subject with the same name already exists.</p>';
+                                    echo '<p>Please enter a different subject name and try again.</p>';
+                                } else if ($canEdit && !$subjectUpdated) {
+                                    echo '<p>The subject: ' . $subject_name . ' could not be updated due to an unknown error.</p>';
+                                } else {
+                                    echo '<p>The subject: ' . $subject_name . ' has been updated.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'edit') {
+                                    if ($subjectUpdated) {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=subjects&subject=list" class="btn btn-primary">Return to Subject List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=subjects&subject=single&id=' . $subject_id . '" class="btn btn-secondary">Go to Subject</a></span>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=subjects&subject=list" class="btn btn-primary">Return to Subject List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=subjects&subject=single&id=' . $subject_id . '" class="btn btn-secondary">Go to Subject</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
