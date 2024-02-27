@@ -27,6 +27,14 @@ jobs:
           echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> $GITHUB_ENV
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "MAIL_MAILER=${{ vars.MAIL_MAILER }}" >> $GITHUB_ENV
+          echo "MAIL_HOST=${{ vars.MAIL_HOST }}" >> $GITHUB_ENV
+          echo "MAIL_PORT=${{ vars.MAIL_PORT }}" >> $GITHUB_ENV
+          echo "MAIL_AUTH_REQ=${{ vars.MAIL_AUTH_REQ }}" >> $GITHUB_ENV
+          echo "MAIL_FROM_ADDRESS=${{ vars.MAIL_FROM_ADDRESS }}" >> $GITHUB_ENV
+          echo "MAIL_FROM_NAME=${{ vars.MAIL_FROM_NAME }}" >> $GITHUB_ENV
+          echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> $GITHUB_ENV
+          echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> $GITHUB_ENV
       - name: Deploy TalentFlow
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -96,6 +104,14 @@ jobs:
           INPUT_DBNAME: ${{ secrets.DB_DATABASE }}
           INPUT_DBUSER: ${{ secrets.DB_USERNAME }}
           INPUT_DBPASS: ${{ secrets.DB_PASSWORD }}
+          INPUT_MAIL_MAILER: ${{ env.MAIL_MAILER }}
+          INPUT_MAIL_HOST: ${{ env.MAIL_HOST }}
+          INPUT_MAIL_PORT: ${{ env.MAIL_PORT }}
+          INPUT_MAIL_AUTH_REQ: ${{ env.MAIL_AUTH_REQ }}
+          INPUT_MAIL_FROM_ADDRESS: ${{ env.MAIL_FROM_ADDRESS }}
+          INPUT_MAIL_FROM_NAME: ${{ env.MAIL_FROM_NAME }}
+          INPUT_MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          INPUT_MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
         with:
           # Hostname or IP address of the server.
           host: ${{secrets.SSH_HOST}}
@@ -125,6 +141,14 @@ jobs:
             sed -i "s/DB_DATABASE=.*$/DB_DATABASE=${{ env.INPUT_DBNAME }}/g" .env
             sed -i "s/DB_USERNAME=.*$/DB_USERNAME=${{ env.INPUT_DBUSER }}/g" .env
             sed -i "s/DB_PASSWORD=.*$/DB_PASSWORD=${{ env.INPUT_DBPASS }}/g" .env
+            sed -i "s/MAIL_MAILER=.*$/MAIL_MAILER=${{ env.INPUT_MAIL_MAILER }}/g" .env
+            sed -i "s/MAIL_HOST=.*$/MAIL_HOST=${{ env.INPUT_MAIL_HOST }}/g" .env
+            sed -i "s/MAIL_PORT=.*$/MAIL_PORT=${{ env.INPUT_MAIL_PORT }}/g" .env
+            sed -i "s/MAIL_AUTH_REQ=.*$/MAIL_AUTH_REQ=${{ env.INPUT_MAIL_AUTH_REQ }}/g" .env
+            sed -i "s/INPUT_MAIL_FROM_ADDRESS=.*$/INPUT_MAIL_FROM_ADDRESS=${{ env.INPUT_MAIL_FROM_ADDRESS }}/g" .env
+            sed -i "s/MAIL_FROM_NAME=.*$/MAIL_FROM_NAME=${{ env.INPUT_MAIL_FROM_NAME }}/g" .env
+            sed -i "s/MAIL_USERNAME=.*$/MAIL_USERNAME=${{ env.INPUT_MAIL_USERNAME }}/g" .env
+            sed -i "s/MAIL_PASSWORD=.*$/MAIL_PASSWORD=${{ env.INPUT_MAIL_PASSWORD }}/g" .env
             # Success Message
             echo 'Environment Configured'
       - name: Install Composer Dependencies
