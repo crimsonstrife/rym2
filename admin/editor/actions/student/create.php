@@ -352,18 +352,32 @@ if (!$hasPermission) {
                 $student_degree = (int) $student_degree;
                 //prepare the student_major
                 $student_major = prepareData($student_major);
-                //check if the major is in the database, if not add it
-                if (!$degrees->getMajorByName($student_major)) {
-                    $degrees->addMajor($student_major, 0);
-                    //once the major is added, get the id, as a string
-                    $student_major = (string) $degrees->getMajorIdByName($student_major);
+                //determine if the provided major is an id or a name
+                if (is_numeric($student_major)) {
                     $student_major = (int) $student_major;
+                    //check if the major is in the database, and assign it to the student_major variable, if not, set an error
+                    //get the major by id
+                    $major = $degrees->getMajor($student_major);
+                    //if the major is not in the database, set an error
+                    if (!$major || empty($major) || $major == null) {
+                        $student_major_error = "Please select a valid major.";
+                        $entry_error = true;
+                    }
                 } else {
-                    //if the major is in the database, get the id, as a string
-                    $student_major = (string) $degrees->getMajorIdByName($student_major);
-                    $student_major = (int) $student_major;
+                    $student_major = (string) $student_major;
+                    //check if the major is in the database, if not add it
+                    if (!$degrees->getMajorByName($student_major)) {
+                        $degrees->addMajor($student_major, intval($session->get('user_id')));
+                        //once the major is added, get the id, as a string
+                        $student_major = (string) $degrees->getMajorIdByName($student_major);
+                        $student_major = (int) $student_major;
+                    } else {
+                        //if the major is in the database, get the id, as a string
+                        $student_major = (string) $degrees->getMajorIdByName($student_major);
+                        $student_major = (int) $student_major;
+                    }
                 }
-                //prepare the student_school
+            //prepare the student_school
                 $student_school = prepareData($student_school);
                 $student_school = (int) $student_school;
                 //prepare the student_graduationDate
