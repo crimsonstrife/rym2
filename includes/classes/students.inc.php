@@ -736,4 +736,62 @@ class Student
         //return the result
         return $result;
     }
+
+    /**
+     * Update a student in the database
+     * @param int $studentID //student id to update
+     * @param StudentData $studentData
+     * @return bool
+     */
+    public function updateStudent(int $studentID, StudentData $studentData): bool
+    {
+        //get the student address object from the student data
+        $studentAddress = $studentData->studentAddress;
+
+        //get the student education object from the student data
+        $studentEducation = $studentData->studentEducation;
+
+        //get the student data, escape the strings to prevent SQL injection
+        $firstName = $studentData->getEscapedString('firstName');
+        $lastName = $studentData->getEscapedString('lastName');
+        $email = $studentData->getEscapedString('email');
+        $phone = $studentData->getEscapedString('phone');
+        $address = $studentAddress->getEscapedString('address');
+        $city = $studentAddress->getEscapedString('city');
+        $state = $studentAddress->getEscapedString('state');
+        $zip = $studentAddress->getEscapedString('zipcode');
+        $degreeID = intval($studentData->studentEducation->degree);
+        $majorID = intval($studentData->studentEducation->major);
+        $school = intval($studentData->studentEducation->school);
+        $graduation = $studentEducation->getEscapedString('graduation');
+        $position = $studentData->getEscapedString('position');
+        $areaID = intval($studentData->interest);
+
+        //get current timestamp to set the updated_at field
+        $timestamp = date('Y-m-d H:i:s');
+
+        //get current user id from session if available
+        $session = new Session();
+        $updatedBy = intval($session->get('user_id')) ?? null; //if the session is not available, set the updated_by to null
+
+        //SQL statement to update a student in the database
+        $sql = "UPDATE student SET first_name = '$firstName', last_name = '$lastName', email = '$email', phone = '$phone', address = '$address', city = '$city', state = '$state', zipcode = '$zip', degree = '$degreeID', major = '$majorID', school = '$school', graduation = '$graduation', position = '$position', interest = '$areaID', updated_at = '$timestamp', updated_by = '$updatedBy' WHERE id = '$studentID'";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //execute the statement
+        $stmt->execute();
+
+        //check the result
+        if ($stmt->affected_rows > 0) {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($updatedBy, 'Updated Student', 'Student ID: ' . $studentID . ' Student Name: ' . $firstName . ' ' . $lastName);
+            return true;
+        }
+
+        //return false
+        return false;
+    }
 };
