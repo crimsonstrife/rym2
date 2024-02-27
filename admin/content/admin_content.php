@@ -75,10 +75,12 @@ if (!isset($hasViewDashboardPermission)) {
                                         /* Setup upcoming events */
                                         //include the event class
                                         $eventsData = new Event();
+                                        //include the schedule class
+                                        $scheduleData = new Schedule();
                                         //include the school class
                                         $eventSchoolsData = new School();
                                         //get all events
-                                        $eventsArray = $eventsData->getEvents();
+                                        $eventsArray = $scheduleData->getUpcomingEvents();
                                         //for each event, if the date is in the future, display it
                                         foreach ($eventsArray as $event) {
                                             if (strtotime($event['event_date']) > strtotime(date('Y-m-d'))) {
