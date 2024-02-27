@@ -36,7 +36,9 @@ class Session
      */
     public function set(string $name, $value): void
     {
-        $_SESSION[$name] = $value;
+        if (!isset($_SESSION)) {
+            $_SESSION[$name] = $value;
+        }
     }
 
     /**
@@ -46,7 +48,11 @@ class Session
      */
     public function get(string $name)
     {
-        return $_SESSION[$name];
+        if (isset($_SESSION[$name])) {
+            return $_SESSION[$name];
+        }
+
+        return null;
     }
 
     /**
@@ -66,6 +72,8 @@ class Session
      */
     public function remove(string $name): void
     {
-        unset($_SESSION[$name]);
+        if (isset($_SESSION[$name])) {
+            unset($_SESSION[$name]);
+        }
     }
 }
