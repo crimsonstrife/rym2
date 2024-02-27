@@ -453,7 +453,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $student_major = prepareData($student_major);
             //check if the major is in the database, if not add it
             if (!$degrees->getMajorByName($student_major)) {
-                $degrees->addMajor($student_major, 0);
+                $degrees->addMajor($student_major, null);
                 //once the major is added, get the id, as a string
                 $student_major = (string)$degrees->getMajorIdByName($student_major);
                 $student_major = (int)$student_major;
