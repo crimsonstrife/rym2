@@ -549,8 +549,14 @@ class Student
         $session = new Session();
         $createdBy = intval($session->get('user_id')) ?? null; //if the session is not available, set the created_by to null
 
-        //SQL statement to add a new student to the database
-        $sql = "INSERT INTO student (first_name, last_name, email, phone, address, city, state, zipcode, degree, major, school, graduation, position, interest, created_at, updated_at, created_by) VALUES ('$firstName', '$lastName', '$email', '$phone', '$address', '$city', '$state', '$zip', '$degreeID', '$majorID', '$school', '$graduation', '$position', '$areaID', '$timestamp', '$timestamp', '$createdBy')";
+        //if the createdBy is null, modify the sql statement to not set the created_by field
+        if ($createdBy == null) {
+            //SQL statement to add a new student to the database
+            $sql = "INSERT INTO student (first_name, last_name, email, phone, address, city, state, zipcode, degree, major, school, graduation, position, interest, created_at, updated_at) VALUES ('$firstName', '$lastName', '$email', '$phone', '$address', '$city', '$state', '$zip', '$degreeID', '$majorID', '$school', '$graduation', '$position', '$areaID', '$timestamp', '$timestamp')";
+        } else {
+            //SQL statement to add a new student to the database
+            $sql = "INSERT INTO student (first_name, last_name, email, phone, address, city, state, zipcode, degree, major, school, graduation, position, interest, created_at, updated_at, created_by, updated_by) VALUES ('$firstName', '$lastName', '$email', '$phone', '$address', '$city', '$state', '$zip', '$degreeID', '$majorID', '$school', '$graduation', '$position', '$areaID', '$timestamp', '$timestamp', '$createdBy', '$createdBy')";
+        }
 
         //Prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
