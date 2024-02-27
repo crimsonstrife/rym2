@@ -200,10 +200,10 @@ class Degree extends Grade implements Major
     /**
      * Add a major to the database
      * @param string $majorName //name of the major
-     * @param int $createdBy //id from the users table
+     * @param ?int $createdBy //id from the users table
      * @return bool
      */
-    public function addMajor(string $majorName, int $createdBy): bool
+    public function addMajor(string $majorName, ?int $createdBy = null): bool
     {
         //instance the session object
         $session = new Session();
@@ -217,14 +217,26 @@ class Degree extends Grade implements Major
             $userID = $createdBy;
         }
 
+        //make sure the user id is either null, or not 0
+        if ($userID === 0) {
+            $userID = null;
+        }
+
         //get the current date and time
         $createdAt = date('Y-m-d H:i:s');
 
-        //prepare the query
-        $stmt = $this->mysqli->prepare("INSERT INTO major (name, created_by, created_at, updated_by, updated_at) VALUES (?, ?, ?, ?, ?)");
-
-        //bind the parameters
-        $stmt->bind_param('sisis', $majorName, $userID, $createdAt, $userID, $createdAt);
+        //alter the sql statement if the created by id is not null
+        if ($userID !== null) {
+            //prepare the query
+            $stmt = $this->mysqli->prepare("INSERT INTO major (name, created_at, updated_at, created_by, updated_by) VALUES (?, ?, ?, ?, ?)");
+            //bind the parameters
+            $stmt->bind_param('sssii', $majorName, $createdAt, $createdAt, $userID, $userID);
+        } else {
+            //prepare the query
+            $stmt = $this->mysqli->prepare("INSERT INTO major (name, created_at, updated_at) VALUES (?, ?, ?)");
+            //bind the parameters
+            $stmt->bind_param('sss', $majorName, $createdAt, $createdAt);
+        }
 
         //execute the query
         $stmt->execute();
