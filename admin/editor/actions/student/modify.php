@@ -334,16 +334,30 @@ if (!$hasPermission) {
             $student_degree = (int) $student_degree;
             //prepare the student_major
             $student_major = prepareData($student_major);
-            //check if the major is in the database, if not add it
-            if (!$degrees->getMajorByName($student_major)) {
-                $degrees->addMajor($student_major, 0);
-                //once the major is added, get the id, as a string
-                $student_major = (string) $degrees->getMajorIdByName($student_major);
+            //determine if the provided major is an id or a name
+            if (is_numeric($student_major)) {
                 $student_major = (int) $student_major;
+                //check if the major is in the database, and assign it to the student_major variable, if not, set an error
+                //get the major by id
+                $major = $degrees->getMajor($student_major);
+                //if the major is not in the database, set an error
+                if (!$major || empty($major) || $major == null) {
+                    $student_major_error = "Please select a valid major.";
+                    $entry_error = true;
+                }
             } else {
-                //if the major is in the database, get the id, as a string
-                $student_major = (string) $degrees->getMajorIdByName($student_major);
-                $student_major = (int) $student_major;
+                $student_major = (string) $student_major;
+                //check if the major is in the database, if not add it
+                if (!$degrees->getMajorByName($student_major)) {
+                    $degrees->addMajor($student_major, intval($session->get('user_id')));
+                    //once the major is added, get the id, as a string
+                    $student_major = (string) $degrees->getMajorIdByName($student_major);
+                    $student_major = (int) $student_major;
+                } else {
+                    //if the major is in the database, get the id, as a string
+                    $student_major = (string) $degrees->getMajorIdByName($student_major);
+                    $student_major = (int) $student_major;
+                }
             }
             //prepare the student_school
             $student_school = prepareData($student_school);
@@ -383,9 +397,95 @@ if (!$hasPermission) {
             $newStudent->position = $student_jobPosition;
             $newStudent->interest = intval($student_areaOfInterest);
 
-            //update the student
+            //update the student, check if the update was successful
+            if ($student->updateStudent(intval($student_id), $newStudent)) {
+                //set the update attempted variable and the student updated variable to true
+                $attemptedStudentEdit = true;
+                $studentUpdated = true;
+            } else {
+                //if the add was not successful, set the student updated variable to false
+                $studentUpdated = false;
+                //set the update attempted variable to true
+                $attemptedStudentEdit = true;
+            }
+
+            //get the student's full name
+            $student_name = $student_firstName . ' ' . $student_lastName;
         }
     }
-    ?>
-
+?>
+    <!-- Completion page content -->
+    <div class="container-fluid px-4">
+        <h1 class="mt-4"><?php echo $student_name; ?></h1>
+        <div class="row">
+            <div class="card mb-4">
+                <!-- show completion message -->
+                <div class="card-header">
+                    <div class="card-title">
+                        <div>
+                            <?php
+                            if ($action == 'edit') {
+                                if ($studentUpdated) {
+                                    echo '<i class="fa-solid fa-check"></i>';
+                                    echo 'Student Updated';
+                                } else {
+                                    echo '<i class="fa-solid fa-x"></i>';
+                                    echo 'Error: Student Not Updated';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- show completion message -->
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'edit') {
+                                if ($studentUpdated) {
+                                    echo '<p>The student: ' . $student_name . ' has been updated.</p>';
+                                } else {
+                                    echo '<i class="fa-solid fa-circle-exclamation"></i>';
+                                    echo '<p>The student: ' . $student_name . ' could not be updated.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <!-- show error messages -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            if ($action == 'edit') {
+                                if (!$studentUpdated) {
+                                    echo '<p>The student: ' . $student_name . ' could not be updated due to an error.</p>';
+                                } else {
+                                    echo '<p>The student: ' . $student_name . ' has been updated.</p>';
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- show back buttons -->
+                        <div class="col-md-12">
+                            <div class="card-buttons">
+                                <?php
+                                if ($action == 'edit') {
+                                    if ($studentUpdated) {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=students&student=list" class="btn btn-primary">Return to Student List</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=students&student=single&id=' . $student_id . '" class="btn btn-secondary">Go to Student</a></span>';
+                                    } else {
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=students&student=list" class="btn btn-primary">Return to Student List</a></span>';
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php } ?>
