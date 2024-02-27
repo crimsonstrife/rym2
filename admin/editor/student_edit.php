@@ -225,7 +225,7 @@ if (isset($_GET['action'])) {
                     <div class="row">
                         <div class="card mb-4">
                             <!-- Edit Form -->
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&student=' . $_GET['student'] . '&action=' . $_GET['action']; ?>" class="needs-validation <?php if ($entry_error) {
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&student=' . $_GET['student'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>" class="needs-validation <?php if ($entry_error) {
                                                                                                                                                                                                                         echo 'was-validated';
                                                                                                                                                                                                                     } ?>" method="post" enctype="multipart/form-data" novalidate>
                                 <div class="card-header">
