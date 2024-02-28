@@ -66,6 +66,10 @@ class Contact
         $mail = new PHPMailer\PHPMailer\PHPMailer();
         //Tell what protocol to use
         $mail->Mailer = MAIL_MAILER;
+        //Set PHPMailer to use SMTP if the mailer is set to use SMTP in the settings
+        if (MAIL_MAILER == 'smtp') {
+            $mail->isSMTP();
+        }
         //Set the hostname of the mail server
         $mail->Host = MAIL_HOST;
         //Set the port number - likely to be 25, 465 or 587
@@ -75,16 +79,16 @@ class Contact
 
         //try to set the encryption system to use - ssl (deprecated) or tls based on the port number in case the user set it wrong
         if ($mail->Port == 465 && MAIL_ENCRYPTION != 'ssl' && OPENSSL_INSTALLED == true) {
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+            $mail->SMTPSecure = $mail::ENCRYPTION_SMTPS;
         } else if ($mail->Port == 587 && MAIL_ENCRYPTION != 'tls' && OPENSSL_INSTALLED == true) {
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->SMTPSecure = $mail::ENCRYPTION_STARTTLS;
         }
 
         //Set the encryption system to use - ssl (deprecated) or tls
         if (MAIL_ENCRYPTION == 'ssl' || OPENSSL_INSTALLED == true) {
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+            $mail->SMTPSecure = $mail::ENCRYPTION_SMTPS;
         } else if (MAIL_ENCRYPTION == 'tls' || OPENSSL_INSTALLED == true) {
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->SMTPSecure = $mail::ENCRYPTION_STARTTLS;
         }
 
         //log errors if the encryption is set to ssl or tls and openssl is not installed
@@ -106,7 +110,11 @@ class Contact
         }
 
         //set debug
-        $mail->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+        if (APP_DEBUG == true) {
+            $mail->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+        } else {
+            $mail->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_OFF;
+        }
 
         //if authentication is required, set the username and password
         if (MAIL_AUTH_REQ == 'true') {
