@@ -391,6 +391,20 @@ if (!function_exists('mail')) {
                                             $sql = file_get_contents(BASEPATH . '/temp/talentflow.sql');
                                             $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
                                             $mysqli->multi_query($sql);
+                                            //get the result of the query to check if it was successful
+                                            $result = $mysqli->store_result();
+
+                                            //check if the result is null or has an error
+                                            if ($result == null || $mysqli->error) {
+                                                //if the result is null or has an error, throw an exception
+                                                $errorFound = true;
+                                                $errorIsDBConnectionFailed = true;
+                                                $dbErrorMessage = "Failed to install the database tables: " . $mysqli->error;
+                                            }
+
+                                            //close the result
+                                            $result->free();
+
                                             //close the connection
                                             closeDatabaseConnection($mysqli);
                                         } catch (Exception $e) {
