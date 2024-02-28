@@ -165,9 +165,9 @@ if (file_exists(BASEPATH . '/.env')) {
     //Check if the mail_auth_req is set in the database, if not set it to the value in the .env file
     if ($mailer_auth_required != null || $mailer_auth_required != '') {
         //if true, set to string true, if false, set to string false
-        if ($mailer_auth_required == true) {
+        if ($mailer_auth_required == true || $mailer_auth_required == 'true') {
             $required = 'true';
-        } else if ($mailer_auth_required == false) {
+        } else if ($mailer_auth_required == false || $mailer_auth_required == 'false') {
             $required = 'false';
         }
         //define the mail_auth_req constant
@@ -206,21 +206,6 @@ if (file_exists(BASEPATH . '/.env')) {
         define('MAIL_USERNAME', $_ENV['MAIL_USERNAME']);
     }
 
-    $mailer_password = null;
-    //try to get the mailer_password
-    try {
-        $mailer_password = $mailSettings->getMailerPassword();
-    } catch (Exception $e) {
-        $mailer_password = null;
-    }
-    //Check if the mail_password is set in the database, if not set it to the value in the .env file
-    if ($mailer_password != null || $mailer_password != '') {
-        //define the mail_password constant
-        define('MAIL_PASSWORD', $mailer_password);
-    } else {
-        define('MAIL_PASSWORD', $_ENV['MAIL_PASSWORD']);
-    }
-
     $mailer_from_address = null;
     //try to get the mailer_from_address
     try {
@@ -251,6 +236,32 @@ if (file_exists(BASEPATH . '/.env')) {
         define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME']);
     }
     define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
+
+    $mailer_password = null;
+    //try to get the mailer_password
+    try {
+        $mailer_password = $mailSettings->getMailerPassword();
+    } catch (Exception $e) {
+        $mailer_password = null;
+    }
+    //Check if the mail_password is set in the database, if not set it to the value in the .env file
+    if ($mailer_password != null || $mailer_password != '') {
+        //define the mail_password constant
+        define('MAIL_PASSWORD', $mailer_password);
+    } else {
+        $mailerPassword = $_ENV['MAIL_PASSWORD'];
+        //if OPENSSL is installed, encrypt the password
+        if (OPENSSL_INSTALLED) {
+            //Encrypt the password
+            $password = openssl_encrypt($mailerPassword, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+        }
+
+        if (!OPENSSL_INSTALLED) {
+            //store the password as plain text
+            $password = $mailerPassword;
+        }
+        define('MAIL_PASSWORD', $mailerPassword);
+    }
 } elseif (file_exists(BASEPATH . '/.env.example')) {
     /*load the .env.example file if the .env file does not exist */
     $dotenv = Dotenv\Dotenv::createImmutable(BASEPATH, '.env.example');
@@ -370,9 +381,9 @@ if (file_exists(BASEPATH . '/.env')) {
     //Check if the mail_auth_req is set in the database, if not set it to the value in the .env file
     if ($mailer_auth_required != null || $mailer_auth_required != '') {
         //if true, set to string true, if false, set to string false
-        if ($mailer_auth_required == true) {
+        if ($mailer_auth_required == true || $mailer_auth_required == 'true') {
             $required = 'true';
-        } else if ($mailer_auth_required == false) {
+        } else if ($mailer_auth_required == false || $mailer_auth_required == 'false') {
             $required = 'false';
         }
         //define the mail_auth_req constant
@@ -423,7 +434,18 @@ if (file_exists(BASEPATH . '/.env')) {
         //define the mail_password constant
         define('MAIL_PASSWORD', $mailer_password);
     } else {
-        define('MAIL_PASSWORD', $_ENV['MAIL_PASSWORD']);
+        $mailerPassword = $_ENV['MAIL_PASSWORD'];
+        //if OPENSSL is installed, encrypt the password
+        if (OPENSSL_INSTALLED) {
+            //Encrypt the password
+            $password = openssl_encrypt($mailerPassword, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+        }
+
+        if (!OPENSSL_INSTALLED) {
+            //store the password as plain text
+            $password = $mailerPassword;
+        }
+        define('MAIL_PASSWORD', $mailerPassword);
     }
 
     $mailer_from_address = null;
@@ -456,6 +478,33 @@ if (file_exists(BASEPATH . '/.env')) {
         define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME']);
     }
     define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
+
+    $mailer_password = null;
+    //try to get the mailer_password
+    try {
+        $mailer_password = $mailSettings->getMailerPassword();
+    } catch (Exception $e) {
+        $mailer_password = null;
+    }
+    //Check if the mail_password is set in the database, if not set it to the value in the .env file
+    if ($mailer_password != null || $mailer_password != '') {
+        //define the mail_password constant
+        define('MAIL_PASSWORD', $mailer_password);
+    } else {
+        $mailerPassword = $_ENV['MAIL_PASSWORD'];
+        //if OPENSSL is installed, encrypt the password
+        if (OPENSSL_INSTALLED) {
+            //Encrypt the password
+            $password = openssl_encrypt($mailerPassword, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+        }
+
+        if (!OPENSSL_INSTALLED) {
+            //store the password as plain text
+            $password = $mailerPassword;
+        }
+        define('MAIL_PASSWORD', $mailerPassword);
+    }
+
 } else {
     //set the error message
     $thisError = 'CONFIGURATION_ERROR';

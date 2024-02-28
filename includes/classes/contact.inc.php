@@ -497,6 +497,10 @@ class Contact
             $session = new Session();
             $userID = intval($session->get('user_id')) ?? null;
             $activity->logActivity($userID, 'Error Sending Account Creation Email', $mail->ErrorInfo);
+
+            //debugging
+            error_log('Error: ' . $mail->ErrorInfo);
+
             //if there is an error, return false
             return false;
         }
@@ -507,6 +511,10 @@ class Contact
         $session = new Session();
         $userID = intval($session->get('user_id')) ?? null;
         $activity->logActivity($userID, 'Account Creation Email Sent', $email);
+
+        //debugging
+        error_log('Email Sent: ' . $email);
+
         //if there is no error, return true
         return true;
     }
