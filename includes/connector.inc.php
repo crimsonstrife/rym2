@@ -87,17 +87,19 @@ if (!function_exists('testDatabaseConnection')) {
     }
 }
 
-/* This function will prepare a SQL statement for execution */
-function prepareStatement(mysqli $mysqli, string $sql): mysqli_stmt
-{
-    //prepare the statement
-    $stmt = $mysqli->prepare($sql);
+if (!function_exists('prepareStatement')) {
+    /* This function will prepare a SQL statement for execution */
+    function prepareStatement(mysqli $mysqli, string $sql): mysqli_stmt
+    {
+        //prepare the statement
+        $stmt = $mysqli->prepare($sql);
 
-    //if the statement fails to prepare, throw an exception
-    if (!$stmt) {
-        throw new Exception("Failed to prepare statement: " . $mysqli->error);
+        //if the statement fails to prepare, throw an exception
+        if (!$stmt) {
+            throw new Exception("Failed to prepare statement: " . $mysqli->error);
+        }
+
+        //return the prepared statement
+        return $stmt;
     }
-
-    //return the prepared statement
-    return $stmt;
 }
