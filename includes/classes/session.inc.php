@@ -24,9 +24,15 @@ class Session
         if (!isset($_SESSION)) {
             //Start the session
             session_start();
+            //Set the session variables
+            $this->sessionVars = $_SESSION;
+            //debug
+            error_log("Session started");
         } else {
             //Set the session variables
             $this->sessionVars = $_SESSION;
+            //debug
+            error_log("Session already started");
         }
     }
 
@@ -38,8 +44,15 @@ class Session
      */
     public function set(string $name, $value): void
     {
-        if (!isset($_SESSION)) {
+        if (isset($_SESSION)) {
             $_SESSION[$name] = $value;
+        } else {
+            //Start the session
+            $this->sessionVars = session_start();
+            //Set the session variables
+            $_SESSION[$name] = $value;
+            //debug
+            error_log("Session started, variable set");
         }
     }
 
@@ -54,6 +67,8 @@ class Session
             return $_SESSION[$name];
         }
 
+        //debug
+        error_log("Session variable" . $name . "not found");
         return null;
     }
 
@@ -64,7 +79,13 @@ class Session
      */
     public function check(string $name): bool
     {
-        return isset($_SESSION[$name]);
+        if (isset($_SESSION[$name])) {
+            return true;
+        }
+
+        //debug
+        error_log("Session variable" . $name . "not found/or not set");
+        return false;
     }
 
     /**
