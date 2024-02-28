@@ -394,98 +394,35 @@ if (!function_exists('mail')) {
                                     if (file_exists($sqlFile)) {
                                         //try to run the sql file
                                         try {
-                                            $sql = file_get_contents($sqlFile);
                                             $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
-                                            $mysqli->multi_query($sql);
-                                            //get the result of the query to check if it was successful
-                                            $result = $mysqli->store_result();
 
-                                            //check if the result is null or has an error
-                                            if ($result == null || $mysqli->error) {
-                                                //if the result is null or has an error, throw an exception
-                                                $errorFound = true;
-                                                $errorIsDBConnectionFailed = true;
-                                                $dbErrorMessage = "Failed to install the database tables: " . $mysqli->error;
-                                            } else {
-                                                //if the result is not null and has no error, the tables were installed
-                                                $errorIsDBConnectionFailed = false;
-                                                //set a flag to show the tables were installed
-                                                $tablesInstalled = true;
-                                            }
+                                            // Temporary variable, used to store current query
+                                            $temp = '';
+                                            // Read in entire file
+                                            $lines = file($sqlFile);
+                                            // Loop through each line
+                                            foreach ($lines as $line) {
+                                                // Skip it if it's a comment
+                                                if (substr($line, 0, 2) == '--' || $line == '')
+                                                continue;
 
-                                            //if the tables were installed, make sure the default admin user is created, and has a default password of admin
-                                            if (isset($tablesInstalled) && $tablesInstalled == true) {
-                                                //check if the admin user exists
-                                                $sql = "SELECT * FROM users WHERE username = 'admin'";
-                                                //try to run the query
-                                                try {
-                                                    $result = $mysqli->query($sql);
-                                                } catch (Exception $e) {
-                                                    // Log the error
-                                                    error_log("Failed to run the query: " . $e->getMessage());
-                                                    //throw an exception if the query fails
-                                                    $errorFound = true;
-                                                    $errorIsDBConnectionFailed = true;
-                                                    $dbErrorMessage = "Failed to configure the database tables: " . $e->getMessage();
-                                                }
-
-                                                $passwordString = password_hash('admin', PASSWORD_DEFAULT);
-
-                                                //if the result is true, the admin user exists, set the password to admin (hashed)
-                                                if ($result->num_rows > 0) {
-                                                    $sql = "UPDATE users SET password = '$passwordString' WHERE username = 'admin'";
-                                                    //try to run the query
-                                                    try {
-                                                        $result = $mysqli->query($sql);
-                                                    } catch (Exception $e) {
-                                                        // Log the error
-                                                        error_log("Failed to run the query: " . $e->getMessage());
-                                                        //throw an exception if the query fails
-                                                        $errorFound = true;
-                                                        $errorIsDBConnectionFailed = true;
-                                                        $dbErrorMessage = "Failed to configure the database tables: " . $e->getMessage();
-                                                    }
-                                                } else {
-                                                    //get the role ID of SUPER ADMIN
-                                                    $sql = "SELECT id FROM roles WHERE name = 'SUPERADMIN'";
-                                                    //try to run the query
-                                                    try {
-                                                        $result = $mysqli->query($sql);
-                                                    } catch (Exception $e) {
-                                                        // Log the error
-                                                        error_log("Failed to run the query: " . $e->getMessage());
-                                                        //throw an exception if the query fails
-                                                        $errorFound = true;
-                                                        $errorIsDBConnectionFailed = true;
-                                                        $dbErrorMessage = "Failed to configure the database tables: " . $e->getMessage();
-                                                    }
-                                                    //get the result of the query
-                                                    $row = $result->fetch_assoc();
-                                                    //get the role ID
-                                                    $roleID = intval($row['id']);
-                                                    //if the result is false, the admin user does not exist, create the admin user with the default password
-                                                    $sql = "INSERT INTO users (username, password, role) VALUES ('admin', ?, ?)";
-                                                    $stmt = $mysqli->prepare($sql);
-                                                    $stmt->bind_param('si', $passwordString, $roleID);
-                                                    //try to run the query
-                                                    try {
-                                                        $stmt->execute();
-                                                    } catch (Exception $e) {
-                                                        // Log the error
-                                                        error_log("Failed to run the query: " . $e->getMessage());
-                                                        //throw an exception if the query fails
-                                                        $errorFound = true;
-                                                        $errorIsDBConnectionFailed = true;
-                                                        $dbErrorMessage = "Failed to configure the database tables: " . $e->getMessage();
-                                                    }
+                                                // Add this line to the current segment
+                                                $templine .= $line;
+                                                // If it has a semicolon at the end, it's the end of the query
+                                                if (substr(trim($line), -1, 1) == ';') {
+                                                    // Perform the query
+                                                    $mysqli->query($templine) or print('Error performing query \'<strong>' . $templine . '\': ' . $mysqli->error . '<br /><br />');
+                                                    // Reset temp variable to empty
+                                                    $temp = '';
                                                 }
                                             }
-
-                                            //close the result
-                                            $result->free();
+                                            echo "Tables imported successfully";
 
                                             //close the connection
                                             closeDatabaseConnection($mysqli);
+
+                                            $errorFound = false;
+                                            $errorIsDBConnectionFailed = false;
                                         } catch (Exception $e) {
                                             // Log the error
                                             error_log("Failed to install the database tables: " . $e->getMessage());
@@ -493,6 +430,104 @@ if (!function_exists('mail')) {
                                             $errorFound = true;
                                             $errorIsDBConnectionFailed = true;
                                             $dbErrorMessage = "Failed to install the database tables: " . $e->getMessage();
+                                        }
+
+                                        //if no errors were found, check if the database has a users table
+                                        $hasUsersTable = false;
+                                        try {
+                                            $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
+                                            $sql = "SELECT * FROM users";
+                                            $result = $mysqli->query($sql);
+                                            if ($result) {
+                                                $hasUsersTable = true;
+                                            }
+                                            closeDatabaseConnection($mysqli);
+                                        } catch (Exception $e) {
+                                            // Log the error
+                                            error_log("User table does not exist: " . $e->getMessage());
+                                            //throw an exception if the connection fails
+                                            $errorFound = true;
+                                            $errorIsDBConnectionFailed = true;
+                                            $dbErrorMessage = "User table does not exist: " . $e->getMessage();
+                                        }
+
+                                        //if the users table exists, check for the admin user
+                                        if ($hasUsersTable) {
+                                            $hasAdminUser = false;
+                                            try {
+                                                $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
+                                                $sql = "SELECT * FROM users WHERE username = 'admin'";
+                                                $result = $mysqli->query($sql);
+                                                if ($result->num_rows > 0) {
+                                                    $hasAdminUser = true;
+                                                }
+                                                closeDatabaseConnection($mysqli);
+                                            } catch (Exception $e) {
+                                                // Log the error
+                                                error_log("Admin user does not exist: " . $e->getMessage());
+                                                //throw an exception if the connection fails
+                                                $errorFound = true;
+                                                $errorIsDBConnectionFailed = true;
+                                                $dbErrorMessage = "Admin user does not exist: " . $e->getMessage();
+                                            }
+
+                                            //if the admin user does not exist, create the admin user
+                                            if (!$hasAdminUser) {
+                                                $role_id = null;
+                                                //get the role id for the SUPERADMIN role
+                                                try {
+                                                    $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
+                                                    $sql = "SELECT id FROM roles WHERE name = 'SUPERADMIN'";
+                                                    $result = $mysqli->query($sql);
+                                                    if ($result->num_rows > 0) {
+                                                        while ($row = $result->fetch_assoc()) {
+                                                            $role_id = $row['id'];
+                                                        }
+                                                    }
+                                                    closeDatabaseConnection($mysqli);
+                                                } catch (Exception $e) {
+                                                    // Log the error
+                                                    error_log("Failed to get the role id: " . $e->getMessage());
+                                                    //throw an exception if the connection fails
+                                                    $errorFound = true;
+                                                    $errorIsDBConnectionFailed = true;
+                                                    $dbErrorMessage = "Failed to get the role id: " . $e->getMessage();
+                                                }
+
+                                                //if the role id was found, create the admin user
+                                                if ($role_id != null) {
+                                                    try {
+                                                        $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
+                                                        $sql = "INSERT INTO users (username, password, email, role_id) VALUES ('admin', '" . password_hash('admin', PASSWORD_DEFAULT) . "', intval($role_id))";
+                                                        $result = $mysqli->query($sql);
+                                                        closeDatabaseConnection($mysqli);
+                                                    } catch (Exception $e) {
+                                                        // Log the error
+                                                        error_log("Failed to create the admin user: " . $e->getMessage());
+                                                        //throw an exception if the connection fails
+                                                        $errorFound = true;
+                                                        $errorIsDBConnectionFailed = true;
+                                                        $dbErrorMessage = "Failed to create the admin user: " . $e->getMessage();
+                                                    }
+                                                }
+
+                                                //if there was an admin user, make sure the default password is set to admin
+                                                if ($hasAdminUser) {
+                                                    try {
+                                                        $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
+                                                        $sql = "UPDATE users SET password = '" . password_hash('admin', PASSWORD_DEFAULT) . "' WHERE username = 'admin'";
+                                                        $result = $mysqli->query($sql);
+                                                        closeDatabaseConnection($mysqli);
+                                                    } catch (Exception $e) {
+                                                        // Log the error
+                                                        error_log("Failed to update the admin user password: " . $e->getMessage());
+                                                        //throw an exception if the connection fails
+                                                        $errorFound = true;
+                                                        $errorIsDBConnectionFailed = true;
+                                                        $dbErrorMessage = "Failed to update the admin user password: " . $e->getMessage();
+                                                    }
+                                                }
+                                            }
                                         }
                                     } else {
                                         //if the file does not exist, throw an exception
