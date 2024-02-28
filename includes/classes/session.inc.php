@@ -19,12 +19,14 @@ class Session
     public $sessionVars;
 
     public function __construct()
-    {
-        $this->sessionVars = $_SESSION; //Get the session variables, will still trigger a phpmd warning.
+    { //Get the session variables, will still trigger a phpmd warning.
         //Check if the session is not set
         if (!isset($_SESSION)) {
             //Start the session
             session_start();
+        } else {
+            //Set the session variables
+            $this->sessionVars = $_SESSION;
         }
     }
 
