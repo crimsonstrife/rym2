@@ -229,13 +229,6 @@ if (!function_exists('mail')) {
                                 </p>
                                 <h3>Checking the system configuration:</h3>
                             </div>
-                            <?php
-                            /* Check if there are any errors in the system configuration, show list of pass and fail for each feature*/
-                            if ($errorFound) { ?>
-                                <p>There were errors found in the system configuration, please fix the following errors
-                                    before
-                                    continuing:</p>
-                            <?php } ?>
                             <ul>
                                 <li>PHP Version: (Must be version 7.2.5 or newer)</li>
                                 <li>MySQLi Extension: (Must be enabled)</li>
@@ -312,17 +305,17 @@ if (!function_exists('mail')) {
                                 <?php
                                 /* Check if the form was submitted, if errored notify the user */
                                 if (isset($_POST['db_submit'])) {
-                                    //try to test the connection
-                                    try {
                                         $testConnection = connectToDatabase($_POST['db_host'], $_POST['db_username'], $_POST['db_password'], $_POST['db_database'], $_POST['db_port']);
-                                    } catch (Exception $e) {
-                                        // Log the error
-                                        error_log("Failed to connect to the database: " . $e->getMessage());
-                                        //throw an exception if the connection fails
-                                        $errorFound = true;
-                                        $errorIsDBConnectionFailed = true;
-                                        $dbErrorMessage = "Failed to connect to the database: " . $e->getMessage();
-                                    }
+
+                                        //get the result of the connection
+                                        if ($testConnection) {
+                                            $errorFound = false;
+                                            $errorIsDBConnectionFailed = false;
+                                        } else {
+                                            $errorFound = true;
+                                            $errorIsDBConnectionFailed = true;
+                                            $dbErrorMessage = "Failed to connect to the database";
+                                        }
                                     if ($errorFound) { ?>
                                         <p>There were errors found in the system configuration, please fix the following before
                                             continuing:</p>
