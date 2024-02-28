@@ -39,6 +39,122 @@ class Contact
     }
 
     /**
+     * Send an email
+     * @param string $recipientEmail email address to send the email to
+     * @param string $recipientName name of the recipient
+     * @param string $senderEmail email address of the sender
+     * @param string $senderName name of the sender
+     * @param string $subject subject of the email
+     * @param string $message message to send to the student
+     * @param ?bool $useHTML whether to use HTML in the email
+     *
+     * @return mixed true if the email was sent, false if not
+     */
+    public function initiateEmailSend(string $recipientEmail, string $recipientName, string $senderEmail, string $senderName, string $subject, string $message, ?bool $useHTML = false): mixed
+    {
+        //is the email HTML?, defaults to false if not set
+        if ($useHTML == true) {
+            $useHTML = true;
+        } else {
+            $useHTML = false;
+        }
+
+        //include the application class
+        $settings = new MailerSettings();
+
+        //Create a new PHPMailer instance
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
+        //Tell what protocol to use
+        $mail->Mailer = MAIL_MAILER;
+        //Set the hostname of the mail server
+        $mail->Host = MAIL_HOST;
+        //Set the port number - likely to be 25, 465 or 587
+        $mail->Port = MAIL_PORT;
+        //Set if authentication is required
+        $mail->SMTPAuth = MAIL_AUTH_REQ;
+
+        //try to set the encryption system to use - ssl (deprecated) or tls based on the port number in case the user set it wrong
+        if ($mail->Port == 465 && MAIL_ENCRYPTION != 'ssl' && OPENSSL_INSTALLED == true) {
+            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+        } else if ($mail->Port == 587 && MAIL_ENCRYPTION != 'tls' && OPENSSL_INSTALLED == true) {
+            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        }
+
+        //Set the encryption system to use - ssl (deprecated) or tls
+        if (MAIL_ENCRYPTION == 'ssl' || OPENSSL_INSTALLED == true) {
+            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+        } else if (MAIL_ENCRYPTION == 'tls' || OPENSSL_INSTALLED == true) {
+            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        }
+
+        //log errors if the encryption is set to ssl or tls and openssl is not installed
+        if (MAIL_ENCRYPTION == 'ssl' && OPENSSL_INSTALLED == false) {
+            error_log('Error: OpenSSL is not installed, cannot use SSL encryption');
+        } else if (MAIL_ENCRYPTION == 'tls' && OPENSSL_INSTALLED == false) {
+            error_log('Error: OpenSSL is not installed, cannot use TLS encryption');
+        }
+
+        //if the app_env is set to local, allow insecure connections for self-signed certificates
+        if (APP_ENV == 'local' || APP_ENV == 'development' || APP_ENV == 'testing' || APP_ENV == 'LOCAL' || APP_ENV == 'DEVELOPMENT' || APP_ENV == 'TESTING') {
+            $mail->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            );
+        }
+
+        //set debug
+        $mail->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+
+        //if authentication is required, set the username and password
+        if (MAIL_AUTH_REQ == 'true') {
+            $mail->Username = MAIL_USERNAME;
+            //if the password was set in the database
+            if ($settings->getMailerPassword() != null || $settings->getMailerPassword() != '') {
+                //if openssl is installed, decrypt the password
+                if (OPENSSL_INSTALLED) {
+                    $mail->Password = openssl_decrypt(MAIL_PASSWORD, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+                } else {
+                    $mail->Password = MAIL_PASSWORD;
+                }
+            } else {
+                $mail->Password = MAIL_PASSWORD;
+            }
+        }
+
+        //Set who the message is to be sent from (the server will need to be configured to authenticate with this address, or to have send as permissions)
+        //check if the sender email matches the from address in constants
+        if ($senderEmail == MAIL_FROM_ADDRESS) {
+            $mail->setFrom(MAIL_FROM_ADDRESS, MAIL_FROM_NAME);
+        } else {
+            $mail->setFrom($senderEmail, $senderName);
+        }
+
+        //debug
+        error_log('Email From: ' . $mail->From);
+
+        //Set who the message is to be sent to
+        $mail->addAddress($recipientEmail, $recipientName);
+
+        //Set the subject line
+        $mail->Subject = $subject;
+
+        //set if the email is HTML
+        $mail->isHTML($useHTML);
+
+        //Set the body
+        $mail->Body = $message;
+
+        //send the message
+        $result = $mail->send();
+
+        //return the result
+        return $result;
+    }
+
+    /**
      * Get the contact log from the database
      *
      * @return array
@@ -262,42 +378,6 @@ class Contact
      */
     function sendAutoEmail(string $email, string $name, string $subject, string $message): bool
     {
-        //include the application class
-        $settings = new MailerSettings();
-        //Create a new PHPMailer instance
-        $mail = new PHPMailer\PHPMailer\PHPMailer();
-        //Tell what protocol to use
-        $mail->Mailer = MAIL_MAILER;
-        //Set the hostname of the mail server
-        $mail->Host = MAIL_HOST;
-        //Set the port number - likely to be 25, 465 or 587
-        $mail->Port = MAIL_PORT;
-        //Set if authentication is required
-        $mail->SMTPAuth = MAIL_AUTH_REQ;
-
-        //Set the encryption system to use - ssl (deprecated) or tls
-        if (MAIL_ENCRYPTION == 'ssl') {
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
-        } else if (MAIL_ENCRYPTION == 'tls') {
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-        }
-
-        //if authentication is required, set the username and password
-        if (MAIL_AUTH_REQ == 'true') {
-            $mail->Username = MAIL_USERNAME;
-            //if the password was set in the database
-            if ($settings->getMailerPassword() != null || $settings->getMailerPassword() != '') {
-                //if openssl is installed, decrypt the password
-                if (OPENSSL_INSTALLED) {
-                    $mail->Password = openssl_decrypt(MAIL_PASSWORD, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
-                } else {
-                    $mail->Password = MAIL_PASSWORD;
-                }
-            } else {
-                $mail->Password = MAIL_PASSWORD;
-            }
-        }
-
         //include the student class
         $studentData = new Student();
 
@@ -307,29 +387,22 @@ class Contact
         //get current date and time
         $date = date('Y-m-d H:i:s');
 
-        //Set who the message is to be sent from (the server will need to be configured to authenticate with this address, or to have send as permissions)
-        $mail->setFrom(MAIL_FROM_ADDRESS, MAIL_FROM_NAME);
+        //initiate the email send
+        $mailResult = $this->initiateEmailSend($email, $name, MAIL_FROM_ADDRESS, MAIL_FROM_NAME, $subject, $message);
 
-        //Set who the message is to be sent to
-        $mail->addAddress($email, $name);
-
-        //Set the subject line
-        $mail->Subject = $subject;
-
-        //Don't use HTML
-        $mail->isHTML(false);
-
-        //Set the body
-        $mail->Body = $message;
-
-        //send the message, check for errors
-        if (!$mail->send()) {
-            //if there is an error, return false
-            return false;
-        } else {
-            //if there is no error, log the email and return true
-            $this->logContactHistory(intval($student['id']), $date, 1, NULL, $subject, $message);
+        //check for errors
+        if ($mailResult == true) {
+            //log the contact
+            $this->logContactHistory($student['id'], $date, 1, NULL, $subject, $message);
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(NULL, 'Email Sent', 'Sent ' . $name . ' @ ' . $email . ' - Subject: ' . $subject);
             return true;
+        } else {
+            //log the error
+            $activity = new Activity();
+            $activity->logActivity(NULL, 'Error Sending Email', $email);
+            return false;
         }
     }
 
@@ -350,79 +423,30 @@ class Contact
         //get the current date and time
         $date = date('Y-m-d H:i:s');
 
-        //include the student class
-        $studentData = new Student();
-
         //include the user class
         $userObject = new User();
 
         //get the email address of the user that sent the email
         $senderEmail = $userObject->getUserEmail($senderId);
 
-        //include the application class
-        $settings = new MailerSettings();
+        //get the name of the user that sent the email
+        $senderName = $userObject->getUserUsername($senderId);
 
-        //Create a new PHPMailer instance
-        $mail = new PHPMailer\PHPMailer\PHPMailer();
-        //Tell what protocol to use
-        $mail->Mailer = MAIL_MAILER;
-        //Set the hostname of the mail server
-        $mail->Host = MAIL_HOST;
-        //Set the port number - likely to be 25, 465 or 587
-        $mail->Port = MAIL_PORT;
-        //Set if authentication is required
-        $mail->SMTPAuth = MAIL_AUTH_REQ;
+        //initiate the email send
+        $result = $this->initiateEmailSend($email, $name, $senderEmail, $senderName, $subject, $message);
 
-        //Set the encryption system to use - ssl (deprecated) or tls
-        if (MAIL_ENCRYPTION == 'ssl') {
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
-        } else if (MAIL_ENCRYPTION == 'tls') {
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-        }
-
-        //if authentication is required, set the username and password
-        if (MAIL_AUTH_REQ == 'true') {
-            $mail->Username = MAIL_USERNAME;
-            //if the password was set in the database
-            if ($settings->getMailerPassword() != null || $settings->getMailerPassword() != '') {
-                //if openssl is installed, decrypt the password
-                if (OPENSSL_INSTALLED) {
-                    $mail->Password = openssl_decrypt(MAIL_PASSWORD, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
-                } else {
-                    $mail->Password = MAIL_PASSWORD;
-                }
-            } else {
-                $mail->Password = MAIL_PASSWORD;
-            }
-        }
-
-        //Set who the message is to be sent from (the server will need to be configured to authenticate with this address, or to have send as permissions)
-        $mail->setFrom(MAIL_FROM_ADDRESS, MAIL_FROM_NAME);
-
-        //Set who the message is to be sent to
-        $mail->addAddress($email, $name);
-
-        //Set the subject line
-        $mail->Subject = $subject;
-
-        //Don't use HTML
-        $mail->isHTML(false);
-
-        //Set the body
-        $mail->Body = $message;
-
-        //send the message
-        $result = $mail->send();
-
-        //send the message, check for errors
+        //check for errors
         if (!$result) {
             //if there is an error, log it to the activity log and return false
             $activity = new Activity();
-            $activity->logActivity($senderId, 'Error Sending Email', $mail->ErrorInfo . ' - ' . $email);
+            $activity->logActivity($senderId, 'Error Sending Email', $result->ErrorInfo . ' - ' . $email);
             return false;
         } else {
             //if there is no error, log the email and return true
             $this->logContactHistory($studentId, $date, 0, $senderId, $subject, $message);
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity($senderId, 'Email Sent', 'Sent ' . $name . ' @ ' . $email . ' - Subject: ' . $subject . ' by ' . $senderName);
             return true;
         }
     }
@@ -438,68 +462,25 @@ class Contact
      */
     public function sendAccountCreationEmail(string $email, string $username, string $password): bool
     {
-        //include the application class
-        $settings = new MailerSettings();
-        //Create a new PHPMailer instance
-        $mail = new PHPMailer\PHPMailer\PHPMailer();
-        //Tell what protocol to use
-        $mail->Mailer = MAIL_MAILER;
-        //Set the hostname of the mail server
-        $mail->Host = MAIL_HOST;
-        //Set the port number - likely to be 25, 465 or 587
-        $mail->Port = MAIL_PORT;
-        //Set if authentication is required
-        $mail->SMTPAuth = MAIL_AUTH_REQ;
-
-        //Set the encryption system to use - ssl (deprecated) or tls
-        if (MAIL_ENCRYPTION == 'ssl') {
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
-        } else if (MAIL_ENCRYPTION == 'tls') {
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-        }
-
-        //if authentication is required, set the username and password
-        if (MAIL_AUTH_REQ == 'true') {
-            $mail->Username = MAIL_USERNAME;
-            //if the password was set in the database
-            if ($settings->getMailerPassword() != null || $settings->getMailerPassword() != '') {
-                //if openssl is installed, decrypt the password
-                if (OPENSSL_INSTALLED) {
-                    $mail->Password = openssl_decrypt(MAIL_PASSWORD, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
-                } else {
-                    $mail->Password = MAIL_PASSWORD;
-                }
-            } else {
-                $mail->Password = MAIL_PASSWORD;
-            }
-        }
-
-        //Set who the message is to be sent from (the server will need to be configured to authenticate with this address, or to have send as permissions)
-        $mail->setFrom(MAIL_FROM_ADDRESS, MAIL_FROM_NAME);
-
-        //Set who the message is to be sent to
-        $mail->addAddress($email);
-
-        //Set the subject line
-        $mail->Subject = 'Account Created';
-
-        //Don't use HTML
-        $mail->isHTML(false);
+        $subject = 'Account Created';
 
         //Set the body
-        $mail->Body = "Your account has been created. Your username is: " . $username . " and your password is: " . $password;
+        $body = "Your account has been created. Your username is: " . $username . " and your password is: " . $password;
 
-        //send the message, check for errors
-        if (!$mail->send()) {
+        //initiate the email send
+        $result = $this->initiateEmailSend($email, $username, MAIL_FROM_ADDRESS, MAIL_FROM_NAME, $subject, $body);
+
+        //check for errors
+        if ($result == false) {
             //log the error
             $activity = new Activity();
             //instance of the session class
             $session = new Session();
             $userID = intval($session->get('user_id')) ?? null;
-            $activity->logActivity($userID, 'Error Sending Account Creation Email', $mail->ErrorInfo);
+            $activity->logActivity($userID, 'Error Sending Account Creation Email', $result->ErrorInfo);
 
             //debugging
-            error_log('Error: ' . $mail->ErrorInfo);
+            error_log('Error: ' . $result->ErrorInfo);
 
             //if there is an error, return false
             return false;

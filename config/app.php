@@ -235,7 +235,27 @@ if (file_exists(BASEPATH . '/.env')) {
     } else {
         define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME']);
     }
-    define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
+
+    //check if the encryption key is set in the .env file, if not set it to a generated key
+    if (isset($_ENV['MAILER_PASSWORD_ENCRYPTION_KEY'])) {
+        //define the mailer_password_encryption_key constant
+        define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
+    } else {
+        //generate a random encryption key
+        if (function_exists('random_bytes')) {
+            $encryptionKey = base64_encode(random_bytes(32));
+        } else if (function_exists('openssl_random_pseudo_bytes')) {
+            $encryptionKey = base64_encode(openssl_random_pseudo_bytes(32));
+        } else {
+            $encryptionKey = base64_encode(uniqid());
+        }
+
+        //write the encryption key to the .env file
+        file_put_contents(BASEPATH . '/.env', "\nMAILER_PASSWORD_ENCRYPTION_KEY=" . $encryptionKey, FILE_APPEND);
+
+        //define the mailer_password_encryption_key constant
+        define('MAILER_PASSWORD_ENCRYPTION_KEY', $encryptionKey);
+    }
 
     $mailer_password = null;
     //try to get the mailer_password
@@ -401,6 +421,10 @@ if (file_exists(BASEPATH . '/.env')) {
     }
     //Check if the mail_encryption is set in the database, if not set it to the value in the .env file
     if ($mailer_encryption != null || $mailer_encryption != '') {
+        //check what port is being used, if 465, set the encryption to ssl just in case, but only if OPENSSL is installed
+        if (($mailer_port == 465 || $mailer_port == '465') && OPENSSL_INSTALLED) {
+            $mailer_encryption = 'ssl';
+        }
         //define the mail_encryption constant
         define('MAIL_ENCRYPTION', $mailer_encryption);
     } else {
@@ -477,7 +501,27 @@ if (file_exists(BASEPATH . '/.env')) {
     } else {
         define('MAIL_FROM_NAME', $_ENV['MAIL_FROM_NAME']);
     }
-    define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
+
+    //check if the encryption key is set in the .env file, if not set it to a generated key
+    if (isset($_ENV['MAILER_PASSWORD_ENCRYPTION_KEY'])) {
+        //define the mailer_password_encryption_key constant
+        define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
+    } else {
+        //generate a random encryption key
+        if (function_exists('random_bytes')) {
+            $encryptionKey = base64_encode(random_bytes(32));
+        } else if (function_exists('openssl_random_pseudo_bytes')) {
+            $encryptionKey = base64_encode(openssl_random_pseudo_bytes(32));
+        } else {
+            $encryptionKey = base64_encode(uniqid());
+        }
+
+        //write the encryption key to the .env file
+        file_put_contents(BASEPATH . '/.env.example', "\nMAILER_PASSWORD_ENCRYPTION_KEY=" . $encryptionKey, FILE_APPEND);
+
+        //define the mailer_password_encryption_key constant
+        define('MAILER_PASSWORD_ENCRYPTION_KEY', $encryptionKey);
+    }
 
     $mailer_password = null;
     //try to get the mailer_password
