@@ -91,11 +91,14 @@ class UserLogin extends User implements Login
      */
     public function logout(): void
     {
-        //initialize the session
-        session_start();
+        //get the auth class
+        $auth = new Authenticator();
 
         //get the session variables
         $session = new Session();
+
+        //expire user's token(s)
+        $auth->expireTokenByUserID(intval($session->get("user_id")));
 
         // Unset all of the session variables
         $session->sessionVars = array();
