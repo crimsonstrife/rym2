@@ -147,6 +147,34 @@ class Authenticator extends User
     }
 
     /**
+     * Expire the authentication token by user ID
+     * @param int $userID
+     * @return bool if the token was expired
+     */
+    function expireTokenByUserID(int $userID)
+    {
+        //SQL statement to expire the token
+        $sql = "UPDATE user_token_auth SET is_expired = 1 WHERE user_id = ?";
+
+        //prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the parameters to the SQL statement
+        $stmt->bind_param("i", $userID);
+
+        //execute the SQL statement
+        $stmt->execute();
+
+        //if there were more than 0 rows affected, return true
+        if ($this->mysqli->affected_rows > 0) {
+            return true;
+        }
+
+        //return false if no rows were affected
+        return false;
+    }
+
+    /**
      * Create the authentication token
      * @param int $userID
      * @param string $username
