@@ -191,8 +191,7 @@ if (!function_exists('mail')) {
     <nav class="top-nav navbar navbar-expand-lg navbar-dark bg-dark schoolBrandedNav">
         <!-- Navbar Brand-->
         <div class="navbar-brand brand-container">
-            <span class="brand-text"><a class="navbar-brand ps-3"
-                    href="<?php echo APP_URL ?>"><?php echo htmlspecialchars(APP_NAME) ?></a></span>
+            <span class="brand-text"><a class="navbar-brand ps-3" href="<?php echo APP_URL ?>"><?php echo htmlspecialchars(APP_NAME) ?></a></span>
         </div>
     </nav>
     <main>
@@ -213,109 +212,104 @@ if (!function_exists('mail')) {
                     <div class="container">
                         <?php /* Check if setup has already been run */
                         if (file_exists('ready.php')) { ?>
-                        <div class="text-center">
-                            <!-- Setup has already been run, notify the user -->
-                            <h2>Setup has already been run.</h2>
-                            <p>You do not need to load this file directly.</p>
-                            <p>If you need to run setup again, please delete the ready.php file and refresh this page.
-                            </p>
-                            <p>Return to the <a href="index.php">application</a>.</p>
-                        </div>
+                            <div class="text-center">
+                                <!-- Setup has already been run, notify the user -->
+                                <h2>Setup has already been run.</h2>
+                                <p>You do not need to load this file directly.</p>
+                                <p>If you need to run setup again, please delete the ready.php file and refresh this page.
+                                </p>
+                                <p>Return to the <a href="index.php">application</a>.</p>
+                            </div>
                         <?php } else { ?>
-                        <div class="text-center">
-                            <!-- Setup has not been run, run the setup process -->
-                            <h2><?php echo htmlspecialchars(APP_NAME) ?> Installation</h2>
-                            <p>Welcome to <?php echo htmlspecialchars(APP_NAME) ?>.</p>
-                            <p>Before you can use the application, you must configure the database and create a user.
-                            </p>
-                            <h3>Checking the system configuration:</h3>
-                        </div>
-                        <?php
+                            <div class="text-center">
+                                <!-- Setup has not been run, run the setup process -->
+                                <h2><?php echo htmlspecialchars(APP_NAME) ?> Installation</h2>
+                                <p>Welcome to <?php echo htmlspecialchars(APP_NAME) ?>.</p>
+                                <p>Before you can use the application, you must configure the database and create a user.
+                                </p>
+                                <h3>Checking the system configuration:</h3>
+                            </div>
+                            <?php
                             /* Check if there are any errors in the system configuration, show list of pass and fail for each feature*/
                             if ($errorFound) { ?>
-                        <p>There were errors found in the system configuration, please fix the following errors
-                            before
-                            continuing:</p>
-                        <?php } ?>
-                        <ul>
-                            <li>PHP Version: (Must be version 7.2.5 or newer)</li>
-                            <li>MySQLi Extension: (Must be enabled)</li>
-                            <li>MySQL Version: (Must be version 5.7.0 or newer, only checked if variables are set)
-                            </li>
-                            <li>PHP Mail: (Must be enabled)</li>
-                        </ul>
-                        <ul>
-                            <?php if ($errorIsPHPVersion) { ?>
-                            <li style="color: red;"><?php echo $phpErrorMessage; ?></li>
-                            <?php } else { ?>
-                            <li style="color: green;">PHP Version: <?php echo $phpVersion; ?> - OK!</li>
+                                <p>There were errors found in the system configuration, please fix the following errors
+                                    before
+                                    continuing:</p>
                             <?php } ?>
-                            <?php if ($errorIsMySQLiExtension) { ?>
-                            <li style="color: red;"><?php echo $mysqliErrorMessage; ?></li>
-                            <?php } else { ?>
-                            <li style="color: green;">MySQLi Extension - OK!</li>
-                            <?php } ?>
-                            <?php if ($errorIsDBVarMissing) { ?>
-                            <li style="color: red;">Database variables are missing from the .env file, will attempt
-                                to
-                                configure them
-                                below.</li>
-                            <?php } else {
+                            <ul>
+                                <li>PHP Version: (Must be version 7.2.5 or newer)</li>
+                                <li>MySQLi Extension: (Must be enabled)</li>
+                                <li>MySQL Version: (Must be version 5.7.0 or newer, only checked if variables are set)
+                                </li>
+                                <li>PHP Mail: (Must be enabled)</li>
+                            </ul>
+                            <ul>
+                                <?php if ($errorIsPHPVersion) { ?>
+                                    <li style="color: red;"><?php echo $phpErrorMessage; ?></li>
+                                <?php } else { ?>
+                                    <li style="color: green;">PHP Version: <?php echo $phpVersion; ?> - OK!</li>
+                                <?php } ?>
+                                <?php if ($errorIsMySQLiExtension) { ?>
+                                    <li style="color: red;"><?php echo $mysqliErrorMessage; ?></li>
+                                <?php } else { ?>
+                                    <li style="color: green;">MySQLi Extension - OK!</li>
+                                <?php } ?>
+                                <?php if ($errorIsDBVarMissing) { ?>
+                                    <li style="color: red;">Database variables are missing from the .env file, will attempt
+                                        to
+                                        configure them
+                                        below.</li>
+                                    <?php } else {
                                     /* if the database variables are set, was the connection successful? */
                                     if ($errorIsDBConnectionFailed) { ?>
-                            <li style="color: red;"><?php echo $dbErrorMessage; ?></li>
-                            <?php } else {
+                                        <li style="color: red;"><?php echo $dbErrorMessage; ?></li>
+                                        <?php } else {
                                         /* If the connection was successful, was the database empty? */
                                         if ($errorIsDBNotEmpty) { ?>
-                            <li style="color: red;">The database is not empty, please empty the database and try
-                                again.
-                            </li>
-                            <?php } else {
+                                            <li style="color: red;">The database is not empty, please empty the database and try
+                                                again.
+                                            </li>
+                                            <?php } else {
                                             /* If the database is empty, was the MySQL version greater than or equal to 5.7.0? */
                                             if ($errorIsMySQLVersion) { ?>
-                            <li style="color: red;"><?php echo $mysqlErrorMessage; ?></li>
-                            <?php } else { ?>
-                            <li style="color: green;">MySQL Version: <?php echo $mysqlVersion; ?> - OK!</li>
-                            <?php }
+                                                <li style="color: red;"><?php echo $mysqlErrorMessage; ?></li>
+                                            <?php } else { ?>
+                                                <li style="color: green;">MySQL Version: <?php echo $mysqlVersion; ?> - OK!</li>
+                                <?php }
                                         }
                                     }
                                 } ?>
-                            <?php if ($errorIsMailEnabled) { ?>
-                            <li style="color: red;"><?php echo $mailErrorMessage; ?></li>
-                            <?php } else { ?>
-                            <li style="color: green;">PHP Mail - OK!</li>
-                            <?php } ?>
-                        </ul>
+                                <?php if ($errorIsMailEnabled) { ?>
+                                    <li style="color: red;"><?php echo $mailErrorMessage; ?></li>
+                                <?php } else { ?>
+                                    <li style="color: green;">PHP Mail - OK!</li>
+                                <?php } ?>
+                            </ul>
                     </div>
                     <!-- there were database errors of any kind, show the form to configure the database -->
                     <?php if ($errorFound && $errorIsDBVarMissing || $errorIsMySQLVersion || $errorIsDBConnectionFailed) { ?>
-                    <h3>Configure the database:</h3>
-                    <div>
-                        <form action="setup.php" method="post">
-                            <label for="db_host">Database Host:</label>
-                            <input type="text" name="db_host" id="db_host" placeholder="<?php echo $_ENV['DB_HOST']; ?>"
-                                required>
-                            <br>
-                            <label for="db_port">Database Port:</label>
-                            <input type="number" name="db_port" id="db_port"
-                                placeholder="<?php echo $_ENV['DB_PORT']; ?>" required>
-                            <br>
-                            <label for="db_database">Database Name:</label>
-                            <input type="text" name="db_database" id="db_database"
-                                placeholder="<?php echo $_ENV['DB_DATABASE']; ?>" required>
-                            <br>
-                            <label for="db_username">Database Username:</label>
-                            <input type="text" name="db_username" id="db_username"
-                                placeholder="<?php echo $_ENV['DB_USERNAME']; ?>" required>
-                            <br>
-                            <label for="db_password">Database Password:</label>
-                            <input type="password" name="db_password" id="db_password"
-                                placeholder="<?php echo $_ENV['DB_PASSWORD']; ?>" required>
-                            <br>
-                            <input type="submit" name="db_submit" value="Submit">
-                        </form>
+                        <h3>Configure the database:</h3>
                         <div>
-                            <?php
+                            <form action="setup.php" method="post">
+                                <label for="db_host">Database Host:</label>
+                                <input type="text" name="db_host" id="db_host" placeholder="<?php echo $_ENV['DB_HOST']; ?>" required>
+                                <br>
+                                <label for="db_port">Database Port:</label>
+                                <input type="number" name="db_port" id="db_port" placeholder="<?php echo $_ENV['DB_PORT']; ?>" required>
+                                <br>
+                                <label for="db_database">Database Name:</label>
+                                <input type="text" name="db_database" id="db_database" placeholder="<?php echo $_ENV['DB_DATABASE']; ?>" required>
+                                <br>
+                                <label for="db_username">Database Username:</label>
+                                <input type="text" name="db_username" id="db_username" placeholder="<?php echo $_ENV['DB_USERNAME']; ?>" required>
+                                <br>
+                                <label for="db_password">Database Password:</label>
+                                <input type="password" name="db_password" id="db_password" placeholder="<?php echo $_ENV['DB_PASSWORD']; ?>" required>
+                                <br>
+                                <input type="submit" name="db_submit" value="Submit">
+                            </form>
+                            <div>
+                                <?php
                                 /* Check if the form was submitted, if errored notify the user */
                                 if (isset($_POST['db_submit'])) {
                                     //try to test the connection
@@ -330,65 +324,77 @@ if (!function_exists('mail')) {
                                         $dbErrorMessage = "Failed to connect to the database: " . $e->getMessage();
                                     }
                                     if ($errorFound) { ?>
-                            <p>There were errors found in the system configuration, please fix the following before
-                                continuing:</p>
-                            <?php if ($errorIsDBConnectionFailed) { ?>
-                            <p><?php echo $dbErrorMessage; ?></p>
-                            <?php } ?>
-                            <?php } ?>
-                            <ul>
-                                <li>Database Host</li>
-                                <li>Database Port</li>
-                                <li>Database Name</li>
-                                <li>Database Username</li>
-                                <li>Database Password</li>
-                            </ul>
-                            <ul>
-                                <?php if (empty($_POST['db_host'])) { ?>
-                                <li style="color: red;">Database Host is required</li>
-                                <?php } else { ?>
-                                <li style="color: green;">Database Host - OK!</li>
+                                        <p>There were errors found in the system configuration, please fix the following before
+                                            continuing:</p>
+                                        <?php if ($errorIsDBConnectionFailed) { ?>
+                                            <p><?php echo $dbErrorMessage; ?></p>
+                                        <?php } ?>
+                                    <?php } ?>
+                                    <ul>
+                                        <li>Database Host</li>
+                                        <li>Database Port</li>
+                                        <li>Database Name</li>
+                                        <li>Database Username</li>
+                                        <li>Database Password</li>
+                                    </ul>
+                                    <ul>
+                                        <?php if (empty($_POST['db_host'])) { ?>
+                                            <li style="color: red;">Database Host is required</li>
+                                        <?php } else { ?>
+                                            <li style="color: green;">Database Host - OK!</li>
+                                        <?php } ?>
+                                        <?php if (empty($_POST['db_port'])) { ?>
+                                            <li style="color: red;">Database Port is required</li>
+                                        <?php } else { ?>
+                                            <li style="color: green;">Database Port - OK!</li>
+                                        <?php } ?>
+                                        <?php if (empty($_POST['db_database'])) { ?>
+                                            <li style="color: red;">Database Name is required</li>
+                                        <?php } else { ?>
+                                            <li style="color: green;">Database Name - OK!</li>
+                                        <?php } ?>
+                                        <?php if (empty($_POST['db_username'])) { ?>
+                                            <li style="color: red;">Database Username is required</li>
+                                        <?php } else { ?>
+                                            <li style="color: green;">Database Username - OK!</li>
+                                        <?php } ?>
+                                        <?php if (empty($_POST['db_password'])) { ?>
+                                            <li style="color: red;">Database Password is required</li>
+                                        <?php } else { ?>
+                                            <li style="color: green;">Database Password - OK!</li>
+                                        <?php } ?>
+                                    </ul>
                                 <?php } ?>
-                                <?php if (empty($_POST['db_port'])) { ?>
-                                <li style="color: red;">Database Port is required</li>
-                                <?php } else { ?>
-                                <li style="color: green;">Database Port - OK!</li>
-                                <?php } ?>
-                                <?php if (empty($_POST['db_database'])) { ?>
-                                <li style="color: red;">Database Name is required</li>
-                                <?php } else { ?>
-                                <li style="color: green;">Database Name - OK!</li>
-                                <?php } ?>
-                                <?php if (empty($_POST['db_username'])) { ?>
-                                <li style="color: red;">Database Username is required</li>
-                                <?php } else { ?>
-                                <li style="color: green;">Database Username - OK!</li>
-                                <?php } ?>
-                                <?php if (empty($_POST['db_password'])) { ?>
-                                <li style="color: red;">Database Password is required</li>
-                                <?php } else { ?>
-                                <li style="color: green;">Database Password - OK!</li>
-                                <?php } ?>
-                            </ul>
-                            <?php } ?>
+                            </div>
                         </div>
-                    </div>
                     <?php } else { ?>
-                    <!-- there were no database errors, show the form to have the user approve the table installation -->
-                    <h3>Install the database tables:</h3>
-                    <div>
-                        <form action="setup.php" method="post">
-                            <input type="submit" name="install_tables" value="Install Tables">
-                        </form>
+                        <!-- there were no database errors, show the form to have the user approve the table installation -->
+                        <h3>Install the database tables:</h3>
                         <div>
-                            <?php
+                            <form action="setup.php" method="post">
+                                <input type="submit" name="install_tables" value="Install Tables">
+                            </form>
+                            <div>
+                                <?php
                                 /* Check if the form was submitted, if errored notify the user */
                                 if (isset($_POST['install_tables'])) {
+                                    //check the mysql version to see which file to use (helps with compatibility for different versions)
+                                    $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
+                                    $mysqlVersion = $mysqli->server_info;
+                                    closeDatabaseConnection($mysqli);
+                                    //check if the mysql version is greater than or equal to 8.0.0
+                                    if (version_compare($mysqlVersion, '8.0.0', '>=')) {
+                                        //if the mysql version is greater than or equal to 8.0.0, use the 8.0.0 sql file
+                                        $sqlFile = BASEPATH . '/temp/talentflow8.sql';
+                                    } else {
+                                        //if the mysql version is less than 8.0.0, use the 5.7.0 sql file
+                                        $sqlFile = BASEPATH . '/temp/talentflow.sql';
+                                    }
                                     //verify the sql file exists in the temp directory
-                                    if (file_exists(BASEPATH . '/temp/talentflow.sql')) {
+                                    if (file_exists($sqlFile)) {
                                         //try to run the sql file
                                         try {
-                                            $sql = file_get_contents(BASEPATH . '/temp/talentflow.sql');
+                                            $sql = file_get_contents($sqlFile);
                                             $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
                                             $mysqli->multi_query($sql);
                                             //get the result of the query to check if it was successful
@@ -400,6 +406,79 @@ if (!function_exists('mail')) {
                                                 $errorFound = true;
                                                 $errorIsDBConnectionFailed = true;
                                                 $dbErrorMessage = "Failed to install the database tables: " . $mysqli->error;
+                                            } else {
+                                                //if the result is not null and has no error, the tables were installed
+                                                $errorIsDBConnectionFailed = false;
+                                                //set a flag to show the tables were installed
+                                                $tablesInstalled = true;
+                                            }
+
+                                            //if the tables were installed, make sure the default admin user is created, and has a default password of admin
+                                            if (isset($tablesInstalled) && $tablesInstalled == true) {
+                                                //check if the admin user exists
+                                                $sql = "SELECT * FROM users WHERE username = 'admin'";
+                                                //try to run the query
+                                                try {
+                                                    $result = $mysqli->query($sql);
+                                                } catch (Exception $e) {
+                                                    // Log the error
+                                                    error_log("Failed to run the query: " . $e->getMessage());
+                                                    //throw an exception if the query fails
+                                                    $errorFound = true;
+                                                    $errorIsDBConnectionFailed = true;
+                                                    $dbErrorMessage = "Failed to configure the database tables: " . $e->getMessage();
+                                                }
+
+                                                $passwordString = password_hash('admin', PASSWORD_DEFAULT);
+
+                                                //if the result is true, the admin user exists, set the password to admin (hashed)
+                                                if ($result->num_rows > 0) {
+                                                    $sql = "UPDATE users SET password = '$passwordString' WHERE username = 'admin'";
+                                                    //try to run the query
+                                                    try {
+                                                        $result = $mysqli->query($sql);
+                                                    } catch (Exception $e) {
+                                                        // Log the error
+                                                        error_log("Failed to run the query: " . $e->getMessage());
+                                                        //throw an exception if the query fails
+                                                        $errorFound = true;
+                                                        $errorIsDBConnectionFailed = true;
+                                                        $dbErrorMessage = "Failed to configure the database tables: " . $e->getMessage();
+                                                    }
+                                                } else {
+                                                    //get the role ID of SUPER ADMIN
+                                                    $sql = "SELECT id FROM roles WHERE name = 'SUPERADMIN'";
+                                                    //try to run the query
+                                                    try {
+                                                        $result = $mysqli->query($sql);
+                                                    } catch (Exception $e) {
+                                                        // Log the error
+                                                        error_log("Failed to run the query: " . $e->getMessage());
+                                                        //throw an exception if the query fails
+                                                        $errorFound = true;
+                                                        $errorIsDBConnectionFailed = true;
+                                                        $dbErrorMessage = "Failed to configure the database tables: " . $e->getMessage();
+                                                    }
+                                                    //get the result of the query
+                                                    $row = $result->fetch_assoc();
+                                                    //get the role ID
+                                                    $roleID = intval($row['id']);
+                                                    //if the result is false, the admin user does not exist, create the admin user with the default password
+                                                    $sql = "INSERT INTO users (username, password, role) VALUES ('admin', ?, ?)";
+                                                    $stmt = $mysqli->prepare($sql);
+                                                    $stmt->bind_param('si', $passwordString, $roleID);
+                                                    //try to run the query
+                                                    try {
+                                                        $stmt->execute();
+                                                    } catch (Exception $e) {
+                                                        // Log the error
+                                                        error_log("Failed to run the query: " . $e->getMessage());
+                                                        //throw an exception if the query fails
+                                                        $errorFound = true;
+                                                        $errorIsDBConnectionFailed = true;
+                                                        $dbErrorMessage = "Failed to configure the database tables: " . $e->getMessage();
+                                                    }
+                                                }
                                             }
 
                                             //close the result
@@ -433,42 +512,42 @@ if (!function_exists('mail')) {
                                         $dbErrorMessage = "Failed to connect to the database: " . $e->getMessage();
                                     }
                                     if ($errorFound) { ?>
-                            <p>There were errors found in the system configuration, please fix the following before
-                                continuing:</p>
-                            <?php if ($errorIsDBConnectionFailed) { ?>
-                            <p><?php echo $dbErrorMessage; ?></p>
-                            <?php } ?>
-                            <?php } ?>
-                            <ul>
-                                <li>Database Tables</li>
-                            </ul>
-                            <ul>
-                                <?php if ($errorIsDBConnectionFailed) { ?>
-                                <li style="color: red;"><?php echo $dbErrorMessage; ?></li>
-                                <?php } else { ?>
-                                <li style="color: green;">Database Connection - OK!</li>
-                                <li style="color: green;">Database Tables - OK!</li>
-                                <?php } ?>
-                            </ul>
+                                        <p>There were errors found in the system configuration, please fix the following before
+                                            continuing:</p>
+                                        <?php if ($errorIsDBConnectionFailed) { ?>
+                                            <p><?php echo $dbErrorMessage; ?></p>
+                                        <?php } ?>
+                                    <?php } ?>
+                                    <ul>
+                                        <li>Database Tables</li>
+                                    </ul>
+                                    <ul>
+                                        <?php if ($errorIsDBConnectionFailed) { ?>
+                                            <li style="color: red;"><?php echo $dbErrorMessage; ?></li>
+                                        <?php } else { ?>
+                                            <li style="color: green;">Database Connection - OK!</li>
+                                            <li style="color: green;">Database Tables - OK!</li>
+                                        <?php } ?>
+                                    </ul>
 
-                            <?php if (!$errorIsDBConnectionFailed) { ?>
-                            <p>Setup is complete, you can now <a href="index.php">launch the application</a>.</p>
-                            <p>The default login is: </p>
-                            <p>Username: admin</p>
-                            <p>Password: admin</p>
-                            <p>It is recommended to change the default password after logging in.</p>
-                            <?php } ?>
-                            <!-- if the database tables were installed, create the ready file -->
-                            <?php if (!$errorIsDBConnectionFailed) {
+                                    <?php if (!$errorIsDBConnectionFailed) { ?>
+                                        <p>Setup is complete, you can now <a href="index.php">launch the application</a>.</p>
+                                        <p>The default login is: </p>
+                                        <p>Username: admin</p>
+                                        <p>Password: admin</p>
+                                        <p>It is recommended to change the default password after logging in.</p>
+                                    <?php } ?>
+                                    <!-- if the database tables were installed, create the ready file -->
+                                    <?php if (!$errorIsDBConnectionFailed) {
                                         //create the ready file
                                         $readyFile = fopen(BASEPATH . '/ready.php', 'w');
                                         fclose($readyFile);
                                     } ?>
-                            <?php } ?>
+                                <?php } ?>
+                            </div>
                         </div>
-                    </div>
                     <?php } ?>
-                    <?php } ?>
+                <?php } ?>
                 </div>
             </div>
         </div>
