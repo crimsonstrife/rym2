@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Feb 23, 2024 at 06:38 PM
+-- Generation Time: Feb 28, 2024 at 12:36 PM
 -- Server version: 5.7.39
 -- PHP Version: 7.4.33
 
@@ -34,463 +34,6 @@ CREATE TABLE `activity_log` (
   `performed_on` varchar(535) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `action_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
---
--- Dumping data for table `activity_log`
---
-
-INSERT INTO `activity_log` (`id`, `user_id`, `action`, `performed_on`, `action_date`) VALUES
-(1, NULL, 'OTHER', 'User 1', '2023-12-28 23:20:28'),
-(2, NULL, 'OTHER', 'User 4', '2023-12-28 23:22:41'),
-(3, 1, 'OTHER', 'User test', '2023-12-28 23:22:41'),
-(4, 1, 'OTHER', 'User test', '2023-12-28 23:24:22'),
-(5, NULL, 'MODIFY', 'Role 11 added to user 4', '2023-12-28 23:31:01'),
-(6, 1, 'MODIFY', 'User test', '2023-12-28 23:31:01'),
-(7, 1, 'OTHER', 'Report 27', '2023-12-29 00:04:42'),
-(8, 1, 'CREATE', 'School Test', '2024-01-03 00:10:57'),
-(9, 1, 'CREATE', 'School Test', '2024-01-04 01:08:39'),
-(10, 1, 'CREATE', 'School Test', '2024-01-04 01:16:18'),
-(11, 1, 'DELETE', 'School ID: 7', '2024-01-04 01:16:39'),
-(12, NULL, 'LOGIN', 'User 1', '2024-01-04 21:03:49'),
-(13, NULL, 'LOGIN', 'User 1', '2024-01-04 21:42:32'),
-(14, NULL, 'MODIFY', 'Role 3 added to user 1', '2024-01-04 21:42:49'),
-(15, 1, 'MODIFY', 'User admin', '2024-01-04 21:42:49'),
-(16, 1, 'MODIFY', 'User admin', '2024-01-04 23:31:57'),
-(17, 3, 'MODIFY', 'Event', '2024-01-05 20:20:47'),
-(18, 3, 'MODIFY', 'Event', '2024-01-05 20:20:47'),
-(19, 3, 'MODIFY', 'Event', '2024-01-05 20:20:47'),
-(20, 2, 'MODIFY', 'Event', '2024-01-05 20:21:13'),
-(21, 2, 'MODIFY', 'Event', '2024-01-05 20:21:13'),
-(22, 2, 'MODIFY', 'Event', '2024-01-05 20:21:13'),
-(23, 1, 'OTHER', 'Event Slug for Event:TrailheadDX does not exist, creating slug', '2024-01-05 21:42:25'),
-(24, 1, 'CREATE', 'Event ID: 14 Event Name: TrailheadDX was sluggified with Slug: trailheaddx', '2024-01-05 21:42:25'),
-(25, 1, 'CREATE', 'Event ID: 14 Event Name: TrailheadDX', '2024-01-05 21:42:25'),
-(26, NULL, 'LOGIN', 'User 1', '2024-01-08 21:25:40'),
-(27, 1, 'DELETE', 'Event ID: 14 Event Name: TrailheadDX', '2024-01-08 22:33:42'),
-(28, 1, 'DELETE', 'Job ID: 6 Job Name: lorem', '2024-01-09 00:44:14'),
-(29, 1, 'DELETE', 'Job ID: 3 Job Name: Lorem Ipsum', '2024-01-09 00:44:29'),
-(30, 1, 'DELETE', 'Job ID: 4 Job Name: Lorem Ipsum 2', '2024-01-09 00:44:34'),
-(31, 1, 'OTHER', 'Report 28', '2024-01-09 00:57:49'),
-(32, 1, 'OTHER', 'Subject', '2024-01-09 01:57:59'),
-(33, 1, 'OTHER', 'Subject', '2024-01-09 02:01:07'),
-(34, 1, 'DELETE', 'Subject ID: 9 Subject Name: Test', '2024-01-09 02:01:13'),
-(35, 1, 'OTHER', 'major', '2024-01-10 20:31:32'),
-(36, 1, 'DELETE', 'Student ID: 4 Student Name: Jane Doe', '2024-01-10 23:26:54'),
-(37, 1, 'DELETE', 'Student ID: 3 Student Name: John Doe', '2024-01-10 23:39:20'),
-(38, 1, 'DELETE', 'Student ID: 7 Student Name: Mark Iplier', '2024-01-10 23:57:04'),
-(39, 1, 'DELETE', 'Major ID: 5 Major Name: Test', '2024-01-11 00:19:19'),
-(40, 1, 'DELETE', 'Degree Level ID: 10 Degree Level Name: BBA - Bachelor of Business Administration', '2024-01-11 01:10:44'),
-(41, NULL, 'MODIFY', 'Role 3 added to user 1', '2024-01-11 01:14:19'),
-(42, 1, 'MODIFY', 'User admin', '2024-01-11 01:14:19'),
-(43, NULL, 'MODIFY', 'Role 3 added to user 4', '2024-01-11 23:50:13'),
-(44, 1, 'MODIFY', 'User: test updated by User: 1', '2024-01-11 23:50:13'),
-(45, 1, 'MODIFY', 'User: test updated by User: 1', '2024-01-11 23:50:21'),
-(46, NULL, 'MODIFY', 'Role ID: 12Role Name: Test added to User ID: 4User Name: test', '2024-01-11 23:54:44'),
-(47, 1, 'MODIFY', 'User: test updated by User: 1', '2024-01-11 23:54:44'),
-(48, NULL, 'LOGIN', 'User 1', '2024-01-12 19:47:06'),
-(49, 1, 'DELETE', 'User ID: 4 User Name: test', '2024-01-12 19:56:37'),
-(50, 1, 'MODIFY', 'Role 1 was removed permission 55', '2024-01-15 21:27:42'),
-(51, 1, 'MODIFY', 'Role 1 was given permission 55', '2024-01-15 21:27:49'),
-(52, 1, 'MODIFY', 'Role 12 was removed permission 4', '2024-01-15 23:04:46'),
-(53, 1, 'DELETE', 'Role 12 was deleted', '2024-01-15 23:04:46'),
-(54, 1, 'MODIFY', 'Role 3 was given permission 57', '2024-01-15 23:14:50'),
-(55, 1, 'MODIFY', 'Role 3 was given permission 58', '2024-01-15 23:14:50'),
-(56, 1, 'DELETE', 'Report 12', '2024-01-16 00:42:09'),
-(57, 1, 'DELETE', 'Report 18', '2024-01-16 01:08:19'),
-(58, 1, 'DELETE', 'Report 20', '2024-01-16 01:10:09'),
-(59, 1, 'DELETE', 'Report 23', '2024-01-16 01:11:56'),
-(60, NULL, 'LOGIN', 'User 1', '2024-01-16 01:37:19'),
-(61, 1, 'DELETE', 'Event ID: 13 Event Name: new event with branding', '2024-01-16 01:38:23'),
-(62, 1, 'DELETE', 'Event ID: 11 Event Name: New Test Event', '2024-01-16 01:38:32'),
-(63, 1, 'OTHER', 'Event Slug for Event:WGU Job Faire already exists, incrementing slug', '2024-01-16 01:39:02'),
-(64, 1, 'MODIFY', 'Event ID: 1 Event Name: WGU Job Faire was sluggified with Slug: wgu-job-faire', '2024-01-16 01:39:02'),
-(65, 1, 'MODIFY', 'Event ID: 1 Event Name: WGU Job Faire', '2024-01-16 01:39:02'),
-(66, 1, 'CREATE', 'School Harvard University', '2024-01-16 19:47:09'),
-(67, 1, 'MODIFY', 'School Harvard University', '2024-01-16 19:47:55'),
-(68, 1, 'CREATE', 'School Stanford University', '2024-01-16 19:49:48'),
-(69, 1, 'CREATE', 'School Massachusetts Institute of Technology - MIT', '2024-01-16 19:52:29'),
-(70, 1, 'CREATE', 'School University of California, Berkeley', '2024-01-16 19:53:40'),
-(71, 1, 'MODIFY', 'School University of California, Berkeley', '2024-01-16 19:54:56'),
-(72, 1, 'CREATE', 'School Yale University', '2024-01-16 19:56:36'),
-(73, 1, 'CREATE', 'School University of Chicago', '2024-01-16 19:58:05'),
-(74, 1, 'CREATE', 'School Columbia University', '2024-01-16 19:59:50'),
-(75, 1, 'CREATE', 'School Duke University', '2024-01-16 20:01:09'),
-(76, 1, 'CREATE', 'School University of North Carolina at Chapel Hill - UNC Chapel Hill', '2024-01-16 20:02:59'),
-(77, 1, 'CREATE', 'School North Carolina State University', '2024-01-16 20:04:51'),
-(78, 1, 'CREATE', 'School Wake Forest University', '2024-01-16 20:06:30'),
-(79, 1, 'OTHER', 'Report 29', '2024-01-16 20:07:19'),
-(80, 1, 'OTHER', 'Event Slug for Event:NC State Recruitement does not exist, creating slug', '2024-01-16 20:19:38'),
-(81, 1, 'CREATE', 'Event ID: 4 Event Name: NC State Recruitement was sluggified with Slug: nc-state-recruitement', '2024-01-16 20:19:38'),
-(82, 1, 'CREATE', 'Event ID: 4 Event Name: NC State Recruitement', '2024-01-16 20:19:38'),
-(83, 1, 'OTHER', 'Event Slug for Event:Wake Forest Trip does not exist, creating slug', '2024-01-16 20:21:09'),
-(84, 1, 'CREATE', 'Event ID: 5 Event Name: Wake Forest Trip was sluggified with Slug: wake-forest-trip', '2024-01-16 20:21:09'),
-(85, 1, 'CREATE', 'Event ID: 5 Event Name: Wake Forest Trip', '2024-01-16 20:21:09'),
-(86, 1, 'OTHER', 'Event Slug for Event:Berkeley Recruitment does not exist, creating slug', '2024-01-16 20:22:08'),
-(87, 1, 'CREATE', 'Event ID: 6 Event Name: Berkeley Recruitment was sluggified with Slug: berkeley-recruitment', '2024-01-16 20:22:08'),
-(88, 1, 'CREATE', 'Event ID: 6 Event Name: Berkeley Recruitment', '2024-01-16 20:22:08'),
-(89, 1, 'OTHER', 'Event Slug for Event:Winston Salem Trip does not exist, creating slug', '2024-01-16 20:23:14'),
-(90, 1, 'CREATE', 'Event ID: 7 Event Name: Winston Salem Trip was sluggified with Slug: winston-salem-trip', '2024-01-16 20:23:14'),
-(91, 1, 'CREATE', 'Event ID: 7 Event Name: Winston Salem Trip', '2024-01-16 20:23:14'),
-(92, 1, 'OTHER', 'Event Slug for Event:Duke Recruitment does not exist, creating slug', '2024-01-16 20:23:53'),
-(93, 1, 'CREATE', 'Event ID: 8 Event Name: Duke Recruitment was sluggified with Slug: duke-recruitment', '2024-01-16 20:23:53'),
-(94, 1, 'CREATE', 'Event ID: 8 Event Name: Duke Recruitment', '2024-01-16 20:23:53'),
-(95, 1, 'OTHER', 'Event Slug for Event:UNC Recruitment does not exist, creating slug', '2024-01-16 20:24:20'),
-(96, 1, 'CREATE', 'Event ID: 9 Event Name: UNC Recruitment was sluggified with Slug: unc-recruitment', '2024-01-16 20:24:20'),
-(97, 1, 'CREATE', 'Event ID: 9 Event Name: UNC Recruitment', '2024-01-16 20:24:20'),
-(98, 1, 'OTHER', 'Event Slug for Event:RCCC - Community Recruitment does not exist, creating slug', '2024-01-16 20:25:21'),
-(99, 1, 'OTHER', 'Event Slug for Event:RCCC - Community Recruitment Event does not exist, creating slug', '2024-01-16 20:30:18'),
-(100, 1, 'CREATE', 'Event ID: 10 Event Name: RCCC - Community Recruitment Event was sluggified with Slug: rccc---community-recruitm', '2024-01-16 20:30:18'),
-(101, 1, 'MODIFY', 'Event ID: 10 Event Name: RCCC - Community Recruitment Event', '2024-01-16 20:30:18'),
-(102, NULL, 'OTHER', 'Emily Johnson Added', '2024-01-16 20:34:21'),
-(103, NULL, 'MODIFY', 'Emily Johnson Added to Event Duke Recruitment', '2024-01-16 20:34:21'),
-(104, NULL, 'OTHER', 'Emily Johnson', '2024-01-16 20:34:21'),
-(105, 1, 'OTHER', 'Report 30', '2024-01-16 20:34:49'),
-(106, 1, 'OTHER', 'Report 31', '2024-01-16 20:35:03'),
-(107, 1, 'OTHER', 'Report 32', '2024-01-16 20:35:13'),
-(108, NULL, 'OTHER', 'major', '2024-01-16 20:39:12'),
-(109, NULL, 'OTHER', 'Alex Davis Added', '2024-01-16 20:39:12'),
-(110, NULL, 'OTHER', 'Alex Davis', '2024-01-16 20:39:12'),
-(111, 1, 'OTHER', 'Report 33', '2024-01-16 20:39:43'),
-(112, 1, 'OTHER', 'Report 34', '2024-01-16 20:40:00'),
-(113, 1, 'OTHER', 'Report 35', '2024-01-16 20:40:08'),
-(114, NULL, 'OTHER', 'major', '2024-01-16 20:42:21'),
-(115, NULL, 'OTHER', 'Olivia Thompson Added', '2024-01-16 20:42:21'),
-(116, NULL, 'MODIFY', 'Olivia Thompson Added to Event Wake Forest Trip', '2024-01-16 20:42:21'),
-(117, NULL, 'OTHER', 'Olivia Thompson', '2024-01-16 20:42:21'),
-(118, 1, 'OTHER', 'Report 36', '2024-01-16 20:43:11'),
-(119, 1, 'OTHER', 'Report 37', '2024-01-16 20:43:21'),
-(120, 1, 'OTHER', 'Report 38', '2024-01-16 20:43:32'),
-(121, 1, 'OTHER', 'Report 39', '2024-01-16 20:43:44'),
-(122, 1, 'OTHER', 'Report 40', '2024-01-16 20:44:13'),
-(123, NULL, 'OTHER', 'major', '2024-01-16 20:47:01'),
-(124, NULL, 'OTHER', 'Sophia Brown Added', '2024-01-16 20:47:01'),
-(125, NULL, 'MODIFY', 'Sophia Brown Added to Event Duke Recruitment', '2024-01-16 20:47:01'),
-(126, NULL, 'OTHER', 'Sophia Brown', '2024-01-16 20:47:01'),
-(127, NULL, 'OTHER', 'Michael Miller Added', '2024-01-16 20:48:33'),
-(128, NULL, 'MODIFY', 'Michael Miller Added to Event Duke Recruitment', '2024-01-16 20:48:33'),
-(129, NULL, 'OTHER', 'Michael Miller', '2024-01-16 20:48:33'),
-(130, 1, 'OTHER', 'Report 41', '2024-01-16 20:48:56'),
-(131, 1, 'OTHER', 'Report 42', '2024-01-16 20:49:02'),
-(132, 1, 'OTHER', 'Report 43', '2024-01-16 20:49:08'),
-(133, 1, 'OTHER', 'Report 44', '2024-01-16 20:49:22'),
-(134, 1, 'OTHER', 'Report 45', '2024-01-16 20:49:34'),
-(135, NULL, 'OTHER', 'Patrick Barnhardt Added', '2024-01-16 20:51:49'),
-(136, NULL, 'MODIFY', 'Patrick Barnhardt Added to Event WGU Job Faire', '2024-01-16 20:51:49'),
-(137, NULL, 'OTHER', 'Patrick Barnhardt', '2024-01-16 20:51:49'),
-(138, 1, 'OTHER', 'Report 46', '2024-01-16 20:52:11'),
-(139, 1, 'OTHER', 'Report 47', '2024-01-16 20:52:23'),
-(140, 1, 'OTHER', 'Report 48', '2024-01-16 20:52:40'),
-(141, 1, 'OTHER', 'Report 49', '2024-01-16 20:52:49'),
-(142, 1, 'OTHER', 'Report 50', '2024-01-16 20:52:56'),
-(143, NULL, 'LOGIN', 'User 1', '2024-01-16 20:57:58'),
-(144, 1, 'OTHER', 'Report 51', '2024-01-17 00:32:22'),
-(145, NULL, 'MODIFY', 'Role ID: 11 Role Name: standard user added to User ID: 2 User Name: test', '2024-01-17 02:29:03'),
-(146, NULL, 'OTHER', 'test@email.com', '2024-01-17 02:29:03'),
-(147, 1, 'CREATE', 'User test', '2024-01-17 02:29:03'),
-(148, NULL, 'LOGIN', 'User 2', '2024-01-17 02:39:36'),
-(149, 2, 'ERROR', 'CODE: [MYSTIC]- An error has occurred, contact the Administrator. FOUND AT: /admin/dashboard.php?login=success&u=Mg==', '2024-01-17 02:42:41'),
-(150, 2, 'ERROR', 'CODE: [TELESCOPE]- You do not have permission to access the dashboard, contact the Administrator. FOUND AT: /admin/dashboard.php?login=success&u=Mg==', '2024-01-17 02:45:52'),
-(151, 2, 'ERROR', 'CODE: [TELESCOPE]- You do not have permission to access the dashboard, contact the Administrator. FOUND AT: /admin/dashboard.php', '2024-01-17 02:46:05'),
-(152, 2, 'ERROR', 'CODE: [TELESCOPE]- You do not have permission to access this content, contact the Administrator. FOUND AT: /admin/dashboard.php', '2024-01-17 02:47:03'),
-(153, 2, 'ERROR', 'CODE: [TELESCOPE]- You do not have permission to access this content, contact the Administrator. FOUND AT: /admin/dashboard.php', '2024-01-17 02:53:06'),
-(154, 2, 'ERROR', 'CODE: [TELESCOPE]- You do not have permission to access this content, contact the Administrator. FOUND AT: /admin/dashboard.php', '2024-01-17 02:53:17'),
-(155, 2, 'ERROR', 'CODE: [TELESCOPE]- You do not have permission to access this content, contact the Administrator. FOUND AT: /admin/dashboard.php', '2024-01-17 02:55:49'),
-(156, 1, 'MODIFY', 'Role 11 was given permission 37', '2024-01-17 02:57:50'),
-(157, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=activity-log', '2024-01-17 03:01:37'),
-(158, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=activity-log', '2024-01-17 03:01:42'),
-(159, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=contact-log', '2024-01-17 03:03:28'),
-(160, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=activity-log', '2024-01-17 03:03:29'),
-(161, NULL, 'LOGIN', 'User 2', '2024-01-17 19:30:41'),
-(162, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=students&student=list', '2024-01-17 19:34:13'),
-(163, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=students&student=list', '2024-01-17 19:43:22'),
-(164, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=activity-log', '2024-01-17 19:43:47'),
-(165, 2, 'ERROR', 'CODE: [SASQUATCH]- AT: /admin/dashboard.php?view=events&event=single&id=100', '2024-01-17 19:56:44'),
-(166, 2, 'ERROR', 'CODE: [CIPHER]- AT: /admin/dashboard.php?view=events&event=single&id=0', '2024-01-17 20:18:54'),
-(167, 2, 'ERROR', 'CODE: [SASQUATCH]- AT: /admin/dashboard.php?view=events&event=single&id=100', '2024-01-17 20:19:02'),
-(168, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=activity-log', '2024-01-17 20:38:52'),
-(169, 2, 'ERROR', 'CODE: [CIPHER]- AT: /admin/dashboard.php?view=reports&report=single&type=Top+Degree+by+School&id=0', '2024-01-17 20:39:07'),
-(170, 2, 'ERROR', 'CODE: [MONOLITH]- AT: /admin/dashboard.php?view=reports&report=single&type=fae&id=0', '2024-01-17 20:39:25'),
-(171, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=activity-log', '2024-01-17 20:39:31'),
-(172, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=activity-log', '2024-01-17 20:41:53'),
-(173, 2, 'ERROR', 'CODE: [SASQUATCH]- AT: /admin/dashboard.php?view=reports&report=single&type=Top+Degree+by+School&id=100', '2024-01-17 20:42:31'),
-(174, 2, 'ERROR', 'CODE: [SASQUATCH]- AT: /admin/dashboard.php?view=roles&role=single&id=15', '2024-01-17 20:49:32'),
-(175, 2, 'ERROR', 'CODE: [SASQUATCH]- AT: /admin/dashboard.php?view=roles&role=single&id=15', '2024-01-17 20:51:47'),
-(176, 1, 'ERROR', 'CODE: [PELICAN]- AT: /admin/dashboard.php?view=students&student=single&id=5', '2024-01-17 21:28:33'),
-(177, 1, 'OTHER', 'Sam Smith', '2024-01-17 21:28:43'),
-(178, 1, 'ERROR', 'CODE: [PELICAN]- AT: /admin/dashboard.php?view=students&student=single&id=10', '2024-01-17 21:30:07'),
-(179, 1, 'OTHER', 'Michael Miller', '2024-01-17 21:30:15'),
-(180, 1, 'ERROR', 'CODE: [PELICAN]- AT: /admin/dashboard.php?view=students&student=single&id=5', '2024-01-17 21:35:01'),
-(181, 1, 'OTHER', 'Sam Smith', '2024-01-17 21:35:09'),
-(182, 1, 'ERROR', 'CODE: [PELICAN]- AT: /admin/dashboard.php?view=students&student=single&id=6', '2024-01-17 21:36:06'),
-(183, 1, 'OTHER', 'Emily Johnson', '2024-01-17 21:36:13'),
-(184, 1, 'ERROR', 'CODE: [PELICAN]- AT: /admin/dashboard.php?view=students&student=single&id=11', '2024-01-17 21:43:23'),
-(185, 1, 'ERROR', 'CODE: [PELICAN]- AT: /admin/dashboard.php?view=students&student=single&id=11', '2024-01-17 21:43:42'),
-(186, 1, 'ERROR', 'CODE: [PELICAN]- AT: /admin/dashboard.php?view=students&student=single&id=9', '2024-01-17 21:45:06'),
-(187, 1, 'ERROR', 'CODE: [PELICAN]- AT: /admin/dashboard.php?view=students&student=single&id=5', '2024-01-17 21:45:13'),
-(188, 1, 'EMAIL', 'Sent Sam Smith @ ssmith@example.com - Subject: tests by admin', '2024-01-17 21:45:19'),
-(189, 1, 'EMAIL', 'Sent Sam Smith @ ssmith@example.com - Subject: tests by admin', '2024-01-17 21:47:28'),
-(190, 1, 'EMAIL', 'Sent Sam Smith @ ssmith@example.com - Subject: test by admin', '2024-01-17 21:47:37'),
-(191, 1, 'EMAIL', 'Sent Sam Smith @ ssmith@example.com - Subject: test by admin', '2024-01-17 21:52:02'),
-(192, 1, 'ERROR', 'CODE: [PELICAN]- AT: /admin/dashboard.php?view=students&student=single&id=5', '2024-01-17 21:52:42'),
-(193, 1, 'EMAIL', 'Sent Sam Smith @ ssmith@example.com - Subject: test by admin', '2024-01-17 21:52:50'),
-(194, 1, 'ERROR', 'CODE: [PELICAN]- AT: /admin/dashboard.php?view=students&student=single&id=10', '2024-01-17 21:53:29'),
-(195, 1, 'EMAIL', 'Sent Michael Miller @ michael.miller@email.com - Subject: any of the R710 left? by admin', '2024-01-17 21:53:35'),
-(196, 1, 'ERROR', 'CODE: [PELICAN]- AT: /admin/dashboard.php?view=students&student=single&id=11', '2024-01-17 23:13:20'),
-(197, 1, 'EMAIL', 'Sent Patrick Barnhardt @ pbarnh1@wgu.edu - Subject: test by admin', '2024-01-17 23:13:26'),
-(198, 1, 'OTHER', 'Report 52', '2024-01-17 23:17:38'),
-(199, 1, 'EMAIL', 'Sent Michael Miller @ michael.miller@email.com - Subject: any of the R710 left? by admin', '2024-01-17 23:17:55'),
-(200, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=1', '2024-01-17 23:36:44'),
-(201, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=10', '2024-01-17 23:36:53'),
-(202, 1, 'CREATE', 'Report 53', '2024-01-17 23:48:31'),
-(203, 1, 'CREATE', 'Report:  Top Field by School - ID: 54 Date: 01/17/2024', '2024-01-17 23:48:33'),
-(204, 1, 'CREATE', 'Report:  Major to Field Ratio by School - ID: 55 Date: 01/17/2024', '2024-01-17 23:48:35'),
-(205, 1, 'CREATE', 'Report:  Jobs by Field - ID: 56 Date: 01/17/2024', '2024-01-17 23:48:37'),
-(206, 1, 'CREATE', 'Report:  Contact Follow-Up Percentage - ID: 57 Date: 01/17/2024', '2024-01-17 23:48:39'),
-(207, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=students&student=list', '2024-01-18 01:50:59'),
-(208, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=settings', '2024-01-18 01:54:11'),
-(209, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=events&event=edit&action=edit&id=1', '2024-01-18 01:54:35'),
-(210, 2, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=1', '2024-01-18 01:55:40'),
-(211, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=edit&action=edit&id=2', '2024-01-18 22:43:57'),
-(212, NULL, 'LOGIN', 'User 1', '2024-01-22 19:05:05'),
-(213, 1, 'MODIFY', 'School Harvard University', '2024-01-22 20:08:56'),
-(214, 1, 'OTHER', 'Logo Image File:/Users/pbarnhardt/Sites/capstone/rym2/admin/editor/actions/school/../../../../public/content/uploads/Harvard_University_shield.png uploaded successfully', '2024-01-22 20:26:31'),
-(215, 1, 'MODIFY', 'School Harvard University', '2024-01-22 20:26:31'),
-(216, 1, 'ERROR', 'Error Uploading Media: Error moving file to upload directory - 98cf7d6d899badc5d9752a12d6e97209.png', '2024-01-23 00:11:03'),
-(217, 1, 'MODIFY', 'School Stanford University', '2024-01-23 00:11:03'),
-(218, 1, 'ERROR', 'Error Uploading Media: Error moving file to upload directory - 98cf7d6d899badc5d9752a12d6e97209.png', '2024-01-23 00:15:17'),
-(219, 1, 'MODIFY', 'School Stanford University', '2024-01-23 00:15:17'),
-(220, 1, 'ERROR', 'Error Uploading Media: Error moving file to upload directory - 98cf7d6d899badc5d9752a12d6e97209.png', '2024-01-23 00:16:14'),
-(221, 1, 'MODIFY', 'School Stanford University', '2024-01-23 00:16:14'),
-(222, 1, 'ERROR', 'Error Uploading Media: Error moving file to upload directory - 98cf7d6d899badc5d9752a12d6e97209.png', '2024-01-23 00:17:21'),
-(223, 1, 'MODIFY', 'School Stanford University', '2024-01-23 00:17:21'),
-(224, 1, 'ERROR', 'Error Uploading Media: File already exists - 98cf7d6d899badc5d9752a12d6e97209.png', '2024-01-23 00:19:29'),
-(225, 1, 'MODIFY', 'School Stanford University', '2024-01-23 00:19:29'),
-(226, 1, 'MODIFY', 'School Stanford University', '2024-01-23 00:21:20'),
-(227, 1, 'OTHER', 'Event Slug for Event:Wake Forest Trip already exists, incrementing slug', '2024-01-23 00:53:34'),
-(228, 1, 'MODIFY', 'Event ID: 5 Event Name: Wake Forest Trip was sluggified with Slug: wake-forest-trip', '2024-01-23 00:53:35'),
-(229, 1, 'MODIFY', 'Event ID: 5 Event Name: Wake Forest Trip', '2024-01-23 00:53:35'),
-(230, 1, 'ERROR', 'Error Uploading Media: Invalid file type - ', '2024-01-23 00:57:39'),
-(231, 1, 'OTHER', 'Event Slug for Event:Wake Forest Trip already exists, incrementing slug', '2024-01-23 00:57:39'),
-(232, 1, 'MODIFY', 'Event ID: 5 Event Name: Wake Forest Trip was sluggified with Slug: wake-forest-trip', '2024-01-23 00:57:39'),
-(233, 1, 'MODIFY', 'Event ID: 5 Event Name: Wake Forest Trip', '2024-01-23 00:57:39'),
-(234, 1, 'ERROR', 'Error Uploading Media: Invalid file type - ', '2024-01-23 01:04:42'),
-(235, 1, 'OTHER', 'Event Slug for Event:Wake Forest Trip already exists, incrementing slug', '2024-01-23 01:04:42'),
-(236, 1, 'MODIFY', 'Event ID: 5 Event Name: Wake Forest Trip was sluggified with Slug: wake-forest-trip', '2024-01-23 01:04:42'),
-(237, 1, 'MODIFY', 'Event ID: 5 Event Name: Wake Forest Trip', '2024-01-23 01:04:42'),
-(238, 1, 'ERROR', 'Error Uploading Media: File already exists - image-placeholder-500x500.jpg', '2024-01-23 01:05:24'),
-(239, 1, 'OTHER', 'Event Slug for Event:Wake Forest Trip already exists, incrementing slug', '2024-01-23 01:05:25'),
-(240, 1, 'MODIFY', 'Event ID: 5 Event Name: Wake Forest Trip was sluggified with Slug: wake-forest-trip', '2024-01-23 01:05:25'),
-(241, 1, 'MODIFY', 'Event ID: 5 Event Name: Wake Forest Trip', '2024-01-23 01:05:25'),
-(242, 1, 'OTHER', 'Event Slug for Event:Wake Forest Trip already exists, incrementing slug', '2024-01-23 01:17:09'),
-(243, 1, 'MODIFY', 'Event ID: 5 Event Name: Wake Forest Trip was sluggified with Slug: wake-forest-trip', '2024-01-23 01:17:09'),
-(244, 1, 'MODIFY', 'Event ID: 5 Event Name: Wake Forest Trip', '2024-01-23 01:17:09'),
-(245, 1, 'ERROR', 'Error Uploading Media: Invalid file type - ', '2024-01-23 01:26:23'),
-(246, 1, 'OTHER', 'Event Slug for Event:Berkeley Recruitment already exists, incrementing slug', '2024-01-23 01:26:23'),
-(247, 1, 'MODIFY', 'Event ID: 6 Event Name: Berkeley Recruitment was sluggified with Slug: berkeley-recruitment', '2024-01-23 01:26:23'),
-(248, 1, 'MODIFY', 'Event ID: 6 Event Name: Berkeley Recruitment', '2024-01-23 01:26:23'),
-(249, 1, 'ERROR', 'Error Uploading Media: Invalid file type - ', '2024-01-23 01:33:03'),
-(250, 1, 'OTHER', 'Event Slug for Event:Berkeley Recruitment already exists, incrementing slug', '2024-01-23 01:33:03'),
-(251, 1, 'MODIFY', 'Event ID: 6 Event Name: Berkeley Recruitment was sluggified with Slug: berkeley-recruitment', '2024-01-23 01:33:03'),
-(252, 1, 'MODIFY', 'Event ID: 6 Event Name: Berkeley Recruitment', '2024-01-23 01:33:03'),
-(253, 1, 'MODIFY', 'Role 3 was given permission 59', '2024-01-23 19:05:31'),
-(254, 1, 'MODIFY', 'Role 3 was given permission 60', '2024-01-23 19:05:31'),
-(255, 1, 'MODIFY', 'Role 3 was given permission 61', '2024-01-23 19:05:31'),
-(256, 1, 'MODIFY', 'Role 3 was given permission 62', '2024-01-23 19:05:31'),
-(257, NULL, 'LOGIN', 'User admin', '2024-01-24 01:42:04'),
-(258, 1, 'ERROR', 'CODE: [CIPHER]- AT: /admin/dashboard.php?view=media&media=add&action=create', '2024-01-24 23:16:36'),
-(259, 1, 'ERROR', 'CODE: [CIPHER]- AT: /admin/dashboard.php?view=media&media=add&action=create', '2024-01-24 23:18:15'),
-(260, 1, 'OTHER', 'Media Uploaded: placeholderbanner.png', '2024-01-24 23:20:09'),
-(261, 1, 'ERROR', 'Error Uploading Media: Invalid file type - ', '2024-01-24 23:49:59'),
-(262, 1, 'ERROR', 'Error Uploading Media: Invalid file type - ', '2024-01-24 23:50:58'),
-(263, 1, 'OTHER', 'Media Uploaded: placeholderlogopng.png', '2024-01-25 01:31:24'),
-(264, 1, 'ERROR', 'Error Uploading Media: Invalid file type - ', '2024-01-25 01:31:41'),
-(265, 1, 'MODIFY', 'School Western Governor&#039;s University - WGU', '2024-01-25 01:32:11'),
-(266, 1, 'MODIFY', 'School University of North Carolina at Charlotte - UNCC', '2024-01-25 01:32:38'),
-(267, 1, 'MODIFY', 'School Stanly Community College - SCC', '2024-01-25 01:32:50'),
-(268, 1, 'MODIFY', 'School University of North Carolina at Greensboro - UNCG', '2024-01-25 01:33:30'),
-(269, 1, 'MODIFY', 'School Harvard University', '2024-01-25 01:33:44'),
-(270, 1, 'MODIFY', 'School Stanford University', '2024-01-25 01:33:58'),
-(271, 1, 'MODIFY', 'School Massachusetts Institute of Technology - MIT', '2024-01-25 01:34:12'),
-(272, 1, 'MODIFY', 'School University of California, Berkeley', '2024-01-25 01:34:29'),
-(273, 1, 'MODIFY', 'School Yale University', '2024-01-25 01:34:46'),
-(274, 1, 'MODIFY', 'School University of Chicago', '2024-01-25 01:35:03'),
-(275, 1, 'MODIFY', 'School Columbia University', '2024-01-25 01:35:18'),
-(276, 1, 'MODIFY', 'School Duke University', '2024-01-25 01:35:32'),
-(277, 1, 'MODIFY', 'School University of North Carolina at Chapel Hill - UNC Chapel Hill', '2024-01-25 01:35:55'),
-(278, 1, 'MODIFY', 'School North Carolina State University', '2024-01-25 01:36:10'),
-(279, 1, 'MODIFY', 'School Wake Forest University', '2024-01-25 01:36:27'),
-(280, 1, 'MODIFY', 'School Rowan-Cabarrus Community College - RCCC', '2024-01-25 01:38:01'),
-(281, 1, 'DELETE', 'Student ID: 2 Student Name: Kelsey Berkman from Event ID: 1 Event Name: WGU Job Faire', '2024-01-25 19:02:28'),
-(282, 1, 'DELETE', 'Student ID: 2 Student Name: Kelsey Berkman', '2024-01-25 19:02:28'),
-(283, 1, 'DELETE', 'Student ID: 1 Student Name: Patrick Barnhardt from Event ID: 1 Event Name: WGU Job Faire', '2024-01-25 19:02:34'),
-(284, 1, 'DELETE', 'Student ID: 1 Student Name: Patrick Barnhardt', '2024-01-25 19:02:34'),
-(285, 1, 'DELETE', 'Student ID: 11 Student Name: Patrick Barnhardt from Event ID: 1 Event Name: WGU Job Faire', '2024-01-25 19:02:43'),
-(286, 1, 'DELETE', 'Student ID: 11 Student Name: Patrick Barnhardt', '2024-01-25 19:02:43'),
-(287, 1, 'OTHER', 'Media Uploaded: 312920701_622333729345028_2932566406123148558_n.jpg', '2024-01-25 19:44:01'),
-(288, 1, 'OTHER', 'Media Uploaded: 2023.09.07_FinancialServices-CareerFair_600x400.png', '2024-01-25 19:44:01'),
-(289, 1, 'OTHER', 'Event Slug for Event:UNCC Charlotte already exists, incrementing slug', '2024-01-25 19:44:01'),
-(290, 1, 'MODIFY', 'Event ID: 2 Event Name: UNCC Charlotte was sluggified with Slug: uncc-charlotte', '2024-01-25 19:44:01'),
-(291, 1, 'MODIFY', 'Event ID: 2 Event Name: UNCC Charlotte', '2024-01-25 19:44:01'),
-(292, 1, 'OTHER', 'Event Slug for Event:UNCC Charlotte already exists, incrementing slug', '2024-01-25 19:44:17'),
-(293, 1, 'MODIFY', 'Event ID: 2 Event Name: UNCC Charlotte was sluggified with Slug: uncc-charlotte', '2024-01-25 19:44:17'),
-(294, 1, 'MODIFY', 'Event ID: 2 Event Name: UNCC Charlotte', '2024-01-25 19:44:17'),
-(295, 1, 'OTHER', 'Event Slug for Event:UNCC Charlotte already exists, incrementing slug', '2024-01-25 19:44:30'),
-(296, 1, 'MODIFY', 'Event ID: 2 Event Name: UNCC Charlotte was sluggified with Slug: uncc-charlotte', '2024-01-25 19:44:30'),
-(297, 1, 'MODIFY', 'Event ID: 2 Event Name: UNCC Charlotte', '2024-01-25 19:44:30'),
-(298, 1, 'DELETE', 'Job ID: 1 Job Name: Packaging Operator', '2024-01-25 19:51:48'),
-(299, 1, 'DELETE', 'Job ID: 2 Job Name: Business Analyst', '2024-01-25 19:51:54'),
-(300, 1, 'DELETE', 'Job ID: 5 Job Name: Job', '2024-01-25 19:51:58'),
-(301, 1, 'DELETE', 'Job ID: 7 Job Name: Helpdesk', '2024-01-25 19:52:02'),
-(302, 1, 'MODIFY', 'The privacy policy was changed.', '2024-01-26 01:41:47'),
-(303, 1, 'MODIFY', 'The terms and conditions were changed.', '2024-01-26 01:41:47'),
-(304, 1, 'MODIFY', 'The privacy policy was changed.', '2024-01-26 01:44:09'),
-(305, 1, 'MODIFY', 'The terms and conditions were changed.', '2024-01-26 01:44:09'),
-(306, 1, 'OTHER', 'Media Uploaded: gc4pJHd.jpg', '2024-01-26 01:21:33'),
-(307, 1, 'OTHER', 'Media Uploaded: gc4pJHd.jpg', '2024-01-26 01:28:03'),
-(308, 1, 'ERROR', 'CODE: [HARMONY]- AT: /admin/dashboard.php?view=media&media=edit&action=edit&id=19', '2024-01-26 01:30:24'),
-(309, NULL, 'LOGIN', 'User admin', '2024-01-26 13:13:33'),
-(310, 1, 'OTHER', 'CREATEDIntern', '2024-01-26 17:35:06'),
-(311, 1, 'OTHER', 'CREATEDIntern', '2024-01-26 17:39:44'),
-(312, 1, 'DELETE', 'Job ID: 2 Job Name: Intern', '2024-01-26 18:16:43'),
-(313, 1, 'OTHER', 'CREATEDIntern', '2024-01-26 18:18:09'),
-(314, 1, 'DELETE', 'Job ID: 3 Job Name: Intern', '2024-01-26 18:22:20'),
-(315, 1, 'OTHER', 'CREATEDIntern', '2024-01-26 18:30:03'),
-(316, 1, 'OTHER', 'UPDATEDIntern', '2024-01-26 21:57:51'),
-(317, 1, 'CREATE', 'Report:  Jobs by Field - ID: 58 Date: 01/26/2024', '2024-01-26 22:17:18'),
-(318, 1, 'OTHER', 'UPDATEDIntern', '2024-01-29 19:38:56'),
-(319, 1, 'CREATE', 'Report:  Top Degree by School - ID: 59 Date: 01/29/2024', '2024-01-30 01:29:39'),
-(320, NULL, 'LOGIN', 'User admin', '2024-02-01 00:50:50'),
-(321, 1, 'CREATE', 'Report:  Top Degree by School - ID: 60 Date: 01/31/2024', '2024-02-01 00:55:48'),
-(322, 1, 'CREATE', 'Report:  Jobs by Field - ID: 61 Date: 01/31/2024', '2024-02-01 01:16:29'),
-(323, 1, 'CREATE', 'Report:  Jobs by Field - ID: 62 Date: 01/31/2024', '2024-02-01 01:18:31'),
-(324, 1, 'CREATE', 'Report:  Jobs by Field - ID: 63 Date: 01/31/2024', '2024-02-01 01:28:31'),
-(325, 1, 'CREATE', 'Report:  Major to Field Ratio by School - ID: 64 Date: 01/31/2024', '2024-02-01 01:31:12'),
-(326, 1, 'CREATE', 'Report:  Jobs by Field - ID: 65 Date: 02/01/2024', '2024-02-01 22:03:39'),
-(327, 1, 'MODIFY', 'The application name was changed to TalentFlow.', '2024-02-02 20:33:46'),
-(328, 1, 'CREATE', 'Report:  Contact Follow-Up Percentage - ID: 66 Date: 02/02/2024', '2024-02-02 20:43:58'),
-(329, NULL, 'OTHER', 'Lunar Gobson Added', '2024-02-05 09:55:42'),
-(330, NULL, 'EMAIL', 'Sent Lunar Gobson @ LunaGob92@gmail.com - Subject: Thank you Lunar, for registering! by SYSTEM', '2024-02-05 09:55:42'),
-(331, 1, 'CREATE', 'Report:  Contact Follow-Up Percentage - ID: 67 Date: 02/05/2024', '2024-02-05 10:02:59'),
-(332, 1, 'DELETE', 'Student ID: 11 Student Name: Lunar Gobson', '2024-02-05 10:09:55'),
-(333, NULL, 'OTHER', 'Patrick Barnhardt Added', '2024-02-05 23:34:43'),
-(334, NULL, 'EMAIL', 'Sent Patrick Barnhardt @ contact@patrickbarnhardt.info - Subject: Thank you Patrick, for registering! by SYSTEM', '2024-02-05 23:34:43'),
-(335, NULL, 'OTHER', 'Patrick Barnhardt Added', '2024-02-05 23:36:03'),
-(336, NULL, 'EMAIL', 'Sent Patrick Barnhardt @ thecrimsonstrife@gmail.com - Subject: Thank you Patrick, for registering! by SYSTEM', '2024-02-05 23:36:03'),
-(337, NULL, 'OTHER', 'Patrick Barnhardt Added', '2024-02-06 00:23:26'),
-(338, NULL, 'EMAIL', 'Sent Patrick Barnhardt @ thecrimsonstrife@gmail.com - Subject: Thank you Patrick, for registering! by SYSTEM', '2024-02-06 00:23:26'),
-(339, NULL, 'LOGIN', 'User admin', '2024-02-06 21:13:35'),
-(340, 1, 'DELETE', 'Student ID: 11 Student Name: Patrick Barnhardt', '2024-02-06 21:13:52'),
-(341, NULL, 'LOGIN', 'User admin', '2024-02-07 23:14:27'),
-(342, 1, 'MODIFY', 'The application name was changed to .', '2024-02-09 01:21:45'),
-(343, 1, 'OTHER', 'Media Uploaded: TalentFlow-Logo.png', '2024-02-09 01:32:52'),
-(344, 1, 'MODIFY', 'The application name was changed to TalentFlow.', '2024-02-09 01:50:40'),
-(345, 1, 'MODIFY', 'The contact email was changed to contact@talentflow.email.', '2024-02-09 01:50:40'),
-(346, 1, 'OTHER', 'Media Uploaded: company-logo.png', '2024-02-09 19:57:25'),
-(347, 1, 'OTHER', 'Media Uploaded: company-logo.svg', '2024-02-09 19:57:49'),
-(348, 1, 'OTHER', 'Media Uploaded: TalentFlow-Logo.svg', '2024-02-09 20:00:28'),
-(349, 1, 'MODIFY', 'The company name was changed to Pipe and Foundry Company.', '2024-02-09 22:01:37'),
-(350, 1, 'MODIFY', 'The company address was changed to 1234 Main St.', '2024-02-09 22:01:37'),
-(351, 1, 'MODIFY', 'The company city was changed to Anyplace.', '2024-02-09 22:01:37'),
-(352, 1, 'MODIFY', 'The company state was changed to NC.', '2024-02-09 22:01:37'),
-(353, 1, 'MODIFY', 'The company zip was changed to 123456.', '2024-02-09 22:01:37'),
-(354, 1, 'MODIFY', 'The company phone was changed to 123-456-1234.', '2024-02-09 22:01:37'),
-(355, 1, 'MODIFY', 'The company name was changed to .', '2024-02-09 22:21:00'),
-(356, 1, 'MODIFY', 'The company address was changed to .', '2024-02-09 22:21:00'),
-(357, 1, 'MODIFY', 'The company city was changed to .', '2024-02-09 22:21:00'),
-(358, 1, 'MODIFY', 'The company zip was changed to .', '2024-02-09 22:21:00'),
-(359, 1, 'MODIFY', 'The company phone was changed to .', '2024-02-09 22:21:00'),
-(360, 1, 'MODIFY', 'The company name was changed to Pipe and Foundry Company.', '2024-02-09 22:28:47'),
-(361, 1, 'MODIFY', 'The company address was changed to 1234 Main St.', '2024-02-09 22:28:47'),
-(362, 1, 'MODIFY', 'The company city was changed to Anyplace.', '2024-02-09 22:28:47'),
-(363, 1, 'MODIFY', 'The company zip was changed to 123456.', '2024-02-09 22:28:47'),
-(364, 1, 'MODIFY', 'The company phone was changed to 123-456-1234.', '2024-02-09 22:28:47'),
-(365, 1, 'MODIFY', 'The application logo was changed.', '2024-02-09 22:32:59'),
-(366, 1, 'MODIFY', 'The application logo was changed.', '2024-02-09 22:33:48'),
-(367, 1, 'MODIFY', 'The company logo was changed.', '2024-02-09 22:33:48'),
-(368, 1, 'MODIFY', 'The privacy policy was changed.', '2024-02-09 23:57:38'),
-(369, 1, 'MODIFY', 'The company URL was changed to https://www.pipecompany.example.', '2024-02-10 00:02:44'),
-(370, NULL, 'LOGIN', 'User admin', '2024-02-15 21:40:18'),
-(371, 1, 'MODIFY', 'User: admin updated by User: 1', '2024-02-16 00:09:57'),
-(372, 1, 'MODIFY', 'User: admin updated by User: 1', '2024-02-16 00:09:57'),
-(373, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:38:44'),
-(374, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:43:15'),
-(375, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:43:56'),
-(376, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:44:46'),
-(377, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:46:47'),
-(378, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:47:52'),
-(379, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:49:09'),
-(380, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=1', '2024-02-16 00:49:58'),
-(381, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:58:06'),
-(382, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 00:59:23'),
-(383, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 01:00:03'),
-(384, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 01:01:11'),
-(385, 1, 'ERROR', 'CODE: [LYNX]- AT: /admin/dashboard.php?view=users&user=single&id=2', '2024-02-16 01:03:41'),
-(386, 1, 'MODIFY', 'The hotjar site ID was changed to 3867800.', '2024-02-16 21:11:24'),
-(387, 1, 'MODIFY', 'The hotjar version was changed to 6.', '2024-02-16 21:11:24'),
-(388, 1, 'MODIFY', 'The hotjar site ID was changed to 3867800.', '2024-02-17 01:04:38'),
-(389, 1, 'MODIFY', 'The hotjar version was changed to 6.', '2024-02-17 01:04:38'),
-(390, 1, 'MODIFY', 'The hotjar site ID was changed to 3867800.', '2024-02-17 01:05:58'),
-(391, 1, 'MODIFY', 'The hotjar version was changed to 6.', '2024-02-17 01:05:58'),
-(392, 1, 'MODIFY', 'The hotjar enabled status was changed to1.', '2024-02-17 01:19:45'),
-(393, 1, 'MODIFY', 'The hotjar enabled status was changed to1.', '2024-02-17 01:20:15'),
-(394, NULL, 'LOGIN', 'User admin', '2024-02-19 20:06:45'),
-(395, NULL, 'OTHER', 'Role ID: 1 Role Name: Admin added to User ID: 3 User Name: stakeholder', '2024-02-20 22:19:36'),
-(396, NULL, 'OTHER', 'stakeholder@example.com', '2024-02-20 22:19:37'),
-(397, 1, 'OTHER', 'User stakeholder', '2024-02-20 22:19:37'),
-(398, 1, 'OTHER', 'Student ID: 12 Student Name: Patrick Barnhardt', '2024-02-21 01:20:14'),
-(399, 1, 'OTHER', 'Student ID: 13 Student Name: Patrick Barnhardt', '2024-02-21 01:51:55'),
-(400, 1, 'OTHER', 'Student ID: 11 Student Name: John Doe', '2024-02-21 01:55:08'),
-(401, 1, 'OTHER', 'Student ID: 14 Student Name: Patrick Barnhardt', '2024-02-21 01:56:29'),
-(402, NULL, 'OTHER', 'Student ID: 15 Student Name: Patrick Barnhardt', '2024-02-21 02:00:40'),
-(403, NULL, 'OTHER', 'Sent Patrick Barnhardt @ contact@patrickbarnhardt.info - Subject: Thank you Patrick, for registering! by SYSTEM', '2024-02-21 02:00:40'),
-(404, 1, 'OTHER', 'Student ID: 15 Student Name: Patrick Barnhardt', '2024-02-21 02:01:03'),
-(405, 1, 'OTHER', 'Student ID: 15 Student Name: Patrick Barnhardt', '2024-02-21 02:01:03'),
-(406, 1, 'OTHER', 'Student ID: 5 Student Name: Sam Smith', '2024-02-21 02:01:25'),
-(407, 1, 'OTHER', 'Student ID: 5 Student Name: Sam Smith', '2024-02-21 02:01:25'),
-(408, 1, 'OTHER', 'Role 1 was Permission Added', '2024-02-21 02:20:45'),
-(409, 1, 'OTHER', 'Role 1 was Permission Added', '2024-02-21 02:20:45'),
-(410, 1, 'OTHER', 'Role 1 was Permission Added', '2024-02-21 02:20:45'),
-(411, 1, 'OTHER', 'Role 1 was Permission Added', '2024-02-21 02:20:45'),
-(412, 1, 'OTHER', 'Role 1 was Permission Added', '2024-02-21 02:20:45'),
-(413, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 08:53:34'),
-(414, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 09:03:42'),
-(415, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 09:08:11'),
-(416, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 09:10:00'),
-(417, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 09:10:58'),
-(418, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 09:15:05'),
-(419, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 09:16:24'),
-(420, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-21 19:06:07'),
-(421, 1, 'OTHER', 'The Hotjar status was changed to 1.', '2024-02-21 23:35:53'),
-(422, 1, 'OTHER', 'The Hotjar status was changed to 1.', '2024-02-21 23:39:07'),
-(423, 1, 'OTHER', 'The Hotjar ID was changed to 5435436.', '2024-02-21 23:39:07'),
-(424, 1, 'OTHER', 'The hotjar version was changed to 6.', '2024-02-21 23:39:07'),
-(425, 1, 'OTHER', 'The Google Analytics status was changed to 1.', '2024-02-21 23:39:07'),
-(426, 1, 'OTHER', 'The Google Analytics ID was changed to G-22222222.', '2024-02-21 23:39:07'),
-(427, 1, 'OTHER', 'The Hotjar status was changed to .', '2024-02-21 23:39:25'),
-(428, 1, 'OTHER', 'The Google Analytics status was changed to .', '2024-02-21 23:39:25'),
-(429, 1, 'OTHER', 'degree_lvl', '2024-02-23 20:15:48'),
-(430, 1, 'OTHER', 'degree_lvl', '2024-02-23 20:19:05'),
-(431, NULL, 'OTHER', 'Student ID: 11 Student Name: Patrick Barnhardt', '2024-02-23 21:05:24'),
-(432, NULL, 'OTHER', 'Sent Patrick Barnhardt @ thecrimsonstrife@gmail.com - Subject: Thank you Patrick, for registering! by SYSTEM', '2024-02-23 21:05:25'),
-(433, 1, 'OTHER', 'Report:  Top Degree by School - ID: 68 Date: 02/23/2024', '2024-02-23 21:24:39'),
-(434, 1, 'OTHER', 'Report 4', '2024-02-23 21:24:53'),
-(435, 1, 'OTHER', 'Student ID: 11 Student Name: Patrick Barnhardt', '2024-02-23 21:25:18'),
-(436, 1, 'OTHER', 'Student ID: 11 Student Name: Patrick Barnhardt', '2024-02-23 21:25:18'),
-(437, 1, 'OTHER', 'Degree Level ID: 13 Degree Level Name: BFA - Bachelor of Fine Arts', '2024-02-23 21:48:58'),
-(438, 1, 'OTHER', 'Report 25', '2024-02-24 01:43:51'),
-(439, 1, 'OTHER', 'Report 24', '2024-02-24 01:45:33'),
-(440, 1, 'OTHER', 'Error Uploading Media: Error moving file to upload directory - image-placeholder-500x500.jpg', '2024-02-24 01:46:17'),
-(441, 1, 'OTHER', 'Media Uploaded: image-placeholder-500x500.jpg', '2024-02-24 01:46:17'),
-(442, 1, 'OTHER', 'Report 32', '2024-02-24 02:00:32'),
-(443, 1, 'OTHER', 'Report 22', '2024-02-24 02:02:16'),
-(444, 1, 'OTHER', 'Role ID: 11 Role Name: standard user added to User ID: 4 User Name: user', '2024-02-24 02:02:43'),
-(445, 1, 'OTHER', 'user@example.com', '2024-02-24 02:02:43'),
-(446, 1, 'OTHER', 'User user', '2024-02-24 02:02:43'),
-(447, 1, 'ERROR', 'CODE: [SASQUATCH]- AT: /admin/dashboard.php?view=users&user=single&id=', '2024-02-24 02:02:46'),
-(448, 1, 'OTHER', 'User ID: 2 User Name: SYSTEM', '2024-02-24 02:04:11'),
-(449, 1, 'OTHER', 'Role ID: 1 Role Name: Admin added to User ID: 5 User Name: evaluator', '2024-02-24 02:04:59'),
-(450, 1, 'OTHER', 'evaluator@email.com', '2024-02-24 02:04:59'),
-(451, 1, 'OTHER', 'User evaluator', '2024-02-24 02:04:59');
 
 -- --------------------------------------------------------
 
@@ -546,10 +89,7 @@ INSERT INTO `contact_log` (`id`, `student`, `auto`, `sender`, `send_date`, `subj
 (7, 8, 1, NULL, '2024-01-16 20:42:21', 'Thank you Olivia, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
 (8, 9, 1, NULL, '2024-01-16 20:47:01', 'Thank you Sophia, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
 (9, 10, 1, NULL, '2024-01-16 20:48:33', 'Thank you Michael, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.'),
-(12, 10, 0, 1, '2024-01-17 21:30:15', 'test', 'test message'),
-(14, 6, 0, 1, '2024-01-17 21:36:13', 'gaelhJf', 'gaefafe'),
-(20, 10, 0, 1, '2024-01-17 21:53:35', 'any of the R710 left?', 'test'),
-(22, 10, 0, 1, '2024-01-17 23:17:55', 'any of the R710 left?', 'test');
+(10, NULL, 1, NULL, '2024-02-28 21:19:17', 'Thank you Patrick, for registering!', 'Thank you for registering for the College Recruitment Program. We will be in touch with you soon.');
 
 -- --------------------------------------------------------
 
@@ -571,18 +111,18 @@ CREATE TABLE `degree_lvl` (
 --
 
 INSERT INTO `degree_lvl` (`id`, `name`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
-(1, 'AA - Associate of Arts', '2023-10-18 17:01:38', '2023-10-18 17:01:38', 1, 1),
-(2, 'AAA - Associate of Applied Arts', '2023-10-18 17:01:38', '2023-10-18 17:01:38', 1, 1),
-(3, 'AS - Associate of Science', '2023-10-18 17:02:06', '2023-10-18 17:02:06', 1, 1),
-(4, 'AAS - Associate of Applied Science', '2023-10-18 17:02:28', '2023-10-18 17:02:28', 1, 1),
-(5, 'BA - Bachelor of Arts', '2023-10-18 17:03:22', '2023-10-18 17:03:22', 1, 1),
-(6, 'BAA - Bachelor of Applied Arts', '2023-10-18 17:03:54', '2023-10-18 17:03:54', 1, 1),
-(7, 'BScIT - Bachelor of Science in Information Technology', '2023-10-18 17:05:14', '2023-12-12 19:40:49', 1, 1),
-(8, 'MA - Master of Arts', '2023-10-18 17:06:00', '2023-10-18 17:06:00', 1, 1),
-(9, 'MS - Master of Science', '2023-10-18 17:06:40', '2023-10-18 17:06:40', 1, 1),
-(11, 'BS - Bachelor of Science', '2023-12-15 21:14:29', '2023-12-15 21:14:29', 1, 1),
-(12, 'BBA - Bachelor of Business Administration', '2024-02-23 20:09:47', '2024-02-23 20:09:47', 1, 1),
-(14, 'DBA - Doctor of Business Administration', '2024-02-23 20:19:05', '2024-02-23 20:19:05', 1, 1);
+(1, 'AA - Associate of Arts', '2024-02-27 22:10:27', '2024-02-27 22:10:27', NULL, NULL),
+(2, 'AAA - Associate of Applied Arts', '2024-02-27 22:10:27', '2024-02-27 22:10:27', NULL, NULL),
+(3, 'AS - Associate of Science', '2024-02-27 22:10:27', '2024-02-27 22:10:27', NULL, NULL),
+(4, 'AAS - Associate of Applied Science', '2024-02-27 22:10:27', '2024-02-27 22:10:27', NULL, NULL),
+(5, 'BA - Bachelor of Arts', '2024-02-27 22:10:27', '2024-02-27 22:10:27', NULL, NULL),
+(6, 'BAA - Bachelor of Applied Arts', '2024-02-27 22:10:27', '2024-02-27 22:10:27', NULL, NULL),
+(7, 'BScIT - Bachelor of Science in Information Technology', '2024-02-27 22:10:27', '2024-02-27 22:10:27', NULL, NULL),
+(8, 'MA - Master of Arts', '2024-02-27 22:10:27', '2024-02-27 22:10:27', NULL, NULL),
+(9, 'MS - Master of Science', '2024-02-27 22:10:27', '2024-02-27 22:10:27', NULL, NULL),
+(11, 'BS - Bachelor of Science', '2024-02-27 22:10:27', '2024-02-27 22:10:27', NULL, NULL),
+(12, 'BBA - Bachelor of Business Administration', '2024-02-27 22:10:27', '2024-02-27 22:10:27', NULL, NULL),
+(14, 'DBA - Doctor of Business Administration', '2024-02-27 22:10:27', '2024-02-27 22:10:27', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -716,10 +256,10 @@ CREATE TABLE `major` (
 --
 
 INSERT INTO `major` (`id`, `name`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
-(1, 'Software Development', '2023-10-18 17:07:54', '2023-10-18 17:07:54', 1, 1),
-(2, 'Business Administration', '2023-10-18 17:08:11', '2023-10-18 17:08:11', 1, 1),
-(3, 'Accounting', '2023-10-18 17:08:27', '2023-10-18 17:08:27', 1, 1),
-(6, 'Computer Science', '2023-12-12 22:39:15', '2023-12-12 22:39:15', 1, 1),
+(1, 'Software Development', '2024-02-27 22:09:49', '2024-02-27 22:09:49', NULL, NULL),
+(2, 'Business Administration', '2024-02-27 22:09:49', '2024-02-27 22:09:49', NULL, NULL),
+(3, 'Accounting', '2024-02-27 22:09:49', '2024-02-27 22:09:49', NULL, NULL),
+(6, 'Computer Science', '2024-02-27 22:09:49', '2024-02-27 22:09:49', NULL, NULL),
 (7, 'Marketing', '2023-12-13 00:57:25', '2023-12-13 00:57:25', NULL, NULL),
 (8, 'Electrical Engineering', '2024-01-16 20:39:12', '2024-01-16 20:39:12', NULL, NULL),
 (9, 'Psychology', '2024-01-16 20:42:21', '2024-01-16 20:42:21', NULL, NULL),
@@ -752,8 +292,7 @@ INSERT INTO `media` (`id`, `filename`, `filetype`, `filesize`, `created_at`, `cr
 (21, 'TalentFlow-Logo.png', 'png', 19205, '2024-02-09 01:32:52', 1, '2024-02-09 01:32:52', 1),
 (22, 'company-logo.png', 'png', 13833, '2024-02-09 19:57:25', 1, '2024-02-09 19:57:25', 1),
 (23, 'company-logo.svg', 'svg', 3769, '2024-02-09 19:57:49', 1, '2024-02-09 19:57:49', 1),
-(24, 'TalentFlow-Logo.svg', 'svg', 2230, '2024-02-09 20:00:28', 1, '2024-02-09 20:00:28', 1),
-(25, 'image-placeholder-500x500.jpg', 'jpg', 9482, '2024-02-24 01:46:17', 1, '2024-02-24 01:46:17', 1);
+(24, 'TalentFlow-Logo.svg', 'svg', 2230, '2024-02-09 20:00:28', 1, '2024-02-09 20:00:28', 1);
 
 -- --------------------------------------------------------
 
@@ -781,6 +320,7 @@ INSERT INTO `permissions` (`id`, `name`) VALUES
 (33, 'CREATE REPORT'),
 (17, 'CREATE ROLE'),
 (13, 'CREATE SCHOOL'),
+(63, 'CREATE STUDENT'),
 (21, 'CREATE SUBJECT'),
 (1, 'CREATE USER'),
 (30, 'DELETE DEGREE'),
@@ -830,6 +370,7 @@ INSERT INTO `permissions` (`id`, `name`) VALUES
 (20, 'UPDATE ROLE'),
 (16, 'UPDATE SCHOOL'),
 (39, 'UPDATE SETTINGS'),
+(64, 'UPDATE STUDENT'),
 (24, 'UPDATE SUBJECT'),
 (2, 'UPDATE USER'),
 (37, 'VIEW DASHBOARD');
@@ -1117,7 +658,11 @@ INSERT INTO `role_has_permission` (`id`, `role_id`, `permission_id`, `created_at
 (160, 1, 59, '2024-02-21 02:20:45', 1, '2024-02-21 02:20:45', 1),
 (161, 1, 60, '2024-02-21 02:20:45', 1, '2024-02-21 02:20:45', 1),
 (162, 1, 61, '2024-02-21 02:20:45', 1, '2024-02-21 02:20:45', 1),
-(163, 1, 62, '2024-02-21 02:20:45', 1, '2024-02-21 02:20:45', 1);
+(163, 1, 62, '2024-02-21 02:20:45', 1, '2024-02-21 02:20:45', 1),
+(164, 1, 63, '2024-02-26 22:29:21', 1, '2024-02-26 22:29:21', 1),
+(165, 1, 64, '2024-02-26 22:29:21', 1, '2024-02-26 22:29:21', 1),
+(166, 3, 63, '2024-02-26 22:29:32', 1, '2024-02-26 22:29:32', 1),
+(167, 3, 64, '2024-02-26 22:29:32', 1, '2024-02-26 22:29:32', 1);
 
 -- --------------------------------------------------------
 
@@ -1263,19 +808,21 @@ CREATE TABLE `student` (
   `position` enum('FULL','PART','INTERN') COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'INTERN',
   `graduation` date NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_by` bigint(20) DEFAULT NULL,
+  `updated_by` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`id`, `first_name`, `last_name`, `email`, `phone`, `address`, `city`, `state`, `zipcode`, `interest`, `degree`, `major`, `school`, `position`, `graduation`, `created_at`, `updated_at`) VALUES
-(6, 'Emily', 'Johnson', 'emily.johnson@email.com', '(555) 123-4567', '123 College Avenue', 'Durham', 'NC', '27708', 1, 11, 6, 13, 'FULL', '2025-05-31', '2024-01-16 20:34:21', '2024-01-16 20:34:21'),
-(7, 'Alex', 'Davis', 'alex.davis@email.com', '(555) 234-5678', '456 University Street', 'Stanford', 'CA', '94305', 4, 9, 8, 7, 'FULL', '2024-05-30', '2024-01-16 20:39:12', '2024-01-16 20:39:12'),
-(8, 'Olivia', 'Thompson', 'olivia.thompson@email.com', '(555) 567-8901', '234 Elm Street', 'Winston-Salem', 'NC', '27109', 7, 8, 9, 16, 'FULL', '2024-12-31', '2024-01-16 20:42:21', '2024-01-16 20:42:21'),
-(9, 'Sophia', 'Brown', 'sophia.brown@email.com', '(555) 567-8901', '234 Duke Circle', 'Durham', 'NC', '27708', 5, 11, 10, 13, 'INTERN', '2026-05-31', '2024-01-16 20:47:01', '2024-01-16 20:47:01'),
-(10, 'Michael', 'Miller', 'michael.miller@email.com', '(555) 456-7890', '101 Blue Ridge Road', 'Durham', 'NC', '27708', 1, 11, 6, 13, 'FULL', '2024-05-31', '2024-01-16 20:48:33', '2024-01-16 20:48:33');
+INSERT INTO `student` (`id`, `first_name`, `last_name`, `email`, `phone`, `address`, `city`, `state`, `zipcode`, `interest`, `degree`, `major`, `school`, `position`, `graduation`, `created_at`, `updated_at`, `created_by`, `updated_by`) VALUES
+(6, 'Emily', 'Johnson', 'emily.johnson@email.com', '(555) 123-4567', '123 College Avenue', 'Durham', 'NC', '27708', 1, 11, 6, 13, 'FULL', '2025-05-31', '2024-01-16 20:34:21', '2024-01-16 20:34:21', NULL, NULL),
+(7, 'Alex', 'Davis', 'alex.davis@email.com', '(555) 234-5678', '456 University Street', 'Stanford', 'CA', '94305', 4, 9, 8, 7, 'FULL', '2024-05-30', '2024-01-16 20:39:12', '2024-01-16 20:39:12', NULL, NULL),
+(8, 'Olivia', 'Thompson', 'olivia.thompson@email.com', '(555) 567-8901', '234 Elm Street', 'Winston-Salem', 'NC', '27109', 7, 8, 9, 16, 'FULL', '2024-12-31', '2024-01-16 20:42:21', '2024-01-16 20:42:21', NULL, NULL),
+(9, 'Sophia', 'Brown', 'sophia.brown@email.com', '(555) 567-8901', '234 Duke Circle', 'Durham', 'NC', '27708', 5, 11, 10, 13, 'INTERN', '2026-05-31', '2024-01-16 20:47:01', '2024-01-16 20:47:01', NULL, NULL),
+(10, 'Michael', 'Miller', 'michael.miller@email.com', '(555) 456-7890', '101 Blue Ridge Road', 'Durham', 'NC', '27708', 1, 11, 6, 13, 'FULL', '2024-05-31', '2024-01-16 20:48:33', '2024-01-16 20:48:33', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1321,10 +868,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 'admin', 'admin@capstone.hostedprojects.net', '$2y$10$bueKn7DZtN7mNMa6vkVKNegMbjdceXmFR.KI/.xjgU8pHBjXo/g2S', '2023-10-12 18:34:47', NULL, '2024-02-16 00:09:57', 1),
-(3, 'stakeholder', 'stakeholder@example.com', '$2y$10$GxfFK9TJhuv1TjSXMpJxdOsWD1fAtM.vGGTim0OU14EdkPivy4Q0a', '2024-02-20 17:19:36', 1, '2024-02-20 17:19:36', 1),
-(4, 'user', 'user@example.com', '$2y$10$4hOj6ujmWf5iYuxUhxjkceQGP4p00l6dwq4Vz8j1mkcIXTl2Vjaf2', '2024-02-23 21:02:43', 1, '2024-02-23 21:02:43', 1),
-(5, 'evaluator', 'evaluator@email.com', '$2y$10$hsvAcwjY2CrdU1q.xIW96.GsnkbCFeccNJtJXvElYXwyKdKYdH8/m', '2024-02-23 21:04:59', 1, '2024-02-23 21:04:59', 1);
+(1, 'admin', 'admin@capstone.hostedprojects.net', '$2y$10$bueKn7DZtN7mNMa6vkVKNegMbjdceXmFR.KI/.xjgU8pHBjXo/g2S', '2023-10-12 18:34:47', NULL, '2024-02-16 00:09:57', NULL),
+(3, 'stakeholder', 'stakeholder@example.com', '$2y$10$GxfFK9TJhuv1TjSXMpJxdOsWD1fAtM.vGGTim0OU14EdkPivy4Q0a', '2024-02-20 17:19:36', NULL, '2024-02-20 17:19:36', NULL),
+(4, 'user', 'user@example.com', '$2y$10$4hOj6ujmWf5iYuxUhxjkceQGP4p00l6dwq4Vz8j1mkcIXTl2Vjaf2', '2024-02-23 21:02:43', NULL, '2024-02-23 21:02:43', NULL),
+(5, 'evaluator', 'evaluator@example.com', '$2y$10$hsvAcwjY2CrdU1q.xIW96.GsnkbCFeccNJtJXvElYXwyKdKYdH8/m', '2024-02-23 21:04:59', NULL, '2024-02-23 21:04:59', NULL);
 
 -- --------------------------------------------------------
 
@@ -1367,25 +914,6 @@ CREATE TABLE `user_token_auth` (
   `is_expired` int(11) NOT NULL DEFAULT '0',
   `expiry_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
---
--- Dumping data for table `user_token_auth`
---
-
-INSERT INTO `user_token_auth` (`id`, `user_id`, `user_name`, `password_hash`, `selector_hash`, `is_expired`, `expiry_date`) VALUES
-(1, 1, 'admin', '$2y$10$mTEfMXuOKoix.YGz2uVPSuIxXJ/jyCpdM3tifpycUy9sSi8suld76', '$2y$10$TzwL8obqyt3uhOBBNE6PBerRpDA1m7sa0Wq56w6ks.5DwHfiKigZm', 1, '2023-11-22 17:41:56'),
-(2, 1, 'admin', '$2y$10$MsbF1YERJOqcJtYab.z.yOX4sbw7g4fPiZxSgwpQkB6kYbjNB8El2', '$2y$10$UpEOAReFyZ4/Ap3hKUnQS.sOzvrbcWhKwbPwKGjyyWBbJjn6E70FW', 1, '2023-12-15 16:12:06'),
-(3, 1, 'admin', '$2y$10$tkuu26p67cmtu.b1sPLuIOTkB4S8ImXpt/w2r.9iRwmof90yweLou', '$2y$10$bSCA5g6dEO31Te/4HJWI9ueX2lNM9S1P7LtsmQVn50BTmcCTlEv4C', 1, '2023-12-19 16:42:56'),
-(4, 1, 'admin', '$2y$10$vtA0bcR9Y0XqGFl8FIgxzO0.IbIBh9qt.7UDvHmwCkxV1ODGNZ6va', '$2y$10$LECAISZra5Vbb68P0WXN.Oa2ZTH.ixsTWW3FHRE2Or6vPYjhi8nlO', 1, '2023-12-20 18:26:34'),
-(5, 1, 'admin', '$2y$10$aPxsdxoE7K7goLSn8qQXveV8kvlpcQCCx5kjpFmzyYy.v7wvvQlOe', '$2y$10$JJwRijaUU0mOrtHPch3l6ed422jZ9P8Ajnvd8M1QXmhTbM/xDHA4u', 1, '2023-12-22 14:55:46'),
-(6, 1, 'admin', '$2y$10$jr.RWYdJidisIVwSM7JVOeqXXxkc1y4Z2kMM2jrJQ.GsxkSs2YNS2', '$2y$10$IRZV.robFoGB/0F9H/w3HuD69jgcAwCVi915obWM246nTjrcqbdEG', 1, '2023-12-28 18:20:28'),
-(7, 1, 'admin', '$2y$10$TouCpqkP2F8PntjUW.VGBeH.8mKgJsz7Ngxw8TWRxUCldIYcW9uCG', '$2y$10$4pY.lGSMaU3xnXpOeC2.auqQwLmBp3Hyj8e1iQ2ekWCq6D30jg3mG', 1, '2024-01-04 16:03:49'),
-(8, 1, 'admin', '$2y$10$mvI/6VXDNHqQ3gQ/8llZXuJZUJBA1zoMyQgf8K2fDtg7FskRuI.qS', '$2y$10$cWM8kj.m4erzBDENe1UWSOHn9RrtIEKdpBECdXhVC6nllwtY7smWy', 1, '2024-01-04 16:42:32'),
-(9, 1, 'admin', '$2y$10$ANzgGffe8kpUSxz74xobaOfHl96cK4ylRtreV5i8ehudAHH2ZARti', '$2y$10$aJNLOp2WAQhwsilKH.WuCuK7..iqRF0G9Fq2vD2sWRKpI7CYKUc0y', 1, '2024-01-08 16:25:40'),
-(10, 1, 'admin', '$2y$10$M0HPJcV79C1.2koi2fTw4OGDN9M17HR/x3FUehTupdrwMs/Z2E.Ya', '$2y$10$SsvZmduDnQ22r5x/HLUY4uDibkGUAe/11IwZisuAUPSgbSu5/GL86', 1, '2024-01-12 14:44:47'),
-(11, 1, 'admin', '$2y$10$k73UYboDHcKBeUF2DR556Oteivl4IhdW3tSax0R3z2lEiFeKTXzUS', '$2y$10$0RGknWVv80mvF13A8J/at.ZfqK38GSBU5Cqxu911vkW0tqhGVujIy', 1, '2024-01-15 20:37:18'),
-(12, 1, 'admin', '$2y$10$LvJsCTVOYqUYO3HCNjJpDut.5rPnM7mIkO/wi59uUtEI9ttEuQVqK', '$2y$10$US85Jb1kbg5/PddUPsC4xOy2eVuDg5UeqE5JTXeCWxbBbEnYG5d7G', 1, '2024-01-16 15:57:58'),
-(13, 1, 'admin', '$2y$10$5zg9mZqQGbOIt7dmo.lmeOZuZNrwMGMW1VZEv2FrsFvXG9oLkCHBG', '$2y$10$SjvtW3coyIHg1lOW0ZConeCt/YrlCxakPt84l2zgSKpNZiynyqDx2', 1, '2024-01-17 14:30:40');
 
 --
 -- Indexes for dumped tables
@@ -1545,7 +1073,9 @@ ALTER TABLE `student`
   ADD KEY `areaOfInterest` (`interest`),
   ADD KEY `degree` (`degree`),
   ADD KEY `major` (`major`),
-  ADD KEY `school` (`school`);
+  ADD KEY `school` (`school`),
+  ADD KEY `studentAddedBy` (`created_by`),
+  ADD KEY `studentUpdatedBy` (`updated_by`);
 
 --
 -- Indexes for table `student_at_event`
@@ -1589,7 +1119,7 @@ ALTER TABLE `user_token_auth`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=452;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=490;
 
 --
 -- AUTO_INCREMENT for table `aoi`
@@ -1601,7 +1131,7 @@ ALTER TABLE `aoi`
 -- AUTO_INCREMENT for table `contact_log`
 --
 ALTER TABLE `contact_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `degree_lvl`
@@ -1643,13 +1173,13 @@ ALTER TABLE `major`
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT for table `reports`
@@ -1667,7 +1197,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `role_has_permission`
 --
 ALTER TABLE `role_has_permission`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=168;
 
 --
 -- AUTO_INCREMENT for table `school`
@@ -1685,7 +1215,7 @@ ALTER TABLE `school_branding`
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `student_at_event`
@@ -1709,7 +1239,7 @@ ALTER TABLE `user_has_role`
 -- AUTO_INCREMENT for table `user_token_auth`
 --
 ALTER TABLE `user_token_auth`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -1832,7 +1362,9 @@ ALTER TABLE `student`
   ADD CONSTRAINT `areaOfInterest` FOREIGN KEY (`interest`) REFERENCES `aoi` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `areaOfStudy` FOREIGN KEY (`major`) REFERENCES `major` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `degreeLevel` FOREIGN KEY (`degree`) REFERENCES `degree_lvl` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `schoolAttended` FOREIGN KEY (`school`) REFERENCES `school` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `schoolAttended` FOREIGN KEY (`school`) REFERENCES `school` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `studentAddedBy` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `studentUpdatedBy` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `student_at_event`

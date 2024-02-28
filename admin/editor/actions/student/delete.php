@@ -105,7 +105,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $student->getStudentFullName($student_id); ?></h1>
+        <h1 class="mt-4"><?php echo $student_name; ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
