@@ -482,7 +482,7 @@ if (!function_exists('mail')) {
                                                 if ($role_id != null) {
                                                     try {
                                                         $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
-                                                        $sql = "INSERT INTO users (username, password, email, role_id) VALUES ('admin', '" . password_hash('admin', PASSWORD_DEFAULT) . "', intval($role_id))";
+                                                        $sql = "INSERT INTO users (username, password, email, role_id) VALUES ('admin', '" . password_hash('admin', PASSWORD_DEFAULT, ["cost" => 10]) . "', intval($role_id))";
                                                         $result = $mysqli->query($sql);
                                                         closeDatabaseConnection($mysqli);
                                                     } catch (Exception $e) {
@@ -499,7 +499,7 @@ if (!function_exists('mail')) {
                                                 if ($hasAdminUser) {
                                                     try {
                                                         $mysqli = connectToDatabase($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE'], $PORT);
-                                                        $sql = "UPDATE users SET password = '" . password_hash('admin', PASSWORD_DEFAULT) . "' WHERE username = 'admin'";
+                                                        $sql = "UPDATE users SET password = '" . password_hash('admin', PASSWORD_DEFAULT, ["cost" => 10]) . "' WHERE username = 'admin'";
                                                         $result = $mysqli->query($sql);
                                                         closeDatabaseConnection($mysqli);
                                                     } catch (Exception $e) {

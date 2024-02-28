@@ -55,9 +55,6 @@ class UserLogin extends User implements Login
 
             //check if the password is correct
             if (password_verify($password, $userPassword)) {
-                //initialize the session
-                session_start();
-
                 // Store data in session variables
                 $session = new Session();
 

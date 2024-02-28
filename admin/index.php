@@ -112,8 +112,8 @@ if (isset($_GET['login'])) {
                         $random_password = randomizeEncryption(16, 16);
 
                         //hash the randomization variables
-                        $random_selector_hash = password_hash($random_selector, PASSWORD_DEFAULT);
-                        $random_password_hash = password_hash($random_password, PASSWORD_DEFAULT);
+                        $random_selector_hash = password_hash($random_selector, PASSWORD_DEFAULT, ['cost' => 12]);
+                        $random_password_hash = password_hash($random_password, PASSWORD_DEFAULT, ['cost' => 12]);
 
                         //set the cookie expiry date
                         $cookie_expiry_date = date("Y-m-d H:i:s", $expiration_time);
