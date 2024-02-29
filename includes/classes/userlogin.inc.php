@@ -64,7 +64,7 @@ class UserLogin extends User implements Login
                 $session->set("username", $username);
 
                 // Redirect user to the dashboard
-                performRedirect(APP_URL . "/admin/dashboard.php");
+                performRedirect("/admin/dashboard.php");
             }
 
             //if the password is incorrect
@@ -104,7 +104,7 @@ class UserLogin extends User implements Login
         session_destroy();
 
         // Redirect to login page
-        performRedirect(APP_URL . "/login.php");
+        performRedirect("/login.php");
     }
 
     /**
