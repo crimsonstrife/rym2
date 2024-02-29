@@ -549,6 +549,31 @@ class Contact
     }
 
     /**
+     * Send an email to a user
+     *
+     * @param string $email - the email address to send the email to
+     * @param string $subject - the subject of the email
+     * @param string $message - the message to send to the user
+     * @return void
+     */
+    public function sendUserEmail(string $email, string $subject, string $message): void
+    {
+        //initiate the email send
+        $result = $this->initiateEmailSend($email, $email, MAIL_FROM_ADDRESS, MAIL_FROM_NAME, $subject, $message);
+
+        //check for errors
+        if ($result == false) {
+            //log the error
+            $activity = new Activity();
+            $activity->logActivity(NULL, 'Error Sending Email', $result->ErrorInfo . ' - ' . $email);
+        } else {
+            //log the activity
+            $activity = new Activity();
+            $activity->logActivity(NULL, 'Email Sent', 'Sent ' . $email . ' - Subject: ' . $subject);
+        }
+    }
+
+    /**
      * Add Student Contact History
      * Add a new contact log entry for a student
      *
