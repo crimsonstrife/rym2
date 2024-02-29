@@ -134,7 +134,7 @@ if (!$hasPermission && (!$isOwnProfile || !$isSuperAdmin)) {
 
                             //only show the edit button if the user has the update user permission
                             if ($hasUpdatePermission || $isOwnProfile) { ?>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . $userId; ?>" class="btn btn-primary">Edit User</a>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=edit&action=edit&id=' . htmlspecialchars($userId); ?>" class="btn btn-primary">Edit User</a>
                             <?php } ?>
                             <?php /*confirm user has a role with delete user permissions*/
                             //get the delete user permission id
@@ -291,7 +291,7 @@ if (!$hasPermission && (!$isOwnProfile || !$isSuperAdmin)) {
                                             <p>This action cannot be undone.</p>
                                         </div>
                                         <div class="modal-footer">
-                                            <form action="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=single&action=delete&id=' . $userId; ?>" method="post">
+                                            <form action="<?php echo APP_URL . '/admin/dashboard.php?view=users&user=single&action=delete&id=' . htmlspecialchars($userId); ?>" method="post">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                 <button type="submit" class="btn btn-danger">Delete User</button>
                                             </form>

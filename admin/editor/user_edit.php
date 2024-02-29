@@ -120,7 +120,7 @@ if (isset($_SESSION['user_id'])) {
                             <div class="row">
                                 <div class="card mb-4">
                                     <!-- Edit Form -->
-                                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&user=' . $_GET['user'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>" method="post" enctype="multipart/form-data" class="needs-validation">
+                                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&user=' . htmlspecialchars($_GET['user']) . '&action=' . htmlspecialchars($_GET['action']) . '&id=' . htmlspecialchars($_GET['id']); ?>" method="post" enctype="multipart/form-data" class="needs-validation">
                                         <div class="card-header">
                                             <div class="card-title">
                                                 <i class="fa-solid fa-user"></i>
@@ -387,7 +387,7 @@ if (isset($_SESSION['user_id'])) {
                     <div class="row">
                         <div class="card mb-4">
                             <!-- Create Form -->
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&user=' . $_GET['user'] . '&action=' . $_GET['action']; ?>" method="post" enctype="multipart/form-data" class="needs-validation">
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&user=' . htmlspecialchars($_GET['user']) . '&action=' . htmlspecialchars($_GET['action']); ?>" method="post" enctype="multipart/form-data" class="needs-validation">
                                 <div class="card-header">
                                     <div class="card-title">
                                         <i class="fa-solid fa-user"></i>
@@ -538,9 +538,9 @@ if (isset($_SESSION['user_id'])) {
         } ?>
 <?php //if passwords.min.js exists, use it, otherwise use passwords.js
         if (file_exists(BASEPATH . '/public/content/assets/js/passwords.min.js')) {
-            echo '<script src="' . getAssetPath() . 'js/passwords.min.js"></script>';
+            echo '<script src="' . htmlspecialchars(getAssetPath()) . 'js/passwords.min.js"></script>';
         } else {
-            echo '<script src="' . getAssetPath() . 'js/passwords.js"></script>';
+            echo '<script src="' . htmlspecialchars(getAssetPath()) . 'js/passwords.js"></script>';
         }
     } else {
         //set the action to null

@@ -99,8 +99,8 @@ if (!$hasPermission) {
         $state = $school->getSchoolState(intval($event->getEventLocationId($event_id)));
         $zip = $school->getSchoolZip(intval($event->getEventLocationId($event_id)));
 ?>
-<link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet/leaflet.css'; ?>">
-<link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.css'; ?>">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(getLibraryPath() . 'leaflet/leaflet.css', ENT_QUOTES, 'UTF-8'); ?>">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(getLibraryPath() . 'leaflet-geosearch/geosearch.css', ENT_QUOTES, 'UTF-8'); ?>">
 <script>
 var mapLocationTitle = "<?php echo $location; ?>";
 var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>";
@@ -126,7 +126,7 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
 
                             //only show the edit button if the user has the update event permission
                             if ($hasUpdatePermission) { ?>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . $event_id; ?>"
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=edit&action=edit&id=' . htmlspecialchars($event_id); ?>"
                         class="btn btn-primary">Edit Event</a>
                     <?php } ?>
                     <?php /*confirm user has a role with delete event permissions*/
@@ -158,7 +158,7 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
                                         target="_blank" class="btn btn-info btn-sm">QRCode Display Page <i
                                             class="fa-solid fa-arrow-up-right-from-square"></i></a></span>
                             </p>
-                            <p><strong>Event Date:</strong> <?php echo $schedule->getEventDate($event_id); ?></p>
+                            <p><strong>Event Date:</strong> <?php echo htmlspecialchars($schedule->getEventDate($event_id)); ?></p>
                             <p><strong>Event Location:</strong> <?php echo $location; ?></p>
                             <!-- Formatted School address -->
                             <div>
@@ -193,23 +193,23 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
                             <h3>Event Branding</h3>
                             <p><strong>Event Logo:</strong></p>
                             <div class="thumbnail-container"
-                                style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
+                                style="background-image: url('<?php echo htmlspecialchars(getAssetPath()) . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($eventMedia->getEventLogo($event_id)); ?>"
+                                    src="<?php echo htmlspecialchars(getUploadPath()) . htmlspecialchars($media->getMediaThumbnail($eventMedia->getEventLogo($event_id))); ?>"
                                     alt="Event Logo Image">
                             </div>
                             <p><strong>Event Banner:</strong></p>
                             <div class="thumbnail-container"
-                                style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
+                                style="background-image: url('<?php echo htmlspecialchars(getAssetPath()) . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($eventMedia->getEventBanner($event_id)); ?>"
+                                    src="<?php echo htmlspecialchars(getUploadPath()) . htmlspecialchars($media->getMediaThumbnail($eventMedia->getEventBanner($event_id))); ?>"
                                     alt="Event Banner Image">
                             </div>
                             <p><strong>School Logo:</strong></p>
                             <div class="thumbnail-container"
-                                style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
+                                style="background-image: url('<?php echo htmlspecialchars(getAssetPath()) . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($school->getSchoolLogo(intval($event->getEventLocationId($event_id)))); ?>"
+                                    src="<?php echo getUploadPath() . htmlspecialchars($media->getMediaThumbnail($school->getSchoolLogo(intval($event->getEventLocationId($event_id))))); ?>"
                                     alt="School Logo Image">
                             </div>
                             <p><strong>School Primary Color:</strong></p>
@@ -307,7 +307,7 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
                                 </div>
                                 <div class="modal-footer">
                                     <form
-                                        action="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single&action=delete&id=' . $event_id; ?>"
+                                        action="<?php echo APP_URL . '/admin/dashboard.php?view=events&event=single&action=delete&id=' . htmlspecialchars($event_id); ?>"
                                         method="post">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Cancel</button>
@@ -325,18 +325,18 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
         </div>
     </div>
 </div>
-<script type="text/javascript" src="<?php echo getLibraryPath() . 'leaflet/leaflet.js'; ?>"></script>
-<script type="text/javascript" src="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.umd.js'; ?>">
+<script type="text/javascript" src="<?php echo htmlspecialchars(getLibraryPath()) . 'leaflet/leaflet.js'; ?>"></script>
+<script type="text/javascript" src="<?php echo htmlspecialchars(getLibraryPath()) . 'leaflet-geosearch/geosearch.umd.js'; ?>">
 </script>
 <?php
         //if event-map.min.js exists, load it. Otherwise, load event-map.js
         if (file_exists(BASEPATH . '/public/content/assets/js/event-map.min.js')) {
         ?>
-<script type="module" src="<?php echo getAssetPath() . 'js/event-map.min.js'; ?>"></script>
+<script type="module" src="<?php echo htmlspecialchars(getAssetPath()) . 'js/event-map.min.js'; ?>"></script>
 <?php
         } else {
         ?>
-<script type="module" src="<?php echo getAssetPath() . 'js/event-map.js'; ?>"></script>
+<script type="module" src="<?php echo htmlspecialchars(getAssetPath()) . 'js/event-map.js'; ?>"></script>
 <?php }
     } ?>
 <script type="text/javascript">

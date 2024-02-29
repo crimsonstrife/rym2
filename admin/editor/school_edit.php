@@ -91,7 +91,7 @@ if (isset($_GET['action'])) {
                     <div class="row">
                         <div class="card mb-4">
                             <!-- Edit Form -->
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&school=' . $_GET['school'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>" method="post" enctype="multipart/form-data">
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&school=' . htmlspecialchars($_GET['school']) . '&action=' . htmlspecialchars($_GET['action']) . '&id=' . htmlspecialchars($_GET['id']); ?>" method="post" enctype="multipart/form-data">
                                 <div class="card-header">
                                     <div class="card-title">
                                         <i class="fa-solid fa-school"></i>
@@ -186,7 +186,7 @@ if (isset($_GET['action'])) {
                                                     <?php
                                                     if (!empty($school->getSchoolLogo(intval($school_id)))) {
                                                         //render the file as an image
-                                                        echo '<div><img src="' . getUploadPath() . $media->getMediaFileName($school->getSchoolLogo(intval($school_id))) . '" alt="School Logo" style="max-width: 200px; max-height: auto;"></div>';
+                                                        echo '<div><img src="' . htmlspecialchars(getUploadPath()) . htmlspecialchars($media->getMediaFileName($school->getSchoolLogo(intval($school_id)))) . '" alt="School Logo" style="max-width: 200px; max-height: auto;"></div>';
                                                         //show the file name
                                                         echo '<div> ' . $media->getMediaFileName($school->getSchoolLogo(intval($school_id))) . '</div>';
                                                     }
@@ -303,7 +303,7 @@ if (isset($_GET['action'])) {
                 <div class="row">
                     <div class="card mb-4">
                         <!-- Create Form -->
-                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&school=' . $_GET['school'] . '&action=' . $_GET['action']; ?>" method="post" enctype="multipart/form-data">
+                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&school=' . htmlspecialchars($_GET['school']) . '&action=' . htmlspecialchars($_GET['action']); ?>" method="post" enctype="multipart/form-data">
                             <div class="card-header">
                                 <div class="card-title">
                                     <i class="fa-solid fa-school"></i>
@@ -478,7 +478,7 @@ if (isset($_GET['action'])) {
     <?php
         }
     } ?>
-    <script type="text/javascript" src="<?php echo getLibraryPath() . 'irojs/iro.min.js'; ?>">
+    <script type="text/javascript" src="<?php echo htmlspecialchars(getLibraryPath()) . 'irojs/iro.min.js'; ?>">
     </script>
     <script>
         //hide or show the file upload input based on the user selection
@@ -497,9 +497,9 @@ if (isset($_GET['action'])) {
 <?php
     //if color-picker.min.js exists, use it, otherwise use color-picker.js
     if (file_exists(BASEPATH . '/public/content/assets/js/color-picker.min.js')) {
-        echo '<script type="text/javascript" src="' . getAssetPath() . 'js/color-picker.min.js"></script>';
+        echo '<script type="text/javascript" src="' . htmlspecialchars(getAssetPath()) . 'js/color-picker.min.js"></script>';
     } else {
-        echo '<script type="text/javascript" src="' . getAssetPath() . 'js/color-picker.js"></script>';
+        echo '<script type="text/javascript" src="' . htmlspecialchars(getAssetPath()) . 'js/color-picker.js"></script>';
     }
 } else {
     //set the action to null

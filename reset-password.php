@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div>
                 <label>New Password</label>
-                <input type="password" name="new_password" <?php echo (!empty($new_password_error)) ? 'is-invalid' : ''; ?>" value="<?php echo $new_password; ?>">
+                <input type="password" name="new_password" <?php echo (!empty($new_password_error)) ? 'is-invalid' : ''; ?>" value="<?php echo htmlspecialchars($new_password); ?>">
                 <span><?php echo $new_password__error; ?></span>
             </div>
             <div>

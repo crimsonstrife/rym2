@@ -279,7 +279,7 @@ if (!$hasPermission) {
 ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $username; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($username); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -307,10 +307,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if ($userUpdated) {
-                                    echo '<p>The user: ' . $username . ' has been updated.</p>';
+                                    echo '<p>The user: ' . htmlspecialchars($username) . ' has been updated.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The user: ' . $username . ' could not be updated.</p>';
+                                    echo '<p>The user: ' . htmlspecialchars($username) . ' could not be updated.</p>';
                                 }
                             }
                             ?>
@@ -323,19 +323,19 @@ if (!$hasPermission) {
                             if ($action == 'edit') {
                                 if (!$userUpdated) {
                                     if ($usernameTaken) {
-                                        echo '<br>' . $usernameError;
+                                        echo '<br>' . htmlspecialchars($usernameError);
                                     }
                                     //if the email is taken, display the error
                                     if ($emailTaken) {
-                                        echo '<br>' . $emailError;
+                                        echo '<br>' . htmlspecialchars($emailError);
                                     }
                                     //if the passwords do not match, display the error
                                     if ($passwordError) {
-                                        echo '<br>' . $passwordError;
+                                        echo '<br>' . htmlspecialchars($passwordError);
                                     }
                                     //if there is a role issue, display the error
                                     if ($roleIssue) {
-                                        echo '<br>' . $roleError;
+                                        echo '<br>' . htmlspecialchars($roleError);
                                     }
                                 }
                             }
@@ -350,7 +350,7 @@ if (!$hasPermission) {
                                 if ($action == 'edit') {
                                     if ($userUpdated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=list" class="btn btn-primary">Return to User List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $user_id . '" class="btn btn-secondary">Go to User</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . htmlspecialchars($user_id) . '" class="btn btn-secondary">Go to User</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=list" class="btn btn-primary">Return to User List</a></span>';
                                     }

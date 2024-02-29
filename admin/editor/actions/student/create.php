@@ -435,7 +435,7 @@ if (!$hasPermission) {
     if (isset($emailSent) && $emailSent != null) { ?>
         <!-- Completion page content -->
         <div class="container-fluid px-4">
-            <h1 class="mt-4"><?php echo $student_name; ?></h1>
+            <h1 class="mt-4"><?php echo htmlspecialchars($student_name); ?></h1>
             <div class="row">
                 <div class="card mb-4">
                     <!-- show email completion message -->
@@ -460,9 +460,9 @@ if (!$hasPermission) {
                             <div class="col-md-12">
                                 <?php
                                 if ($emailSent) {
-                                    echo '<p>The confirmation email has been sent to ' . $student_name . ' at ' . $student_email . '.</p>';
+                                    echo '<p>The confirmation email has been sent to ' . htmlspecialchars($student_name) . ' at ' . htmlspecialchars($student_email) . '.</p>';
                                 } else {
-                                    echo '<p>The confirmation email could not be sent to ' . $student_name . ' at ' . $student_email . '.</p>';
+                                    echo '<p>The confirmation email could not be sent to ' . htmlspecialchars($student_name) . ' at ' . htmlspecialchars($student_email) . '.</p>';
                                 }
                                 ?>
                             </div>
@@ -483,7 +483,7 @@ if (!$hasPermission) {
     <?php } else { ?>
         <!-- Completion page content -->
         <div class="container-fluid px-4">
-            <h1 class="mt-4"><?php echo $student_name; ?></h1>
+            <h1 class="mt-4"><?php echo htmlspecialchars($student_name); ?></h1>
             <div class="row">
                 <div class="card mb-4">
                     <!-- show completion message -->
@@ -511,10 +511,10 @@ if (!$hasPermission) {
                                 <?php
                                 if ($action == 'create') {
                                     if ($studentCreated) {
-                                        echo '<p>The student: ' . $student_name . ' has been created.</p>';
+                                        echo '<p>The student: ' . htmlspecialchars($student_name) . ' has been created.</p>';
                                     } else {
                                         echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                        echo '<p>The student: ' . $student_name . ' could not be created.</p>';
+                                        echo '<p>The student: ' . htmlspecialchars($student_name) . ' could not be created.</p>';
                                     }
                                 }
                                 ?>
@@ -526,9 +526,9 @@ if (!$hasPermission) {
                                 <?php
                                 if ($action == 'create') {
                                     if (!$studentCreated) {
-                                        echo '<p>The student: ' . $student_name . ' could not be created due to an error.</p>';
+                                        echo '<p>The student: ' . htmlspecialchars($student_name) . ' could not be created due to an error.</p>';
                                     } else {
-                                        echo '<p>The student: ' . $student_name . ' has been created.</p>';
+                                        echo '<p>The student: ' . htmlspecialchars($student_name) . ' has been created.</p>';
                                     }
                                 }
                                 ?>
@@ -540,13 +540,14 @@ if (!$hasPermission) {
                                 <?php
                                 if ($action == 'create') {
                                     if ($studentCreated) {
-                                        echo '<p>Would you like to send a confirmation email to ' . $student_name . '?</p>';
+                                        echo '<p>Would you like to send a confirmation email to ' . htmlspecialchars($student_name) . '?</p>';
                                         //confirmation email form - student values are hidden
-                                        echo '<form action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '?view=' . $_GET['view'] . '" method="post">';
+                                        $view = isset($_GET['view']) ? htmlspecialchars($_GET['view']) : '';
+                                        echo '<form action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '?view=' . $view . '" method="post">';
                                         echo '<input type="hidden" name="student_id" value="' . $student_id . '">';
-                                        echo '<input type="hidden" name="student_firstName" value="' . $student_firstName . '">';
-                                        echo '<input type="hidden" name="student_lastName" value="' . $student_lastName . '">';
-                                        echo '<input type="hidden" name="student_email" value="' . $student_email . '">';
+                                        echo '<input type="hidden" name="student_firstName" value="' . htmlspecialchars($student_firstName) . '">';
+                                        echo '<input type="hidden" name="student_lastName" value="' . htmlspecialchars($student_lastName) . '">';
+                                        echo '<input type="hidden" name="student_email" value="' . htmlspecialchars($student_email) . '">';
                                         //current user id from session
                                         echo '<input type="hidden" name="user_id" value="' . $session->get('user_id') . '">';
                                         echo '<input type="submit" class="btn btn-primary" name="send_email" value="Send Email">';

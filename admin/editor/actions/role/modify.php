@@ -409,13 +409,13 @@ if (!$hasPermission) {
                             if ($action == 'edit') {
                                 if ($permissionsWarning != '') { ?>
                                     <p>If you would like to update all associated records, click the button below.</p>
-                                    <form action="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=edit&action=edit&id=' . strval($roleId) . '&override=true'; ?>" method="post">
+                                    <form action="<?php echo htmlspecialchars(APP_URL . '/admin/dashboard.php?view=roles&role=edit&action=edit&id=' . strval($roleId) . '&override=true'); ?>" method="post">
                                         <input type="hidden" name="editAll" value="true" required>
-                                        <input type="hidden" name="role_name" value="<?php echo $role_name; ?>" required>
+                                        <input type="hidden" name="role_name" value="<?php echo htmlspecialchars($role_name); ?>" required>
                                         <select multiple class="hidden" type="hidden" name="role_permissions[]" required>
                                             <?php //loop through the role permissions and mark the selected permissions as the value
                                             foreach ($role_permissions as $permission) {
-                                                echo '<option value="' . $permission . '" selected>' . $permission . '</option>';
+                                                echo '<option value="' . htmlspecialchars($permission) . '" selected>' . htmlspecialchars($permission) . '</option>';
                                             }
                                             ?>
                                         </select>

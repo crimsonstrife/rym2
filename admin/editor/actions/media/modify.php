@@ -74,9 +74,12 @@ if (!$hasPermission) {
 
             //if the file name is set, get the name from the form
             if (isset($_POST['media_name'])) {
-                $media_name = trim($_POST["media_name"]);
+                $media_name = trim(basename($_POST["media_name"]));
                 //prepare the media name
                 $media_name = prepareData($media_name);
+
+                //sanitize the media name
+                $media_name = htmlspecialchars($media_name);
             }
         }
 
@@ -105,12 +108,7 @@ if (!$hasPermission) {
                 include_once(__DIR__ . '/../../../../includes/errors/errorMessage.inc.php');
             } else {
                 //if the media name is being changed, update the media name
-                if ($fileNameChanged) {
-                    $mediaUpdated = $media->renameMedia($media_id, $media_name, intval($session->get('user_id')));
-                } else {
-                    //no file was uploaded, and no name was changed, set the update to true
-                    $mediaUpdated = true;
-                }
+                $mediaUpdated = $fileNameChanged ? $media->renameMedia($media_id, htmlspecialchars(prepareData($media_name)), intval($session->get('user_id'))) : true;
             }
         } else {
             //get the media name from the file name
@@ -133,7 +131,7 @@ if (!$hasPermission) {
 
                     //if the media id is set, update the media name
                     if (isset($media_id) && ($media_id != null || $media_id != 0)) {
-                        $mediaUpdated = $media->renameMedia($media_id, $media_name, intval($session->get('user_id')));
+                        $mediaUpdated = $media->renameMedia($media_id, htmlspecialchars(prepareData($media_name)), intval($session->get('user_id')));
                     }
                 } else {
                     //replace the media file
@@ -148,7 +146,7 @@ if (!$hasPermission) {
 ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $media_name; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($media_name); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -176,10 +174,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if ($mediaUpdated) {
-                                    echo '<p>The media: ' . $media_name . ' has been updated.</p>';
+                                    echo '<p>The media: ' . htmlspecialchars($media_name) . ' has been updated.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The media: ' . $media_name . ' could not be updated.</p>';
+                                    echo '<p>The media: ' . htmlspecialchars($media_name) . ' could not be updated.</p>';
                                 }
                             }
                             ?>
@@ -191,12 +189,12 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if ($mediaExists && !$mediaUpdated) {
-                                    echo '<p>The media: ' . $media_name . ' cannot be updated because a media with the same name already exists.</p>';
+                                    echo '<p>The media: ' . htmlspecialchars($media_name) . ' cannot be updated because a media with the same name already exists.</p>';
                                     echo '<p>Please enter a different media name and try again.</p>';
                                 } else if (!$mediaExists && !$mediaUpdated) {
-                                    echo '<p>The media: ' . $media_name . ' could not be updated due to an unknown error.</p>';
+                                    echo '<p>The media: ' . htmlspecialchars($media_name) . ' could not be updated due to an unknown error.</p>';
                                 } else {
-                                    echo '<p>The media: ' . $media_name . ' has been updated.</p>';
+                                    echo '<p>The media: ' . htmlspecialchars($media_name) . ' has been updated.</p>';
                                 }
                             }
                             ?>
@@ -210,7 +208,7 @@ if (!$hasPermission) {
                                 if ($action == 'edit') {
                                     if ($mediaUpdated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=list" class="btn btn-primary">Return to Media List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=single&id=' . $media_id . '" class="btn btn-secondary">Go to Media</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=single&id=' . htmlspecialchars($media_id) . '" class="btn btn-secondary">Go to Media</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=list" class="btn btn-primary">Return to Media List</a></span>';
                                     }

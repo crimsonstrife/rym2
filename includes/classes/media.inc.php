@@ -417,9 +417,9 @@ class Media
         $uploadPath = dirname(__DIR__, 2) . '/public/content/uploads/';
 
         // Validate the file
-        $upload_error = validateFile($file);
-        if ($upload_error !== '') {
-            $activity->logActivity($userID, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
+        $uploadError = validateFile($file);
+        if ($uploadError !== '') {
+            $activity->logActivity($userID, 'Upload Error', 'Error Uploading Media: ' . $uploadError . ' - ' . $file['name']);
             return $mediaID;
         }
 
@@ -427,11 +427,11 @@ class Media
         if (moveFile($file, $uploadPath)) {
             $mediaID = $this->addMediaToDatabase($file, $userID);
             if ($mediaID === 0) {
-                $upload_error = 'Error adding media to the database';
-                $activity->logActivity($userID, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
+                $uploadError = 'Error adding media to the database';
+                $activity->logActivity($userID, 'Upload Error', 'Error Uploading Media: ' . $uploadError . ' - ' . $file['name']);
             }
-            $upload_error = 'Error moving file to upload directory';
-            $activity->logActivity($userID, 'Upload Error', 'Error Uploading Media: ' . $upload_error . ' - ' . $file['name']);
+            $uploadError = 'Error moving file to upload directory';
+            $activity->logActivity($userID, 'Upload Error', 'Error Uploading Media: ' . $uploadError . ' - ' . $file['name']);
         }
 
         // Log the activity
@@ -509,12 +509,12 @@ class Media
      * Renames the media file on the server and updates the media object in the database
      *
      * @param int $mediaID The media id
-     * @param string $new_filename The new file name
+     * @param string $newFilename The new file name
      * @param int $userID The user id for the user updating the media
      *
      * @return bool True if the media file was renamed, false if it was not
      */
-    public function renameMedia(int $mediaID, string $new_filename, int $userID = NULL): bool
+    public function renameMedia(int $mediaID, string $newFilename, int $userID = NULL): bool
     {
         //placeholder for the result
         $result = false;
@@ -526,36 +526,39 @@ class Media
         $error = false;
 
         //placeholder for the upload error
-        $upload_error = '';
+        $uploadError = '';
 
         //get the current file name
-        $current_filename = $this->getMediaFileName($mediaID);
+        $currentFilename= $this->getMediaFileName($mediaID);
+
+        //sanitize the new file name
+        $newFilename = htmlspecialchars($newFilename);
 
         //if the file name is different, rename the file
-        if ($new_filename !== $current_filename) {
+        if ($newFilename !== $currentFilename) {
             //if the file exists, rename the file
-            if (file_exists($uploadPath . $current_filename)) {
+            if (file_exists($uploadPath . $currentFilename)) {
                 //create a backup of the current file
-                if (copy($uploadPath . $current_filename, $uploadPath . 'backup_' . $current_filename)) {
+                if (copy($uploadPath . $currentFilename, $uploadPath . 'backup_' . $currentFilename)) {
                     //rename the new file
-                    if (rename($uploadPath . $current_filename, $uploadPath . $new_filename)) {
+                    if (rename($uploadPath . $currentFilename, $uploadPath . $newFilename)) {
                         //update the file name in the database
-                        $this->updateMediaFileName($mediaID, $new_filename);
+                        $this->updateMediaFileName($mediaID, $newFilename);
                     } else {
                         //set the upload error
-                        $upload_error = 'Error renaming file';
+                        $uploadError = 'Error renaming file';
                         //set the error boolean to true
                         $error = true;
                     }
                 } else {
                     //set the upload error
-                    $upload_error = 'Error creating backup file';
+                    $uploadError = 'Error creating backup file';
                     //set the error boolean to true
                     $error = true;
                 }
             } else {
                 //set the upload error
-                $upload_error = 'File does not exist';
+                $uploadError = 'File does not exist';
                 //set the error boolean to true
                 $error = true;
             }
@@ -563,13 +566,13 @@ class Media
             //if there is an error, log the activity
             if ($error === true) {
                 $activity = new Activity();
-                $activity->logActivity($userID, "Upload Error", "Error Renaming Media File: " . $upload_error . " - " . $current_filename . " to " . $new_filename);
+                $activity->logActivity($userID, "Upload Error", "Error Renaming Media File: " . $uploadError . " - " . $currentFilename. " to " . $newFilename);
 
                 //set the result to false
                 $result = false;
             } else {
                 //delete the backup file
-                unlink($uploadPath . 'backup_' . $current_filename);
+                unlink($uploadPath . 'backup_' . $currentFilename);
 
                 //set the result to true
                 $result = true;
@@ -606,7 +609,7 @@ class Media
         $error = false;
 
         //placeholder for the upload error
-        $upload_error = '';
+        $uploadError = '';
 
         //if the file array is empty, return false
         if (empty($file)) {
@@ -620,35 +623,35 @@ class Media
         $filesize = $file['size'];
 
         //get the current file name
-        $current_filename = $this->getMediaFileName($mediaID);
+        $currentFilename= $this->getMediaFileName($mediaID);
 
         //if the file name is different, rename the file
-        if ($filename !== $current_filename) {
+        if ($filename !== $currentFilename) {
             //if the file exists, rename the file
             if (file_exists($uploadPath . $filename)) {
                 //create a backup of the current file
-                if (copy($uploadPath . $current_filename, $uploadPath . 'backup_' . $current_filename)) {
+                if (copy($uploadPath . $currentFilename, $uploadPath . 'backup_' . $currentFilename)) {
                     //rename the new file
-                    if (rename($uploadPath . $filename, $uploadPath . $current_filename)) {
+                    if (rename($uploadPath . $filename, $uploadPath . $currentFilename)) {
                         //update the file name in the database
-                        $this->updateMediaFileName($mediaID, $current_filename);
+                        $this->updateMediaFileName($mediaID, $currentFilename);
                         //update the file size in the database
                         $this->updateMediaFileSize($mediaID, $filesize);
                     } else {
                         //set the upload error
-                        $upload_error = 'Error renaming file';
+                        $uploadError = 'Error renaming file';
                         //set the error boolean to true
                         $error = true;
                     }
                 } else {
                     //set the upload error
-                    $upload_error = 'Error creating backup file';
+                    $uploadError = 'Error creating backup file';
                     //set the error boolean to true
                     $error = true;
                 }
             } else {
                 //set the upload error
-                $upload_error = 'File does not exist';
+                $uploadError = 'File does not exist';
                 //set the error boolean to true
                 $error = true;
             }
@@ -656,13 +659,13 @@ class Media
             //if there is an error, log the activity
             if ($error === true) {
                 $activity = new Activity();
-                $activity->logActivity($userID, "Upload Error", "Error Updating Media File: " . $upload_error . " - " . $current_filename . " from " . $filename);
+                $activity->logActivity($userID, "Upload Error", "Error Updating Media File: " . $uploadError . " - " . $currentFilename. " from " . $filename);
 
                 //set the result to false
                 $result = false;
             } else {
                 //delete the backup file
-                unlink($uploadPath . 'backup_' . $current_filename);
+                unlink($uploadPath . 'backup_' . $currentFilename);
 
                 //set the result to true
                 $result = true;
@@ -700,7 +703,7 @@ class Media
         $deleted = false;
 
         //placeholder for the error message
-        $error_message = '';
+        $errorMessage = '';
 
         //get the file name
         $filename = $this->getMediaFileName($mediaID);
@@ -714,13 +717,13 @@ class Media
                 //set the error boolean to true
                 $error = true;
                 //set the error message
-                $error_message = 'Error deleting file';
+                $errorMessage = 'Error deleting file';
             }
         } else {
             //set the error boolean to true
             $error = true;
             //set the error message
-            $error_message = 'File does not exist';
+            $errorMessage = 'File does not exist';
         }
 
         //delete thumbnails if they exist
@@ -752,7 +755,7 @@ class Media
                 //set the error boolean to true
                 $error = true;
                 //set the error message
-                $error_message = 'Error deleting media from database';
+                $errorMessage = 'Error deleting media from database';
                 //set the result to false
                 $result = false;
             }
@@ -761,7 +764,7 @@ class Media
         //if there is an error, log the activity
         if ($error === true) {
             $activity = new Activity();
-            $activity->logActivity($userID, "Delete Error", "Error Deleting Media: " . $error_message . " - " . $filename);
+            $activity->logActivity($userID, "Delete Error", "Error Deleting Media: " . $errorMessage . " - " . $filename);
         }
 
         //return the result
@@ -887,33 +890,33 @@ class Media
         $uploadPath = dirname(__DIR__, 2) . '/public/content/uploads/';
 
         //get the file name
-        $original_filename = $this->getMediaFileName($mediaID);
+        $originalFilename = $this->getMediaFileName($mediaID);
 
         //if the size is modal, get the modal thumbnail
         switch ($size) {
             case 'modal':
                 //if the modal thumbnail exists, get the modal thumbnail
-                if (file_exists($uploadPath . 'thumb_600_' . $original_filename)) {
-                    $filename = 'thumb_600_' . $original_filename;
+                if (file_exists($uploadPath . 'thumb_600_' . $originalFilename)) {
+                    $filename = 'thumb_600_' . $originalFilename;
                 } else {
                     //if the modal thumbnail does not exist, get the original file
-                    $filename = $original_filename;
+                    $filename = $originalFilename;
                 }
                 //return the filename
                 return $filename;
             case 'list':
                 //if the list thumbnail exists, get the list thumbnail
-                if (file_exists($uploadPath . 'thumb_200_' . $original_filename)) {
-                    $filename = 'thumb_200_' . $original_filename;
+                if (file_exists($uploadPath . 'thumb_200_' . $originalFilename)) {
+                    $filename = 'thumb_200_' . $originalFilename;
                 } else {
                     //if the list thumbnail does not exist, get the original file
-                    $filename = $original_filename;
+                    $filename = $originalFilename;
                 }
                 //return the filename
                 return $filename;
             default:
                 //if the size is not modal or list, get the original file
-                $filename = $original_filename;
+                $filename = $originalFilename;
 
                 //return the filename
                 return $filename;

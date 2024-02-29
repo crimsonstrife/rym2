@@ -87,7 +87,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $degree->getMajorNameById($major_id); ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($degree->getMajorNameById($major_id)); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -115,10 +115,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if ($majorUpdated) {
-                                    echo '<p>The major: ' . $major_name . ' has been updated.</p>';
+                                    echo '<p>The major: ' . htmlspecialchars($major_name) . ' has been updated.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The major: ' . $major_name . ' could not be updated.</p>';
+                                    echo '<p>The major: ' . htmlspecialchars($major_name) . ' could not be updated.</p>';
                                 }
                             }
                             ?>
@@ -130,12 +130,12 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if (!$canEdit) {
-                                    echo '<p>The major: ' . $major_name . ' cannot be updated because a major with the same name already exists.</p>';
+                                    echo '<p>The major: ' . htmlspecialchars($major_name) . ' cannot be updated because a major with the same name already exists.</p>';
                                     echo '<p>Please enter a different major name and try again.</p>';
                                 } else if ($canEdit && !$majorUpdated) {
-                                    echo '<p>The major: ' . $major_name . ' could not be updated due to an unknown error.</p>';
+                                    echo '<p>The major: ' . htmlspecialchars($major_name) . ' could not be updated due to an unknown error.</p>';
                                 } else {
-                                    echo '<p>The major: ' . $major_name . ' has been updated.</p>';
+                                    echo '<p>The major: ' . htmlspecialchars($major_name) . ' has been updated.</p>';
                                 }
                             }
                             ?>
@@ -149,10 +149,10 @@ if (!$hasPermission) {
                                 if ($action == 'edit') {
                                     if ($majorUpdated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=majors&major=list" class="btn btn-primary">Return to Major List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=majors&major=single&id=' . $major_id . '" class="btn btn-secondary">Go to Major</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=majors&major=single&id=' . htmlspecialchars($major_id) . '" class="btn btn-secondary">Go to Major</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=majors&major=list" class="btn btn-primary">Return to Major List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=majors&major=single&id=' . $major_id . '" class="btn btn-secondary">Go to Major</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=majors&major=single&id=' . htmlspecialchars($major_id) . '" class="btn btn-secondary">Go to Major</a></span>';
                                     }
                                 }
                                 ?>

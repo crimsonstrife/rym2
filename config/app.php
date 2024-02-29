@@ -242,9 +242,7 @@ if (file_exists(BASEPATH . '/.env')) {
         define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
     } else {
         //generate a random encryption key
-        if (function_exists('random_bytes')) {
-            $encryptionKey = base64_encode(random_bytes(32));
-        } else if (function_exists('openssl_random_pseudo_bytes')) {
+        if (function_exists('openssl_random_pseudo_bytes')) {
             $encryptionKey = base64_encode(openssl_random_pseudo_bytes(32));
         } else {
             $encryptionKey = base64_encode(uniqid());
@@ -273,7 +271,7 @@ if (file_exists(BASEPATH . '/.env')) {
         //if OPENSSL is installed, encrypt the password
         if (OPENSSL_INSTALLED) {
             //Encrypt the password
-            $password = openssl_encrypt($mailerPassword, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+            $password = openssl_encrypt($mailerPassword, 'AES-256-CBC', MAILER_PASSWORD_ENCRYPTION_KEY);
         }
 
         if (!OPENSSL_INSTALLED) {
@@ -462,7 +460,7 @@ if (file_exists(BASEPATH . '/.env')) {
         //if OPENSSL is installed, encrypt the password
         if (OPENSSL_INSTALLED) {
             //Encrypt the password
-            $password = openssl_encrypt($mailerPassword, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+            $password = openssl_encrypt($mailerPassword, 'AES-256-CBC', MAILER_PASSWORD_ENCRYPTION_KEY);
         }
 
         if (!OPENSSL_INSTALLED) {
@@ -508,9 +506,7 @@ if (file_exists(BASEPATH . '/.env')) {
         define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
     } else {
         //generate a random encryption key
-        if (function_exists('random_bytes')) {
-            $encryptionKey = base64_encode(random_bytes(32));
-        } else if (function_exists('openssl_random_pseudo_bytes')) {
+        if (function_exists('openssl_random_pseudo_bytes')) {
             $encryptionKey = base64_encode(openssl_random_pseudo_bytes(32));
         } else {
             $encryptionKey = base64_encode(uniqid());
@@ -539,7 +535,7 @@ if (file_exists(BASEPATH . '/.env')) {
         //if OPENSSL is installed, encrypt the password
         if (OPENSSL_INSTALLED) {
             //Encrypt the password
-            $password = openssl_encrypt($mailerPassword, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+            $password = openssl_encrypt($mailerPassword, 'AES-256-CBC', MAILER_PASSWORD_ENCRYPTION_KEY);
         }
 
         if (!OPENSSL_INSTALLED) {
@@ -895,33 +891,33 @@ function prepareData($data)
 function includeHeader(): string
 {
     /* CSS for the application */
-    $boostrapCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'bootstrap/css/bootstrap.min.css">';
-    $datatablesCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'simple-datatables/style.css">';
-    $select2CSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'select2/css/select2.min.css">';
-    $select2BootstrapCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'select2/css/select2-bootstrap.min.css">';
-    $fontawesomeCSS = '<link rel="stylesheet" href="' . getLibraryPath() . 'fontawesome/css/all.min.css">';
+    $boostrapCSS = '<link rel="stylesheet" href="' . htmlspecialchars(getLibraryPath()) . 'bootstrap/css/bootstrap.min.css">';
+    $datatablesCSS = '<link rel="stylesheet" href="' . htmlspecialchars(getLibraryPath()) . 'simple-datatables/style.css">';
+    $select2CSS = '<link rel="stylesheet" href="' . htmlspecialchars(getLibraryPath()) . 'select2/css/select2.min.css">';
+    $select2BootstrapCSS = '<link rel="stylesheet" href="' . htmlspecialchars(getLibraryPath()) . 'select2/css/select2-bootstrap.min.css">';
+    $fontawesomeCSS = '<link rel="stylesheet" href="' . htmlspecialchars(getLibraryPath()) . 'fontawesome/css/all.min.css">';
     //if style.min.css exists, load it, otherwise load the original
     if (file_exists(BASEPATH . '/public/content/assets/css/style.min.css')) {
-        $styleCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/style.min.css">';
+        $styleCSS = '<link rel="stylesheet" href="' . htmlspecialchars(getAssetPath()) . 'css/style.min.css">';
     } else {
-        $styleCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/style.css">';
+        $styleCSS = '<link rel="stylesheet" href="' . htmlspecialchars(getAssetPath()) . 'css/style.css">';
     }
     //if compatibility.min.css exists, load it, otherwise load the original
     if (file_exists(BASEPATH . '/public/content/assets/css/compatibility.min.css')) {
-        $compatibilityCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/compatibility.min.css">';
+        $compatibilityCSS = '<link rel="stylesheet" href="' . htmlspecialchars(getAssetPath()) . 'css/compatibility.min.css">';
     } else {
-        $compatibilityCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/compatibility.css">';
+        $compatibilityCSS = '<link rel="stylesheet" href="' . htmlspecialchars(getAssetPath()) . 'css/compatibility.css">';
     }
     //if responsive.min.css exists, load it, otherwise load the original
     if (file_exists(BASEPATH . '/public/content/assets/css/responsive.min.css')) {
-        $responsiveCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/responsive.min.css">';
+        $responsiveCSS = '<link rel="stylesheet" href="' . htmlspecialchars(getAssetPath()) . 'css/responsive.min.css">';
     } else {
-        $responsiveCSS = '<link rel="stylesheet" href="' . getAssetPath() . 'css/responsive.css">';
+        $responsiveCSS = '<link rel="stylesheet" href="' . htmlspecialchars(getAssetPath()) . 'css/responsive.css">';
     }
 
     /* JS that needs to be loaded in the header */
-    $jQuery = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery/jquery.min.js"></script>';
-    $jqueryMigrate = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery-migrate/jquery-migrate.min.js"></script>';
+    $jQuery = '<script type="text/javascript" src="' . htmlspecialchars(getLibraryPath()) . 'jquery/jquery.min.js"></script>';
+    $jqueryMigrate = '<script type="text/javascript" src="' . htmlspecialchars(getLibraryPath()) . 'jquery-migrate/jquery-migrate.min.js"></script>';
     $hotjar_activation = null;
     //check if hotjar is enabled
     if (HOTJAR_ENABLED == true) {
@@ -930,7 +926,7 @@ function includeHeader(): string
         <script>
     (function(h,o,t,j,a,r){
         h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:" . HOTJAR_ID .",hjsv:" . HOTJAR_VERSION ."};
+        h._hjSettings={hjid:" . htmlspecialchars(HOTJAR_ID) .",hjsv:" . htmlspecialchars(HOTJAR_VERSION) ."};
         a=o.getElementsByTagName('head')[0];
         r=o.createElement('script');r.async=1;
         r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
@@ -943,12 +939,12 @@ function includeHeader(): string
     if (GOOGLE_ANALYTICS_ENABLED == true) {
         //setup the google analytics activation script
         $google_analytics_activation = "<!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src='https://www.googletagmanager.com/gtag/js?id=" . GOOGLE_ANALYTICS_ID . "'></script>
+        <script async src='https://www.googletagmanager.com/gtag/js?id=" . htmlspecialchars(GOOGLE_ANALYTICS_ID) . "'></script>
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '" . GOOGLE_ANALYTICS_ID . "');
+            gtag('config', '" . htmlspecialchars(GOOGLE_ANALYTICS_ID) . "');
         </script>";
     }
 
@@ -968,46 +964,46 @@ function includeHeader(): string
 function includeFooter(): string
 {
     /* JS for the application */
-    $boostrapJS = '<script type="text/javascript" src="' . getLibraryPath() . 'bootstrap/js/bootstrap.bundle.min.js"></script>';
-    $fontawesomeJS = '<script type="text/javascript" src="' . getLibraryPath() . 'fontawesome/js/all.min.js"></script>';
-    //$jQuery = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery/jquery.min.js"></script>';
-    //$jqueryMigrate = '<script type="text/javascript" src="' . getLibraryPath() . 'jquery-migrate/jquery-migrate.min.js"></script>';
-    $datatablesJS = '<script type="text/javascript" src="' . getLibraryPath() . 'simple-datatables/umd/simple-datatables.js"></script>';
-    $chartJS = '<script type="text/javascript" src="' . getLibraryPath() . 'chart.js/chart.umd.js"></script>';
+    $boostrapJS = '<script type="text/javascript" src="' . htmlspecialchars(getLibraryPath()) . 'bootstrap/js/bootstrap.bundle.min.js"></script>';
+    $fontawesomeJS = '<script type="text/javascript" src="' . htmlspecialchars(getLibraryPath()) . 'fontawesome/js/all.min.js"></script>';
+    //$jQuery = '<script type="text/javascript" src="' . htmlspecialchars(getLibraryPath()) . 'jquery/jquery.min.js"></script>';
+    //$jqueryMigrate = '<script type="text/javascript" src="' . htmlspecialchars(getLibraryPath()) . 'jquery-migrate/jquery-migrate.min.js"></script>';
+    $datatablesJS = '<script type="text/javascript" src="' . htmlspecialchars(getLibraryPath()) . 'simple-datatables/umd/simple-datatables.js"></script>';
+    $chartJS = '<script type="text/javascript" src="' . htmlspecialchars(getLibraryPath()) . 'chart.js/chart.umd.js"></script>';
     $tether = '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>';
-    $select2JS = '<script type="text/javascript" src="' . getLibraryPath() . 'select2/js/select2.min.js"></script>';
+    $select2JS = '<script type="text/javascript" src="' . htmlspecialchars(getLibraryPath()) . 'select2/js/select2.min.js"></script>';
     $select2BootstrapEnabler = '<script type="text/javascript">$.fn.select2.defaults.set( "theme", "bootstrap" );</script>';
     //if scripts.min.js exists, load it, otherwise load the original
     if (file_exists(BASEPATH . '/public/content/assets/js/scripts.min.js')) {
-        $JS = '<script type="text/javascript" src="' . getAssetPath() . 'js/scripts.min.js"></script>';
+        $JS = '<script type="text/javascript" src="' . htmlspecialchars(getAssetPath()) . 'js/scripts.min.js"></script>';
     } else {
-        $JS = '<script type="text/javascript" src="' . getAssetPath() . 'js/scripts.js"></script>';
+        $JS = '<script type="text/javascript" src="' . htmlspecialchars(getAssetPath()) . 'js/scripts.js"></script>';
     }
-    $dataTableJS = '<script type="text/javascript" src="' . getLibraryPath() . 'datatable-master/js/datatable.min.js"></script>';
-    $dataTableJqueryJS = '<script type="text/javascript" src="' . getLibraryPath() . 'datatable-master/js/datatable.jquery.min.js"></script>';
+    $dataTableJS = '<script type="text/javascript" src="' . htmlspecialchars(getLibraryPath()) . 'datatable-master/js/datatable.min.js"></script>';
+    $dataTableJqueryJS = '<script type="text/javascript" src="' . htmlspecialchars(getLibraryPath()) . 'datatable-master/js/datatable.jquery.min.js"></script>';
     //if tables.min.js exists, load it, otherwise load tables.js
     if (file_exists(BASEPATH . '/public/content/assets/js/tables.min.js')) {
-        $tablesJS = '<script type="module" src="' . getAssetPath() . 'js/tables.min.js"></script>';
+        $tablesJS = '<script type="module" src="' . htmlspecialchars(getAssetPath()) . 'js/tables.min.js"></script>';
     } else {
-        $tablesJS = '<script type="module" src="' . getAssetPath() . 'js/tables.js"></script>';
+        $tablesJS = '<script type="module" src="' . htmlspecialchars(getAssetPath()) . 'js/tables.js"></script>';
     }
     //if skill-list.min.js exists, load it, otherwise load skill-list.js
     if (file_exists(BASEPATH . '/public/content/assets/js/skill-list.min.js')) {
-        $skillListJS = '<script type="module" src="' . getAssetPath() . 'js/skill-list.min.js"></script>';
+        $skillListJS = '<script type="module" src="' . htmlspecialchars(getAssetPath()) . 'js/skill-list.min.js"></script>';
     } else {
-        $skillListJS = '<script type="module" src="' . getAssetPath() . 'js/skill-list.js"></script>';
+        $skillListJS = '<script type="module" src="' . htmlspecialchars(getAssetPath()) . 'js/skill-list.js"></script>';
     }
     //if wysiwyg-editor.min.js exists, load it, otherwise load wysiwyg-editor.js
     if (file_exists(BASEPATH . '/public/content/assets/js/wysiwyg-editor.min.js')) {
-        $wysiwygEditorJS = '<script type="module" src="' . getAssetPath() . 'js/wysiwyg-editor.min.js"></script>';
+        $wysiwygEditorJS = '<script type="module" src="' . htmlspecialchars(getAssetPath()) . 'js/wysiwyg-editor.min.js"></script>';
     } else {
-        $wysiwygEditorJS = '<script type="module" src="' . getAssetPath() . 'js/wysiwyg-editor.js"></script>';
+        $wysiwygEditorJS = '<script type="module" src="' . htmlspecialchars(getAssetPath()) . 'js/wysiwyg-editor.js"></script>';
     }
     //if counter.min.js exists, load it, otherwise load counter.js
     if (file_exists(BASEPATH . '/public/content/assets/js/counter.min.js')) {
-        $counterJS = '<script type="text/javascript" src="' . getAssetPath() . 'js/counter.min.js"></script>';
+        $counterJS = '<script type="text/javascript" src="' . htmlspecialchars(getAssetPath()) . 'js/counter.min.js"></script>';
     } else {
-        $counterJS = '<script type="text/javascript" src="' . getAssetPath() . 'js/counter.js"></script>';
+        $counterJS = '<script type="text/javascript" src="' . htmlspecialchars(getAssetPath()) . 'js/counter.js"></script>';
     }
 
     $jqueryNoConflict = '<script>var $j = jQuery.noConflict();</script>';

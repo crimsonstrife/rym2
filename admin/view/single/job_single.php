@@ -95,7 +95,7 @@ if (!$hasReadPermission) {
 
                             //only show the edit button if the user has the update job permission
                             if ($hasUpdatePermission) { ?>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=edit&action=edit&id=' . $job_id; ?>"
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=edit&action=edit&id=' . htmlspecialchars($job_id); ?>"
                         class="btn btn-primary">Edit Job</a>
                     <?php } ?>
                     <?php /*confirm user has a role with delete job permissions*/
@@ -269,7 +269,7 @@ if (!$hasReadPermission) {
                                 </div>
                                 <div class="modal-footer">
                                     <form
-                                        action="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=single&action=delete&id=' . $job_id; ?>"
+                                        action="<?php echo APP_URL . '/admin/dashboard.php?view=jobs&job=single&action=delete&id=' . htmlspecialchars($job_id); ?>"
                                         method="post">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Cancel</button>

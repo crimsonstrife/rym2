@@ -199,7 +199,7 @@ if (isset($_GET['view'])) {
                      **/
                     import {
                         DataTable
-                    } from "<?php echo getLibraryPath() . 'simple-datatables/module.js' ?>"
+                    } from "<?php echo htmlspecialchars(getLibraryPath() . 'simple-datatables/module.js'); ?>"
                     const dt = new DataTable("table", {
                         scrollY: "50%",
                         rowNavigation: true,

@@ -90,7 +90,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $subject_name; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($subject_name); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -118,10 +118,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'create') {
                                 if ($subjectCreated) {
-                                    echo '<p>The subject: ' . $subject_name . ' has been created.</p>';
+                                    echo '<p>The subject: ' . htmlspecialchars($subject_name) . ' has been created.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The subject: ' . $subject_name . ' could not be created.</p>';
+                                    echo '<p>The subject: ' . htmlspecialchars($subject_name) . ' could not be created.</p>';
                                 }
                             }
                             ?>
@@ -133,12 +133,12 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'create') {
                                 if (!$canCreate) {
-                                    echo '<p>The subject: ' . $subject_name . ' cannot be created because a subject with the same name already exists.</p>';
+                                    echo '<p>The subject: ' . htmlspecialchars($subject_name) . ' cannot be created because a subject with the same name already exists.</p>';
                                     echo '<p>Please enter a different subject name and try again.</p>';
                                 } else if ($canCreate && !$subjectCreated) {
-                                    echo '<p>The subject: ' . $subject_name . ' could not be created due to an unknown error.</p>';
+                                    echo '<p>The subject: ' . htmlspecialchars($subject_name) . ' could not be created due to an unknown error.</p>';
                                 } else {
-                                    echo '<p>The subject: ' . $subject_name . ' has been created.</p>';
+                                    echo '<p>The subject: ' . htmlspecialchars($subject_name) . ' has been created.</p>';
                                 }
                             }
                             ?>

@@ -134,7 +134,7 @@ if (!$hasPermission) {
 
                             //only show the edit button if the user has the update role permission
                             if ($hasUpdatePermission) { ?>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=edit&action=edit&id=' . $roleId; ?>"
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=edit&action=edit&id=' . htmlspecialchars($roleId); ?>"
                         class="btn btn-primary">Edit Role</a>
                     <?php } ?>
                     <?php /*confirm user has a role with delete role permissions*/
@@ -297,7 +297,7 @@ if (!$hasPermission) {
                             </div>
                             <div class="modal-footer">
                                 <form
-                                    action="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=single&action=delete&id=' . $roleId; ?>"
+                                    action="<?php echo APP_URL . '/admin/dashboard.php?view=roles&role=single&action=delete&id=' . htmlspecialchars($roleId); ?>"
                                     method="post">
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Cancel</button>
