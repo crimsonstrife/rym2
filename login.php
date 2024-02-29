@@ -17,8 +17,7 @@ if ($session->check('logged_in') === true) {
     //if the user is logged in, redirect to the admin dashboard
     if ($session->get('logged_in') === true) {
         //is the user set?
-        if
-        ($session->check('user_id') === true) {
+        if ($session->check('user_id') === true) {
             //get the user id
             $user_id = $session->get('user_id');
             //redirect to the admin dashboard
@@ -110,8 +109,14 @@ if (!empty($errorArray)) {
         <div>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
         </div>
+        <p class="mt-5 mb-3 text-muted">Copyright &copy; Patrick Barnhardt 2023</p>
+        <!-- Forgot Password -->
+        <a href="<?php echo APP_URL . '/forgot-password.php' ?>">Forgot Password?</a>
     </form>
 </body>
+<footer>
+    <?php echo includeFooter(); ?>
+</footer>
 
 </html>
 
