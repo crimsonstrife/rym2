@@ -92,12 +92,12 @@ if (!empty($errorArray)) {
             echo '<div>' . htmlspecialchars($login_error) . '</div>';
         }
         ?>
-        <div>
+        <div class="form-group">
             <label for="inputUsername" class="sr-only">Username</label>
             <input id="inputUsername" class="form-control" type="text" name="username" value="<?php echo $username; ?>" placeholder="Username" required autofocus>
             <span><?php echo htmlspecialchars($username_error); ?></span>
         </div>
-        <div>
+        <div class="form-group">
             <label for="inputPassword" class="sr-only">Password</label>
             <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
             <span><?php echo htmlspecialchars($password_error); ?></span>
@@ -106,7 +106,7 @@ if (!empty($errorArray)) {
             <label>Remember Me</label>
             <input type="checkbox" name="remember">
         </div>
-        <div>
+        <div class="form-group">
             <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
         </div>
         <p class="mt-5 mb-3 text-muted">Copyright &copy; Patrick Barnhardt 2023</p>
