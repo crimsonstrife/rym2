@@ -21,6 +21,12 @@
     Order Allow,Deny
     Deny from all
 </FilesMatch>
+# Deny remote access to specific directories
+<IfModule mod_rewrite.c>
+    RewriteRule ^vendor/ - [F,L]
+    RewriteRule ^config/ - [F,L]
+    RewriteRule ^includes/ - [F,L]
+</IfModule>
 # Prevent Directory Listing
 Options -Indexes
 # If mod_headers is enabled, apply the following rules
