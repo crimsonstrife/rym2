@@ -112,8 +112,6 @@ class Contact
         //set debug
         if (APP_DEBUG == true) {
             $mail->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
-        } else {
-            $mail->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_OFF;
         }
 
         //if authentication is required, set the username and password
