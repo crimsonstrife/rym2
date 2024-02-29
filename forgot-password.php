@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     //check if email or username is set
-    if ($email != "" && $username != "") {
+    if ($email != "" || $username != "") {
         //check if the email or username exists
         if ($email != "") {
             //check if the email exists
@@ -94,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (function_exists('openssl_random_pseudo_bytes')) {
                 $token = bin2hex(openssl_random_pseudo_bytes(16));
             } else {
-                $token = uniqid();
+                $token = bin2hex(uniqid());
             }
 
             //set the password reset token
