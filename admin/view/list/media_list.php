@@ -221,9 +221,9 @@ if (!$hasReadPermission) {
                                                     $mediaArray[$mediaIndex]['updated_by'] = $updatedByUsername;
                                                     ?>
                                     <div class="thumbnail-container"
-                                        style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
+                                        style="background-image: url('<?php echo htmlspecialchars(getAssetPath() . 'img/transparency.svg', ENT_QUOTES, 'UTF-8'); ?>' background-size:cover;">
                                         <img id="thumbnail" class="img-thumbnail"
-                                            src="<?php echo getUploadPath() . $mediaData->getMediaThumbnail(intval($mediaID)); ?>"
+                                            src="<?php echo htmlspecialchars(getUploadPath() . $mediaData->getMediaThumbnail(intval($mediaID)), ENT_QUOTES, 'UTF-8'); ?>"
                                             alt="<?php echo $mediaFilename; ?>">
                                     </div>
                                     <div class="caption">
@@ -315,7 +315,7 @@ if (!$hasReadPermission) {
                                         <!-- Media Image -->
                                         <div class="col-md-6">
                                             <div class="modal-thumbnail-container"
-                                                style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
+                                                style="background-image: url('<?php echo htmlspecialchars(getAssetPath() . 'img/transparency.svg', ENT_QUOTES, 'UTF-8'); ?>'); background-size:cover;">
                                                 <img id="thumbnail" class="img-thumbnail modal-thumb" src="#" alt="#">
                                             </div>
                                         </div>
@@ -477,13 +477,13 @@ if (!$hasReadPermission) {
             readModal.querySelector("#updated_by").innerHTML = mediaArray.find(media => media.id == id).updated_by;
 
             //check if the thumbnail file exists in the uploads folder
-            var thumbnailExists = fileExists("<?php echo getUploadPath() ?>" + "thumb_600_" + mediaName);
+            var thumbnailExists = fileExists("<?php echo htmlspecialchars(getUploadPath(), ENT_QUOTES, 'UTF-8'); ?>" + "thumb_600_" + mediaName);
 
             //set the image source
             if (thumbnailExists) {
-                img.src = "<?php echo getUploadPath() ?>" + "thumb_600_" + mediaName;
+                img.src = "<?php echo htmlspecialchars(getUploadPath(), ENT_QUOTES, 'UTF-8'); ?>" + "thumb_600_" + mediaName;
             } else {
-                img.src = "<?php echo getUploadPath() ?>" + mediaName;
+                img.src = "<?php echo htmlspecialchars(getUploadPath(), ENT_QUOTES, 'UTF-8'); ?>" + mediaName;
             }
 
             //set the image alt
