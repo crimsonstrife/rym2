@@ -1,4 +1,20 @@
 <?php
+/**
+ * Helper Functions
+ * Contains functions that are used throughout the application to format data, perform redirects, and other miscellaneous tasks.
+ * Note: This file should be included in every page that uses these functions, they are not autoloaded.
+ *
+ * Author:  Patrick Barnhardt
+ * Author Email: pbarnh1@wgu.edu
+ * Date:   10/16/2023
+ *
+ * @category Helper
+ * @package RYM2
+ * Filename: helpers.php
+ * @version 1.0.0
+ * @requires PHP 8.1.2+
+ */
+
 require_once(__DIR__ . '/../constants.php');
 function formatDate(string $date, string $format = DATE_FORMAT): string
 {
