@@ -1,5 +1,20 @@
 <?php
 
+/**
+ * Jobs By Field Report Class file for the College Recruitment Application
+ * This class is used to generate the Jobs by Field Report and store it in the database
+ *
+ * Author:  Patrick Barnhardt
+ * Author Email: pbarnh1@wgu.edu
+ * Date:   10/16/2023
+ *
+ * @category Admin
+ * @package RYM2
+ * Filename: jobsbyfield.report.inc.php
+ * @version 1.0.0
+ * @requires PHP 8.1.2+
+ */
+
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 
 /* Include the base application config file */
