@@ -156,7 +156,65 @@ This project aims to provide a web-based application for a business to handle st
 
 ## Features
 
--- TODO -- Add features here / had to remove what was here from a previous unrelated project when I reused my template.
+- User Accounts
+  - Admins can create, edit, and delete user accounts
+  - Users can log in and out
+  - Users can reset their password
+  - Users can update their profile information
+  - Users can view their own data
+  - Users can view other user's data if they have the correct permissions
+  - Users can view and interact with student data if they have the correct permissions
+  - Users can view and interact with school data if they have the correct permissions
+  - Users can view and interact with event data if they have the correct permissions
+  - Users can view and interact with reports data if they have the correct permissions
+  - Users can view and interact with settings data if they have the correct permissions
+
+- Student Data
+  - Students can register from the front-end portal, and their data is stored in the database (no login required)
+  - Students submit their name, email, phone number, address, city, state, zip code, school, graduation year, degree, job type, subject matter interest, and program of study
+  - Students can receive a confirmation email after registering
+  - Admins can view, edit, and delete student data
+  - Admins can contact students via email from the admin dashboard
+
+- School Data
+  - Admins can add, edit, and delete schools
+  - Schools have a name, address, city, state, zip code, and branding
+  - Schools can be associated with students
+  - Schools can be associated with events
+
+- Event Data
+  - Admins can add, edit, and delete events
+  - Events have a name, date, time, location(school), description, and branding
+  - Events can be associated with schools
+  - Events can be associated with students
+  - Events can be associated with reports
+
+- Reports Data
+  - Admins can view, edit, and delete reports
+  - Reports store historical data even when relevant objects are deleted
+  - Admins can generate new, updated copies of reports
+
+- Education Data
+  - Admins can add, edit, and delete programs of study, and degrees
+  - Programs of study have a name
+  - Programs of study can be associated with students
+  - Degrees have a name
+  - Degrees can be associated with students
+  - Students can select from a list of programs of study and degrees when registering
+  - Students can submit their own programs of study when registering
+
+- Subject Matter Data
+  - Admins can add, edit, and delete subject matter
+  - Subject matter has a name
+  - Subject matter can be associated with students
+
+- Settings Data
+  - Admins can view, edit, and delete settings
+
+- Mail
+  - Admins can send mail to students from the admin dashboard
+  - Students receive a confirmation email after registering
+  - Users can reset their password via email
 
 ## Installation
 
@@ -168,49 +226,70 @@ This project aims to provide a web-based application for a business to handle st
 
 To run this project, you will need to add the following environment variables to your .env file, or edit the .env.example file included and rename it to ".env".
 
-`APP_NAME`
+`APP_NAME` - The name of the application
 
-`APP_ENV`
+`APP_ENV` - The environment the application is running in (local, development, production, etc.)
 
-`APP_DEBUG`
+`APP_DEBUG` - Whether or not the application is in debug mode
 
-`APP_URL`
+`APP_URL` - The URL of the application
 
-`LOG_LEVEL`
+`COMPANY_NAME` - The name of the company
 
-`DB_CONNECTION`
+`COMPANY_ADDRESS` - The contact address of the company
 
-`DB_HOST`
+`COMPANY_CITY` - The contact city of the company
 
-`DB_PORT`
+`COMPANY_STATE` - The contact state of the company
 
-`DB_DATABASE`
+`COMPANY_ZIP` - The contact zip code of the company
 
-`DB_USERNAME`
+`COMPANY_PHONE` - The contact phone number of the company
 
-`DB_PASSWORD`
+`COMPANY_URL` - The website URL of the company
+
+`CONTACT_EMAIL` - The contact email address for the application administrator
+
+`LOG_LEVEL` - The level of logging for the application (debug, info, notice, warning, error, critical, alert, emergency) //TODO: Currently not implemented
+
+`DB_CONNECTION` - The type of database connection (mysql), currently only mysql is supported
+
+`DB_HOST` - The host of the database
+
+`DB_PORT` - The port of the database
+
+`DB_DATABASE` - The name of the database
+
+`DB_USERNAME` - The username for the database
+
+`DB_PASSWORD` - The password for the database
 
 To use the mail functions of the project, you will also need the following environment variables in the .env file.
 
-`MAIL_MAILER`
+`MAIL_MAILER` - The mailer to use (smtp, sendmail, mail, etc.), currently only smtp is supported
 
-`MAIL_HOST`
+`MAIL_HOST` - The host of the mail server
 
-`MAIL_PORT`
+`MAIL_PORT` - The port of the mail server
 
-`MAIL_AUTH_REQ`
+`MAIL_AUTH_REQ` - Whether or not the mail server requires authentication (true, false)
 
-`MAIL_USERNAME`
+`MAIL_USERNAME` - The username for the mail server
 
-`MAIL_PASSWORD`
+`MAIL_PASSWORD` - The password for the mail server
 
-`MAIL_ENCRYPTION`
+`MAIL_ENCRYPTION` - The encryption type for the mail server (tls, ssl), must have openssl installed and enabled in PHP
 
-`MAIL_FROM_ADDRESS`
+`MAIL_FROM_ADDRESS` - The email address to send mail from, must be a valid email address for the mail server, and if authentication is required then the username must be able to send mail from this address
 
-`MAIL_FROM_NAME`
+`MAIL_FROM_NAME` - The name to send mail as
+
+You will also need to add the following environment variables for the encryption of the mail password, or if you leave them blank, the app should generate them for you.
+These can be random strings of any length, but should be kept secret.
 
 `MAILER_PASSWORD_ENCRYPTION_KEY`
+
+`MAILER_PASSWORD_ENCRYPTION_IV`
 
 ## Usage
 
