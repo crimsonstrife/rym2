@@ -225,7 +225,7 @@ if (isset($_GET['action'])) {
                     <div class="row">
                         <div class="card mb-4">
                             <!-- Edit Form -->
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&student=' . $_GET['student'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>" class="needs-validation <?php if ($entry_error) {
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&student=' . htmlspecialchars($_GET['student']) . '&action=' . htmlspecialchars($_GET['action']) . '&id=' . htmlspecialchars($_GET['id']); ?>" class="needs-validation <?php if ($entry_error) {
                                                                                                                                                                                                                         echo 'was-validated';
                                                                                                                                                                                                                     } ?>" method="post" enctype="multipart/form-data" novalidate>
                                 <div class="card-header">
@@ -617,7 +617,7 @@ if (isset($_GET['action'])) {
                 <div class="row">
                     <div class="card mb-4">
                         <!-- Create Form -->
-                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&student=' . $_GET['student'] . '&action=' . $_GET['action']; ?>" class="needs-validation <?php if ($entry_error) { echo 'was-validated'; } ?>" method="post" enctype="multipart/form-data" novalidate>
+                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&student=' . htmlspecialchars($_GET['student']) . '&action=' . htmlspecialchars($_GET['action']); ?>" class="needs-validation <?php if ($entry_error) { echo 'was-validated'; } ?>" method="post" enctype="multipart/form-data" novalidate>
                             <div class="card-header">
                                 <div class="card-title">
                                     <i class="fa-solid fa-person"></i>
