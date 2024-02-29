@@ -79,8 +79,8 @@ if (!$hasPermission) {
         $schoolState = $school->getSchoolState(intval($school_id));
         $schoolZip = $school->getSchoolZip(intval($school_id));
 ?>
-<link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet/leaflet.css'; ?>">
-<link rel="stylesheet" href="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.css'; ?>">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(getLibraryPath()) . 'leaflet/leaflet.css'; ?>">
+<link rel="stylesheet" href="<?php echo htmlspecialchars(getLibraryPath()) . 'leaflet-geosearch/geosearch.css'; ?>">
 <script>
 var mapLocationTitle = "<?php echo $school->getSchoolName(intval($school_id)); ?>";
 var address = "<?php echo formatAddress($schoolAddress, $schoolCity, $schoolState, $schoolZip); ?>";
@@ -106,7 +106,7 @@ var address = "<?php echo formatAddress($schoolAddress, $schoolCity, $schoolStat
 
                             //only show the edit button if the user has the update school permission
                             if ($hasUpdatePermission) { ?>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=edit&action=edit&id=' . $school_id; ?>"
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=edit&action=edit&id=' . htmlspecialchars($school_id); ?>"
                         class="btn btn-primary">Edit School</a>
                     <?php } ?>
                     <?php /*confirm user has a role with delete school permissions*/
@@ -151,9 +151,9 @@ var address = "<?php echo formatAddress($schoolAddress, $schoolCity, $schoolStat
                             <h3>School Branding</h3>
                             <p><strong>School Logo:</strong></p>
                             <div class="thumbnail-container"
-                                style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
+                                style="background-image: url('<?php echo htmlspecialchars(getAssetPath()) . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo getUploadPath() . $media->getMediaThumbnail($school->getSchoolLogo(intval($school_id))); ?>"
+                                    src="<?php echo htmlspecialchars(getUploadPath()) . htmlspecialchars($media->getMediaThumbnail($school->getSchoolLogo(intval($school_id)))); ?>"
                                     alt="School Logo Image">
                             </div>
                             <p><strong>School Primary Color:</strong></p>
@@ -185,7 +185,7 @@ var address = "<?php echo formatAddress($schoolAddress, $schoolCity, $schoolStat
                                 </div>
                                 <div class="modal-footer">
                                     <form
-                                        action="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=single&action=delete&id=' . $school_id; ?>"
+                                        action="<?php echo APP_URL . '/admin/dashboard.php?view=schools&school=single&action=delete&id=' . htmlspecialchars($school_id); ?>"
                                         method="post">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Cancel</button>
@@ -203,10 +203,10 @@ var address = "<?php echo formatAddress($schoolAddress, $schoolCity, $schoolStat
         </div>
     </div>
 </div>
-<script type="text/javascript" src="<?php echo getLibraryPath() . 'leaflet/leaflet.js'; ?>"></script>
-<script type="text/javascript" src="<?php echo getLibraryPath() . 'leaflet-geosearch/geosearch.umd.js'; ?>">
+<script type="text/javascript" src="<?php echo htmlspecialchars(getLibraryPath()) . 'leaflet/leaflet.js'; ?>"></script>
+<script type="text/javascript" src="<?php echo htmlspecialchars(getLibraryPath()) . 'leaflet-geosearch/geosearch.umd.js'; ?>">
 </script>
-<script type="module" src="<?php echo getAssetPath() . 'js/event-map.js'; ?>">
+<script type="module" src="<?php echo htmlspecialchars(getAssetPath()) . 'js/event-map.js'; ?>">
 </script>
 <?php }
 } ?>
