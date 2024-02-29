@@ -35,6 +35,7 @@ Disclaimer: This project is strictly for educational purposes only.  Any similar
     - [Development Environment](#development-environment)
   - [Features](#features)
   - [Installation](#installation)
+    - [Recommended Local Environments](#recommended-local-environments)
   - [Environment Variables](#environment-variables)
   - [Usage](#usage)
   - [Support](#support)
@@ -218,9 +219,61 @@ This project aims to provide a web-based application for a business to handle st
 
 ## Installation
 
+To install this project, you will need to have an Apache web server with PHP and MySQL installed.  You will also need to have Composer and npm installed on your development machine.  You will also need to have an SMTP mail server set up to send mail from the application, however the rest of the application will function without this.
+
+You will also need to have the following PHP extensions installed and enabled in your PHP configuration:
+
+- openssl
+- pdo_mysql
+- gd
+- mbstring
+- mysqli
+- imagick
+
+### Recommended Local Environments
+
+- Windows
+  - MAMP or MAMP PRO for Windows or XAMPP - Apache, MySQL, PHP, phpMyAdmin comes pre-installed, and you can enable the necessary PHP extensions in the MAMP PRO or XAMPP control panel. You can also use the included phpMyAdmin to create the database for the application.  You may need to adjust the default PHP version.
+  - Git for Windows - GitLFS is also recommended for cloning the repository
+  - Composer
+  - npm
+
+- macOS
+  - MAMP or MAMP PRO - Apache, MySQL, PHP, phpMyAdmin comes pre-installed, and you can enable the necessary PHP extensions in the MAMP PRO control panel. You can also use the included phpMyAdmin to create the database for the application.  You may need to adjust the default PHP version.
+  - Git for macOS - GitLFS is also recommended for cloning the repository
+  - Composer
+  - npm
+
+There are two ways to get the project files.  You can either clone the repository from GitHub, or you can download the files as a zip file from GitHub.  If you clone the repository, you will need to have Git installed on your development machine, and GitLFS installed and enabled in your Git configuration.  You'll want to run the following command to clone the repository:
+
 ```bash
+git clone https://github.com/crimsonstrife/rym2.git rym2 && cd rym2
+
+# If you have GitLFS installed and enabled
+git lfs install
+git lfs pull
+```
+
+If you download the files as a zip file, you will need to extract the files to a directory on your development machine, the LFS files should be included in the zip file.
+
+Once you have the files, you will need to run the following commands to install the project dependencies, these should be run from the root directory of the project, where the composer.json and package.json files are located:
+
+```bash
+composer install
+composer update
+
+# Composer should install the PHPMailer and PHP-QRCode libraries, and update the composer.lock file. It should also run the npm install command for you as part of the scripts in the composer.json file, but you can run it manually if you need to.
+npm install
 
 ```
+
+You will also need to create a MySQL database for the application to use.  You can use the provided database schema in the project, or you can create your own.  The database schema is located in the `temp` directory of the project, and is named `talentflow.sql`.  You can import this file into your MySQL database using phpMyAdmin, another editor, or the command line.  If you're running the newer MySQL 8.0, you may need to instead use the `talentflow8.sql` file, which has the correct syntax for MySQL 8.0.  You may also wait and leave the database empty, and the application will create the tables for you when you run the application for the first time, it should be able to determine which file to use on it's own.
+
+You will also need to create a .env file in the root directory of the project, and add the environment variables listed below in the ['Environment Variables' section](#environment-variables) to the file.  You can use the .env.example file included in the project as a template, and rename it to .env.  You will need to add your own values for the environment variables, and you should keep the file secure, as it may contain sensitive information.  The included .htaccess file should prevent direct access to the .env file, but you should still ensure you have proper file permissions set on the file in a production environment.
+
+Open the url for the application, on first run the setup page should appear, and you should see if there are any notable errors with your configuration.  If there are no errors, you can click the "Install" button to install the application.  If there are errors, you will need to correct them before you can install the application.  Once the tables are created, you should be able to log in with the default admin account, and you can then create new users, and change the default admin password.
+
+You may also manually create the tables in the database using the provided schema, and then simply create an empty php file in the root directory of the project named ready.php, and the application should be able to determine that the tables are already created and skip the setup page.
 
 ## Environment Variables
 
@@ -293,7 +346,11 @@ These can be random strings of any length, but should be kept secret.
 
 ## Usage
 
-TODO: Write usage instructions/examples
+Refer to the [Installation](#installation) section for information on how to install the project.
+
+Once the project is installed, you can use the application by opening the URL for the application in a web browser.  You will be presented with the landing/student registration page, and you can register as a student, or find the Admin Login link in the footer, and log in as an admin.  You can then use the admin dashboard to view, edit, or delete student data, and add, edit, or delete other data in the application.
+
+You can also use the admin dashboard to send mail to students, and generate reports.  You can also view and edit settings for the application, and view the activity log for the application.
 
 ## Support
 
