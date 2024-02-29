@@ -222,7 +222,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $school_name; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($school_name); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -250,10 +250,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'create') {
                                 if ($schoolCreated) {
-                                    echo '<p>The school: ' . $school_name . ' has been created.</p>';
+                                    echo '<p>The school: ' . htmlspecialchars($school_name) . ' has been created.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The school: ' . $school_name . ' could not be created.</p>';
+                                    echo '<p>The school: ' . htmlspecialchars($school_name) . ' could not be created.</p>';
                                 }
                             }
                             ?>
@@ -265,9 +265,9 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'create') {
                                 if (!$schoolCreated) {
-                                    echo '<p>The school: ' . $school_name . ' could not be created due to an error.</p>';
+                                    echo '<p>The school: ' . htmlspecialchars($school_name) . ' could not be created due to an error.</p>';
                                 } else {
-                                    echo '<p>The school: ' . $school_name . ' has been created.</p>';
+                                    echo '<p>The school: ' . htmlspecialchars($school_name) . ' has been created.</p>';
                                 }
                                 //if the school was created and there are files to add, show the completion message
                                 if ($schoolCreated && $addBrandingToNewSchool) {
@@ -284,7 +284,7 @@ if (!$hasPermission) {
                                 }
                                 //if the school name already exists, show the error message
                                 if (!$canCreate && $existingSchool != null) {
-                                    echo '<p>The school: ' . $school_name . ' could not be created because it already exists.</p>';
+                                    echo '<p>The school: ' . htmlspecialchars($school_name) . ' could not be created because it already exists.</p>';
                                 }
                             }
                             ?>
@@ -298,7 +298,7 @@ if (!$hasPermission) {
                                 if ($action == 'create') {
                                     if ($schoolCreated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=list" class="btn btn-primary">Return to School List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=single&id=' . $school_id . '" class="btn btn-secondary">Go to School</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=single&id=' . htmlspecialchars($school_id) . '" class="btn btn-secondary">Go to School</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=list" class="btn btn-primary">Return to School List</a></span>';
                                     }
