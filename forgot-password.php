@@ -98,16 +98,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             //set the password reset token
-            $user->setPasswordResetToken($userID, $token);
+            $user->setPasswordResetToken(intval($userID), $token);
 
             //send the user an email with the reset link
-            $email = $user->getUserEmail($userID);
+            $email = $user->getUserEmail(intval($userID));
 
             //set the email subject
             $subject = "Password Reset Request";
 
             //set the email message
-            $message = "Hello, <br><br> We received a request to reset your password. If you made this request, click the link below to reset your password. <br><br> <a href='" . APP_URL . "/reset-password.php?token=" . $token . "'>Reset Password</a> <br><br> If you did not make this request, you can ignore this email. <br><br>";
+            $message = "Hello, <br><br> We received a request to reset your password. If you made this request, click the link below to reset your password. <br><br> <a href='" . APP_URL . "/reset-password.php?token=" . $token . "&user=" . $userID . "'>Reset Password</a> <br><br> If you did not make this request, you can ignore this email. <br><br>";
 
             //send the email
             $contact->sendUserEmail($email, $subject, $message);
