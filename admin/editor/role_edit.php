@@ -127,7 +127,7 @@ if (isset($_GET['action'])) {
         <div class="card mb-4">
             <!-- Edit Form -->
             <form
-                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&role=' . $_GET['role'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>"
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&role=' . htmlspecialchars($_GET['role']) . '&action=' . htmlspecialchars($_GET['action']) . '&id=' . htmlspecialchars($_GET['id']); ?>"
                 method="post" enctype="multipart/form-data">
                 <div class="card-header">
                     <div class="card-title">
@@ -291,7 +291,7 @@ if (isset($_GET['action'])) {
         <div class="card mb-4">
             <!-- Create Form -->
             <form
-                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&role=' . $_GET['role'] . '&action=' . $_GET['action']; ?>"
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&role=' . htmlspecialchars($_GET['role']) . '&action=' . htmlspecialchars($_GET['action']); ?>"
                 method="post" enctype="multipart/form-data">
                 <div class="card-header">
                     <div class="card-title">
