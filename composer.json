@@ -77,8 +77,7 @@
             "includes/classes/topdegreebyschool.report.inc.php",
             "includes/classes/topfieldbyschool.report.inc.php",
             "includes/classes/jobsbyfield.report.inc.php",
-            "includes/classes/contactfollowuppercentage.report.inc.php",
-            "includes/classes/students.report.inc.php"
+            "includes/classes/contactfollowuppercentage.report.inc.php"
         ]
     },
     "scripts": {
