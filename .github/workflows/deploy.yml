@@ -150,7 +150,7 @@ jobs:
             sed -i "s/MAIL_PORT=.*$/MAIL_PORT=${{ env.INPUT_MAIL_PORT }}/g" .env
             sed -i "s/MAIL_ENCRYPTION=.*$/MAIL_ENCRYPTION=${{ env.INPUT_MAIL_ENCRYPTION }}/g" .env
             sed -i "s/MAIL_AUTH_REQ=.*$/MAIL_AUTH_REQ=${{ env.INPUT_MAIL_AUTH_REQ }}/g" .env
-            sed -i "s/INPUT_MAIL_FROM_ADDRESS=.*$/INPUT_MAIL_FROM_ADDRESS=${{ env.INPUT_MAIL_FROM_ADDRESS }}/g" .env
+            sed -i "s/MAIL_FROM_ADDRESS=.*$/MAIL_FROM_ADDRESS=${{ env.INPUT_MAIL_FROM_ADDRESS }}/g" .env
             sed -i "s/MAIL_FROM_NAME=.*$/MAIL_FROM_NAME=${{ env.INPUT_MAIL_FROM_NAME }}/g" .env
             sed -i "s/MAIL_USERNAME=.*$/MAIL_USERNAME=${{ env.INPUT_MAIL_USERNAME }}/g" .env
             sed -i "s/MAIL_PASSWORD=.*$/MAIL_PASSWORD=${{ env.INPUT_MAIL_PASSWORD }}/g" .env
