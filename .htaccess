@@ -1,5 +1,6 @@
 # If mod_rewrite is enabled, apply the following rules to redirect requests to the index.php file
 <IfModule mod_rewrite.c>
+    Options +FollowSymLinks
     RewriteEngine On
     RedirectMatch 301 ^/privacy-policy$ /index.php?path=privacy
     RedirectMatch 301 ^/privacy-policy.php /index.php?path=privacy
@@ -16,7 +17,7 @@
     ErrorDocument 500 /index.php?path=error&error=500
 </IfModule>
 # Prevent access to certain file types, such as .htaccess, .htpasswd, .ini, .log, .sh, .inc, .bak, .config, .sql, .tpl, .cache, .svn, .git, .yml, .yaml, .json, .lock, .dist, etc.
-<FilesMatch "\.(htaccess|htpasswd|ini|phps|fla|psd|log|sh|inc|bak|config|sql|tpl|cache|svn|git|github|env|env.example|yml|yaml|json|lock|dist)$">
+<FilesMatch "\.(htaccess|htpasswd|ini|phps|fla|psd|log|sh|inc|bak|config|sql|tpl|cache|svn|git|github|code-workspace|env|env.example|yml|yaml|json|lock|dist)$">
     Order Allow,Deny
     Deny from all
 </FilesMatch>
