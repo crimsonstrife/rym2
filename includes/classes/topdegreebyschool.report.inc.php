@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * Top Degree by School Report Class
+ * This class is used to generate the Top Degree by School Report
+ * It extends the Report class, and generates a report based on the data for the degree levels, majors, and schools using the student counts.
+ * Stores the report in an array, and logs the report to the database as a JSON string.
+ *
+ * Author:  Patrick Barnhardt
+ * Author Email: pbarnh1@wgu.edu
+ * Date:   10/16/2023
+ *
+ * @category   Admin
+ * @package    RYM2
+ * Filename:  topdegreebyschool.report.inc.php
+ * @version 1.0.0
+ * @requires PHP 8.1.2+
+ */
+
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 
 /* Include the base application config file */
