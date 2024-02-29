@@ -126,7 +126,7 @@ if (isset($_GET['action'])) {
         <div class="card mb-4">
             <!-- Edit Form -->
             <form
-                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&event=' . $_GET['event'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>"
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&event=' . htmlspecialchars($_GET['event']) . '&action=' . htmlspecialchars($_GET['action']) . '&id=' . htmlspecialchars($_GET['id']); ?>"
                 method="post" enctype="multipart/form-data">
                 <div class="card-header">
                     <div class="card-title">
@@ -175,8 +175,8 @@ if (isset($_GET['action'])) {
                                 <p><strong><label for="eventDate">Event Date: <strong><span
                                                     class="required">*</span></strong></label></strong></p>
                                 <p><input type="date" id="eventDate" name="event_date" class="form-control"
-                                        value="<?php echo $schedule->getEventDate($event_id); ?>"
-                                        placeholder="<?php echo $schedule->getEventDate($event_id); ?>" required></p>
+                                        value="<?php echo htmlspecialchars($schedule->getEventDate($event_id)); ?>"
+                                        placeholder="<?php echo htmlspecialchars($schedule->getEventDate($event_id)); ?>" required></p>
                                 <p><small id="eventDateHelp" class="form-text text-muted">Enter the date of the event,
                                         must
                                         be
@@ -244,7 +244,7 @@ if (isset($_GET['action'])) {
                                     <?php
                                                         if (!empty($eventMedia->getEventLogo($event_id))) {
                                                             //render the file as an image
-                                                            echo '<div><img src="' . getUploadPath() . $media->getMediaFileName($eventMedia->getEventLogo($event_id)) . '" alt="Event Logo" style="max-width: 200px; max-height: auto;"></div>';
+                                                            echo '<div><img src="' . htmlspecialchars(getUploadPath()) . htmlspecialchars($media->getMediaFileName($eventMedia->getEventLogo($event_id))) . '" alt="Event Logo" style="max-width: 200px; max-height: auto;"></div>';
                                                             //show the file name
                                                             echo '<div> ' . $media->getMediaFileName($eventMedia->getEventLogo($event_id)) . '</div>';
                                                         }
@@ -301,7 +301,7 @@ if (isset($_GET['action'])) {
                                     <?php
                                                         if (!empty($eventMedia->getEventBanner($event_id))) {
                                                             //render the file as an image
-                                                            echo '<div><img src="' . getUploadPath() . $media->getMediaFileName($eventMedia->getEventBanner($event_id)) . '" alt="Event Banner" style="max-width: 200px; max-height: auto;"></div>';
+                                                            echo '<div><img src="' . htmlspecialchars(getUploadPath()) . htmlspecialchars($media->getMediaFileName($eventMedia->getEventBanner($event_id))) . '" alt="Event Banner" style="max-width: 200px; max-height: auto;"></div>';
                                                             //show the file name
                                                             echo '<div> ' . $media->getMediaFileName($eventMedia->getEventBanner($event_id)) . '</div>';
                                                         }
@@ -398,7 +398,7 @@ if (isset($_GET['action'])) {
         <div class="card mb-4">
             <!-- Event Create Form -->
             <form
-                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&event=' . $_GET['event'] . '&action=' . $_GET['action'] ?>"
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&event=' . htmlspecialchars($_GET['event']) . '&action=' . htmlspecialchars($_GET['action']) ?>"
                 method="post" enctype="multipart/form-data">
                 <div class="card-header">
                     <div class="card-title">

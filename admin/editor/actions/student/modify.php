@@ -416,7 +416,7 @@ if (!$hasPermission) {
 ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $student_name; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($student_name); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -444,10 +444,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if ($studentUpdated) {
-                                    echo '<p>The student: ' . $student_name . ' has been updated.</p>';
+                                    echo '<p>The student: ' . htmlspecialchars($student_name) . ' has been updated.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The student: ' . $student_name . ' could not be updated.</p>';
+                                    echo '<p>The student: ' . htmlspecialchars($student_name) . ' could not be updated.</p>';
                                 }
                             }
                             ?>
@@ -459,9 +459,9 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if (!$studentUpdated) {
-                                    echo '<p>The student: ' . $student_name . ' could not be updated due to an error.</p>';
+                                    echo '<p>The student: ' . htmlspecialchars($student_name) . ' could not be updated due to an error.</p>';
                                 } else {
-                                    echo '<p>The student: ' . $student_name . ' has been updated.</p>';
+                                    echo '<p>The student: ' . htmlspecialchars($student_name) . ' has been updated.</p>';
                                 }
                             }
                             ?>
@@ -475,7 +475,7 @@ if (!$hasPermission) {
                                 if ($action == 'edit') {
                                     if ($studentUpdated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=students&student=list" class="btn btn-primary">Return to Student List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=students&student=single&id=' . $student_id . '" class="btn btn-secondary">Go to Student</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=students&student=single&id=' . htmlspecialchars($student_id) . '" class="btn btn-secondary">Go to Student</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=students&student=list" class="btn btn-primary">Return to Student List</a></span>';
                                     }

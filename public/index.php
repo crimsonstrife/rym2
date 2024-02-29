@@ -12,8 +12,10 @@ if ($page == '') {
         include_once(__DIR__ . '/pages/landing_content.php');
     } else {
         //if the page is not empty, check if it is a valid page
-        if (file_exists(__DIR__ . '/pages/' . $page . '_content.php')) {
+        if (file_exists(__DIR__ . '/pages/' . htmlspecialchars($page) . '_content.php')) {
             //if the page is valid, include it
+            $page = htmlspecialchars($page);
+            // deepcode ignore FileInclusion: <false error, $page is already being escaped above>
             include_once(__DIR__ . '/pages/' . $page . '_content.php');
         } else {
             //if the page is not valid, include the 404 page

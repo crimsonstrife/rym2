@@ -95,7 +95,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $role_name; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($role_name); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -123,10 +123,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'create') {
                                 if ($roleCreated) {
-                                    echo '<p>The role: ' . $role_name . ' has been created.</p>';
+                                    echo '<p>The role: ' . htmlspecialchars($role_name) . ' has been created.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The role: ' . $role_name . ' could not be created.</p>';
+                                    echo '<p>The role: ' . htmlspecialchars($role_name) . ' could not be created.</p>';
                                 }
                             }
                             ?>
@@ -154,7 +154,7 @@ if (!$hasPermission) {
                                 if ($action == 'create') {
                                     if ($roleCreated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=roles&role=list" class="btn btn-primary">Return to Role List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=roles&role=single&id=' . $role_id . '" class="btn btn-secondary">Go to Role</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=roles&role=single&id=' . htmlspecialchars($role_id) . '" class="btn btn-secondary">Go to Role</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=roles&role=list" class="btn btn-primary">Return to Role List</a></span>';
                                     }

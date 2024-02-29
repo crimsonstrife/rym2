@@ -100,7 +100,7 @@ if (!$hasPermission) {
             include_once(__DIR__ . '/../../../includes/errors/errorMessage.inc.php');
         } else { ?>
 <div class="container-fluid px-4">
-    <h1 class="mt-4"><?php echo $reportListTitle . ' - ' . formatDate($report['created_at']) ?></h1>
+    <h1 class="mt-4"><?php echo htmlspecialchars($reportListTitle) . ' - ' . formatDate($report['created_at']) ?></h1>
     <div class="row">
         <div class="card mb-4">
             <div class="card-header">
@@ -275,7 +275,7 @@ if (!$hasPermission) {
                 </div>
             </div>
             <?php } ?>
-            <script type="text/javascript" src="<?php echo getLibraryPath() . 'chart.js/chart.umd.js'; ?>"></script>
+            <script type="text/javascript" src="<?php echo htmlspecialchars(getLibraryPath()) . 'chart.js/chart.umd.js'; ?>"></script>
             <script type="text/javascript">
             //get the chart element
             const ctx = document.getElementById('reportChartJS');

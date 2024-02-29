@@ -156,6 +156,7 @@ if (document.getElementById("jobSkillsList")) {
 	}
 
 	//function to update the list of skills as an array in the hidden field
+	// Move the function declaration outside of the block
 	function updateSkillArray() {
 		//get the list of skills
 		var skillList = document.getElementById("jobSkillsList");

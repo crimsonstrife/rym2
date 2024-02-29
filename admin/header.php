@@ -76,7 +76,7 @@ if (!empty($companyName) && $companyName != null && $companyName != '') {
                 // Get the app logo from the application settings, if not set use default
                 $appLogo = $settings->getAppLogo();
                 if (!empty($appLogo) && $appLogo != null && $appLogo != '') {
-                    echo '<img src="' . getUploadPath() . $media_class->getMediaFileName(intval($appLogo)) . '" alt="' . APP_NAME . '" class="brand-logo" />';
+                    echo '<img src="' . getUploadPath() . htmlspecialchars($media_class->getMediaFileName(intval($appLogo))) . '" alt="' . htmlspecialchars(APP_NAME) . '" class="brand-logo" />';
                 }
                 ?>
                 </div>

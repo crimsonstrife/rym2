@@ -138,7 +138,7 @@ if (!$hasPermission) {
 
                             //only show the edit button if the user has the update student permission
                             if ($hasUpdatePermission) { ?>
-                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=edit&action=edit&id=' . $student_id; ?>" class="btn btn-primary">Edit Student</a>
+                                <a href="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=edit&action=edit&id=' . htmlspecialchars($student_id); ?>" class="btn btn-primary">Edit Student</a>
                             <?php } ?>
                             <?php /*confirm user has a role with delete student permissions*/
                             //get the delete student permission id
@@ -381,7 +381,7 @@ if (!$hasPermission) {
                                                             <label for="message">Message:</label>
                                                             <textarea class="form-control" id="message" name="message" required></textarea>
 
-                                                            <input class="form-control" type="hidden" id="studentId" name="studentId" value="<?php echo $student_id; ?>">
+                                                            <input class="form-control" type="hidden" id="studentId" name="studentId" value="<?php echo htmlspecialchars($student_id); ?>">
                                                             <input class="form-control" type="hidden" id="studentName" name="studentName" value="<?php echo $student_name; ?>">
                                                             <input class="form-control" type="hidden" id="studentEmail" name="studentEmail" value="<?php echo $student_email; ?>">
                                                             <input class="form-control" type="hidden" id="senderId" name="senderId" value="<?php echo $_SESSION['user_id']; ?>">
@@ -458,7 +458,7 @@ if (!$hasPermission) {
                                                 <p>This action cannot be undone.</p>
                                             </div>
                                             <div class="modal-footer">
-                                                <form action="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single&action=delete&id=' . $student_id; ?>" method="post">
+                                                <form action="<?php echo APP_URL . '/admin/dashboard.php?view=students&student=single&action=delete&id=' . htmlspecialchars($student_id); ?>" method="post">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                     <button type="submit" class="btn btn-danger">Delete Student</button>
                                                 </form>

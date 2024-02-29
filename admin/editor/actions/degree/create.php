@@ -92,7 +92,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $degree_name; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($degree_name); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -120,10 +120,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'create') {
                                 if ($degreeCreated) {
-                                    echo '<p>The degree: ' . $degree_name . ' has been created.</p>';
+                                    echo '<p>The degree: ' . htmlspecialchars($degree_name) . ' has been created.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The degree: ' . $degree_name . ' could not be created.</p>';
+                                    echo '<p>The degree: ' . htmlspecialchars($degree_name) . ' could not be created.</p>';
                                 }
                             }
                             ?>
@@ -135,12 +135,12 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'create') {
                                 if (!$canCreate) {
-                                    echo '<p>The degree: ' . $degree_name . ' cannot be created because a degree with the same name already exists.</p>';
+                                    echo '<p>The degree: ' . htmlspecialchars($degree_name) . ' cannot be created because a degree with the same name already exists.</p>';
                                     echo '<p>Please enter a different degree name and try again.</p>';
                                 } else if ($canCreate && !$degreeCreated) {
-                                    echo '<p>The degree: ' . $degree_name . ' could not be created due to an unknown error.</p>';
+                                    echo '<p>The degree: ' . htmlspecialchars($degree_name) . ' could not be created due to an unknown error.</p>';
                                 } else {
-                                    echo '<p>The degree: ' . $degree_name . ' has been created.</p>';
+                                    echo '<p>The degree: ' . htmlspecialchars($degree_name) . ' has been created.</p>';
                                 }
                             }
                             ?>
@@ -154,7 +154,7 @@ if (!$hasPermission) {
                                 if ($action == 'create') {
                                     if ($degreeCreated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=degrees&degree=list" class="btn btn-primary">Return to Degree List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=degrees&degree=single&id=' . $degree_id . '" class="btn btn-secondary">Go to Degree</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=degrees&degree=single&id=' . htmlspecialchars($degree_id) . '" class="btn btn-secondary">Go to Degree</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=degrees&degree=list" class="btn btn-primary">Return to Degree List</a></span>';
                                     }

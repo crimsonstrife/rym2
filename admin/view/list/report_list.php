@@ -63,7 +63,7 @@ if (!$hasPermission) {
     }
 ?>
 <div class="container-fluid px-4">
-    <h1 class="mt-4"><?php echo $reportListTitle; ?></h1>
+    <h1 class="mt-4"><?php echo htmlspecialchars($reportListTitle); ?></h1>
     <div class="row">
         <div class="card mb-4">
             <div class="card-header">

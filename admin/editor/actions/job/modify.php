@@ -125,7 +125,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $job_title; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($job_title); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -153,10 +153,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if ($jobUpdated) {
-                                    echo '<p>The job: ' . $job_title . ' has been updated.</p>';
+                                    echo '<p>The job: ' . htmlspecialchars($job_title) . ' has been updated.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The job: ' . $job_title . ' could not be updated.</p>';
+                                    echo '<p>The job: ' . htmlspecialchars($job_title) . ' could not be updated.</p>';
                                 }
                             }
                             ?>
@@ -168,9 +168,9 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if (!$canCreate) {
-                                    echo '<p>The job: ' . $job_title . ' could not be updated due to an error.</p>';
+                                    echo '<p>The job: ' . htmlspecialchars($job_title) . ' could not be updated due to an error.</p>';
                                 } else {
-                                    echo '<p>The job: ' . $job_title . ' has been updated.</p>';
+                                    echo '<p>The job: ' . htmlspecialchars($job_title) . ' has been updated.</p>';
                                 }
                             }
                             ?>
@@ -184,7 +184,7 @@ if (!$hasPermission) {
                                 if ($action == 'edit') {
                                     if ($jobUpdated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=jobs&job=list" class="btn btn-primary">Return to Job List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=jobs&job=single&id=' . $job_id . '" class="btn btn-secondary">Go to Job</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=jobs&job=single&id=' . htmlspecialchars($job_id) . '" class="btn btn-secondary">Go to Job</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=jobs&job=list" class="btn btn-primary">Return to Job List</a></span>';
                                     }

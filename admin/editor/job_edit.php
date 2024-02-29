@@ -20,7 +20,7 @@ $job = new Job();
 //user class
 $user = new User();
 
-echo '<script src="' . getLibraryPath() . 'ckeditor/ckeditor.js' . '"></script>';
+echo '<script src="' . htmlspecialchars(getLibraryPath()) . 'ckeditor/ckeditor.js' . '"></script>';
 
 //check that action is set in the URL parameters
 if (isset($_GET['action'])) {
@@ -80,11 +80,11 @@ if (isset($_GET['action'])) {
             if (!empty($object)) {
 ?>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4"><?php echo $job->getJobTitle(intval($job_id)); ?></h1>
+                    <h1 class="mt-4"><?php echo htmlspecialchars($job->getJobTitle(intval($job_id))); ?></h1>
                     <div class="row">
                         <div class="card mb-4">
                             <!-- Edit Form -->
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&job=' . $_GET['job'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>" method="post" enctype="multipart/form-data">
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&job=' . htmlspecialchars($_GET['job']) . '&action=' . htmlspecialchars($_GET['action']) . '&id=' . htmlspecialchars($_GET['id']); ?>" method="post" enctype="multipart/form-data">
                                 <div class="card-header">
                                     <div class="card-title">
                                         <i class="fa-solid fa-briefcase"></i>
@@ -323,7 +323,7 @@ if (isset($_GET['action'])) {
                     <div class="row">
                         <div class="card mb-4">
                             <!-- Create Form -->
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&job=' . $_GET['job'] . '&action=' . $_GET['action']; ?>" method="post" enctype="multipart/form-data">
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&job=' . htmlspecialchars($_GET['job']) . '&action=' . htmlspecialchars($_GET['action']); ?>" method="post" enctype="multipart/form-data">
                                 <div class="card-header">
                                     <div class="card-title">
                                         <i class="fa-solid fa-briefcase"></i>

@@ -972,7 +972,7 @@ class MailerSettings extends Settings
             //if OPENSSL is installed, encrypt the password
             if (OPENSSL_INSTALLED) {
                 //Encrypt the password
-                $password = openssl_encrypt($mailerPassword, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+                $password = openssl_encrypt($mailerPassword, 'AES-256-CBC', MAILER_PASSWORD_ENCRYPTION_KEY);
             }
 
             if (!OPENSSL_INSTALLED) {
@@ -1001,7 +1001,7 @@ class MailerSettings extends Settings
         //if OPENSSL is installed, encrypt the password
         if (OPENSSL_INSTALLED) {
             //Encrypt the password
-            $password = openssl_encrypt($mailerPassword, 'AES-128-ECB', MAILER_PASSWORD_ENCRYPTION_KEY);
+            $password = openssl_encrypt($mailerPassword, 'AES-256-CBC', MAILER_PASSWORD_ENCRYPTION_KEY);
         }
 
         if (!OPENSSL_INSTALLED) {

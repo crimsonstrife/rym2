@@ -78,9 +78,9 @@ if (!empty($errorArray)) {
     <?php echo includeHeader(); ?>
     <?php //if login-style.min.css exists, use it, otherwise use login-style.css
     if (file_exists(BASEPATH . '/public/content/assets/css/login-style.min.css')) {
-        echo '<link rel="stylesheet" href="' . getAssetPath() . 'css/login-style.min.css">';
+        echo '<link rel="stylesheet" href="' . htmlspecialchars(getAssetPath()) . 'css/login-style.min.css">';
     } else {
-        echo '<link rel="stylesheet" href="' . getAssetPath() . 'css/login-style.css">';
+        echo '<link rel="stylesheet" href="' . htmlspecialchars(getAssetPath()) . 'css/login-style.css">';
     } ?>
 </head>
 
@@ -90,18 +90,18 @@ if (!empty($errorArray)) {
         <p>Please fill in your credentials to login.</p>
         <?php
         if (!empty($login_error)) {
-            echo '<div>' . $login_error . '</div>';
+            echo '<div>' . htmlspecialchars($login_error) . '</div>';
         }
         ?>
         <div>
             <label for="inputUsername" class="sr-only">Username</label>
             <input id="inputUsername" class="form-control" type="text" name="username" value="<?php echo $username; ?>" placeholder="Username" required autofocus>
-            <span><?php echo $username_error; ?></span>
+            <span><?php echo htmlspecialchars($username_error); ?></span>
         </div>
         <div>
             <label for="inputPassword" class="sr-only">Password</label>
             <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-            <span><?php echo $password_error; ?></span>
+            <span><?php echo htmlspecialchars($password_error); ?></span>
         </div>
         <div class="checkbox mb-3">
             <label>Remember Me</label>

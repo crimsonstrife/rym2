@@ -77,7 +77,7 @@ if (isset($_GET['action'])) {
         <div class="card mb-4">
             <!-- Edit Form -->
             <form
-                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&media=' . $_GET['media'] . '&action=' . $_GET['action'] . '&id=' . $_GET['id']; ?>"
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&media=' . htmlspecialchars($_GET['media']) . '&action=' . htmlspecialchars($_GET['action']) . '&id=' . htmlspecialchars($_GET['id']); ?>"
                 method="post" enctype="multipart/form-data">
                 <div class="card-header">
                     <div class="card-title">
@@ -183,7 +183,7 @@ if (isset($_GET['action'])) {
         <div class="card mb-4">
             <!-- New Form -->
             <form
-                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . $_GET['view'] . '&media=' . $_GET['media'] . '&action=' . $_GET['action']; ?>"
+                action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?view=' . htmlspecialchars($_GET['view']) . '&media=' . htmlspecialchars($_GET['media']) . '&action=' . htmlspecialchars($_GET['action']); ?>"
                 method="post" enctype="multipart/form-data">
                 <div class="card-header">
                     <div class="card-title">

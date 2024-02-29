@@ -23,3 +23,14 @@
 </FilesMatch>
 # Prevent Directory Listing
 Options -Indexes
+# If mod_headers is enabled, apply the following rules
+<IfModule mod_headers.c>
+# Set Strict-Transport-Security to enable HSTS
+    Header always set Strict-Transport-Security "max-age=15552000; includeSubDomains"
+# Set Referrer-Policy
+    Header always set Referrer-Policy "no-referrer"
+# Set Content-Security-Policy
+    Header always set Content-Security-Policy "upgrade-insecure-requests"
+# Set X-Content-Type-Options to prevent browsers from MIME-sniffing a response away from the declared content-type
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>

@@ -87,7 +87,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $major_name; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($major_name); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -115,10 +115,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'create') {
                                 if ($majorCreated) {
-                                    echo '<p>The major: ' . $major_name . ' has been created.</p>';
+                                    echo '<p>The major: ' . htmlspecialchars($major_name) . ' has been created.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The major: ' . $major_name . ' could not be created.</p>';
+                                    echo '<p>The major: ' . htmlspecialchars($major_name) . ' could not be created.</p>';
                                 }
                             }
                             ?>
@@ -130,12 +130,12 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'create') {
                                 if (!$canCreate) {
-                                    echo '<p>The major: ' . $major_name . ' cannot be created because a major with the same name already exists.</p>';
+                                    echo '<p>The major: ' . htmlspecialchars($major_name) . ' cannot be created because a major with the same name already exists.</p>';
                                     echo '<p>Please enter a different major name and try again.</p>';
                                 } else if ($canCreate && !$majorCreated) {
-                                    echo '<p>The major: ' . $major_name . ' could not be created due to an unknown error.</p>';
+                                    echo '<p>The major: ' . htmlspecialchars($major_name) . ' could not be created due to an unknown error.</p>';
                                 } else {
-                                    echo '<p>The major: ' . $major_name . ' has been created.</p>';
+                                    echo '<p>The major: ' . htmlspecialchars($major_name) . ' has been created.</p>';
                                 }
                             }
                             ?>
@@ -149,7 +149,7 @@ if (!$hasPermission) {
                                 if ($action == 'create') {
                                     if ($majorCreated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=majors&major=list" class="btn btn-primary">Return to Major List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=majors&major=single&id=' . $major_id . '" class="btn btn-secondary">Go to Major</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=majors&major=single&id=' . htmlspecialchars($major_id) . '" class="btn btn-secondary">Go to Major</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=majors&major=list" class="btn btn-primary">Return to Major List</a></span>';
                                     }
