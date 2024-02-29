@@ -184,6 +184,27 @@ class User
     }
 
     /**
+     * Generate a new password
+     * Generates a new password for a user
+     *
+     * @param int user_id
+     * @return string
+     */
+    public function generatePassword(): string
+    {
+        //if openssl is available, use it to generate a random password
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $password = bin2hex(openssl_random_pseudo_bytes(8));
+        } else {
+            //if openssl is not available, use uniqid to generate a random password
+            $password = uniqid();
+        }
+
+        //return the password
+        return $password;
+    }
+
+    /**
      * Get just the IDs of the roles for a specific user, returns an array of role IDs
      * @param int $userID
      * @return array
