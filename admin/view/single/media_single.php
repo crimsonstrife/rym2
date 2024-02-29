@@ -85,7 +85,7 @@ if (!$hasPermission) {
 
                             //only show the edit button if the user has the update media permission
                             if ($hasUpdatePermission) { ?>
-                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=media&media=edit&action=edit&id=' . $media_id; ?>"
+                    <a href="<?php echo APP_URL . '/admin/dashboard.php?view=media&media=edit&action=edit&id=' . htmlspecialchars($media_id); ?>"
                         class="btn btn-primary">Edit Media</a>
                     <?php } ?>
                     <?php /*confirm user has a role with delete media permissions*/
@@ -114,7 +114,7 @@ if (!$hasPermission) {
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="img-container"
-                                        style="background-image: url('<?php echo getAssetPath() . 'img/transparency.svg' ?>'); background-size:cover;">
+                                        style="background-image: url('<?php echo htmlspecialchars(getAssetPath()) . 'img/transparency.svg' ?>'); background-size:cover;">
                                         <img src="<?php echo $media->getMediaFilePath(intval($media_id)); ?>"
                                             alt="<?php echo $mediaData['filename']; ?>" class="img-fluid">
                                     </div>
@@ -336,7 +336,7 @@ if (!$hasPermission) {
                             </div>
                             <div class="modal-footer">
                                 <form
-                                    action="<?php echo APP_URL . '/admin/dashboard.php?view=media&media=single&action=delete&id=' . $media_id; ?>"
+                                    action="<?php echo APP_URL . '/admin/dashboard.php?view=media&media=single&action=delete&id=' . htmlspecialchars($media_id); ?>"
                                     method="post">
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Cancel</button>
