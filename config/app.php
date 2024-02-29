@@ -271,7 +271,8 @@ if (file_exists(BASEPATH . '/.env')) {
         //if OPENSSL is installed, encrypt the password
         if (OPENSSL_INSTALLED) {
             //Encrypt the password
-            $password = openssl_encrypt($mailerPassword, 'AES-256-CBC', MAILER_PASSWORD_ENCRYPTION_KEY);
+            define('MAILER_PASSWORD_ENCRYPTION_IV', openssl_random_pseudo_bytes(16));
+            $password = openssl_encrypt($mailerPassword, 'AES-256-CBC', MAILER_PASSWORD_ENCRYPTION_KEY, 0, MAILER_PASSWORD_ENCRYPTION_IV);
         }
 
         if (!OPENSSL_INSTALLED) {
@@ -460,7 +461,9 @@ if (file_exists(BASEPATH . '/.env')) {
         //if OPENSSL is installed, encrypt the password
         if (OPENSSL_INSTALLED) {
             //Encrypt the password
-            $password = openssl_encrypt($mailerPassword, 'AES-256-CBC', MAILER_PASSWORD_ENCRYPTION_KEY);
+            define('MAILER_PASSWORD_ENCRYPTION_IV', openssl_random_pseudo_bytes(16));
+            //Encrypt the password
+            $password = openssl_encrypt($mailerPassword, 'AES-256-CBC',MAILER_PASSWORD_ENCRYPTION_KEY, 0, MAILER_PASSWORD_ENCRYPTION_IV);
         }
 
         if (!OPENSSL_INSTALLED) {
@@ -535,7 +538,9 @@ if (file_exists(BASEPATH . '/.env')) {
         //if OPENSSL is installed, encrypt the password
         if (OPENSSL_INSTALLED) {
             //Encrypt the password
-            $password = openssl_encrypt($mailerPassword, 'AES-256-CBC', MAILER_PASSWORD_ENCRYPTION_KEY);
+            define('MAILER_PASSWORD_ENCRYPTION_IV', openssl_random_pseudo_bytes(16));
+            //Encrypt the password
+            $password = openssl_encrypt($mailerPassword, 'AES-256-CBC',MAILER_PASSWORD_ENCRYPTION_KEY, 0, MAILER_PASSWORD_ENCRYPTION_IV);
         }
 
         if (!OPENSSL_INSTALLED) {
