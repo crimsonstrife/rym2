@@ -705,7 +705,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <?php
                                 //if this is an event page, set the form action to the event specific page using the event slug
                                 if ($isEventPage) { ?>
-                                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?path=student&event=<?php echo $event_slug; ?>#registrationForm" class="needs-validation <?php if ($entry_error) {
+                                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?path=student&event=<?php echo htmlspecialchars($event_slug); ?>#registrationForm" class="needs-validation <?php if ($entry_error) {
                                                                                                                                                                                                     echo 'was-validated';
                                                                                                                                                                                                 } ?>" method="post" novalidate>
                                     <?php } else { //if this is not an event page, set the form action to the regular index page
@@ -732,7 +732,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <div class="input-group">
                                                         <input type="text" name="student_firstName" id="student_firstName" class="form-control<?php if ($student_firstName_error != null) {
                                                                                                                                                     echo " is-invalid";
-                                                                                                                                                } ?>" placeholder="First Name" value="<?php echo $student_firstName; ?>" required>
+                                                                                                                                                } ?>" placeholder="First Name" value="<?php echo htmlspecialchars($student_firstName); ?>" required>
                                                         <span></span>
                                                     </div>
                                                 </div>
@@ -751,7 +751,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <div class="input-group">
                                                         <input type="text" name="student_lastName" id="student_lastName" class="form-control<?php if ($student_lastName_error != null) {
                                                                                                                                                 echo " is-invalid";
-                                                                                                                                            } ?>"" placeholder=" Last Name" value="<?php echo $student_lastName; ?>" required>
+                                                                                                                                            } ?>"" placeholder=" Last Name" value="<?php echo htmlspecialchars($student_lastName); ?>" required>
                                                         <span></span>
                                                     </div>
                                                 </div>
@@ -768,7 +768,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <div class="input-group">
                                                         <input type="text" name="student_email" id="student_email" class="form-control<?php if ($student_email_error != null) {
                                                                                                                                             echo " is-invalid";
-                                                                                                                                        } ?>" placeholder="Email" value="<?php echo $student_email; ?>" required>
+                                                                                                                                        } ?>" placeholder="Email" value="<?php echo htmlspecialchars($student_email); ?>" required>
                                                         <span></span>
                                                     </div>
                                                 </div>
@@ -783,7 +783,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <div class="input-group">
                                                         <input type="text" name="student_phone" id="student_phone" class="form-control<?php if ($student_phone_error != null) {
                                                                                                                                             echo " is-invalid";
-                                                                                                                                        } ?>" placeholder="Phone Number" value="<?php echo $student_phone; ?>" required>
+                                                                                                                                        } ?>" placeholder="Phone Number" value="<?php echo htmlspecialchars($student_phone); ?>" required>
                                                         <span></span>
                                                     </div>
                                                 </div>
@@ -800,7 +800,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <div class="input-group">
                                                         <input type="text" name="student_address" id="student_address" class="form-control<?php if ($student_address_error != null) {
                                                                                                                                                 echo " is-invalid";
-                                                                                                                                            } ?>" placeholder="Street" value="<?php echo $student_address; ?>" required>
+                                                                                                                                            } ?>" placeholder="Street" value="<?php echo htmlspecialchars($student_address); ?>" required>
                                                         <span></span>
                                                     </div>
                                                     <!-- help text for address -->
@@ -820,7 +820,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <div class="input-group">
                                                         <input type="text" name="student_city" id="student_city" class="form-control<?php if ($student_city_error != null) {
                                                                                                                                         echo " is-invalid";
-                                                                                                                                    } ?>" placeholder="City" value="<?php echo $student_city; ?>" required>
+                                                                                                                                    } ?>" placeholder="City" value="<?php echo htmlspecialchars($student_city); ?>" required>
                                                         <span></span>
                                                     </div>
                                                 </div>
@@ -864,7 +864,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <div class="input-group">
                                                         <input type="text" name="student_zip" id="student_zip" class="form-control<?php if ($student_zip_error != null) {
                                                                                                                                         echo " is-invalid";
-                                                                                                                                    } ?>" placeholder="Zip" value="<?php echo $student_zip; ?>" required>
+                                                                                                                                    } ?>" placeholder="Zip" value="<?php echo htmlspecialchars($student_zip); ?>" required>
                                                         <span></span>
                                                     </div>
                                                 </div>
