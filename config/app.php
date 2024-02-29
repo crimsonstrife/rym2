@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Configuration File for the College Recruitment Application
  *
