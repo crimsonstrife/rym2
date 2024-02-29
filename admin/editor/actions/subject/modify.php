@@ -85,7 +85,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $subject_name ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($subject_name); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -113,10 +113,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if ($subjectUpdated) {
-                                    echo '<p>The subject: ' . $subject_name . ' has been updated.</p>';
+                                    echo '<p>The subject: ' . htmlspecialchars($subject_name) . ' has been updated.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The subject: ' . $subject_name . ' could not be updated.</p>';
+                                    echo '<p>The subject: ' . htmlspecialchars($subject_name) . ' could not be updated.</p>';
                                 }
                             }
                             ?>
@@ -128,12 +128,12 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if (!$canEdit) {
-                                    echo '<p>The subject: ' . $subject_name . ' cannot be updated because a subject with the same name already exists.</p>';
+                                    echo '<p>The subject: ' . htmlspecialchars($subject_name) . ' cannot be updated because a subject with the same name already exists.</p>';
                                     echo '<p>Please enter a different subject name and try again.</p>';
                                 } else if ($canEdit && !$subjectUpdated) {
-                                    echo '<p>The subject: ' . $subject_name . ' could not be updated due to an unknown error.</p>';
+                                    echo '<p>The subject: ' . htmlspecialchars($subject_name) . ' could not be updated due to an unknown error.</p>';
                                 } else {
-                                    echo '<p>The subject: ' . $subject_name . ' has been updated.</p>';
+                                    echo '<p>The subject: ' . htmlspecialchars($subject_name) . ' has been updated.</p>';
                                 }
                             }
                             ?>
@@ -147,10 +147,10 @@ if (!$hasPermission) {
                                 if ($action == 'edit') {
                                     if ($subjectUpdated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=subjects&subject=list" class="btn btn-primary">Return to Subject List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=subjects&subject=single&id=' . $subject_id . '" class="btn btn-secondary">Go to Subject</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=subjects&subject=single&id=' . htmlspecialchars($subject_id) . '" class="btn btn-secondary">Go to Subject</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=subjects&subject=list" class="btn btn-primary">Return to Subject List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=subjects&subject=single&id=' . $subject_id . '" class="btn btn-secondary">Go to Subject</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=subjects&subject=single&id=' . htmlspecialchars($subject_id) . '" class="btn btn-secondary">Go to Subject</a></span>';
                                     }
                                 }
                                 ?>
