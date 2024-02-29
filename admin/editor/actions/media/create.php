@@ -104,7 +104,7 @@ if (!$hasPermission) {
 ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $media_name; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($media_name); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -132,10 +132,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'create') {
                                 if ($mediaCreated) {
-                                    echo '<p>The media: ' . $media_name . ' has been created.</p>';
+                                    echo '<p>The media: ' . htmlspecialchars($media_name) . ' has been created.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The media: ' . $media_name . ' could not be created.</p>';
+                                    echo '<p>The media: ' . htmlspecialchars($media_name) . ' could not be created.</p>';
                                 }
                             }
                             ?>
@@ -147,10 +147,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'create') {
                                 if ($mediaExists && !$mediaCreated) {
-                                    echo '<p>The media: ' . $media_name . ' cannot be created because a media with the same name already exists.</p>';
+                                    echo '<p>The media: ' . htmlspecialchars($media_name) . ' cannot be created because a media with the same name already exists.</p>';
                                     echo '<p>Please enter a different media name and try again.</p>';
                                 } else if (!$mediaExists && !$mediaCreated) {
-                                    echo '<p>The media: ' . $media_name . ' could not be created due to an unknown error.</p>';
+                                    echo '<p>The media: ' . htmlspecialchars($media_name) . ' could not be created due to an unknown error.</p>';
                                 }
                             }
                             ?>
@@ -164,7 +164,7 @@ if (!$hasPermission) {
                                 if ($action == 'create') {
                                     if ($mediaCreated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=list" class="btn btn-primary">Return to Media List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=single&id=' . $media_id . '" class="btn btn-secondary">Go to Media</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=single&id=' . htmlspecialchars($media_id) . '" class="btn btn-secondary">Go to Media</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=media&media=list" class="btn btn-primary">Return to Media List</a></span>';
                                     }
