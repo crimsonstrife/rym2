@@ -263,7 +263,7 @@ if (!$hasPermission) {
     } ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $event_name; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($event_name); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -291,10 +291,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if ($eventUpdated) {
-                                    echo '<p>The event: ' . $event_name . ' has been updated.</p>';
+                                    echo '<p>The event: ' . htmlspecialchars($event_name) . ' has been updated.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The event: ' . $event_name . ' could not be updated.</p>';
+                                    echo '<p>The event: ' . htmlspecialchars($event_name) . ' could not be updated.</p>';
                                 }
                             }
                             ?>
@@ -306,9 +306,9 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if (!$eventUpdated) {
-                                    echo '<p>The event: ' . $event_name . ' could not be updated due to an error.</p>';
+                                    echo '<p>The event: ' . htmlspecialchars($event_name) . ' could not be updated due to an error.</p>';
                                 } else {
-                                    echo '<p>The event: ' . $event_name . ' has been updated.</p>';
+                                    echo '<p>The event: ' . htmlspecialchars($event_name) . ' has been updated.</p>';
                                 }
                                 //if the event was updated and there are files to add, show the completion message
                                 if ($eventUpdated && $updateEventMedia) {
@@ -338,7 +338,7 @@ if (!$hasPermission) {
                                 if ($action == 'edit') {
                                     if ($eventUpdated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=events&event=list" class="btn btn-primary">Return to Event List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=events&event=single&id=' . $event_id . '" class="btn btn-secondary">Go to Event</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=events&event=single&id=' . htmlspecialchars($event_id) . '" class="btn btn-secondary">Go to Event</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=events&event=list" class="btn btn-primary">Return to Event List</a></span>';
                                     }
