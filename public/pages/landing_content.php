@@ -12,7 +12,7 @@
  * @package RYM2
  * Filename: landing_content.php
  * @version 1.0.0
- * @requires PHP 7.2.5+
+ * @requires PHP 8.1.2+
  * @requires Bootstrap 5.3.2+
  * @requires Font Awesome 6.4.2+
  * @requires jQuery 3.7.1+
