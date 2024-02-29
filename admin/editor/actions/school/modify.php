@@ -282,7 +282,7 @@ if (!$hasPermission) {
 ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $school_name; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($school_name); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -310,10 +310,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if ($schoolUpdated) {
-                                    echo '<p>The school: ' . $school_name . ' has been updated.</p>';
+                                    echo '<p>The school: ' . htmlspecialchars($school_name) . ' has been updated.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The school: ' . $school_name . ' could not be updated.</p>';
+                                    echo '<p>The school: ' . htmlspecialchars($school_name) . ' could not be updated.</p>';
                                 }
                             }
                             ?>
@@ -325,9 +325,9 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'edit') {
                                 if (!$schoolUpdated) {
-                                    echo '<p>The school: ' . $school_name . ' could not be updated due to an error.</p>';
+                                    echo '<p>The school: ' . htmlspecialchars($school_name) . ' could not be updated due to an error.</p>';
                                 } else {
-                                    echo '<p>The school: ' . $school_name . ' has been updated.</p>';
+                                    echo '<p>The school: ' . htmlspecialchars($school_name) . ' has been updated.</p>';
                                 }
                                 //if the school was updated and there are files to add, show the completion message
                                 if ($schoolUpdated && $updatedSchoolBranding) {
@@ -344,7 +344,7 @@ if (!$hasPermission) {
                                 }
                                 //if the school name already exists, show the error message
                                 if (!$canEdit && $existingSchool != null) {
-                                    echo '<p>The school: ' . $school_name . ' could not be updated because a school with that name already exists.</p>';
+                                    echo '<p>The school: ' . htmlspecialchars($school_name) . ' could not be updated because a school with that name already exists.</p>';
                                 }
                             }
                             ?>
@@ -358,7 +358,7 @@ if (!$hasPermission) {
                                 if ($action == 'edit') {
                                     if ($schoolUpdated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=list" class="btn btn-primary">Return to School List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=single&id=' . $school_id . '" class="btn btn-secondary">Go to School</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=single&id=' . htmlspecialchars($school_id) . '" class="btn btn-secondary">Go to School</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=list" class="btn btn-primary">Return to School List</a></span>';
                                     }
