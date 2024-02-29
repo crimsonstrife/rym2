@@ -71,10 +71,13 @@ function formatAddress(string $address, string $city, string $state, string $zip
 function clearCookies()
 {
     //clear the cookies
-    setcookie("user_id", "");
-    setcookie("user_name", "");
-    setcookie("user_password", "");
-    setcookie("user_password_selector", "");
+    setcookie("user_id", "", 0, "/", "", true, true);
+    setcookie(
+    "user_name", "", 0, "/", "", true, true);
+    setcookie(
+    "user_password", "", 0, "/", "", true, true);
+    setcookie(
+    "user_password_selector", "", 0, "/", "", true, true);
 };
 
 function setCookies(int $userID, string $username, string $passwordHash, string $selectorHash, string $expiryDate)
@@ -84,10 +87,10 @@ function setCookies(int $userID, string $username, string $passwordHash, string 
     $expiryDate = mktime(date("H", $expiryDate), date("i", $expiryDate), date("s", $expiryDate), date("m", $expiryDate), date("d", $expiryDate), date("Y", $expiryDate));
 
     //set the cookies
-    setcookie("user_id", $userID, $expiryDate, "/");
-    setcookie("user_name", $username, $expiryDate, "/");
-    setcookie("user_password", $passwordHash, $expiryDate, "/");
-    setcookie("user_password_selector", $selectorHash, $expiryDate, "/");
+    setcookie("user_id", $userID, $expiryDate, "/", "", true, true);
+    setcookie("user_name", $username, $expiryDate, "/", "", true, true);
+    setcookie("user_password", $passwordHash, $expiryDate, "/", "", true, true);
+    setcookie("user_password_selector", $selectorHash, $expiryDate, "/", "", true, true);
 };
 
 function randomizeEncryption($minimum, $maximum)
