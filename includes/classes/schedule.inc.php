@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Schedule Class file for the College Recruitment Application
  * Contains all the functions for the Schedule Class and handles all the scheduling related tasks for events with the database.
@@ -11,7 +10,7 @@
  * @package RYM2
  * Filename: schedule.inc.php
  * @version 1.0.0
- * @requires PHP 7.2.5+
+ * @requires PHP 8.1.2+
  */
 
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
