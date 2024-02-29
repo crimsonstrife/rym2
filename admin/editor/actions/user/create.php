@@ -131,7 +131,7 @@ if (!$hasPermission) {
 ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $username; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($username); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -159,10 +159,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'create') {
                                 if ($userCreated) {
-                                    echo '<p>The user: ' . $username . ' has been created.</p>';
+                                    echo '<p>The user: ' . htmlspecialchars($username) . ' has been created.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The user: ' . $username . ' could not be created.</p>';
+                                    echo '<p>The user: ' . htmlspecialchars($username) . ' could not be created.</p>';
                                 }
                             }
                             ?>
@@ -198,7 +198,7 @@ if (!$hasPermission) {
                                 if ($action == 'create') {
                                     if ($userCreated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=list" class="btn btn-primary">Return to User List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . $user_id . '" class="btn btn-secondary">Go to User</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=single&id=' . htmlspecialchars($user_id) . '" class="btn btn-secondary">Go to User</a></span>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=users&user=list" class="btn btn-primary">Return to User List</a></span>';
                                     }
