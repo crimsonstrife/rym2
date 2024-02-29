@@ -21,3 +21,5 @@
     Order Allow,Deny
     Deny from all
 </FilesMatch>
+# Prevent Directory Listing
+Options -Indexes
