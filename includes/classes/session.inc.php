@@ -1,4 +1,18 @@
 <?php
+/**
+ * Session Class file for the College Recruitment Application
+ * This class is used to manage session data for the application
+ *
+ * Author:  Patrick Barnhardt
+ * Author Email: pbarnh1@wgu.edu
+ * Date:   10/16/2023
+ *
+ * @category Authentication
+ * @package RYM2
+ * Filename: session.inc.php
+ * @version 1.0.0
+ * @requires PHP 8.1.2+
+ */
 
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 
@@ -12,7 +26,6 @@ require_once(BASEPATH . '/includes/connector.inc.php');
 /**
  * Session Class
  * Used to access and manage session data
- * @package RYM2
  */
 class Session
 {
