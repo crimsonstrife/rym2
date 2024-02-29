@@ -590,7 +590,7 @@ if (!isset($hasViewDashboardPermission)) {
                 }
             }
 ?>
-            <script src="<?php echo getLibraryPath() . 'ckeditor/ckeditor.js'; ?>"></script>
+            <script src="<?php echo htmlspecialchars(getLibraryPath() . 'ckeditor/ckeditor.js'); ?>"></script>
             <!-- main content -->
             <div id="layout_content" class="w-95 mx-auto">
                 <main>
@@ -622,7 +622,8 @@ if (!isset($hasViewDashboardPermission)) {
                             <div class="row">
                                 <!-- Main Settings Form -->
                                 <form class="form-inline" <?php if ($hasUpdateSettingsPermission) {
-                                                                echo 'method="post"' . ' action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '?view=' . $_GET['view'] . '"';
+                                                                $encodedView = htmlspecialchars($_GET['view']);
+                                                                echo 'method="post"' . ' action="' . htmlspecialchars($_SERVER['PHP_SELF']) . '?view=' . $encodedView . '"';
                                                             } ?> class="needs-validation <?php if ($entry_error) {
                                                                                                 echo 'was-validated';
                                                                                             } ?>">
@@ -690,7 +691,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                             <?php
                                                             if (!empty($settings->getAppLogo())) {
                                                                 // render the file as an image
-                                                                echo '<div><img src="' . getUploadPath() . $media->getMediaFileName(intval($app_logo)) . '" alt="Application Logo" style="max-width: 200px; max-height: auto;"></div>';
+                                                                echo '<div><img src="' . htmlspecialchars(getUploadPath() . $media->getMediaFileName(intval($app_logo)), ENT_QUOTES, 'UTF-8') . '" alt="Application Logo" style="max-width: 200px; max-height: auto;"></div>';
                                                                 // show the file name
                                                                 echo '<div> ' . $media->getMediaFileName(intval($app_logo)) . '</div>';
                                                             }
@@ -820,7 +821,7 @@ if (!isset($hasViewDashboardPermission)) {
                                                             <?php
                                                             if (!empty($companySettings->getCompanyLogo())) {
                                                                 // render the file as an image
-                                                                echo '<div><img src="' . getUploadPath() . $media->getMediaFileName(intval($company_logo)) . '" alt="Company Logo" style="max-width: 200px; max-height: auto;"></div>';
+                                                                echo '<div><img src="' . htmlspecialchars(getUploadPath() . $media->getMediaFileName(intval($company_logo)), ENT_QUOTES, 'UTF-8') . '" alt="Company Logo" style="max-width: 200px; max-height: auto;"></div>';
                                                                 // show the file name
                                                                 echo '<div> ' . $media->getMediaFileName(intval($company_logo)) . '</div>';
                                                             }
