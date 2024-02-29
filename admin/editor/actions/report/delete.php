@@ -112,7 +112,7 @@ if (!$hasPermission) {
 ?>
     <!-- Completion page content -->
     <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo $report_name; ?></h1>
+        <h1 class="mt-4"><?php echo htmlspecialchars($report_name); ?></h1>
         <div class="row">
             <div class="card mb-4">
                 <!-- show completion message -->
@@ -140,10 +140,10 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'delete') {
                                 if ($reportDeleted) {
-                                    echo '<p>The report: ' . $report_name . ' has been deleted.</p>';
+                                    echo '<p>The report: ' . htmlspecialchars($report_name) . ' has been deleted.</p>';
                                 } else {
                                     echo '<i class="fa-solid fa-circle-exclamation"></i>';
-                                    echo '<p>The report: ' . $report_name . ' could not be deleted.</p>';
+                                    echo '<p>The report: ' . htmlspecialchars($report_name) . ' could not be deleted.</p>';
                                 }
                             }
                             ?>
@@ -155,9 +155,9 @@ if (!$hasPermission) {
                             <?php
                             if ($action == 'delete') {
                                 if (!$reportDeleted) {
-                                    echo '<p>The report: ' . $report_name . ' could not be deleted, due to an error.</p>';
+                                    echo '<p>The report: ' . htmlspecialchars($report_name) . ' could not be deleted, due to an error.</p>';
                                 } else {
-                                    echo '<p>All associated records for the report: ' . $report_name . ' have been deleted.</p>';
+                                    echo '<p>All associated records for the report: ' . htmlspecialchars($report_name) . ' have been deleted.</p>';
                                 }
                             }
                             ?>
@@ -173,7 +173,7 @@ if (!$hasPermission) {
                                         echo '<a href="' . APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType) . '" class="btn btn-primary">Return to Report List</a>';
                                     } else {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=reports&report=list&type=' . urlencode($reportType) . '" class="btn btn-primary">Return to Report List</a></span>';
-                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=reports&report=single&type=' . urlencode($reportType) .'&id=' . $report_id . '" class="btn btn-secondary">Return to Report</a></span>';
+                                        echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=reports&report=single&type=' . urlencode($reportType) .'&id=' . htmlspecialchars($report_id) . '" class="btn btn-secondary">Return to Report</a></span>';
                                     }
                                 }
                                 ?>
