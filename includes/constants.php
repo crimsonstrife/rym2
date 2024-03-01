@@ -1,4 +1,15 @@
 <?php
+/**
+ * Constants
+ *
+ * This file contains the constants used throughout the application
+ *
+ * PHP version 7.4
+ *
+ * @category   Constants
+ * @package    RYM2
+ * @subpackage Constants
+ */
 
 /**
  * define the job types for labels

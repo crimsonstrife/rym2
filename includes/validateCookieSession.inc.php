@@ -1,4 +1,16 @@
 <?php
+/**
+ * Validate Cookie Session
+ * Used to validate the user's session and cookies to determine if they are logged in
+ *
+ * Author:  Patrick Barnhardt
+ * Author Email: pbarnh1@wgu.edu
+ * Date:   10/16/2023
+ *
+ * @package RYM2
+ * @version 1.0.0
+ * @requires PHP 8.1.2+
+ */
 
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 

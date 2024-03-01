@@ -111,11 +111,6 @@ if (!empty($companyName) && $companyName != null && $companyName != '') {
                             <hr class="dropdown-divider" />
                         </li>
                         <li>
-                            <!-- Reset password link -->
-                            <a class="dropdown-item" href="<?php echo APP_URL; ?>/reset-password.php">Reset Password
-                            </a>
-                        </li>
-                        <li>
                             <!-- Logout link -->
                             <a class="dropdown-item" href="<?php echo APP_URL; ?>/logout.php">Logout</a>
                         </li>

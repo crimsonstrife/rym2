@@ -10,7 +10,7 @@
  * @package RYM2
  * Filename: users.inc.php
  * @version 1.0.0
- * @requires PHP 7.2.5+
+ * @requires PHP 8.1.2+
  */
 
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
@@ -80,6 +80,128 @@ class User
 
         //return false if the password is not valid
         return false;
+    }
+
+    /**
+     * Set a Password Reset Token for a user
+     * Sets the password reset token for a user in the database, used to approve the generation of a new password
+     *
+     * @param int $userID
+     * @param string $token
+     */
+    public function setPasswordResetToken(int $userID, string $token): void
+    {
+        // SQL statement to set the password reset token for a user
+        $sql = "UPDATE users SET password_reset_token = ? WHERE id = ?";
+
+        // Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        // Bind the parameters to the SQL statement
+        $stmt->bind_param("si", $token, $userID);
+
+        // Execute the statement
+        $stmt->execute();
+    }
+
+    /**
+     * Get the user's password reset token
+     * Gets the password reset token for a user from the database
+     *
+     * @param int $userID
+     * @return string
+     */
+    public function getPasswordResetToken(int $userID): string
+    {
+        // SQL statement to get the password reset token for a user
+        $sql = "SELECT password_reset_token FROM users WHERE id = $userID";
+
+        // Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        // Execute the statement
+        $stmt->execute();
+
+        // Get the result
+        $result = $stmt->get_result();
+
+        // Fetch the password reset token
+        $row = $result->fetch_assoc();
+
+        // Return the password reset token
+        return $row['password_reset_token'] ?? '';
+    }
+
+    /**
+     * Get the user's password reset token by email
+     * Gets the password reset token for a user from the database by email
+     *
+     * @param string $email
+     * @return string
+     */
+    public function getPasswordResetTokenByEmail(string $email): string {
+        // SQL statement to get the password reset token for a user by email
+        $sql = "SELECT password_reset_token FROM users WHERE email = ?";
+
+        // Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        // Bind the email to the statement
+        $stmt->bind_param("s", $email);
+
+        // Execute the statement
+        $stmt->execute();
+
+        // Get the result
+        $result = $stmt->get_result();
+
+        // Fetch the password reset token
+        $row = $result->fetch_assoc();
+
+        // Return the password reset token
+        return $row['password_reset_token'] ?? '';
+    }
+
+    /**
+     * Clear the user's password reset token
+     * Clears the password reset token for a user in the database
+     *
+     * @param int $userID
+     * @return void
+     */
+    public function clearPasswordResetToken(int $userID): void {
+        // SQL statement to clear the password reset token for a user
+        $sql = "UPDATE users SET password_reset_token = NULL WHERE id = ?";
+
+        // Prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        // Bind the user ID to the statement
+        $stmt->bind_param("i", $userID);
+
+        // Execute the statement
+        $stmt->execute();
+    }
+
+    /**
+     * Generate a new password
+     * Generates a new password for a user
+     *
+     * @param int user_id
+     * @return string
+     */
+    public function generatePassword(): string
+    {
+        //if openssl is available, use it to generate a random password
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $password = bin2hex(openssl_random_pseudo_bytes(8));
+        } else {
+            //if openssl is not available, use uniqid to generate a random password
+            $password = uniqid();
+        }
+
+        //return the password
+        return $password;
     }
 
     /**

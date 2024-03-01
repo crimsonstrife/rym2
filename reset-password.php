@@ -1,120 +1,178 @@
 <?php
-// Initialize the session
-session_start();
+define('CAN_INCLUDE', true); // Define a constant to control access to the include files
+
+// Include config file
+require_once(__DIR__ . '/config/app.php');
+// Include the helpers file
+require_once(__DIR__ . '/includes/utils/helpers.php');
 
 //instance of the session class
 $session = new Session();
 
-// Check if the user is logged in, otherwise redirect to login page
-if ($session->check('logged_in') !== true || $session->get('logged_in') !== true){
-    header("location: login.php");
-    exit;
-}
+//instance of the user class
+$user = new User();
 
-// Include config file
-require_once(__DIR__ . '/config/app.php');
-// Include the user class
-require_once(BASEPATH . '/includes/classes/users.inc.php');
+//instance of the contact class
+$contact = new Contact();
 
 // Define variables and initialize with empty values
-$current_password__error = "";
-$current_password = "";
-$new_password = $confirm_password = "";
-$new_password_error = $confirm_password_error = "";
+$tokenVerified = false;
+$userID = $token = "";
+$canSendEmail = false;
+$allowReset = false;
 
-// Processing form data when form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    // Validate current password
-    if (empty(trim($_POST["current_password"]))) {
-        $current_password_error = "Please enter the current password.";
+//get the token from the url if it is set
+if (isset($_GET['token'])) {
+    $token = $_GET['token'];
+} else {
+    //check if the token is set in the post data
+    if (isset($_POST['token'])) {
+        $token = $_POST['token'];
     } else {
-        $current_password = trim($_POST["current_password"]);
-    }
-
-    // Validate new password
-    if (empty(trim($_POST["new_password"]))) {
-        $new_password_error = "Please enter the new password.";
-    } elseif (strlen(trim($_POST["new_password"])) < 6) {
-        $new_password_error = "Password must have at least 6 characters.";
-    } else {
-        $new_password = trim($_POST["new_password"]);
-    }
-
-    // Validate confirm password
-    if (empty(trim($_POST["confirm_password"]))) {
-        $confirm_password_error = "Please confirm the password.";
-    } else {
-        $confirm_password = trim($_POST["confirm_password"]);
-        if (empty($new_password_error)  && ($new_password != $confirm_password)) {
-            $confirm_password_error = "Password did not match.";
-        }
-    }
-
-    // Check input errors, and to see if the current password matches the database before updating the database to the new password
-    if (empty($current_password_error) && empty($new_password_error) && empty($confirm_password_error)) {
-        //instance of the user class
-        $user = new User();
-
-        //instance of the user login class
-        $userLogin = new UserLogin();
-
-        // Get the user's information from the database
-        $currentUser = $user->getUserById(intval($session->get('user_id')));
-
-        // Check if the password entered matches the current hashed password in the database
-        if ($userLogin->validateUserPassword(intval($session->get('user_id')), $current_password)) {
-            // Password is correct, update the database with the new password
-            $user->setUserPassword(intval($session->get('user_id')), $new_password);
-
-            // Log the user out
-            $userLogin->logout();
-
-            // Redirect the user to the login page
-            performRedirect(APP_URL . "/login.php");
-            exit();
-        } else {
-            // Display an error message if the password entered does not match the current password in the database
-            $current_password_error = "The password you entered was not valid.";
-        }
+        //if the token is not set, redirect to the login page
+        performRedirect('/login.php?error=' . urlencode(base64_encode(json_encode(array('login_error' => 'No reset token.')))));
     }
 }
+
+//get the user id from the url if it is set
+if (isset($_GET['user'])) {
+    $userID = $_GET['user'];
+} else {
+    //check if the user id is set in the post data
+    if (isset($_POST['user'])) {
+        $userID = $_POST['user'];
+    } else {
+        //if the user id is not set, redirect to the login page
+        performRedirect('/login.php?error=' . urlencode(base64_encode(json_encode(array('login_error' => 'No user id.')))));
+    }
+}
+
+//escape the user id
+$userID = htmlspecialchars($userID);
+
+//escape the token
+$token = htmlspecialchars($token);
+
+//debugging
+error_log('Token: ' . $token);
+
+//get the user's stored token
+$storedToken = $user->getPasswordResetToken(intval($userID));
+
+//debugging
+error_log('Stored Token: ' . $storedToken);
+
+//verify the token
+if ($token !== $storedToken) {
+    //if the token is not valid, redirect to the login page
+    performRedirect('/login.php?error=' . urlencode(base64_encode(json_encode(array('login_error' => 'Invalid reset token.')))));
+} else {
+    //if the token is valid, set tokenVerified to true
+    $tokenVerified = true;
+}
+
+//check if the mail_mailer constant is defined
+if (defined('MAIL_MAILER')) {
+    //check if the mail_mailer constant is set to smtp
+    if (MAIL_MAILER === 'smtp') {
+        //check if the bare minimum smtp constants are defined
+        if (defined('MAIL_HOST') && defined('MAIL_PORT') && defined('MAIL_FROM_ADDRESS') && defined('MAIL_FROM_NAME')) {
+            //check if the bare minimum smtp constants are not empty
+            if (MAIL_HOST !== "" && MAIL_PORT !== "" && MAIL_FROM_ADDRESS !== "" && MAIL_FROM_NAME !== "") {
+                $canSendEmail = true;
+            } else {
+                //if the smtp constants are empty, set canSendEmail to false
+                $canSendEmail = false;
+            }
+        } else {
+            //if the smtp constants are not defined, set canSendEmail to false
+            $canSendEmail = false;
+        }
+    } else {
+        //currently, only smtp is supported, so if the mail_mailer constant is not set to smtp, set canSendEmail to false
+        $canSendEmail = false;
+    }
+}
+
+//if the token is valid, check if email can be sent, if so show a form to approve the password reset
+if ($canSendEmail && $tokenVerified) {
+    //check if the user has approved the password reset
+    if (isset($_POST['approve'])) {
+        //approve the password reset
+        $allowReset = true;
+
+        //if the password reset is approved, generate a new password
+        if ($allowReset) {
+            //generate a new password
+            $newPassword = $user->generatePassword();
+
+            //update the user's password - it will be hashed
+            $user->setUserPassword(intval($userID), $newPassword);
+
+            //get the user's email address
+            $email = $user->getUserEmail(intval($userID));
+
+            //set the email subject
+            $subject = "Your password has been reset";
+
+            //set the email message
+            $message = "Your password has been reset. Your new password is: " . $newPassword;
+
+            //send the email
+            $contact->sendUserEmail($email, $subject, $message);
+
+            //clear the password reset token
+            $user->clearPasswordResetToken(intval($userID));
+
+            //redirect to the login page
+            performRedirect('/login.php?msg=' . urlencode(base64_encode(json_encode(array('login_error' => 'Password reset approved.')))));
+        }
+    }
+    if (isset($_POST['deny'])) {
+        //clear the password reset token
+        $user->clearPasswordResetToken(intval($userID));
+        //deny the password reset
+        performRedirect('/login.php?error=' . urlencode(base64_encode(json_encode(array('login_error' => 'Password reset denied.')))));
+    }
 ?>
+    <!DOCTYPE html>
+    <html lang="en">
 
-<!DOCTYPE html>
-<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Reset Password</title>
+        <?php echo includeHeader(); ?>
+        <?php //if login-style.min.css exists, use it, otherwise use login-style.css
+        if (file_exists(BASEPATH . '/public/content/assets/css/login-style.min.css')) {
+            echo '<link rel="stylesheet" href="' . htmlspecialchars(getAssetPath()) . 'css/login-style.min.css">';
+        } else {
+            echo '<link rel="stylesheet" href="' . htmlspecialchars(getAssetPath()) . 'css/login-style.css">';
+        } ?>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Reset Password</title>
-</head>
-
-<body>
-    <div>
-        <h2>Reset Password</h2>
-        <p>Please fill out this form to reset your password.</p>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div>
-                <label>Current Password</label>
-                <input type="password" name="current_password" <?php echo (!empty($current_password_error)) ? 'is-invalid' : ''; ?>">
-                <span><?php echo $current_password__error; ?></span>
-            </div>
-            <div>
-                <label>New Password</label>
-                <input type="password" name="new_password" <?php echo (!empty($new_password_error)) ? 'is-invalid' : ''; ?>" value="<?php echo htmlspecialchars($new_password); ?>">
-                <span><?php echo $new_password__error; ?></span>
-            </div>
-            <div>
-                <label>Confirm Password</label>
-                <input type="password" name="confirm_password" <?php echo (!empty($confirm_password_error)) ? 'is-invalid' : ''; ?>">
-                <span><?php echo $confirm_password__error; ?></span>
-            </div>
-            <div>
-                <input type="submit" value="Submit">
-                <a href="/admin/dashboard.php">Cancel</a>
-            </div>
+    <body class="text-center">
+        <form class="form-signin" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?token=' . htmlspecialchars($token) . '&id=' . htmlspecialchars($userID); ?>" method="post">
+            <h1 class="h3 mb-3 font-weight-normal">Reset Password</h1>
+            <p>Are you sure you want to reset your password?</p>
+            <p>A new password will be generated and emailed to you, this cannot be undone.</p>
+            <input type="hidden" name="token" value="<?php echo $token; ?>">
+            <input type="hidden" name="user" value="<?php echo $userID; ?>">
+            <button class="btn btn-lg btn-primary btn-block" type="submit" name="approve">Yes</button>
+            <button class="btn btn-lg btn-secondary btn-block" type="button" name="deny">No</button>
         </form>
-    </div>
-</body>
+    </body>
 
-</html>
+    <?php } else {
+    if (!$canSendEmail) { ?>
+        <div class="alert alert-danger" role="alert">
+            <p>Sorry, the system is not properly configured to send emails. Please contact the system administrator.</p>
+        </div>
+    <?php } else { ?>
+        <div class="alert alert-danger" role="alert">
+            <p>Sorry, the token is not valid.</p>
+        </div>
+<?php }
+} ?>

@@ -1,4 +1,18 @@
 <?php
+/**
+ * Contact Follow Up Percentage Report Class file for the College Recruitment Application
+ * This class is used to generate the Contact Follow-Up Percentage Report
+ *
+ * Author:  Patrick Barnhardt
+ * Author Email: pbarnh1@wgu.edu
+ * Date:   10/16/2023
+ *
+ * @category Admin
+ * @package RYM2
+ * Filename: contactfollowuppercentage.report.inc.php
+ * @version 1.0.0
+ * @requires PHP 8.1.2+
+ */
 
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 

@@ -35,8 +35,10 @@ Disclaimer: This project is strictly for educational purposes only.  Any similar
     - [Development Environment](#development-environment)
   - [Features](#features)
   - [Installation](#installation)
+    - [Recommended Local Environments](#recommended-local-environments)
   - [Environment Variables](#environment-variables)
   - [Usage](#usage)
+    - [Example](#example)
   - [Support](#support)
   - [Acknowledgements](#acknowledgements)
   - [References](#references)
@@ -156,65 +158,204 @@ This project aims to provide a web-based application for a business to handle st
 
 ## Features
 
--- TODO -- Add features here / had to remove what was here from a previous unrelated project when I reused my template.
+- User Accounts
+  - Admins can create, edit, and delete user accounts
+  - Users can log in and out
+  - Users can reset their password
+  - Users can update their profile information
+  - Users can view their own data
+  - Users can view other user's data if they have the correct permissions
+  - Users can view and interact with student data if they have the correct permissions
+  - Users can view and interact with school data if they have the correct permissions
+  - Users can view and interact with event data if they have the correct permissions
+  - Users can view and interact with reports data if they have the correct permissions
+  - Users can view and interact with settings data if they have the correct permissions
+
+- Student Data
+  - Students can register from the front-end portal, and their data is stored in the database (no login required)
+  - Students submit their name, email, phone number, address, city, state, zip code, school, graduation year, degree, job type, subject matter interest, and program of study
+  - Students can receive a confirmation email after registering
+  - Admins can view, edit, and delete student data
+  - Admins can contact students via email from the admin dashboard
+
+- School Data
+  - Admins can add, edit, and delete schools
+  - Schools have a name, address, city, state, zip code, and branding
+  - Schools can be associated with students
+  - Schools can be associated with events
+
+- Event Data
+  - Admins can add, edit, and delete events
+  - Events have a name, date, time, location(school), description, and branding
+  - Events can be associated with schools
+  - Events can be associated with students
+  - Events can be associated with reports
+
+- Reports Data
+  - Admins can view, edit, and delete reports
+  - Reports store historical data even when relevant objects are deleted
+  - Admins can generate new, updated copies of reports
+
+- Education Data
+  - Admins can add, edit, and delete programs of study, and degrees
+  - Programs of study have a name
+  - Programs of study can be associated with students
+  - Degrees have a name
+  - Degrees can be associated with students
+  - Students can select from a list of programs of study and degrees when registering
+  - Students can submit their own programs of study when registering
+
+- Subject Matter Data
+  - Admins can add, edit, and delete subject matter
+  - Subject matter has a name
+  - Subject matter can be associated with students
+
+- Settings Data
+  - Admins can view, edit, and delete settings
+
+- Mail
+  - Admins can send mail to students from the admin dashboard
+  - Students receive a confirmation email after registering
+  - Users can reset their password via email
 
 ## Installation
 
+To install this project, you will need to have an Apache web server with PHP and MySQL installed.  You will also need to have Composer and npm installed on your development machine.  You will also need to have an SMTP mail server set up to send mail from the application, however the rest of the application will function without this.
+
+You will also need to have the following PHP extensions installed and enabled in your PHP configuration:
+
+- openssl
+- pdo_mysql
+- gd
+- mbstring
+- mysqli
+- imagick
+
+### Recommended Local Environments
+
+- Windows
+  - MAMP or MAMP PRO for Windows or XAMPP - Apache, MySQL, PHP, phpMyAdmin comes pre-installed, and you can enable the necessary PHP extensions in the MAMP PRO or XAMPP control panel. You can also use the included phpMyAdmin to create the database for the application.  You may need to adjust the default PHP version.
+  - Git for Windows - GitLFS is also recommended for cloning the repository
+  - Composer
+  - npm
+
+- macOS
+  - MAMP or MAMP PRO - Apache, MySQL, PHP, phpMyAdmin comes pre-installed, and you can enable the necessary PHP extensions in the MAMP PRO control panel. You can also use the included phpMyAdmin to create the database for the application.  You may need to adjust the default PHP version.
+  - Git for macOS - GitLFS is also recommended for cloning the repository
+  - Composer
+  - npm
+
+There are two ways to get the project files.  You can either clone the repository from GitHub, or you can download the files as a zip file from GitHub.  If you clone the repository, you will need to have Git installed on your development machine, and GitLFS installed and enabled in your Git configuration.  You'll want to run the following command to clone the repository:
+
 ```bash
+git clone https://github.com/crimsonstrife/rym2.git rym2 && cd rym2
+
+# If you have GitLFS installed and enabled
+git lfs install
+git lfs pull
+```
+
+If you download the files as a zip file, you will need to extract the files to a directory on your development machine, the LFS files should be included in the zip file.
+
+Once you have the files, you will need to run the following commands to install the project dependencies, these should be run from the root directory of the project, where the composer.json and package.json files are located:
+
+```bash
+composer install
+composer update
+
+# Composer should install the PHPMailer and PHP-QRCode libraries, and update the composer.lock file. It should also run the npm install command for you as part of the scripts in the composer.json file, but you can run it manually if you need to.
+npm install
 
 ```
+
+You will also need to create a MySQL database for the application to use.  You can use the provided database schema in the project, or you can create your own.  The database schema is located in the `temp` directory of the project, and is named `talentflow.sql`.  You can import this file into your MySQL database using phpMyAdmin, another editor, or the command line.  If you're running the newer MySQL 8.0, you may need to instead use the `talentflow8.sql` file, which has the correct syntax for MySQL 8.0.  You may also wait and leave the database empty, and the application will create the tables for you when you run the application for the first time, it should be able to determine which file to use on it's own.
+
+You will also need to create a .env file in the root directory of the project, and add the environment variables listed below in the ['Environment Variables' section](#environment-variables) to the file.  You can use the .env.example file included in the project as a template, and rename it to .env.  You will need to add your own values for the environment variables, and you should keep the file secure, as it may contain sensitive information.  The included .htaccess file should prevent direct access to the .env file, but you should still ensure you have proper file permissions set on the file in a production environment.
+
+Open the url for the application, on first run the setup page should appear, and you should see if there are any notable errors with your configuration.  If there are no errors, you can click the "Install" button to install the application.  If there are errors, you will need to correct them before you can install the application.  Once the tables are created, you should be able to log in with the default admin account, and you can then create new users, and change the default admin password.
+
+You may also manually create the tables in the database using the provided schema, and then simply create an empty php file in the root directory of the project named ready.php, and the application should be able to determine that the tables are already created and skip the setup page.
 
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file, or edit the .env.example file included and rename it to ".env".
 
-`APP_NAME`
+`APP_NAME` - The name of the application
 
-`APP_ENV`
+`APP_ENV` - The environment the application is running in (local, development, production, etc.)
 
-`APP_DEBUG`
+`APP_DEBUG` - Whether or not the application is in debug mode
 
-`APP_URL`
+`APP_URL` - The URL of the application
 
-`LOG_LEVEL`
+`COMPANY_NAME` - The name of the company
 
-`DB_CONNECTION`
+`COMPANY_ADDRESS` - The contact address of the company
 
-`DB_HOST`
+`COMPANY_CITY` - The contact city of the company
 
-`DB_PORT`
+`COMPANY_STATE` - The contact state of the company
 
-`DB_DATABASE`
+`COMPANY_ZIP` - The contact zip code of the company
 
-`DB_USERNAME`
+`COMPANY_PHONE` - The contact phone number of the company
 
-`DB_PASSWORD`
+`COMPANY_URL` - The website URL of the company
+
+`CONTACT_EMAIL` - The contact email address for the application administrator
+
+`LOG_LEVEL` - The level of logging for the application (debug, info, notice, warning, error, critical, alert, emergency) //TODO: Currently not implemented
+
+`DB_CONNECTION` - The type of database connection (mysql), currently only mysql is supported
+
+`DB_HOST` - The host of the database
+
+`DB_PORT` - The port of the database
+
+`DB_DATABASE` - The name of the database
+
+`DB_USERNAME` - The username for the database
+
+`DB_PASSWORD` - The password for the database
 
 To use the mail functions of the project, you will also need the following environment variables in the .env file.
 
-`MAIL_MAILER`
+`MAIL_MAILER` - The mailer to use (smtp, sendmail, mail, etc.), currently only smtp is supported
 
-`MAIL_HOST`
+`MAIL_HOST` - The host of the mail server
 
-`MAIL_PORT`
+`MAIL_PORT` - The port of the mail server
 
-`MAIL_AUTH_REQ`
+`MAIL_AUTH_REQ` - Whether or not the mail server requires authentication (true, false)
 
-`MAIL_USERNAME`
+`MAIL_USERNAME` - The username for the mail server
 
-`MAIL_PASSWORD`
+`MAIL_PASSWORD` - The password for the mail server
 
-`MAIL_ENCRYPTION`
+`MAIL_ENCRYPTION` - The encryption type for the mail server (tls, ssl), must have openssl installed and enabled in PHP
 
-`MAIL_FROM_ADDRESS`
+`MAIL_FROM_ADDRESS` - The email address to send mail from, must be a valid email address for the mail server, and if authentication is required then the username must be able to send mail from this address
 
-`MAIL_FROM_NAME`
+`MAIL_FROM_NAME` - The name to send mail as
+
+You will also need to add the following environment variables for the encryption of the mail password, or if you leave them blank, the app should generate them for you.
+These can be random strings of any length, but should be kept secret.
 
 `MAILER_PASSWORD_ENCRYPTION_KEY`
 
+`MAILER_PASSWORD_ENCRYPTION_IV`
+
 ## Usage
 
-TODO: Write usage instructions/examples
+Refer to the [Installation](#installation) section for information on how to install the project.
+
+Once the project is installed, you can use the application by opening the URL for the application in a web browser.  You will be presented with the landing/student registration page, and you can register as a student, or find the Admin Login link in the footer, and log in as an admin.  You can then use the admin dashboard to view, edit, or delete student data, and add, edit, or delete other data in the application.
+
+You can also use the admin dashboard to send mail to students, and generate reports.  You can also view and edit settings for the application, and view the activity log for the application.
+
+### Example
+
+- [TalentFlow Demo](https://capstone.hostedprojects.net/)
 
 ## Support
 

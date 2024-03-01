@@ -1,5 +1,4 @@
 <?php
-
 /**
  * User Login Class file for the College Recruitment Application
  * Contains all the functions for the User Login Class and handles all the user related tasks with the database.
@@ -11,7 +10,7 @@
  * @package RYM2
  * Filename: users.inc.php
  * @version 1.0.0
- * @requires PHP 7.2.5+
+ * @requires PHP 8.1.2+
  */
 
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
@@ -64,7 +63,7 @@ class UserLogin extends User implements Login
                 $session->set("username", $username);
 
                 // Redirect user to the dashboard
-                performRedirect(APP_URL . "/admin/dashboard.php");
+                performRedirect("/admin/dashboard.php");
             }
 
             //if the password is incorrect
@@ -104,7 +103,7 @@ class UserLogin extends User implements Login
         session_destroy();
 
         // Redirect to login page
-        performRedirect(APP_URL . "/login.php");
+        performRedirect("/login.php");
     }
 
     /**

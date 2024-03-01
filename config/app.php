@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Configuration File for the College Recruitment Application
  *
@@ -12,7 +11,7 @@
  * @package RYM2
  * Filename: app.php
  * @version 1.0.0
- * @requires PHP 7.2.5+
+ * @requires PHP 8.1.2+
  * @requires Bootstrap 5.3.2+
  * @requires Font Awesome 6.4.2+
  * @requires jQuery 3.7.1+
@@ -238,21 +237,74 @@ if (file_exists(BASEPATH . '/.env')) {
 
     //check if the encryption key is set in the .env file, if not set it to a generated key
     if (isset($_ENV['MAILER_PASSWORD_ENCRYPTION_KEY'])) {
+        //check if the key is empty, if so, generate a new one
+        if ($_ENV['MAILER_PASSWORD_ENCRYPTION_KEY'] == '') {
+            //generate a random encryption key
+            if (function_exists('openssl_random_pseudo_bytes')) {
+                $encryptionKey = base64_encode(openssl_random_pseudo_bytes(12));
+            } else {
+                $encryptionKey = base64_encode(uniqid());
+            }
+
+            //remove the old encryption key from the .env file
+            $file = file_get_contents(BASEPATH . '/.env');
+            $file = str_replace('MAILER_PASSWORD_ENCRYPTION_KEY=', '', $file);
+
+            //write the encryption key to the .env file
+            file_put_contents(BASEPATH . '/.env', "\nMAILER_PASSWORD_ENCRYPTION_KEY='" . $encryptionKey . "'", FILE_APPEND);
+        }
+
         //define the mailer_password_encryption_key constant
         define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
     } else {
         //generate a random encryption key
         if (function_exists('openssl_random_pseudo_bytes')) {
-            $encryptionKey = base64_encode(openssl_random_pseudo_bytes(32));
+            $encryptionKey = base64_encode(openssl_random_pseudo_bytes(12));
         } else {
             $encryptionKey = base64_encode(uniqid());
         }
 
         //write the encryption key to the .env file
-        file_put_contents(BASEPATH . '/.env', "\nMAILER_PASSWORD_ENCRYPTION_KEY=" . $encryptionKey, FILE_APPEND);
+        file_put_contents(BASEPATH . '/.env', "\nMAILER_PASSWORD_ENCRYPTION_KEY='" . $encryptionKey . "'", FILE_APPEND);
 
         //define the mailer_password_encryption_key constant
         define('MAILER_PASSWORD_ENCRYPTION_KEY', $encryptionKey);
+    }
+
+    //check if the encryption IV is set in the .env file, if not set it to a generated IV
+    if (isset($_ENV['MAILER_PASSWORD_ENCRYPTION_IV'])) {
+        //check if the IV is empty, if so, generate a new one
+        if ($_ENV['MAILER_PASSWORD_ENCRYPTION_IV'] == '') {
+            //generate a random encryption IV
+            if (function_exists('openssl_random_pseudo_bytes')) {
+                $encryptionIV = base64_encode(openssl_random_pseudo_bytes(12));
+            } else {
+                $encryptionIV = base64_encode(uniqid());
+            }
+
+            //remove the old encryption IV from the .env file
+            $file = file_get_contents(BASEPATH . '/.env');
+            $file = str_replace('MAILER_PASSWORD_ENCRYPTION_IV=', '', $file);
+
+            //write the encryption IV to the .env file
+            file_put_contents(BASEPATH . '/.env', "\nMAILER_PASSWORD_ENCRYPTION_IV='" . $encryptionIV . "'", FILE_APPEND);
+        }
+
+        //define the mailer_password_encryption_iv constant
+        define('MAILER_PASSWORD_ENCRYPTION_IV', $_ENV['MAILER_PASSWORD_ENCRYPTION_IV']); // Define the MAILER_PASSWORD_ENCRYPTION_IV constant, this is the encryption IV to use for encrypting passwords.
+    } else {
+        //generate a random encryption IV
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $encryptionIV = base64_encode(openssl_random_pseudo_bytes(12));
+        } else {
+            $encryptionIV = base64_encode(uniqid());
+        }
+
+        //write the encryption IV to the .env file
+        file_put_contents(BASEPATH . '/.env', "\nMAILER_PASSWORD_ENCRYPTION_IV='" . $encryptionIV . "'", FILE_APPEND);
+
+        //define the mailer_password_encryption_iv constant
+        define('MAILER_PASSWORD_ENCRYPTION_IV', $encryptionIV);
     }
 
     $mailer_password = null;
@@ -264,6 +316,10 @@ if (file_exists(BASEPATH . '/.env')) {
     }
     //Check if the mail_password is set in the database, if not set it to the value in the .env file
     if ($mailer_password != null || $mailer_password != '') {
+        //if MAIL_AUTH_REQ is set to false, set the password to null
+        if (MAIL_AUTH_REQ == 'false') {
+            $mailer_password = null;
+        }
         //define the mail_password constant
         define('MAIL_PASSWORD', $mailer_password);
     } else {
@@ -271,13 +327,17 @@ if (file_exists(BASEPATH . '/.env')) {
         //if OPENSSL is installed, encrypt the password
         if (OPENSSL_INSTALLED) {
             //Encrypt the password
-            define('MAILER_PASSWORD_ENCRYPTION_IV', openssl_random_pseudo_bytes(16));
             $password = openssl_encrypt($mailerPassword, 'AES-256-CBC', MAILER_PASSWORD_ENCRYPTION_KEY, 0, MAILER_PASSWORD_ENCRYPTION_IV);
         }
 
         if (!OPENSSL_INSTALLED) {
             //store the password as plain text
             $password = $mailerPassword;
+        }
+
+        //if MAIL_AUTH_REQ is set to false, set the password to null
+        if (MAIL_AUTH_REQ == 'false') {
+            $mailer_password = null;
         }
         define('MAIL_PASSWORD', $mailerPassword);
     }
@@ -454,14 +514,17 @@ if (file_exists(BASEPATH . '/.env')) {
     }
     //Check if the mail_password is set in the database, if not set it to the value in the .env file
     if ($mailer_password != null || $mailer_password != '') {
+        //if MAIL_AUTH_REQ is set to false, set the password to null
+        if (MAIL_AUTH_REQ == 'false') {
+            $mailer_password = null;
+        }
+
         //define the mail_password constant
         define('MAIL_PASSWORD', $mailer_password);
     } else {
         $mailerPassword = $_ENV['MAIL_PASSWORD'];
         //if OPENSSL is installed, encrypt the password
         if (OPENSSL_INSTALLED) {
-            //Encrypt the password
-            define('MAILER_PASSWORD_ENCRYPTION_IV', openssl_random_pseudo_bytes(16));
             //Encrypt the password
             $password = openssl_encrypt($mailerPassword, 'AES-256-CBC',MAILER_PASSWORD_ENCRYPTION_KEY, 0, MAILER_PASSWORD_ENCRYPTION_IV);
         }
@@ -470,6 +533,11 @@ if (file_exists(BASEPATH . '/.env')) {
             //store the password as plain text
             $password = $mailerPassword;
         }
+        //if MAIL_AUTH_REQ is set to false, set the password to null
+        if (MAIL_AUTH_REQ == 'false') {
+            $mailer_password = null;
+        }
+
         define('MAIL_PASSWORD', $mailerPassword);
     }
 
@@ -505,21 +573,74 @@ if (file_exists(BASEPATH . '/.env')) {
 
     //check if the encryption key is set in the .env file, if not set it to a generated key
     if (isset($_ENV['MAILER_PASSWORD_ENCRYPTION_KEY'])) {
+        //check if the key is empty, if so, generate a new one
+        if ($_ENV['MAILER_PASSWORD_ENCRYPTION_KEY'] == '') {
+            //generate a random encryption key
+            if (function_exists('openssl_random_pseudo_bytes')) {
+                $encryptionKey = base64_encode(openssl_random_pseudo_bytes(12));
+            } else {
+                $encryptionKey = base64_encode(uniqid());
+            }
+
+            //remove the old encryption key from the .env file
+            $file = file_get_contents(BASEPATH . '/.env.example');
+            $file = str_replace('MAILER_PASSWORD_ENCRYPTION_KEY=', '', $file);
+
+            //write the encryption key to the .env file
+            file_put_contents(BASEPATH . '/.env.example', "\nMAILER_PASSWORD_ENCRYPTION_KEY='" . $encryptionKey . "'", FILE_APPEND);
+        }
+
         //define the mailer_password_encryption_key constant
         define('MAILER_PASSWORD_ENCRYPTION_KEY', $_ENV['MAILER_PASSWORD_ENCRYPTION_KEY']); // Define the MAILER_PASSWORD_ENCRYPTION_KEY constant, this is the encryption key to use for encrypting passwords.
     } else {
         //generate a random encryption key
         if (function_exists('openssl_random_pseudo_bytes')) {
-            $encryptionKey = base64_encode(openssl_random_pseudo_bytes(32));
+            $encryptionKey = base64_encode(openssl_random_pseudo_bytes(12));
         } else {
             $encryptionKey = base64_encode(uniqid());
         }
 
         //write the encryption key to the .env file
-        file_put_contents(BASEPATH . '/.env.example', "\nMAILER_PASSWORD_ENCRYPTION_KEY=" . $encryptionKey, FILE_APPEND);
+        file_put_contents(BASEPATH . '/.env.example', "\nMAILER_PASSWORD_ENCRYPTION_KEY='" . $encryptionKey . "'", FILE_APPEND);
 
         //define the mailer_password_encryption_key constant
         define('MAILER_PASSWORD_ENCRYPTION_KEY', $encryptionKey);
+    }
+
+    //check if the encryption IV is set in the .env file, if not set it to a generated IV
+    if (isset($_ENV['MAILER_PASSWORD_ENCRYPTION_IV'])) {
+        //check if the IV is empty, if so, generate a new one
+        if ($_ENV['MAILER_PASSWORD_ENCRYPTION_IV'] == '') {
+            //generate a random encryption IV
+            if (function_exists('openssl_random_pseudo_bytes')) {
+                $encryptionIV = base64_encode(openssl_random_pseudo_bytes(12));
+            } else {
+                $encryptionIV = base64_encode(uniqid());
+            }
+
+            //remove the old encryption IV from the .env file
+            $file = file_get_contents(BASEPATH . '/.env.example');
+            $file = str_replace('MAILER_PASSWORD_ENCRYPTION_IV=', '', $file);
+
+            //write the encryption IV to the .env file
+            file_put_contents(BASEPATH . '/.env.example', "\nMAILER_PASSWORD_ENCRYPTION_IV='" . $encryptionIV . "'", FILE_APPEND);
+        }
+
+        //define the mailer_password_encryption_iv constant
+        define('MAILER_PASSWORD_ENCRYPTION_IV', $_ENV['MAILER_PASSWORD_ENCRYPTION_IV']); // Define the MAILER_PASSWORD_ENCRYPTION_IV constant, this is the encryption IV to use for encrypting passwords.
+    } else {
+        //generate a random encryption IV
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $encryptionIV = base64_encode(openssl_random_pseudo_bytes(12));
+        } else {
+            $encryptionIV = base64_encode(uniqid());
+        }
+
+        //write the encryption IV to the .env file
+        file_put_contents(BASEPATH . '/.env.example', "\nMAILER_PASSWORD_ENCRYPTION_IV='" . $encryptionIV . "'", FILE_APPEND);
+
+        //define the mailer_password_encryption_iv constant
+        define('MAILER_PASSWORD_ENCRYPTION_IV', $encryptionIV);
     }
 
     $mailer_password = null;
@@ -531,14 +652,17 @@ if (file_exists(BASEPATH . '/.env')) {
     }
     //Check if the mail_password is set in the database, if not set it to the value in the .env file
     if ($mailer_password != null || $mailer_password != '') {
+        //if MAIL_AUTH_REQ is set to false, set the password to null
+        if (MAIL_AUTH_REQ == 'false') {
+            $mailer_password = null;
+        }
+
         //define the mail_password constant
         define('MAIL_PASSWORD', $mailer_password);
     } else {
         $mailerPassword = $_ENV['MAIL_PASSWORD'];
         //if OPENSSL is installed, encrypt the password
         if (OPENSSL_INSTALLED) {
-            //Encrypt the password
-            define('MAILER_PASSWORD_ENCRYPTION_IV', openssl_random_pseudo_bytes(16));
             //Encrypt the password
             $password = openssl_encrypt($mailerPassword, 'AES-256-CBC',MAILER_PASSWORD_ENCRYPTION_KEY, 0, MAILER_PASSWORD_ENCRYPTION_IV);
         }
@@ -547,6 +671,11 @@ if (file_exists(BASEPATH . '/.env')) {
             //store the password as plain text
             $password = $mailerPassword;
         }
+        //if MAIL_AUTH_REQ is set to false, set the password to null
+        if (MAIL_AUTH_REQ == 'false') {
+            $mailer_password = null;
+        }
+
         define('MAIL_PASSWORD', $mailerPassword);
     }
 
