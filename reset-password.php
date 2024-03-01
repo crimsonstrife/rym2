@@ -154,17 +154,40 @@ if ($canSendEmail && $tokenVerified) {
     </head>
 
     <body class="text-center">
-        <form class="form-signin" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?token=' . htmlspecialchars($token) . '&id=' . htmlspecialchars($userID); ?>" method="post">
-            <h1 class="h3 mb-3 font-weight-normal">Reset Password</h1>
-            <p>Are you sure you want to reset your password?</p>
-            <p>A new password will be generated and emailed to you, this cannot be undone.</p>
-            <input type="hidden" name="token" value="<?php echo $token; ?>">
-            <input type="hidden" name="user" value="<?php echo $userID; ?>">
-            <button class="btn btn-lg btn-primary btn-block" type="submit" name="approve">Yes</button>
-            <button class="btn btn-lg btn-secondary btn-block" type="button" name="deny">No</button>
-        </form>
+        <div id="layout_content" class="w-50 mx-auto" style="margin-top: auto;">
+            <main>
+                <div class="container-fluid px-4">
+                    <div class="row align-items-center">
+                        <!-- Application Logo -->
+                        <?php if (!empty($logo) || $logo != null) { ?>
+                            <img class="mb-4" src="<?php echo htmlspecialchars($logo); ?>" alt="Application Logo" width="150" height="150">
+                        <?php } else { ?>
+                            <i class="fa-solid fa-user-lock fa-5x"></i>
+                        <?php } ?>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="card mb-4">
+                            <!-- Forgot Password Form -->
+                            <form class="form-signin" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?token=' . htmlspecialchars($token) . '&id=' . htmlspecialchars($userID); ?>" method="post">
+                                <h1 class="h3 mb-3 font-weight-normal">Reset Password</h1>
+                                <p>Are you sure you want to reset your password?</p>
+                                <p>A new password will be generated and emailed to you, this cannot be undone.</p>
+                                <input type="hidden" name="token" value="<?php echo $token; ?>">
+                                <input type="hidden" name="user" value="<?php echo $userID; ?>">
+                                <button class="btn btn-lg btn-primary btn-block" type="submit" name="approve">Yes</button>
+                                <button class="btn btn-lg btn-secondary btn-block" type="button" name="deny">No</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     </body>
+    <footer>
+        <?php echo includeFooter(); ?>
+    </footer>
 
+    </html>
     <?php } else {
     if (!$canSendEmail) { ?>
         <div class="alert alert-danger" role="alert">
