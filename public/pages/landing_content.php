@@ -30,6 +30,27 @@ $contact = new Contact();
 // instance of the school class
 $school = new School();
 
+// instance of the settings class
+$settings = new Settings();
+
+// instance of the media class
+$media = new Media();
+
+// instance of the event media class
+$eventMedia = new EventMedia();
+
+// instance of the degree class
+$degrees = new Degree();
+
+// instance of the student class
+$student = new Student();
+
+// instance of the job class
+$job = new Job();
+
+// instance of the area of interest class
+$areaOfInterest = new AreaOfInterest();
+
 //check the event slug
 if (isset($event_slug)) {
     //get the event by the slug
@@ -83,17 +104,12 @@ $entry_error = $studentAdded = $emailSent = false;
 // Define any variables that are starting as null
 $attemptedStudentSubmission = $existing_student = null;
 
-/* create a new student object */
-$student = new Student();
-
 //create an array of states
 $stateArray = STATES;
 
 /**
  * Get the degree levels list from the database
  */
-//initialize the degree class
-$degrees = new Degree();
 //get the degree levels list
 $degree_list = $degrees->getAllGrades();
 //for each item, set the ID as the value and the name as the label
@@ -110,8 +126,6 @@ array_multisort(array_column($degree_list, 'label'), SORT_ASC, $degree_list);
 /**
  * Get the schools list from the database
  */
-//initialize the school class
-$school = new School();
 //get the schools list
 $schools_list = $school->getSchools();
 //for each item, set the id as the value and the name as the label
@@ -152,8 +166,6 @@ array_multisort(array_column($majors_list, 'label'), SORT_ASC, $majors_list);
 /**
  * Get the job positions list from the database
  */
-//initialize the job class
-$job = new Job();
 //get the job positions list
 $job_list = $job->getAllJobs();
 //for each item, set the id as the value and the name as the label
@@ -171,8 +183,6 @@ array_multisort(array_column($job_list, 'date'), SORT_DESC, $job_list);
 /**
  * Get the areas of interest list from the database
  */
-//initialize the area of interest class
-$areaOfInterest = new AreaOfInterest();
 //get the areas of interest list
 $areaOfInterest_list = $areaOfInterest->getAllSubjects();
 //for each item, set the id as the value and the name as the label
@@ -579,7 +589,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="row">
                         <div class="col-md-12">
                             <h1>Welcome to the <?php if (!$event_location == null) {
-                                                    echo $event_location;
+                                                    echo htmlspecialchars($event_location);
                                                 } else {
                                                     echo COMPANY_NAME;
                                                 } ?> Internship Recruitment Application</h1>
@@ -606,8 +616,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <?php
                                 /* check if there are any jobs in the list, if so show a scrollable table, if not show a message and an empty table */
                                 if (count($job_list) > 0) {
-                                    //initialize the job class
-                                    $jobObject = new Job();
                                 ?>
                                     <div>
                                         <table id="dataTable" class="table table-striped table-bordered">
@@ -619,17 +627,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php foreach ($job_list as $job) {
+                                                <?php foreach ($job_list as $job_item) {
                                                     //get the job type
-                                                    $type = $jobObject->getJobType($job['value']);
+                                                    $type = $job->getJobType($job_item['value']);
                                                     //get the job description
-                                                    $description = $jobObject->getJobSummary($job['value']);
+                                                    $description = $job->getJobSummary($job_item['value']);
                                                 ?>
                                                     <tr>
-                                                        <td><a href="<?php echo APP_URL . '/index.php?path=job'; ?>&id=<?php echo $job['value']; ?>"><?php echo $job['label']; ?></a>
+                                                        <td><a href="<?php echo APP_URL . '/index.php?path=job'; ?>&id=<?php echo htmlspecialchars($job_item['value']); ?>"><?php echo htmlspecialchars($job_item['label']); ?></a>
                                                         </td>
-                                                        <td><?php echo $description; ?></td>
-                                                        <td><?php echo $type; ?></td>
+                                                        <td><?php echo htmlspecialchars($description); ?></td>
+                                                        <td><?php echo htmlspecialchars($type); ?></td>
                                                     </tr>
                                                 <?php } ?>
                                             </tbody>
@@ -1263,6 +1271,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     <?php } ?>
 </script>
-<?php
-include_once('footer.php');
-?>
+<?php include_once('footer.php'); ?>
