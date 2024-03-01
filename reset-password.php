@@ -15,6 +15,12 @@ $user = new User();
 //instance of the contact class
 $contact = new Contact();
 
+//instance of the media class
+$media = new Media();
+
+//instance of the settings class
+$settings = new Settings();
+
 // Define variables and initialize with empty values
 $tokenVerified = false;
 $userID = $token = "";
@@ -134,7 +140,16 @@ if ($canSendEmail && $tokenVerified) {
         //deny the password reset
         performRedirect('/login.php?error=' . urlencode(base64_encode(json_encode(array('login_error' => 'Password reset denied.')))));
     }
-?>
+
+    //get the application logo id
+    $logoID = $settings->getAppLogo();
+
+    //if the logo id is not empty, get the logo
+    if (!empty($logoID)) {
+        $logo = $media->getMediaFilePath(intval($logoID));
+    } else {
+        $logo = null;
+    } ?>
     <!DOCTYPE html>
     <html lang="en">
 
