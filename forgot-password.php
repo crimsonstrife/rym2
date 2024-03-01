@@ -15,6 +15,12 @@ $user = new User();
 //instance of the contact class
 $contact = new Contact();
 
+//instance of the media class
+$media = new Media();
+
+//instance of the settings class
+$settings = new Settings();
+
 // Check if the user is already logged in, if yes redirect to the admin dashboard
 if ($session->get('logged_in') === true) {
     performRedirect('/admin/dashboard.php');
@@ -117,6 +123,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $requestError = "Please enter your username or email address.";
     }
+}
+//get the application logo id
+$logoID = $settings->getAppLogo();
+
+//if the logo id is not empty, get the logo
+if (!empty($logoID)) {
+    $logo = $media->getMediaFilePath(intval($logoID));
+} else {
+    $logo = null;
 } ?>
 <!DOCTYPE html>
 <html lang="en">
