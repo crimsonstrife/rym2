@@ -1,9 +1,6 @@
 <?php
 define('CAN_INCLUDE', true); // Define a constant to control access to the include files
 
-// Initialize the session
-session_start();
-
 // Include config file
 require_once(__DIR__ . '/config/app.php');
 // Include the helpers file
@@ -38,12 +35,12 @@ if (isset($_GET['token'])) {
 }
 
 //get the user id from the url if it is set
-if (isset($_GET['id'])) {
-    $userID = $_GET['id'];
+if (isset($_GET['user'])) {
+    $userID = $_GET['user'];
 } else {
     //check if the user id is set in the post data
-    if (isset($_POST['id'])) {
-        $userID = $_POST['id'];
+    if (isset($_POST['user'])) {
+        $userID = $_POST['user'];
     } else {
         //if the user id is not set, redirect to the login page
         performRedirect('/login.php?error=' . urlencode(base64_encode(json_encode(array('login_error' => 'No user id.')))));
@@ -51,13 +48,19 @@ if (isset($_GET['id'])) {
 }
 
 //escape the user id
-$userID = htmlspecialchars(strip_tags($userID));
+$userID = htmlspecialchars($userID);
 
 //escape the token
-$token = htmlspecialchars(strip_tags($token));
+$token = htmlspecialchars($token);
+
+//debugging
+error_log('Token: ' . $token);
 
 //get the user's stored token
 $storedToken = $user->getPasswordResetToken(intval($userID));
+
+//debugging
+error_log('Stored Token: ' . $storedToken);
 
 //verify the token
 if ($token !== $storedToken) {
@@ -122,7 +125,7 @@ if ($canSendEmail && $tokenVerified) {
             $user->clearPasswordResetToken(intval($userID));
 
             //redirect to the login page
-            performRedirect('/login.php?error=' . urlencode(base64_encode(json_encode(array('login_error' => 'Password reset approved.')))));
+            performRedirect('/login.php?msg=' . urlencode(base64_encode(json_encode(array('login_error' => 'Password reset approved.')))));
         }
     }
     if (isset($_POST['deny'])) {
@@ -131,7 +134,7 @@ if ($canSendEmail && $tokenVerified) {
         //deny the password reset
         performRedirect('/login.php?error=' . urlencode(base64_encode(json_encode(array('login_error' => 'Password reset denied.')))));
     }
-    ?>
+?>
     <!DOCTYPE html>
     <html lang="en">
 
@@ -156,7 +159,7 @@ if ($canSendEmail && $tokenVerified) {
             <p>Are you sure you want to reset your password?</p>
             <p>A new password will be generated and emailed to you, this cannot be undone.</p>
             <input type="hidden" name="token" value="<?php echo $token; ?>">
-            <input type="hidden" name="id" value="<?php echo $userID; ?>">
+            <input type="hidden" name="user" value="<?php echo $userID; ?>">
             <button class="btn btn-lg btn-primary btn-block" type="submit" name="approve">Yes</button>
             <button class="btn btn-lg btn-secondary btn-block" type="button" name="deny">No</button>
         </form>

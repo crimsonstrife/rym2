@@ -1,9 +1,6 @@
 <?php
 define('CAN_INCLUDE', true); // Define a constant to control access to the include files
 
-// Initialize the session
-session_start();
-
 // Include config file
 require_once(__DIR__ . '/config/app.php');
 // Include the helpers file
@@ -110,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $message = "Hello, <br><br> We received a request to reset your password. If you made this request, click the link below to reset your password. <br><br> <a href='" . APP_URL . "/reset-password.php?token=" . $token . "&user=" . $userID . "'>Reset Password</a> <br><br> If you did not make this request, you can ignore this email. <br><br>";
 
             //send the email
-            $contact->sendUserEmail($email, $subject, $message);
+            $contact->sendUserEmail($email, $subject, $message, true);
 
             //redirect the user to the login page
             performRedirect('/login.php?error=' . urlencode(base64_encode(json_encode(array('login_error' => 'A password reset link has been sent to your email address.')))));

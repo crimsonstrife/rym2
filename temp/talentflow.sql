@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Feb 28, 2024 at 12:39 PM
+-- Generation Time: Feb 29, 2024 at 10:04 PM
 -- Server version: 5.7.39
 -- PHP Version: 7.4.33
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `activity_log` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `user_id` bigint(20) DEFAULT NULL,
   `action` enum('CREATE','MODIFY','DELETE','LOGIN','LOGOUT','LOGIN FAILED','OTHER','RESET','UPLOAD','DOWNLOAD','ERROR','EMAIL') COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `performed_on` varchar(535) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE `activity_log` (
 --
 
 CREATE TABLE `aoi` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `name` varchar(55) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_by` bigint(20) DEFAULT NULL,
@@ -70,7 +70,7 @@ INSERT INTO `aoi` (`id`, `name`, `created_by`, `updated_by`, `created_at`, `upda
 --
 
 CREATE TABLE `contact_log` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `student` bigint(20) DEFAULT NULL,
   `auto` tinyint(1) NOT NULL DEFAULT '1',
   `sender` bigint(20) DEFAULT NULL,
@@ -98,7 +98,7 @@ INSERT INTO `contact_log` (`id`, `student`, `auto`, `sender`, `send_date`, `subj
 --
 
 CREATE TABLE `degree_lvl` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `name` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -131,7 +131,7 @@ INSERT INTO `degree_lvl` (`id`, `name`, `created_at`, `updated_at`, `created_by`
 --
 
 CREATE TABLE `event` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `event_date` date NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -164,7 +164,7 @@ INSERT INTO `event` (`id`, `name`, `event_date`, `created_at`, `updated_at`, `up
 --
 
 CREATE TABLE `event_branding` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `event_id` bigint(20) NOT NULL,
   `event_logo` bigint(20) DEFAULT NULL,
   `event_banner` bigint(20) DEFAULT NULL
@@ -186,7 +186,7 @@ INSERT INTO `event_branding` (`id`, `event_id`, `event_logo`, `event_banner`) VA
 --
 
 CREATE TABLE `event_slugs` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `event_id` bigint(20) NOT NULL,
   `slug` varchar(30) COLLATE utf8mb4_unicode_520_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -214,7 +214,7 @@ INSERT INTO `event_slugs` (`id`, `event_id`, `slug`) VALUES
 --
 
 CREATE TABLE `jobs` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `name` varchar(150) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `description` longtext COLLATE utf8mb4_unicode_520_ci,
   `summary` text COLLATE utf8mb4_unicode_520_ci,
@@ -243,7 +243,7 @@ INSERT INTO `jobs` (`id`, `name`, `description`, `summary`, `type`, `field`, `ed
 --
 
 CREATE TABLE `major` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -272,7 +272,7 @@ INSERT INTO `major` (`id`, `name`, `created_at`, `updated_at`, `created_by`, `up
 --
 
 CREATE TABLE `media` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `filename` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `filetype` varchar(5) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `filesize` bigint(20) DEFAULT NULL,
@@ -301,7 +301,7 @@ INSERT INTO `media` (`id`, `filename`, `filetype`, `filesize`, `created_at`, `cr
 --
 
 CREATE TABLE `permissions` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
@@ -382,7 +382,7 @@ INSERT INTO `permissions` (`id`, `name`) VALUES
 --
 
 CREATE TABLE `reports` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `report_type` varchar(500) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `data` json NOT NULL,
   `created_by` bigint(20) DEFAULT NULL,
@@ -460,7 +460,7 @@ INSERT INTO `reports` (`id`, `report_type`, `data`, `created_by`, `created_at`, 
 --
 
 CREATE TABLE `roles` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -486,7 +486,7 @@ INSERT INTO `roles` (`id`, `name`, `created_by`, `created_at`, `updated_by`, `up
 --
 
 CREATE TABLE `role_has_permission` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `role_id` bigint(20) NOT NULL,
   `permission_id` bigint(20) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -671,7 +671,7 @@ INSERT INTO `role_has_permission` (`id`, `role_id`, `permission_id`, `created_at
 --
 
 CREATE TABLE `school` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `address` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `city` varchar(50) COLLATE utf8mb4_unicode_520_ci NOT NULL,
@@ -712,7 +712,7 @@ INSERT INTO `school` (`id`, `name`, `address`, `city`, `state`, `zipcode`, `crea
 --
 
 CREATE TABLE `school_branding` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `school_id` bigint(20) DEFAULT NULL,
   `school_logo` bigint(20) DEFAULT NULL,
   `school_color` varchar(8) COLLATE utf8mb4_unicode_520_ci NOT NULL
@@ -792,7 +792,7 @@ INSERT INTO `settings` (`isSet`, `app_name`, `app_url`, `company_name`, `company
 --
 
 CREATE TABLE `student` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `first_name` varchar(55) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `last_name` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
@@ -831,7 +831,7 @@ INSERT INTO `student` (`id`, `first_name`, `last_name`, `email`, `phone`, `addre
 --
 
 CREATE TABLE `student_at_event` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `student_id` bigint(20) NOT NULL,
   `event_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -853,22 +853,23 @@ INSERT INTO `student_at_event` (`id`, `student_id`, `event_id`) VALUES
 --
 
 CREATE TABLE `users` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `username` varchar(55) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` bigint(20) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_by` bigint(20) DEFAULT NULL
+  `updated_by` bigint(20) DEFAULT NULL,
+  `password_reset_token` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `created_by`, `updated_at`, `updated_by`) VALUES
-(1, 'admin', 'admin@capstone.hostedprojects.net', '$2y$10$rVqFTvBSATwuM4klnmBdMeRadHJJLQqxxHVPpkzD4WwOWVxnHL/2e', '2023-10-12 18:34:47', NULL, '2024-02-16 00:09:57', NULL);
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `created_by`, `updated_at`, `updated_by`, `password_reset_token`) VALUES
+(1, 'admin', 'admin@capstone.hostedprojects.net', '$2y$10$rVqFTvBSATwuM4klnmBdMeRadHJJLQqxxHVPpkzD4WwOWVxnHL/2e', '2023-10-12 18:34:47', NULL, '2024-02-16 00:09:57', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -877,7 +878,7 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `creat
 --
 
 CREATE TABLE `user_has_role` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `user_id` bigint(20) NOT NULL,
   `role_id` bigint(20) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -900,7 +901,7 @@ INSERT INTO `user_has_role` (`id`, `user_id`, `role_id`, `created_at`, `created_
 --
 
 CREATE TABLE `user_token_auth` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL PRIMARY KEY,
   `user_id` bigint(20) NOT NULL,
   `user_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
@@ -914,16 +915,9 @@ CREATE TABLE `user_token_auth` (
 --
 
 --
--- Indexes for table `activity_log`
---
-ALTER TABLE `activity_log`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `aoi`
 --
 ALTER TABLE `aoi`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`),
   ADD KEY `created` (`created_by`),
   ADD KEY `updated` (`updated_by`) USING BTREE;
@@ -932,7 +926,6 @@ ALTER TABLE `aoi`
 -- Indexes for table `contact_log`
 --
 ALTER TABLE `contact_log`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `student` (`student`),
   ADD KEY `sender` (`sender`);
 
@@ -940,7 +933,6 @@ ALTER TABLE `contact_log`
 -- Indexes for table `degree_lvl`
 --
 ALTER TABLE `degree_lvl`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`),
   ADD KEY `created_by` (`created_by`),
   ADD KEY `updated_by` (`updated_by`);
@@ -949,7 +941,6 @@ ALTER TABLE `degree_lvl`
 -- Indexes for table `event`
 --
 ALTER TABLE `event`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `eventCreatedBy` (`created_by`),
   ADD KEY `eventUpdatedBy` (`updated_by`),
   ADD KEY `eventAtSchool` (`location`);
@@ -958,7 +949,6 @@ ALTER TABLE `event`
 -- Indexes for table `event_branding`
 --
 ALTER TABLE `event_branding`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `event_id` (`event_id`) USING BTREE,
   ADD KEY `eventLogoFile` (`event_logo`),
   ADD KEY `eventBannerFile` (`event_banner`);
@@ -967,14 +957,12 @@ ALTER TABLE `event_branding`
 -- Indexes for table `event_slugs`
 --
 ALTER TABLE `event_slugs`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `eventHasSlug` (`event_id`);
 
 --
 -- Indexes for table `jobs`
 --
 ALTER TABLE `jobs`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `jobField` (`field`),
   ADD KEY `jobCreatedBy` (`created_by`),
   ADD KEY `jobUpdatedBy` (`updated_by`),
@@ -984,7 +972,6 @@ ALTER TABLE `jobs`
 -- Indexes for table `major`
 --
 ALTER TABLE `major`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`),
   ADD KEY `created_by` (`created_by`),
   ADD KEY `updated_by` (`updated_by`);
@@ -993,7 +980,6 @@ ALTER TABLE `major`
 -- Indexes for table `media`
 --
 ALTER TABLE `media`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `filename` (`filename`),
   ADD KEY `fileCreatedBy` (`created_by`),
   ADD KEY `fileUpdatedBy` (`updated_by`);
@@ -1002,14 +988,12 @@ ALTER TABLE `media`
 -- Indexes for table `permissions`
 --
 ALTER TABLE `permissions`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Indexes for table `reports`
 --
 ALTER TABLE `reports`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `created_by` (`created_by`),
   ADD KEY `updated_by` (`updated_by`),
   ADD KEY `created_at` (`created_at`),
@@ -1019,7 +1003,6 @@ ALTER TABLE `reports`
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`),
   ADD KEY `created_by` (`created_by`),
   ADD KEY `roleUpdatedBy` (`updated_by`);
@@ -1028,7 +1011,6 @@ ALTER TABLE `roles`
 -- Indexes for table `role_has_permission`
 --
 ALTER TABLE `role_has_permission`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `roleHasPermission` (`role_id`,`permission_id`),
   ADD KEY `permissionID` (`permission_id`),
   ADD KEY `created_by` (`created_by`),
@@ -1038,7 +1020,6 @@ ALTER TABLE `role_has_permission`
 -- Indexes for table `school`
 --
 ALTER TABLE `school`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`),
   ADD KEY `created_by` (`created_by`),
   ADD KEY `updated_by` (`updated_by`);
@@ -1047,7 +1028,6 @@ ALTER TABLE `school`
 -- Indexes for table `school_branding`
 --
 ALTER TABLE `school_branding`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `schoolHasBranding` (`school_id`),
   ADD KEY `schoolLogoFile` (`school_logo`);
 
@@ -1063,7 +1043,6 @@ ALTER TABLE `settings`
 -- Indexes for table `student`
 --
 ALTER TABLE `student`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `areaOfInterest` (`interest`),
   ADD KEY `degree` (`degree`),
   ADD KEY `major` (`major`),
@@ -1075,7 +1054,6 @@ ALTER TABLE `student`
 -- Indexes for table `student_at_event`
 --
 ALTER TABLE `student_at_event`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `studentAtEvent` (`student_id`),
   ADD KEY `eventHadStudent` (`event_id`);
 
@@ -1083,7 +1061,6 @@ ALTER TABLE `student_at_event`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`),
   ADD UNIQUE KEY `email` (`email`);
 
@@ -1091,7 +1068,6 @@ ALTER TABLE `users`
 -- Indexes for table `user_has_role`
 --
 ALTER TABLE `user_has_role`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `userHasRole` (`user_id`,`role_id`),
   ADD KEY `roleID` (`role_id`),
   ADD KEY `userGivenRole` (`created_by`),
@@ -1101,7 +1077,6 @@ ALTER TABLE `user_has_role`
 -- Indexes for table `user_token_auth`
 --
 ALTER TABLE `user_token_auth`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `userHasToken` (`user_id`),
   ADD KEY `usersName` (`user_name`);
 
@@ -1113,7 +1088,7 @@ ALTER TABLE `user_token_auth`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=490;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `aoi`
@@ -1209,7 +1184,7 @@ ALTER TABLE `school_branding`
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `student_at_event`
@@ -1221,13 +1196,13 @@ ALTER TABLE `student_at_event`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user_has_role`
 --
 ALTER TABLE `user_has_role`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `user_token_auth`

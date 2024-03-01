@@ -77,16 +77,21 @@ class Contact
 
         //Create a new PHPMailer instance
         $mail = new PHPMailer\PHPMailer\PHPMailer();
+
         //Tell what protocol to use
         $mail->Mailer = MAIL_MAILER;
+
         //Set PHPMailer to use SMTP if the mailer is set to use SMTP in the settings
         if (MAIL_MAILER == 'smtp') {
             $mail->isSMTP();
         }
+
         //Set the hostname of the mail server
         $mail->Host = MAIL_HOST;
+
         //Set the port number - likely to be 25, 465 or 587
         $mail->Port = MAIL_PORT;
+
         //Set if authentication is required
         $mail->SMTPAuth = MAIL_AUTH_REQ;
 
@@ -102,6 +107,8 @@ class Contact
             $mail->SMTPSecure = $mail::ENCRYPTION_SMTPS;
         } else if (MAIL_ENCRYPTION == 'tls' || OPENSSL_INSTALLED == true) {
             $mail->SMTPSecure = $mail::ENCRYPTION_STARTTLS;
+        } else {
+            $mail->SMTPSecure = false;
         }
 
         //log errors if the encryption is set to ssl or tls and openssl is not installed
@@ -111,20 +118,41 @@ class Contact
             error_log('Error: OpenSSL is not installed, cannot use TLS encryption');
         }
 
+        //if MAIL_ENCRYPTION is set to null, remove any encryption
+        if (MAIL_ENCRYPTION == null) {
+            $mail->SMTPSecure = false;
+        }
+
         //if the app_env is set to local, allow insecure connections for self-signed certificates
         if (APP_ENV == 'local' || APP_ENV == 'development' || APP_ENV == 'testing' || APP_ENV == 'LOCAL' || APP_ENV == 'DEVELOPMENT' || APP_ENV == 'TESTING') {
-            $mail->SMTPOptions = array(
-                'ssl' => array(
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed' => true
-                )
-            );
+            //if ssl is set, allow insecure connections
+            if (MAIL_ENCRYPTION == 'ssl') {
+                $mail->SMTPOptions = array(
+                    'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    )
+                );
+            } else if (MAIL_ENCRYPTION == 'tls') {
+                $mail->SMTPOptions = array(
+                    'tls' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    )
+                );
+            } else {
+                //empty the options
+                $mail->SMTPOptions = array();
+            }
         }
 
         //set debug
         if (APP_DEBUG == true) {
             $mail->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+        } else {
+            $mail->SMTPDebug = 0;
         }
 
         //if authentication is required, set the username and password
@@ -141,6 +169,9 @@ class Contact
             } else {
                 $mail->Password = MAIL_PASSWORD;
             }
+        } else {
+            $mail->SMTPAuth = false;
+            $mail->SMTPSecure = false;
         }
 
         //Set who the message is to be sent from (the server will need to be configured to authenticate with this address, or to have send as permissions)
@@ -150,9 +181,6 @@ class Contact
         } else {
             $mail->setFrom($senderEmail, $senderName);
         }
-
-        //debug
-        error_log('Email From: ' . $mail->From);
 
         //Set who the message is to be sent to
         $mail->addAddress($recipientEmail, $recipientName);
@@ -554,22 +582,34 @@ class Contact
      * @param string $email - the email address to send the email to
      * @param string $subject - the subject of the email
      * @param string $message - the message to send to the user
-     * @return void
+     * @param bool $useHTML - whether to use HTML in the email
+     *
+     * @return bool
      */
-    public function sendUserEmail(string $email, string $subject, string $message): void
+    public function sendUserEmail(string $email, string $subject, string $message, bool $useHTML = false): bool
     {
         //initiate the email send
-        $result = $this->initiateEmailSend($email, $email, MAIL_FROM_ADDRESS, MAIL_FROM_NAME, $subject, $message);
+        $result = $this->initiateEmailSend($email, $email, MAIL_FROM_ADDRESS, MAIL_FROM_NAME, $subject, $message, $useHTML);
 
         //check for errors
-        if ($result == false) {
+        if (!$result) {
             //log the error
             $activity = new Activity();
-            $activity->logActivity(NULL, 'Error Sending Email', $result->ErrorInfo . ' - ' . $email);
+            $activity->logActivity(NULL, 'Error Sending Email', $email);
+            //debugging
+            error_log('Error Sending Email: ' . $email);
+
+            //return false
+            return false;
         } else {
             //log the activity
             $activity = new Activity();
             $activity->logActivity(NULL, 'Email Sent', 'Sent ' . $email . ' - Subject: ' . $subject);
+            //debugging
+            error_log('Email Sent: ' . $email . ' - Subject: ' . $subject);
+
+            //return true
+            return true;
         }
     }
 
