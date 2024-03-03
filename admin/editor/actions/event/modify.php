@@ -216,16 +216,16 @@ if (!$hasPermission) {
                     $logoMedia_id = $event_logo;
                 }
             }
-        }
 
-        //if the event banner is not empty or null, try to upload it
-        if (!empty($event_banner) && $event_banner != null) {
-            //if the event banner is an array, upload the file
-            if (is_array($event_banner)) {
-                $bannerMedia_id = $media->uploadMedia($event_banner, intval($session->get('user_id')));
-            } else {
-                //if the event banner is not an array, set the media id to the event banner int
-                $bannerMedia_id = $event_banner;
+            //if the event banner is not empty or null, try to upload it
+            if (!empty($event_banner) && $event_banner != null) {
+                //if the event banner is an array, upload the file
+                if (is_array($event_banner)) {
+                    $bannerMedia_id = $media->uploadMedia($event_banner, intval($session->get('user_id')));
+                } else {
+                    //if the event banner is not an array, set the media id to the event banner int
+                    $bannerMedia_id = $event_banner;
+                }
             }
         }
 
@@ -239,24 +239,52 @@ if (!$hasPermission) {
             //if the logo media id is not null, see if it is different from the current logo media id
             if ($logoMedia_id != null) {
                 //get the current logo media id
-                $currentLogoMedia_id = $eventMedia->getEventLogo($event_id);
+                $currentLogoMedia_id = $eventMedia->getEventLogo(intval($event_id));
+
                 //if the new logo media id is different from the current logo media id, update the event logo
                 if ($logoMedia_id != $currentLogoMedia_id) {
-                    $eventMedia->updateEventLogo($event_id, $logoMedia_id);
-                    //set the update event media flag to true
-                    $updateEventMedia = true;
+                    //does the event have branding?
+                    $hasBranding = $eventMedia->doesEventHaveBranding(intval($event_id));
+
+                    //if the branding is not set, add the logo media id
+                    if ($hasBranding == null || empty($hasBranding)) {
+                        $eventMedia->setEventLogo(intval($event_id), intval($logoMedia_id));
+                    } else {
+                        //if the current logo media id is 0 or null, add the logo media id
+                        if ($currentLogoMedia_id == 0 || $currentLogoMedia_id == null) {
+                            $eventMedia->setEventLogo(intval($event_id), intval($logoMedia_id));
+                        } else {
+                            $eventMedia->updateEventLogo(intval($event_id), intval($logoMedia_id));
+                            //set the update event media flag to true
+                            $updateEventMedia = true;
+                        }
+                    }
                 }
             }
 
             //if the banner media id is not null, see if it is different from the current banner media id
             if ($bannerMedia_id != null) {
                 //get the current banner media id
-                $currentBannerMedia_id = $eventMedia->getEventBanner($event_id);
+                $currentBannerMedia_id = $eventMedia->getEventBanner(intval($event_id));
+
                 //if the new banner media id is different from the current banner media id, update the event banner
                 if ($bannerMedia_id != $currentBannerMedia_id) {
-                    $eventMedia->updateEventBanner($event_id, $bannerMedia_id);
-                    //set the update event media flag to true
-                    $updateEventMedia = true;
+                    //does the event have branding?
+                    $hasBranding = $eventMedia->doesEventHaveBranding(intval($event_id));
+
+                    //if the branding is not set, add the banner media id
+                    if ($hasBranding == null || empty($hasBranding)) {
+                        $eventMedia->setEventBanner(intval($event_id), intval($bannerMedia_id));
+                    } else {
+                        //if the current banner media id is 0 or null, add the banner media id
+                        if ($currentBannerMedia_id == 0 || $currentBannerMedia_id == null) {
+                            $eventMedia->setEventBanner(intval($event_id), intval($bannerMedia_id));
+                        } else {
+                            $eventMedia->updateEventBanner(intval($event_id), intval($bannerMedia_id));
+                            //set the update event media flag to true
+                            $updateEventMedia = true;
+                        }
+                    }
                 }
             }
         }
