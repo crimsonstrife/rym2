@@ -62,8 +62,12 @@ if (isset($event_slug)) {
 //if the event is set, get the event styling data
 if (isset($this_event)) {
     $event_brandingColor = $school->getSchoolColor(intval($this_event['location']));
+    $event_logoID = $eventMedia->getEventLogo(intval($this_event['id']));
+    $event_bannerID = $eventMedia->getEventBanner(intval($this_event['id']));
 } else {
     $event_brandingColor = null;
+    $event_logoID = null;
+    $event_bannerID = null;
 }
 
 //if the event color is set and not null, echo the style tag
@@ -73,6 +77,20 @@ if (isset($event_brandingColor) && !empty($event_brandingColor) && !is_null($eve
     echo 'background-color: ' . $event_brandingColor . ' !important;';
     echo '}';
     echo '</style>';
+}
+
+//if the event logoID is set and not null, get the logo
+if (isset($event_logoID) && !empty($event_logoID) && !is_null($event_logoID)) {
+    $event_logo = $media->getMediaFilePath($event_logoID);
+} else {
+    $event_logo = null;
+}
+
+//if the event bannerID is set and not null, get the banner
+if (isset($event_bannerID) && !empty($event_bannerID) && !is_null($event_bannerID)) {
+    $event_banner = $media->getMediaFilePath($event_bannerID);
+} else {
+    $event_banner = null;
 }
 
 //get the event variables if the event is set
@@ -581,6 +599,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <div id="layout">
+    <?php //if this is an event page, show the event header
+    if ($isEventPage) { ?>
+        <!-- event header -->
+        <?php //if the event banner is set and not null, show the banner
+        if (isset($event_banner) && !empty($event_banner) && !is_null($event_banner)) { ?>
+            <div class="eventBanner" style="background-image: url('<?php echo htmlspecialchars($event_banner); ?>');">
+            </div>
+        <?php } ?>
+    <?php } ?>
     <!-- main content -->
     <main>
         <div id="layout_content" class="w-95 mx-auto nav-less">
@@ -599,644 +626,644 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <p>Author Email: pbarnh1@wgu.edu</p>
                         </div>
                     </div>
-                    </div>
-                </div>
-                <div class="container-fluid px-4">
-                    <div class="container">
-                        <div class="row">
-                            <!-- List of available jobs -->
-                            <div class="col-md-12">
-                                <h2>Available Jobs</h2>
-                                <p>Below is a list of available jobs.</p>
-                                <p>Click on a job to view more information.</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <?php
-                                /* check if there are any jobs in the list, if so show a scrollable table, if not show a message and an empty table */
-                                if (count($job_list) > 0) {
-                                ?>
-                                    <div>
-                                        <table id="dataTable" class="table table-striped table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th scope=" col">Job Title</th>
-                                                    <th scope="col">Job Description</th>
-                                                    <th scope="col">Job Type</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach ($job_list as $job_item) {
-                                                    //get the job type
-                                                    $type = $job->getJobType($job_item['value']);
-                                                    //get the job description
-                                                    $description = $job->getJobSummary($job_item['value']);
-                                                ?>
-                                                    <tr>
-                                                        <td><a href="<?php echo APP_URL . '/index.php?path=job'; ?>&id=<?php echo htmlspecialchars($job_item['value']); ?>"><?php echo htmlspecialchars($job_item['label']); ?></a>
-                                                        </td>
-                                                        <td><?php echo htmlspecialchars($description); ?></td>
-                                                        <td><?php echo htmlspecialchars($type); ?></td>
-                                                    </tr>
-                                                <?php } ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                <?php } else { ?>
-                                    <div class="alert alert-info">
-                                        There are no jobs available at this time. But you can still register below.
-                                    </div>
-                                    <div class="table-responsive-md">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Job Title</th>
-                                                    <th scope="col">Job Description</th>
-                                                    <th scope="col">Job Type</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    <?php } ?>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Registration Form -->
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h2 id="registrationForm">Student Registration</h2>
-                                <p>Please fill in your information to register.</p>
-                                <p>You should receive an automated confirmation email and then will be contacted again after
-                                    the event.</p>
-                                <p><span class="text-danger">* </span> Denotes a required field.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <?php if ($entry_error) { ?>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="alert alert-danger">
-                                        Please correct the errors below and try again.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php } ?>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <?php
-                                //if this is an event page, set the form action to the event specific page using the event slug
-                                if ($isEventPage) { ?>
-                                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?path=student&event=<?php echo htmlspecialchars($event_slug); ?>#registrationForm" class="needs-validation <?php if ($entry_error) {
-                                                                                                                                                                                                    echo 'was-validated';
-                                                                                                                                                                                                } ?>" method="post" novalidate>
-                                    <?php } else { //if this is not an event page, set the form action to the regular index page
-                                    ?>
-                                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>#registrationForm" class="needs-validation <?php if ($entry_error) {
-                                                                                                                                                            echo 'was-validated';
-                                                                                                                                                        } ?>" method="post" novalidate>
-                                        <?php } ?>
-                                        <!-- hidden field for event id or other parameters -->
-                                        <?php
-                                        $keys = array('event');
-                                        foreach ($keys as $name) {
-                                            if (!isset($_GET[$name])) {
-                                                continue;
-                                            }
-                                            $value = htmlspecialchars($_GET[$name]);
-                                            $name = htmlspecialchars($name);
-                                            echo '<input type="hidden" name="' . $name . '" value="' . $value . '">';
-                                        } ?>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <label for="student_firstName">First Name:<span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <input type="text" name="student_firstName" id="student_firstName" class="form-control<?php if ($student_firstName_error != null) {
-                                                                                                                                                    echo " is-invalid";
-                                                                                                                                                } ?>" placeholder="First Name" value="<?php echo htmlspecialchars($student_firstName); ?>" required>
-                                                        <span></span>
-                                                    </div>
-                                                </div>
-                                                <?php if ($student_firstName_error != null) { ?>
-                                                    <!-- errors for name -->
-                                                    <div id="student_firstName_error" class="invalid-feedback" style="display: unset;">
-                                                        <span class="text-danger">
-                                                            <?php echo $student_firstName_error; ?>
-                                                        </span>
-                                                    </div>
-                                                <?php } ?>
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <label for="student_lastName">Last Name:<span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <input type="text" name="student_lastName" id="student_lastName" class="form-control<?php if ($student_lastName_error != null) {
-                                                                                                                                                echo " is-invalid";
-                                                                                                                                            } ?>"" placeholder=" Last Name" value="<?php echo htmlspecialchars($student_lastName); ?>" required>
-                                                        <span></span>
-                                                    </div>
-                                                </div>
-                                                <!-- errors for name -->
-                                                <div id="student_lastName_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_lastName_error; ?></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <label for="student_email">Email:<span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <input type="text" name="student_email" id="student_email" class="form-control<?php if ($student_email_error != null) {
-                                                                                                                                            echo " is-invalid";
-                                                                                                                                        } ?>" placeholder="Email" value="<?php echo htmlspecialchars($student_email); ?>" required>
-                                                        <span></span>
-                                                    </div>
-                                                </div>
-                                                <!-- errors for email -->
-                                                <div id="student_email_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_email_error; ?></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <label for="student_phone">Phone:<span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <input type="text" name="student_phone" id="student_phone" class="form-control<?php if ($student_phone_error != null) {
-                                                                                                                                            echo " is-invalid";
-                                                                                                                                        } ?>" placeholder="Phone Number" value="<?php echo htmlspecialchars($student_phone); ?>" required>
-                                                        <span></span>
-                                                    </div>
-                                                </div>
-                                                <!-- errors for phone -->
-                                                <div id="student_phone_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_phone_error; ?></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12 mb-1">
-                                                <div class="form-group">
-                                                    <label for="student_address">Address:<span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <input type="text" name="student_address" id="student_address" class="form-control<?php if ($student_address_error != null) {
-                                                                                                                                                echo " is-invalid";
-                                                                                                                                            } ?>" placeholder="Street" value="<?php echo htmlspecialchars($student_address); ?>" required>
-                                                        <span></span>
-                                                    </div>
-                                                    <!-- help text for address -->
-                                                    <small id="addressHelp" class="form-text text-muted">Please enter your
-                                                        street address, no P.O. Boxes.</small>
-                                                </div>
-                                                <!-- errors for address -->
-                                                <div id="student_address_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_address_error; ?></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <div class="form-group">
-                                                    <label for="student_city">City:<span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <input type="text" name="student_city" id="student_city" class="form-control<?php if ($student_city_error != null) {
-                                                                                                                                        echo " is-invalid";
-                                                                                                                                    } ?>" placeholder="City" value="<?php echo htmlspecialchars($student_city); ?>" required>
-                                                        <span></span>
-                                                    </div>
-                                                </div>
-                                                <!-- errors for city -->
-                                                <div id="student_city_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_city_error; ?></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <div class="form-group">
-                                                    <label for="student_state">State:<span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <select name="student_state" id="student_state" class="form-control<?php if ($student_state_error != null) {
-                                                                                                                                echo " is-invalid";
-                                                                                                                            } ?>" style="width: 100%;" required>
-                                                            <?php
-                                                            //loop through the states list
-                                                            foreach ($stateArray as $state) {
-                                                                //check if the state matches the student's state
-                                                                if ($student_state == $state['value']) {
-                                                                    //if it matches, set the selected attribute
-                                                                    echo '<option value="' . $state['value'] . '" selected>' . $state['label'] . '</option>';
-                                                                } else {
-                                                                    //if it doesn't match, don't set the selected attribute
-                                                                    echo '<option value="' . $state['value'] . '">' . $state['label'] . '</option>';
-                                                                }
-                                                            }
-                                                            ?>
-                                                        </select>
-                                                        <span></span>
-                                                    </div>
-                                                </div>
-                                                <!-- errors for state -->
-                                                <div id="student_state_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_state_error; ?></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <div class="form-group">
-                                                    <label for="student_zip">Zip:<span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <input type="text" name="student_zip" id="student_zip" class="form-control<?php if ($student_zip_error != null) {
-                                                                                                                                        echo " is-invalid";
-                                                                                                                                    } ?>" placeholder="Zip" value="<?php echo htmlspecialchars($student_zip); ?>" required>
-                                                        <span></span>
-                                                    </div>
-                                                </div>
-                                                <!-- errors for zip -->
-                                                <div id="student_zip_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_zip_error; ?></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <label for="student_degree">Degree:<span class="text-danger">*</span></label>
-                                                    <div id="degreeParent" class="col-md-12 degree-dropdown">
-                                                        <div class="input-group">
-                                                            <select name="student_degree" id="student_degree" class="form-control select2 select2-degree <?php if ($student_degree_error != null) {
-                                                                                                                                                                echo " is-invalid";
-                                                                                                                                                            } else if ($student_degree_error == null && $entry_error == false) {
-                                                                                                                                                                echo " is-valid";
-                                                                                                                                                            } ?>" style="width: 100%;" required>
-                                                                <?php
-                                                                //loop through the degree levels list
-                                                                foreach ($degree_list as $degree => $value) {
-                                                                    //get the key and value from the array and set the variables
-                                                                    $degree_id = (string)$value['value'];
-                                                                    $degree_label = (string)$value['label'];
-                                                                    //check if the degree level matches the student's degree level
-                                                                    if (intval($student_degree) == ($degree_id)) {
-                                                                        //if it matches, set the selected attribute
-                                                                        echo '<option value="' . $degree_id . '" selected>' . $degree_label . '</option>';
-                                                                    } else {
-                                                                        //if it doesn't match, don't set the selected attribute
-                                                                        echo '<option value="' . $degree_id . '">' . $degree_label . '</option>';
-                                                                    }
-                                                                }
-                                                                ?>
-                                                            </select>
-                                                            <span></span>
-                                                        </div>
-                                                    </div>
-                                                    <!-- help text for degree -->
-                                                    <small id="degreeHelp" class="form-text text-muted">Please select your
-                                                        degree level. If your degree is not available, select the nearest
-                                                        equivalent and notify our event attendants.</small>
-                                                </div>
-                                                <!-- errors for degree -->
-                                                <div id="student_degree_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_degree_error; ?></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <label for="student_major">Please select or enter your major:<span class="text-danger">*</span></label>
-                                                    <!-- Select2 dropdown, used to allow users to add custom entries alongside what is pulled -->
-                                                    <div id="majorsParent" class="col-md-12 majors-dropdown">
-                                                        <select name="student_major" id="student_major" class="form-control select2 select2-major <?php if ($student_major_error != null) {
-                                                                                                                                                        echo " is-invalid";
-                                                                                                                                                    } else if ($student_major_error == null && $entry_error == false) {
-                                                                                                                                                        echo " is-valid";
-                                                                                                                                                    } ?>" style="width: 100%;" required>
-                                                            <?php
-                                                            //loop through the majors list
-                                                            foreach ($majors_list as $major => $value) {
-                                                                //get the key and value from the array and set the variables
-                                                                $major_id = (string)$value['value'];
-                                                                $major_label = (string)$value['label'];
-                                                                //check if the major matches the student's major
-                                                                if (intval($student_major) == intval($major_id)) {
-                                                                    //if it matches, set the selected attribute
-                                                                    echo '<option value="' . $major_label . '" selected>' . $major_label . '</option>';
-                                                                } else {
-                                                                    //if it doesn't match, don't set the selected attribute
-                                                                    echo '<option value="' . $major_label . '">' . $major_label . '</option>';
-                                                                }
-                                                            }
-                                                            ?>
-                                                        </select>
-                                                    </div>
-                                                    <!-- help text for major -->
-                                                    <small id="majorHelp" class="form-text text-muted">Please select your
-                                                        major. If your major is not available, you can enter it and it will
-                                                        be
-                                                        added during submission.</small>
-                                                </div>
-                                                <!-- errors for major -->
-                                                <div id="student_major_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_major_error; ?></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <label for="student_school">School:<span class="text-danger">*</span></label>
-                                                    <div id="schoolParent" class="col-md-12 school-dropdown">
-                                                        <select name="student_school" id="student_school" class="form-control select2 select2-school <?php if ($student_school_error != null) {
-                                                                                                                                                            echo " is-invalid";
-                                                                                                                                                        } else if ($student_school_error == null && $entry_error == false) {
-                                                                                                                                                            echo " is-valid";
-                                                                                                                                                        } ?>" style="width: 100%;">
-                                                            <?php
-                                                            //loop through the schools list
-                                                            foreach ($schools_list as $school => $value) {
-                                                                //get the key and value from the array and set the variables
-                                                                $school_id = (string)$value['value'];
-                                                                $school_label = (string)$value['label'];
-                                                                //check if the school matches the location of the event, if so, set the selected attribute, if not compare to the student's school
-                                                                if ($isEventPage == true) {
-                                                                    if (intval($school_id) == intval($event_location)) {
-                                                                        //if it matches, set the selected attribute
-                                                                        echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
-                                                                    } else if ($school_label == $student_school) {
-                                                                        //if it matches, set the selected attribute
-                                                                        echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
-                                                                    } else {
-                                                                        //if it doesn't match, don't set the selected attribute
-                                                                        echo '<option value="' . $school_id . '">' . $school_label . '</option>';
-                                                                    }
-                                                                } else {
-                                                                    if (intval($school_id) == intval($student_school)) {
-                                                                        //if it matches, set the selected attribute
-                                                                        echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
-                                                                    } else {
-                                                                        //if it doesn't match, don't set the selected attribute
-                                                                        echo '<option value="' . $school_id . '">' . $school_label . '</option>';
-                                                                    }
-                                                                }
-                                                            }
-                                                            ?>
-                                                        </select>
-                                                    </div>
-                                                    <!-- help text for school -->
-                                                    <small id="schoolHelp" class="form-text text-muted">Please select your
-                                                        school. If your school is not available, notify our event
-                                                        attendants.</small>
-                                                </div>
-                                                <!-- errors for school -->
-                                                <div id="student_school_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_school_error; ?></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <label for="student_graduationDate"> Expected Graduation Date:<span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <input type="date" name="student_graduationDate" id="student_graduationDate" class="form-control <?php if ($student_graduationDate_error != null) {
-                                                                                                                                                                echo " is-invalid";
-                                                                                                                                                            } ?>" min="<?php echo date(JS_DATE_FORMAT) ?>" value="<?php echo (!empty($student_graduationDate) ? formatDate($student_graduationDate) : date(JS_DATE_FORMAT)); ?>">
-                                                        <span></span>
-                                                    </div>
-                                                    <!-- help text for graduation date -->
-                                                    <small id="graduationDateHelp" class="form-text text-muted">Please enter
-                                                        your expected graduation date, these opportunities are for current
-                                                        students.</small>
-                                                </div>
-                                                <!-- errors for graduation date -->
-                                                <div id="student_graduationDate_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_graduationDate_error; ?></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <label for="student_jobPosition">Preferred Job Type:<span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <select name="student_jobPosition" id="student_jobPosition" class="form-control <?php if ($student_jobPosition_error != null) {
-                                                                                                                                            echo " is-invalid";
-                                                                                                                                        } ?>" style="width: 100%;" required>
-                                                            <?php foreach ($positionType_list as $positionType) {
-                                                                //check if the job position matches the student's job position
-                                                                if ($student_jobPosition == $positionType['value']) {
-                                                                    //if it matches, set the selected attribute
-                                                                    echo '<option value="' . $positionType['value'] . '" selected>' . $positionType['label'] . '</option>';
-                                                                } else {
-                                                                    //if it doesn't match, don't set the selected attribute
-                                                                    echo '<option value="' . $positionType['value'] . '">' . $positionType['label'] . '</option>';
-                                                                }
-                                                            } ?>
-                                                        </select>
-                                                        <span></span>
-                                                    </div>
-                                                    <!-- help text for job position -->
-                                                    <small id="jobPositionHelp" class="form-text text-muted">Please select
-                                                        your
-                                                        preferred job type. By submitting this form you acknowledge you may
-                                                        still be contacted about internships even if your preference is for
-                                                        Full
-                                                        or Part-time employment.</small>
-                                                </div>
-                                                <!-- errors for job position -->
-                                                <div id="student_jobPosition_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_jobPosition_error; ?></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <div class="form-group">
-                                                    <label for="student_areaOfInterest">Field:<span class="text-danger">*</span></label>
-                                                    <div id="aoiParent" class="col-md-12 aoi-dropdown">
-                                                        <select name="student_areaOfInterest" id="student_areaOfInterest" class="form-control select2 select2-aoi <?php if ($student_areaOfInterest_error != null) {
-                                                                                                                                                                        echo " is-invalid";
-                                                                                                                                                                    } else if ($student_areaOfInterest_error == null && $entry_error == false) {
-                                                                                                                                                                        echo " is-valid";
-                                                                                                                                                                    } ?>" style="width: 100%;" required>
-                                                            <?php
-                                                            //loop through the areas of interest list
-                                                            foreach ($areaOfInterest_list as $areaOfInterest => $value) {
-                                                                //get the key and value from the array and set the variables
-                                                                $areaOfInterest_id = (string)$value['value'];
-                                                                $areaOfInterest_label = (string)$value['label'];
-                                                                //check if the area of interest matches the student's area of interest
-                                                                if (intval($student_areaOfInterest) == intval($areaOfInterest_id)) {
-                                                                    //if it matches, set the selected attribute
-                                                                    echo '<option value="' . $areaOfInterest_id . '" selected>' . $areaOfInterest_label . '</option>';
-                                                                } else {
-                                                                    //if it doesn't match, don't set the selected attribute
-                                                                    echo '<option value="' . $areaOfInterest_id . '">' . $areaOfInterest_label . '</option>';
-                                                                }
-                                                            }
-                                                            ?>
-                                                        </select>
-                                                    </div>
-                                                    <!-- help text for area of interest -->
-                                                    <small id="aoiHelp" class="form-text text-muted">Please select your
-                                                        area of interest. If your area of interest is not available, notify
-                                                        our
-                                                        event attendants.</small>
-                                                </div>
-                                                <!-- errors for area of interest -->
-                                                <div id="student_areaOfInterest_error" class="invalid-feedback" style="display: unset;">
-                                                    <span class="text-danger"><?php echo $student_areaOfInterest_error; ?></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- empty row for spacing -->
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <input type="submit" id="submit" name="submit_btn" class="btn btn-primary" value="Submit">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        </form>
-                                        <!-- script to handle the form validation, disables submission if there are invalid fields -->
-                                        <script>
-                                            // based on the bootstrap validation documentation from https://getbootstrap.com/docs/4.0/components/forms/#validation
-                                            (function() {
-                                                'use strict';
-                                                window.addEventListener('load', function() {
-                                                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                                                    var form = document.getElementsByClassName('needs-validation');
-
-                                                    //check the fields and prevent submission if there are errors
-                                                    var validation = Array.prototype.filter.call(form, function(form) {
-                                                        form.addEventListener('submit', function(event) {
-                                                            if (form.checkValidity() === false) {
-                                                                event.preventDefault();
-                                                                event.stopPropagation();
-                                                            }
-                                                            form.classList.add('was-validated');
-                                                        }, false);
-                                                    });
-                                                }, false);
-                                            })();
-                                        </script>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="info" class="">
-                    <?php if ($attemptedStudentSubmission != null && $attemptedStudentSubmission != false) { ?>
-                        <!-- Submission Result Modal-->
-                        <!-- Modal -->
-                        <div id="submissionResultModal" class="modal fade result" tabindex="-1" role="dialog" aria-labelledby="#submissionResultModal" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <?php if ($studentAdded) { ?>
-                                        <div class="modal-header">
-                                            <h3 class="modal-title" id="submissionResultModal">
-                                                Thanks for registering! We will be in touch soon.
-                                            </h3>
-                                            <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
-                                                <i class="fa-solid fa-times"></i>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="alert alert-success"> Submission successfull! </div>
-                                                        <?php if ($emailSent) { ?>
-                                                            <div class="alert alert-success"> A confirmation email has been sent to the
-                                                                email you provided.
-                                                            </div>
-                                                        <?php } else { ?>
-                                                            <div class="alert alert-warning"> There was an error sending the email, the
-                                                                submission was successful, but you may not receive a confirmation email.
-                                                            </div>
-                                                        <?php } ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        </div>
-                                    <?php } else if ($studentAdded == false && $existing_student == null) { ?>
-                                        <div class="modal-header">
-                                            <h3 class="modal-title" id="submissionResultModal">
-                                                Uh-oh! Check your submission for errors.
-                                            </h3>
-                                            <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
-                                                <i class="fa-solid fa-times"></i>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="alert alert-success"> There was an error with your submission.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        </div>
-                                    <?php }
-                                    if ($existing_student != null) { ?>
-                                        <div class="modal-header">
-                                            <h3 class="modal-title" id="submissionResultModal">
-                                                Looks like a case of Déjà vu.
-                                            </h3>
-                                            <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
-                                                <i class="fa-solid fa-times"></i>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="alert alert-info"> Seems like you've registered previously, if
-                                                            you think this is an error, let us know.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                        </div>
-                    <?php } ?>
                 </div>
             </div>
+            <div class="container-fluid px-4">
+                <div class="container">
+                    <div class="row">
+                        <!-- List of available jobs -->
+                        <div class="col-md-12">
+                            <h2>Available Jobs</h2>
+                            <p>Below is a list of available jobs.</p>
+                            <p>Click on a job to view more information.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            /* check if there are any jobs in the list, if so show a scrollable table, if not show a message and an empty table */
+                            if (count($job_list) > 0) {
+                            ?>
+                                <div>
+                                    <table id="dataTable" class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope=" col">Job Title</th>
+                                                <th scope="col">Job Description</th>
+                                                <th scope="col">Job Type</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($job_list as $job_item) {
+                                                //get the job type
+                                                $type = $job->getJobType($job_item['value']);
+                                                //get the job description
+                                                $description = $job->getJobSummary($job_item['value']);
+                                            ?>
+                                                <tr>
+                                                    <td><a href="<?php echo APP_URL . '/index.php?path=job'; ?>&id=<?php echo htmlspecialchars($job_item['value']); ?>"><?php echo htmlspecialchars($job_item['label']); ?></a>
+                                                    </td>
+                                                    <td><?php echo htmlspecialchars($description); ?></td>
+                                                    <td><?php echo htmlspecialchars($type); ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php } else { ?>
+                                <div class="alert alert-info">
+                                    There are no jobs available at this time. But you can still register below.
+                                </div>
+                                <div class="table-responsive-md">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Job Title</th>
+                                                <th scope="col">Job Description</th>
+                                                <th scope="col">Job Type</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                <?php } ?>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Registration Form -->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 id="registrationForm">Student Registration</h2>
+                            <p>Please fill in your information to register.</p>
+                            <p>You should receive an automated confirmation email and then will be contacted again after
+                                the event.</p>
+                            <p><span class="text-danger">* </span> Denotes a required field.</p>
+                        </div>
+                    </div>
+                </div>
+                <?php if ($entry_error) { ?>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger">
+                                    Please correct the errors below and try again.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            //if this is an event page, set the form action to the event specific page using the event slug
+                            if ($isEventPage) { ?>
+                                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?path=student&event=<?php echo htmlspecialchars($event_slug); ?>#registrationForm" class="needs-validation <?php if ($entry_error) {
+                                                                                                                                                                                                                    echo 'was-validated';
+                                                                                                                                                                                                                } ?>" method="post" novalidate>
+                                <?php } else { //if this is not an event page, set the form action to the regular index page
+                                ?>
+                                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>#registrationForm" class="needs-validation <?php if ($entry_error) {
+                                                                                                                                                        echo 'was-validated';
+                                                                                                                                                    } ?>" method="post" novalidate>
+                                    <?php } ?>
+                                    <!-- hidden field for event id or other parameters -->
+                                    <?php
+                                    $keys = array('event');
+                                    foreach ($keys as $name) {
+                                        if (!isset($_GET[$name])) {
+                                            continue;
+                                        }
+                                        $value = htmlspecialchars($_GET[$name]);
+                                        $name = htmlspecialchars($name);
+                                        echo '<input type="hidden" name="' . $name . '" value="' . $value . '">';
+                                    } ?>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-group">
+                                                <label for="student_firstName">First Name:<span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <input type="text" name="student_firstName" id="student_firstName" class="form-control<?php if ($student_firstName_error != null) {
+                                                                                                                                                echo " is-invalid";
+                                                                                                                                            } ?>" placeholder="First Name" value="<?php echo htmlspecialchars($student_firstName); ?>" required>
+                                                    <span></span>
+                                                </div>
+                                            </div>
+                                            <?php if ($student_firstName_error != null) { ?>
+                                                <!-- errors for name -->
+                                                <div id="student_firstName_error" class="invalid-feedback" style="display: unset;">
+                                                    <span class="text-danger">
+                                                        <?php echo $student_firstName_error; ?>
+                                                    </span>
+                                                </div>
+                                            <?php } ?>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-group">
+                                                <label for="student_lastName">Last Name:<span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <input type="text" name="student_lastName" id="student_lastName" class="form-control<?php if ($student_lastName_error != null) {
+                                                                                                                                            echo " is-invalid";
+                                                                                                                                        } ?>"" placeholder=" Last Name" value="<?php echo htmlspecialchars($student_lastName); ?>" required>
+                                                    <span></span>
+                                                </div>
+                                            </div>
+                                            <!-- errors for name -->
+                                            <div id="student_lastName_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_lastName_error; ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-group">
+                                                <label for="student_email">Email:<span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <input type="text" name="student_email" id="student_email" class="form-control<?php if ($student_email_error != null) {
+                                                                                                                                        echo " is-invalid";
+                                                                                                                                    } ?>" placeholder="Email" value="<?php echo htmlspecialchars($student_email); ?>" required>
+                                                    <span></span>
+                                                </div>
+                                            </div>
+                                            <!-- errors for email -->
+                                            <div id="student_email_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_email_error; ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-group">
+                                                <label for="student_phone">Phone:<span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <input type="text" name="student_phone" id="student_phone" class="form-control<?php if ($student_phone_error != null) {
+                                                                                                                                        echo " is-invalid";
+                                                                                                                                    } ?>" placeholder="Phone Number" value="<?php echo htmlspecialchars($student_phone); ?>" required>
+                                                    <span></span>
+                                                </div>
+                                            </div>
+                                            <!-- errors for phone -->
+                                            <div id="student_phone_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_phone_error; ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 mb-1">
+                                            <div class="form-group">
+                                                <label for="student_address">Address:<span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <input type="text" name="student_address" id="student_address" class="form-control<?php if ($student_address_error != null) {
+                                                                                                                                            echo " is-invalid";
+                                                                                                                                        } ?>" placeholder="Street" value="<?php echo htmlspecialchars($student_address); ?>" required>
+                                                    <span></span>
+                                                </div>
+                                                <!-- help text for address -->
+                                                <small id="addressHelp" class="form-text text-muted">Please enter your
+                                                    street address, no P.O. Boxes.</small>
+                                            </div>
+                                            <!-- errors for address -->
+                                            <div id="student_address_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_address_error; ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="student_city">City:<span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <input type="text" name="student_city" id="student_city" class="form-control<?php if ($student_city_error != null) {
+                                                                                                                                    echo " is-invalid";
+                                                                                                                                } ?>" placeholder="City" value="<?php echo htmlspecialchars($student_city); ?>" required>
+                                                    <span></span>
+                                                </div>
+                                            </div>
+                                            <!-- errors for city -->
+                                            <div id="student_city_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_city_error; ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <div class="form-group">
+                                                <label for="student_state">State:<span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <select name="student_state" id="student_state" class="form-control<?php if ($student_state_error != null) {
+                                                                                                                            echo " is-invalid";
+                                                                                                                        } ?>" style="width: 100%;" required>
+                                                        <?php
+                                                        //loop through the states list
+                                                        foreach ($stateArray as $state) {
+                                                            //check if the state matches the student's state
+                                                            if ($student_state == $state['value']) {
+                                                                //if it matches, set the selected attribute
+                                                                echo '<option value="' . $state['value'] . '" selected>' . $state['label'] . '</option>';
+                                                            } else {
+                                                                //if it doesn't match, don't set the selected attribute
+                                                                echo '<option value="' . $state['value'] . '">' . $state['label'] . '</option>';
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                    <span></span>
+                                                </div>
+                                            </div>
+                                            <!-- errors for state -->
+                                            <div id="student_state_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_state_error; ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <div class="form-group">
+                                                <label for="student_zip">Zip:<span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <input type="text" name="student_zip" id="student_zip" class="form-control<?php if ($student_zip_error != null) {
+                                                                                                                                    echo " is-invalid";
+                                                                                                                                } ?>" placeholder="Zip" value="<?php echo htmlspecialchars($student_zip); ?>" required>
+                                                    <span></span>
+                                                </div>
+                                            </div>
+                                            <!-- errors for zip -->
+                                            <div id="student_zip_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_zip_error; ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-group">
+                                                <label for="student_degree">Degree:<span class="text-danger">*</span></label>
+                                                <div id="degreeParent" class="col-md-12 degree-dropdown">
+                                                    <div class="input-group">
+                                                        <select name="student_degree" id="student_degree" class="form-control select2 select2-degree <?php if ($student_degree_error != null) {
+                                                                                                                                                            echo " is-invalid";
+                                                                                                                                                        } else if ($student_degree_error == null && $entry_error == false) {
+                                                                                                                                                            echo " is-valid";
+                                                                                                                                                        } ?>" style="width: 100%;" required>
+                                                            <?php
+                                                            //loop through the degree levels list
+                                                            foreach ($degree_list as $degree => $value) {
+                                                                //get the key and value from the array and set the variables
+                                                                $degree_id = (string)$value['value'];
+                                                                $degree_label = (string)$value['label'];
+                                                                //check if the degree level matches the student's degree level
+                                                                if (intval($student_degree) == ($degree_id)) {
+                                                                    //if it matches, set the selected attribute
+                                                                    echo '<option value="' . $degree_id . '" selected>' . $degree_label . '</option>';
+                                                                } else {
+                                                                    //if it doesn't match, don't set the selected attribute
+                                                                    echo '<option value="' . $degree_id . '">' . $degree_label . '</option>';
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                        <span></span>
+                                                    </div>
+                                                </div>
+                                                <!-- help text for degree -->
+                                                <small id="degreeHelp" class="form-text text-muted">Please select your
+                                                    degree level. If your degree is not available, select the nearest
+                                                    equivalent and notify our event attendants.</small>
+                                            </div>
+                                            <!-- errors for degree -->
+                                            <div id="student_degree_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_degree_error; ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-group">
+                                                <label for="student_major">Please select or enter your major:<span class="text-danger">*</span></label>
+                                                <!-- Select2 dropdown, used to allow users to add custom entries alongside what is pulled -->
+                                                <div id="majorsParent" class="col-md-12 majors-dropdown">
+                                                    <select name="student_major" id="student_major" class="form-control select2 select2-major <?php if ($student_major_error != null) {
+                                                                                                                                                    echo " is-invalid";
+                                                                                                                                                } else if ($student_major_error == null && $entry_error == false) {
+                                                                                                                                                    echo " is-valid";
+                                                                                                                                                } ?>" style="width: 100%;" required>
+                                                        <?php
+                                                        //loop through the majors list
+                                                        foreach ($majors_list as $major => $value) {
+                                                            //get the key and value from the array and set the variables
+                                                            $major_id = (string)$value['value'];
+                                                            $major_label = (string)$value['label'];
+                                                            //check if the major matches the student's major
+                                                            if (intval($student_major) == intval($major_id)) {
+                                                                //if it matches, set the selected attribute
+                                                                echo '<option value="' . $major_label . '" selected>' . $major_label . '</option>';
+                                                            } else {
+                                                                //if it doesn't match, don't set the selected attribute
+                                                                echo '<option value="' . $major_label . '">' . $major_label . '</option>';
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <!-- help text for major -->
+                                                <small id="majorHelp" class="form-text text-muted">Please select your
+                                                    major. If your major is not available, you can enter it and it will
+                                                    be
+                                                    added during submission.</small>
+                                            </div>
+                                            <!-- errors for major -->
+                                            <div id="student_major_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_major_error; ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-group">
+                                                <label for="student_school">School:<span class="text-danger">*</span></label>
+                                                <div id="schoolParent" class="col-md-12 school-dropdown">
+                                                    <select name="student_school" id="student_school" class="form-control select2 select2-school <?php if ($student_school_error != null) {
+                                                                                                                                                        echo " is-invalid";
+                                                                                                                                                    } else if ($student_school_error == null && $entry_error == false) {
+                                                                                                                                                        echo " is-valid";
+                                                                                                                                                    } ?>" style="width: 100%;">
+                                                        <?php
+                                                        //loop through the schools list
+                                                        foreach ($schools_list as $school => $value) {
+                                                            //get the key and value from the array and set the variables
+                                                            $school_id = (string)$value['value'];
+                                                            $school_label = (string)$value['label'];
+                                                            //check if the school matches the location of the event, if so, set the selected attribute, if not compare to the student's school
+                                                            if ($isEventPage == true) {
+                                                                if (intval($school_id) == intval($event_location)) {
+                                                                    //if it matches, set the selected attribute
+                                                                    echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
+                                                                } else if ($school_label == $student_school) {
+                                                                    //if it matches, set the selected attribute
+                                                                    echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
+                                                                } else {
+                                                                    //if it doesn't match, don't set the selected attribute
+                                                                    echo '<option value="' . $school_id . '">' . $school_label . '</option>';
+                                                                }
+                                                            } else {
+                                                                if (intval($school_id) == intval($student_school)) {
+                                                                    //if it matches, set the selected attribute
+                                                                    echo '<option value="' . $school_id . '" selected>' . $school_label . '</option>';
+                                                                } else {
+                                                                    //if it doesn't match, don't set the selected attribute
+                                                                    echo '<option value="' . $school_id . '">' . $school_label . '</option>';
+                                                                }
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <!-- help text for school -->
+                                                <small id="schoolHelp" class="form-text text-muted">Please select your
+                                                    school. If your school is not available, notify our event
+                                                    attendants.</small>
+                                            </div>
+                                            <!-- errors for school -->
+                                            <div id="student_school_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_school_error; ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-group">
+                                                <label for="student_graduationDate"> Expected Graduation Date:<span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <input type="date" name="student_graduationDate" id="student_graduationDate" class="form-control <?php if ($student_graduationDate_error != null) {
+                                                                                                                                                            echo " is-invalid";
+                                                                                                                                                        } ?>" min="<?php echo date(JS_DATE_FORMAT) ?>" value="<?php echo (!empty($student_graduationDate) ? formatDate($student_graduationDate) : date(JS_DATE_FORMAT)); ?>">
+                                                    <span></span>
+                                                </div>
+                                                <!-- help text for graduation date -->
+                                                <small id="graduationDateHelp" class="form-text text-muted">Please enter
+                                                    your expected graduation date, these opportunities are for current
+                                                    students.</small>
+                                            </div>
+                                            <!-- errors for graduation date -->
+                                            <div id="student_graduationDate_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_graduationDate_error; ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-group">
+                                                <label for="student_jobPosition">Preferred Job Type:<span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <select name="student_jobPosition" id="student_jobPosition" class="form-control <?php if ($student_jobPosition_error != null) {
+                                                                                                                                        echo " is-invalid";
+                                                                                                                                    } ?>" style="width: 100%;" required>
+                                                        <?php foreach ($positionType_list as $positionType) {
+                                                            //check if the job position matches the student's job position
+                                                            if ($student_jobPosition == $positionType['value']) {
+                                                                //if it matches, set the selected attribute
+                                                                echo '<option value="' . $positionType['value'] . '" selected>' . $positionType['label'] . '</option>';
+                                                            } else {
+                                                                //if it doesn't match, don't set the selected attribute
+                                                                echo '<option value="' . $positionType['value'] . '">' . $positionType['label'] . '</option>';
+                                                            }
+                                                        } ?>
+                                                    </select>
+                                                    <span></span>
+                                                </div>
+                                                <!-- help text for job position -->
+                                                <small id="jobPositionHelp" class="form-text text-muted">Please select
+                                                    your
+                                                    preferred job type. By submitting this form you acknowledge you may
+                                                    still be contacted about internships even if your preference is for
+                                                    Full
+                                                    or Part-time employment.</small>
+                                            </div>
+                                            <!-- errors for job position -->
+                                            <div id="student_jobPosition_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_jobPosition_error; ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-group">
+                                                <label for="student_areaOfInterest">Field:<span class="text-danger">*</span></label>
+                                                <div id="aoiParent" class="col-md-12 aoi-dropdown">
+                                                    <select name="student_areaOfInterest" id="student_areaOfInterest" class="form-control select2 select2-aoi <?php if ($student_areaOfInterest_error != null) {
+                                                                                                                                                                    echo " is-invalid";
+                                                                                                                                                                } else if ($student_areaOfInterest_error == null && $entry_error == false) {
+                                                                                                                                                                    echo " is-valid";
+                                                                                                                                                                } ?>" style="width: 100%;" required>
+                                                        <?php
+                                                        //loop through the areas of interest list
+                                                        foreach ($areaOfInterest_list as $areaOfInterest => $value) {
+                                                            //get the key and value from the array and set the variables
+                                                            $areaOfInterest_id = (string)$value['value'];
+                                                            $areaOfInterest_label = (string)$value['label'];
+                                                            //check if the area of interest matches the student's area of interest
+                                                            if (intval($student_areaOfInterest) == intval($areaOfInterest_id)) {
+                                                                //if it matches, set the selected attribute
+                                                                echo '<option value="' . $areaOfInterest_id . '" selected>' . $areaOfInterest_label . '</option>';
+                                                            } else {
+                                                                //if it doesn't match, don't set the selected attribute
+                                                                echo '<option value="' . $areaOfInterest_id . '">' . $areaOfInterest_label . '</option>';
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <!-- help text for area of interest -->
+                                                <small id="aoiHelp" class="form-text text-muted">Please select your
+                                                    area of interest. If your area of interest is not available, notify
+                                                    our
+                                                    event attendants.</small>
+                                            </div>
+                                            <!-- errors for area of interest -->
+                                            <div id="student_areaOfInterest_error" class="invalid-feedback" style="display: unset;">
+                                                <span class="text-danger"><?php echo $student_areaOfInterest_error; ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- empty row for spacing -->
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <input type="submit" id="submit" name="submit_btn" class="btn btn-primary" value="Submit">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </form>
+                                    <!-- script to handle the form validation, disables submission if there are invalid fields -->
+                                    <script>
+                                        // based on the bootstrap validation documentation from https://getbootstrap.com/docs/4.0/components/forms/#validation
+                                        (function() {
+                                            'use strict';
+                                            window.addEventListener('load', function() {
+                                                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                                                var form = document.getElementsByClassName('needs-validation');
+
+                                                //check the fields and prevent submission if there are errors
+                                                var validation = Array.prototype.filter.call(form, function(form) {
+                                                    form.addEventListener('submit', function(event) {
+                                                        if (form.checkValidity() === false) {
+                                                            event.preventDefault();
+                                                            event.stopPropagation();
+                                                        }
+                                                        form.classList.add('was-validated');
+                                                    }, false);
+                                                });
+                                            }, false);
+                                        })();
+                                    </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="info" class="">
+                <?php if ($attemptedStudentSubmission != null && $attemptedStudentSubmission != false) { ?>
+                    <!-- Submission Result Modal-->
+                    <!-- Modal -->
+                    <div id="submissionResultModal" class="modal fade result" tabindex="-1" role="dialog" aria-labelledby="#submissionResultModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <?php if ($studentAdded) { ?>
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="submissionResultModal">
+                                            Thanks for registering! We will be in touch soon.
+                                        </h3>
+                                        <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="alert alert-success"> Submission successfull! </div>
+                                                    <?php if ($emailSent) { ?>
+                                                        <div class="alert alert-success"> A confirmation email has been sent to the
+                                                            email you provided.
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <div class="alert alert-warning"> There was an error sending the email, the
+                                                            submission was successful, but you may not receive a confirmation email.
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                <?php } else if ($studentAdded == false && $existing_student == null) { ?>
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="submissionResultModal">
+                                            Uh-oh! Check your submission for errors.
+                                        </h3>
+                                        <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="alert alert-success"> There was an error with your submission.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                <?php }
+                                if ($existing_student != null) { ?>
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="submissionResultModal">
+                                            Looks like a case of Déjà vu.
+                                        </h3>
+                                        <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="alert alert-info"> Seems like you've registered previously, if
+                                                        you think this is an error, let us know.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
     </main>
 </div>
 <script type="text/javascript">
