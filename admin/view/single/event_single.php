@@ -195,21 +195,21 @@ var address = "<?php echo formatAddress($streetAddress, $city, $state, $zip); ?>
                             <div class="thumbnail-container"
                                 style="background-image: url('<?php echo htmlspecialchars(getAssetPath()) . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo htmlspecialchars(getUploadPath()) . htmlspecialchars($media->getMediaThumbnail($eventMedia->getEventLogo($event_id))); ?>"
+                                    src="<?php echo htmlspecialchars(getUploadPath()) . htmlspecialchars($media->getMediaThumbnail(intval($eventMedia->getEventLogo(intval($event_id))))); ?>"
                                     alt="Event Logo Image">
                             </div>
                             <p><strong>Event Banner:</strong></p>
                             <div class="thumbnail-container"
                                 style="background-image: url('<?php echo htmlspecialchars(getAssetPath()) . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo htmlspecialchars(getUploadPath()) . htmlspecialchars($media->getMediaThumbnail($eventMedia->getEventBanner($event_id))); ?>"
+                                    src="<?php echo htmlspecialchars(getUploadPath()) . htmlspecialchars($media->getMediaThumbnail(intval($eventMedia->getEventBanner(intval($event_id))))); ?>"
                                     alt="Event Banner Image">
                             </div>
                             <p><strong>School Logo:</strong></p>
                             <div class="thumbnail-container"
                                 style="background-image: url('<?php echo htmlspecialchars(getAssetPath()) . 'img/transparency.svg' ?>'); background-size:cover;">
                                 <img id="thumbnail" class="img-thumbnail"
-                                    src="<?php echo getUploadPath() . htmlspecialchars($media->getMediaThumbnail($school->getSchoolLogo(intval($event->getEventLocationId($event_id))))); ?>"
+                                    src="<?php echo getUploadPath() . htmlspecialchars($media->getMediaThumbnail(intval($school->getSchoolLogo(intval($event->getEventLocationId(intval($event_id))))))); ?>"
                                     alt="School Logo Image">
                             </div>
                             <p><strong>School Primary Color:</strong></p>
