@@ -97,7 +97,7 @@ class Session
         }
 
         //debug
-        error_log("Session variable" . $name . "not found/or not set");
+        error_log("Session variable " . $name . " not found/or not set");
         return false;
     }
 
