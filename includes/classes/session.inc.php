@@ -39,13 +39,9 @@ class Session
             session_start();
             //Set the session variables
             $this->sessionVars = $_SESSION;
-            //debug
-            error_log("Session started");
         } else {
             //Set the session variables
             $this->sessionVars = $_SESSION;
-            //debug
-            error_log("Session already started");
         }
     }
 
