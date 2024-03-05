@@ -2,9 +2,6 @@
 
 declare(strict_types=1); // Forces PHP to adhere to strict typing, if types do not match an error is thrown.
 
-// Initialize the session
-session_start();
-
 define('CAN_INCLUDE', true); // Define a constant to control access to the include files
 
 // Include config file
