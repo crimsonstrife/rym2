@@ -1,7 +1,4 @@
 <?php
-// Initialize the session
-session_start();
-
 define('CAN_INCLUDE', true); // Define a constant to control access to the include files
 
 // Include config file
