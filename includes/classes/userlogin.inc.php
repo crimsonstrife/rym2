@@ -41,9 +41,6 @@ class UserLogin extends User implements Login
      */
     public function login($username, $password)
     {
-        //trim the email
-        $username = trim($username);
-
         //try to login
         try {
             //get the user ID by username
@@ -62,16 +59,20 @@ class UserLogin extends User implements Login
                 $session->set("user_id", $userID);
                 $session->set("username", $username);
 
+                //log the activity
+                $activity = new Activity();
+                $activity->logActivity(null, "Login Success", 'User ID: ' . strval($userID) . ' Username: ' . $username . ' logged in successfully.');
+
                 // Redirect user to the dashboard
                 performRedirect("/admin/dashboard.php");
+            } else {
+                //if the password is incorrect
+                // log the activity
+                $activity = new Activity();
+                $activity->logActivity(null, "Login Error Invalid Password", 'User ID: ' . strval($userID) . ' Username: ' . $username . ' failed to log in with invalid password.');
+                // Display a generic error message
+                throw new Exception("Invalid username or password.");
             }
-
-            //if the password is incorrect
-            // log the activity
-            $activity = new Activity();
-            $activity->logActivity(null, "Login Error Invalid Password", 'User ID: ' . strval($userID) . ' Username: ' . $username . ' failed to log in with invalid password.');
-            // Display a generic error message
-            throw new Exception("Invalid username or password.");
         } catch (Exception $e) {
             // log the activity
             $activity = new Activity();
