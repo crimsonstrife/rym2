@@ -1,9 +1,6 @@
 <?php
 define('CAN_INCLUDE', true); // Define a constant to control access to the include files
 
-// Initialize the session
-session_start();
-
 // Include config file
 require_once(__DIR__ . '/config/app.php');
 // Include the helpers file
@@ -27,9 +24,9 @@ $settings = new Settings();
 // Check if the user is already logged in, if yes redirect to the admin dashboard
 if ($session->check('logged_in') === true) {
     //if the user is logged in, redirect to the admin dashboard
-    if ($session->get('logged_in') === true) {
+    if ($session->get('logged_in') === true || $session->get('logged_in') === 'true') {
         //is the user set?
-        if ($session->check('user_id') === true) {
+        if ($session->check('user_id') === true && $session->get('user_id') !== null) {
             //get the user id
             $user_id = $session->get('user_id');
             //check for login tokens that are expired
@@ -44,25 +41,25 @@ if ($session->check('logged_in') === true) {
 
                 //clear expired tokens
                 $auth->clearExpiredTokens(intval($user_id));
+            }
 
-                //check for valid tokens
-                //get username
-                $username = $user->getUserUsername(intval($user_id));
-                $validTokens = $auth->getAuthenticationToken(intval($user_id), $username, 0);
+            //check for valid tokens
+            //get username
+            $username = $user->getUserUsername(intval($user_id));
+            $validTokens = $auth->getAuthenticationToken(intval($user_id), $username, 0);
 
-                //if the user has valid tokens, redirect to the admin dashboard
-                if ($validTokens !== false) {
-                    //redirect to the admin dashboard
-                    performRedirect('/admin/dashboard.php?login=success&u=' . base64_encode($user_id));
-                    exit;
-                } else {
-                    //clear the session
-                    session_unset();
-                    //destroy the session
-                    session_destroy();
-                    //redirect to the login page
-                    performRedirect('/login.php?error=' . urlencode(base64_encode(json_encode(array('login_error' => 'Sessions have expired, Please Login.')))));
-                }
+            //if the user has valid tokens, redirect to the admin dashboard
+            if ($validTokens !== false) {
+                //redirect to the admin dashboard
+                performRedirect('/admin/dashboard.php?login=success&u=' . base64_encode($user_id));
+                exit;
+            } else {
+                //clear the session
+                session_unset();
+                //destroy the session
+                session_destroy();
+                //redirect to the login page
+                performRedirect('/login.php?error=' . urlencode(base64_encode(json_encode(array('login_error' => 'Sessions have expired, Please Login.')))));
             }
         } else {
             //clear the session
