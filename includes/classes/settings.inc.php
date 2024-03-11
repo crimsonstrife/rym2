@@ -1611,7 +1611,7 @@ class CompanySettings extends Settings
             //check if the company_logo is set or not
             if (isset($row['company_logo'])) {
                 //Set the company logo
-                $companyLogo = $row['company_logo'];
+                $companyLogo = intval($row['company_logo']);
             }
         }
 

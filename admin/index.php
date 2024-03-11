@@ -1,7 +1,4 @@
 <?php
-// Initialize the session
-session_start();
-
 define('CAN_INCLUDE', true); // Define a constant to control access to the include files
 
 // Include config file
@@ -34,19 +31,17 @@ if (isset($_GET['login'])) {
                 $auth_flag = false;
 
                 // Check if username is empty
-                if (empty(trim($_POST["username"]))) {
+                if (empty($_POST["username"])) {
                     $username_error = "Please enter username.";
                 } else {
-                    $username = trim($_POST["username"]);
+                    $username = $_POST["username"];
                 }
 
                 // Check if password is empty
-                if (empty(trim($_POST["password"]))) {
+                if (empty($_POST["password"])) {
                     $password_error = "Please enter your password.";
-                    //log the result
-                    error_log("Password is empty.");
                 } else {
-                    $password = trim($_POST["password"]);
+                    $password = $_POST["password"];
                 }
 
                 // Validate credentials
@@ -111,6 +106,10 @@ if (isset($_GET['login'])) {
                         $random_selector = randomizeEncryption(32, 32);
                         $random_password = randomizeEncryption(16, 16);
 
+                        //set the randomization variables to the session cookies
+                        $session->set('random_selector', $random_selector);
+                        $session->set('random_password', $random_password);
+
                         //hash the randomization variables
                         $random_selector_hash = password_hash($random_selector, PASSWORD_DEFAULT, ['cost' => 12]);
                         $random_password_hash = password_hash($random_password, PASSWORD_DEFAULT, ['cost' => 12]);
@@ -119,7 +118,7 @@ if (isset($_GET['login'])) {
                         $cookie_expiry_date = date("Y-m-d H:i:s", $expiration_time);
 
                         //set the cookies
-                        setcookies($user_id, $username, $random_password_hash, $random_selector_hash, $cookie_expiry_date);
+                        setcookies($user_id, $username, $random_password, $random_selector, $cookie_expiry_date);
 
                         //expire the existing token if it exists
                         $userToken = $authenticator->getAuthenticationToken($user_id, $username, 0);
@@ -130,11 +129,29 @@ if (isset($_GET['login'])) {
                         //create the token
                         $authenticator->createToken($user_id, $username, $random_password_hash, $random_selector_hash, $cookie_expiry_date);
                     } else {
+                        //check if the user has a token, if so expire it
+                        $userToken = $authenticator->getAuthenticationToken($user_id, $username, 0);
+
+                        //if the token exists, check if it is an array, if so expire all the tokens
+                        if (is_array($userToken)) {
+                            foreach ($userToken as $token) {
+                                $authenticator->expireToken(intval($token["id"]));
+                            }
+                        } else {
+                            //if the token is not an array, expire the token if it exists
+                            if ($userToken) {
+                                $authenticator->expireToken(intval($userToken["id"]));
+                            }
+                        }
+
                         //clear the cookies
                         clearCookies();
                     }
+                    //set the logged in flag to true
                     $session->set('logged_in', true);
+                    //set the user ID in the session
                     $session->set('user_id', $user_id);
+                    //redirect to the admin dashboard
                     performRedirect('/admin/dashboard.php?login=success&u=' . base64_encode($user_id));
                 } else {
                     //set the login error

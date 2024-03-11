@@ -75,7 +75,7 @@ if (!empty($_SESSION["user_id"])) {
             }
 
             //password selector cookie verification
-            if (hash_equals($_COOKIE["user_password_selector"], strval($auth_token[0]["password_hash"]) ?? '')) {
+            if (hash_equals($_COOKIE["user_password_selector"], strval($auth_token[0]["selector_hash"]) ?? '')) {
                 $user_password_selector_verified = true;
             }
 

@@ -15,6 +15,12 @@ $user = new User();
 //instance of the contact class
 $contact = new Contact();
 
+//instance of the media class
+$media = new Media();
+
+//instance of the settings class
+$settings = new Settings();
+
 // Check if the user is already logged in, if yes redirect to the admin dashboard
 if ($session->get('logged_in') === true) {
     performRedirect('/admin/dashboard.php');
@@ -118,9 +124,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $requestError = "Please enter your username or email address.";
     }
 }
+//get the application logo id
+$logoID = $settings->getAppLogo();
 
-
-?>
+//if the logo id is not empty, get the logo
+if (!empty($logoID)) {
+    $logo = $media->getMediaFilePath(intval($logoID));
+} else {
+    $logo = null;
+} ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -140,32 +152,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body class="text-center">
-    <?php
-    //check if email can be sent
-    if ($canSendEmail) { ?>
-        <form class="form-signin" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <h1 class="h3 mb-3 font-weight-normal">Forgot Password</h1>
-            <p>Enter your username or email address and we'll send you a link to reset your password.</p>
-            <div class="form-group">
-                <input type="text" name="username" class="form-control" placeholder="Username" value="<?php echo htmlspecialchars($username); ?>">
-                <span class="help-block">Enter your username or email address</span>
-                </span><?php echo $username_error; ?></span>
+    <div id="layout_content" class="w-50 mx-auto" style="margin-top: auto;">
+        <main>
+            <div class="container-fluid px-4">
+                <div class="row align-items-center">
+                    <!-- Application Logo -->
+                    <?php if (!empty($logo) || $logo != null) { ?>
+                        <img class="mb-4" src="<?php echo htmlspecialchars($logo); ?>" alt="Application Logo" width="150" height="150">
+                    <?php } else { ?>
+                        <i class="fa-solid fa-user-lock fa-5x"></i>
+                    <?php } ?>
+                </div>
+                <div class="row align-items-center">
+                    <div class="card mb-4">
+                        <!-- Forgot Password Form -->
+                        <?php
+                        //check if email can be sent
+                        if ($canSendEmail) { ?>
+                            <form class="form-signin" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                                <h1 class="h3 mb-3 font-weight-normal">Forgot Password</h1>
+                                <p>Enter your username or email address and we'll send you a link to reset your password.</p>
+                                <div class="form-group">
+                                    <input type="text" name="username" class="form-control" placeholder="Username" value="<?php echo htmlspecialchars($username); ?>">
+                                    <span class="help-block">Enter your username or email address</span>
+                                    </span><?php echo $username_error; ?></span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-primary" value="Submit">
+                                </div>
+                            </form>
+                        <?php } else { ?>
+                            <div class="alert alert-danger" role="alert">
+                                <p>Sorry, the system is not properly configured to send emails. Please contact the system administrator.</p>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Submit">
-            </div>
-        </form>
-    <?php } else { ?>
-        <div class="alert alert-danger" role="alert">
-            <p>Sorry, the system is not properly configured to send emails. Please contact the system administrator.</p>
-        </div>
-    <?php } ?>
+        </main>
+    </div>
 </body>
-
 <footer>
     <?php echo includeFooter(); ?>
 </footer>
 
 </html>
-
 <?php ?>

@@ -273,6 +273,71 @@ class Authenticator extends User
     }
 
     /**
+     * Get tokens by user ID which have an expiry date that has passed
+     * @param int $userID
+     *
+     * @return array|bool
+     */
+    function getExpiredTokens(int $userID) {
+        //SQL statement to get the expired tokens
+        $sql = "SELECT * FROM user_token_auth WHERE user_id = ? AND expiry_date < ?";
+
+        //prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //get the current date
+        $currentDate = date('Y-m-d H:i:s');
+
+        //bind the parameters to the SQL statement
+        $stmt->bind_param("is", $userID, $currentDate);
+
+        //execute the SQL statement
+        $stmt->execute();
+
+        //get the result of the SQL statement
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            //return the result
+            return $result->fetch_all(MYSQLI_ASSOC);;
+        }
+
+        //return false if no token is found
+        return false;
+    }
+
+    /**
+     * Clear the user's expired tokens
+     * @param int $userID
+     *
+     * @return bool
+     */
+    function clearExpiredTokens(int $userID)
+    {
+        //SQL statement to clear the expired tokens
+        $sql = "DELETE FROM user_token_auth WHERE user_id = ? AND is_expired = 1 AND expiry_date < ?";
+
+        //prepare the SQL statement for execution
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //get the current date
+        $currentDate = date('Y-m-d H:i:s');
+
+        //bind the parameters to the SQL statement
+        $stmt->bind_param("is", $userID, $currentDate);
+
+        //execute the SQL statement
+        $stmt->execute();
+
+        //if there were more than 0 rows affected, return true
+        if ($this->mysqli->affected_rows > 0) {
+            return true;
+        }
+
+        //return false if no rows were affected
+        return false;
+    }
+
+    /**
      * Validate the user by ID
      *
      * @param int $userID The user ID

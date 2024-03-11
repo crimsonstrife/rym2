@@ -39,13 +39,9 @@ class Session
             session_start();
             //Set the session variables
             $this->sessionVars = $_SESSION;
-            //debug
-            error_log("Session started");
         } else {
             //Set the session variables
             $this->sessionVars = $_SESSION;
-            //debug
-            error_log("Session already started");
         }
     }
 
@@ -97,7 +93,7 @@ class Session
         }
 
         //debug
-        error_log("Session variable" . $name . "not found/or not set");
+        error_log("Session variable " . $name . " not found/or not set");
         return false;
     }
 
