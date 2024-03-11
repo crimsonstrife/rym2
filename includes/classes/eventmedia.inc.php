@@ -26,6 +26,47 @@ require_once(BASEPATH . '/includes/connector.inc.php');
 class EventMedia extends Media
 {
     /**
+     * Does event have branding?
+     * Searches for event branding by event id, either logo or banner. Returns an array of the media id's if found.
+     *
+     * @param int $eventID event id
+     *
+     * @return null|array media id's
+     */
+    public function doesEventHaveBranding(int $eventID): null|array
+    {
+        //SQL statement to get the event branding
+        $sql = "SELECT * FROM event_branding WHERE event_id = ?";
+
+        //prepare the statement
+        $stmt = prepareStatement($this->mysqli, $sql);
+
+        //bind the parameters
+        $stmt->bind_param("i", $eventID);
+
+        //execute the statement
+        $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //array to hold the media id's
+        $mediaIDs = null;
+
+        //if the result has rows, loop through the rows and add them to the media id's array
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $mediaIDs = array(
+                'logo' => intval($row['event_logo']),
+                'banner' => intval($row['event_banner'])
+            );
+        }
+
+        //return the media id's array
+        return $mediaIDs;
+    }
+
+    /**
      * Get event logo
      *
      * @param int $eventID event id
@@ -197,6 +238,13 @@ class EventMedia extends Media
      */
     public function updateEventLogo(int $eventID, int $logo)
     {
+        //instance of the event class
+        $event = new Event();
+        //instance of the activity class
+        $activity = new Activity();
+        //instance of the session class
+        $session = new Session();
+
         //SQL statement to update the event logo
         $sql = "UPDATE event_branding SET event_logo = ? WHERE event_id = ?";
 
@@ -208,6 +256,21 @@ class EventMedia extends Media
 
         //execute the statement
         $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //get the user id from the session
+        $userID = intval($session->get('user_id'));
+
+        //if the result has rows, log the activity
+        if ($result) {
+            //log the activity
+            $activity->logActivity($userID, "Event Logo Updated", "Logo Image updated for Event ID: " . $eventID . " Event Name: " . $event->getEventName($eventID) . "");
+        } else {
+            //since it is possible there was nothing to update, attempt to insert an entry for the event and logo
+            $this->setEventLogo($eventID, $logo);
+        }
     }
 
     /**
@@ -218,6 +281,13 @@ class EventMedia extends Media
      */
     public function updateEventBanner(int $eventID, int $banner)
     {
+        //instance of the event class
+        $event = new Event();
+        //instance of the activity class
+        $activity = new Activity();
+        //instance of the session class
+        $session = new Session();
+
         //SQL statement to update the event banner
         $sql = "UPDATE event_branding SET event_banner = ? WHERE event_id = ?";
 
@@ -229,6 +299,21 @@ class EventMedia extends Media
 
         //execute the statement
         $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //get the user id from the session
+        $userID = intval($session->get('user_id'));
+
+        //if the result has rows, log the activity
+        if ($result) {
+            //log the activity
+            $activity->logActivity($userID, "Event Banner Updated", "Banner Image updated for Event ID: " . $eventID . " Event Name: " . $event->getEventName($eventID) . "");
+        } else {
+            //since it is possible there was nothing to update, attempt to insert an entry for the event and banner
+            $this->setEventBanner($eventID, $banner);
+        }
     }
 
     /**
@@ -241,6 +326,13 @@ class EventMedia extends Media
      */
     public function updateEventLogoAndBanner(int $eventID, int $logo, int $banner)
     {
+        //instance of the event class
+        $event = new Event();
+        //instance of the activity class
+        $activity = new Activity();
+        //instance of the session class
+        $session = new Session();
+
         //SQL statement to update the event logo
         $sql = "UPDATE event_branding SET event_logo = ?, event_banner = ? WHERE event_id = ?";
 
@@ -252,6 +344,21 @@ class EventMedia extends Media
 
         //execute the statement
         $stmt->execute();
+
+        //get the result
+        $result = $stmt->get_result();
+
+        //get the user id from the session
+        $userID = intval($session->get('user_id'));
+
+        //if the result has rows, log the activity
+        if ($result) {
+            //log the activity
+            $activity->logActivity($userID, "Event Logo and Banner Updated", "Logo and Banner Images updated for Event ID: " . $eventID . " Event Name: " . $event->getEventName($eventID) . "");
+        } else {
+            //log the failure to update
+            $activity->logActivity($userID, "Event Logo and Banner Update Failed", "Logo and Banner Images update failed for Event ID: " . $eventID . " Event Name: " . $event->getEventName($eventID) . "");
+        }
     }
 
     /**

@@ -1,7 +1,4 @@
 <?php
-// Initialize the session
-session_start();
-
 define('CAN_INCLUDE', true); // Define a constant to control access to the include files
 
 // Include config file
@@ -34,19 +31,17 @@ if (isset($_GET['login'])) {
                 $auth_flag = false;
 
                 // Check if username is empty
-                if (empty(trim($_POST["username"]))) {
+                if (empty($_POST["username"])) {
                     $username_error = "Please enter username.";
                 } else {
-                    $username = trim($_POST["username"]);
+                    $username = $_POST["username"];
                 }
 
                 // Check if password is empty
-                if (empty(trim($_POST["password"]))) {
+                if (empty($_POST["password"])) {
                     $password_error = "Please enter your password.";
-                    //log the result
-                    error_log("Password is empty.");
                 } else {
-                    $password = trim($_POST["password"]);
+                    $password = $_POST["password"];
                 }
 
                 // Validate credentials
