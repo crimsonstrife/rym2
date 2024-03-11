@@ -33,6 +33,9 @@ $school = new School();
 // instance of the settings class
 $settings = new Settings();
 
+//instance of the company settings class
+$companySettings = new CompanySettings();
+
 // instance of the media class
 $media = new Media();
 
@@ -599,25 +602,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <div id="layout">
-    <?php //if this is an event page, show the event header
-    if ($isEventPage) { ?>
-        <!-- event header -->
-        <?php //if the event banner is set and not null, show the banner
-        if (isset($event_banner) && !empty($event_banner) && !is_null($event_banner)) { ?>
-            <div class="eventBanner" style="background-image: url('<?php echo htmlspecialchars($event_banner); ?>');">
-            </div>
-        <?php } ?>
-    <?php } ?>
     <!-- main content -->
     <main>
+        <?php //if this is an event page, show the event header
+        if ($isEventPage) { ?>
+            <!-- event header -->
+            <?php //if the event banner is set and not null, show the banner
+            if (isset($event_banner) && !empty($event_banner) && !is_null($event_banner)) {
+                //set the event banner as the banner variable
+                $bannerImage = htmlspecialchars($event_banner); ?>
+                <div class="eventBanner">
+                    <img src="<?php echo $bannerImage; ?>" class="img-fluid" alt="Event Banner">
+                </div>
+                <style>
+                    #layout_content {
+                        margin-top: 2%; /* fix the margin of the content when the banner is showing */
+                    }
+                </style>
+            <?php } ?>
+        <?php } ?>
         <div id="layout_content" class="w-95 mx-auto nav-less">
             <div class="container-fluid px-4">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
-                            <h1>Welcome to the <?php if (!$event_location == null) {
-                                                    echo htmlspecialchars($event_location);
-                                                } else {
+                            <h1>Welcome to the <?php if (defined('COMPANY_NAME')) {
                                                     echo COMPANY_NAME;
                                                 } ?> Internship Recruitment Application</h1>
                             <p>Students will be able to enter their information and have it sent to the database.</p>
@@ -628,12 +637,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                 </div>
             </div>
+            <?php //if this is an event page, show a welcome message for the specific event/school
+            if ($isEventPage) { ?>
+                <div class="container-fluid px-4">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2>Welcome to the <?php echo htmlspecialchars($event_location); ?> Event</h2>
+                                <p>Thank you for your interest in our event at <?php echo htmlspecialchars($event_location); ?>. Please fill in your information to register.</p>
+                                <p>You should receive an automated confirmation email and then will be contacted again after the event.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
             <div class="container-fluid px-4">
                 <div class="container">
+                    <?php //if the company logo media id is set and not null, show the logo
+                    $companyLogoMediaID = $companySettings->getCompanyLogo();
+                    //get the company logo from the media class
+                    if (isset($companyLogoMediaID) && !empty($companyLogoMediaID) && !is_null($companyLogoMediaID)) {
+                        $companyLogo = $media->getMediaFilePath($companyLogoMediaID);
+                    } else {
+                        $companyLogo = null;
+                    }
+                    //if the company logo is set and not null, show the logo
+                    if (isset($companyLogo) && !empty($companyLogo) && !is_null($companyLogo)) {
+                        //set the company logo as the logo variable
+                        $logoImage = htmlspecialchars($companyLogo); ?>
+                        <div class="row justify-content-center">
+                            <div class="col">
+                            </div>
+                            <div class="col-md-3">
+                                <img src="<?php echo $logoImage; ?>" class="img-fluid companyLogo" alt="Company Logo">
+                            </div>
+                            <div class="col">
+                            </div>
+                        </div>
+                    <?php } ?>
                     <div class="row">
                         <!-- List of available jobs -->
                         <div class="col-md-12">
-                            <h2>Available Jobs</h2>
+                            <h2>Available Jobs <?php if (defined('COMPANY_NAME')) {
+                                                    echo ' at ' . COMPANY_NAME;
+                                                } ?> </h2>
                             <p>Below is a list of available jobs.</p>
                             <p>Click on a job to view more information.</p>
                         </div>
@@ -1268,7 +1315,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 <script type="text/javascript">
     //variables for the datatable
-    var tableHeight = "40vh";
+    var tableHeight = "25vh";
     var rowNav = true;
     var pageSelect = [5, 10, 15, 20, 25, 50, ["All", -1]];
     var columnArray = [{
