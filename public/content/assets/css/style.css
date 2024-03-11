@@ -11,6 +11,10 @@ main {
 	flex-flow: nowrap;
 }
 
+.eventBanner {
+	margin-top: 2%;
+}
+
 footer#layout_footer {
 	height: 8vh;
 	position: fixed;
@@ -36,6 +40,13 @@ footer#layout_footer {
 	margin-left: auto;
 	margin-right: auto;
 	display: block;
+}
+
+img.companyLogo {
+	max-width: 100%;
+	max-height: 100%;
+	display: block;
+	margin: 5%;
 }
 
 .thumbnail-container {
