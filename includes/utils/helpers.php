@@ -84,6 +84,10 @@ function formatAddress(string $address, string $city, string $state, string $zip
     return $formattedAddress;
 };
 
+/**
+ * Clear the cookies
+ * @return void
+ */
 function clearCookies()
 {
     //clear the cookies
@@ -96,6 +100,15 @@ function clearCookies()
     "user_password_selector", "", 0, "/", "", true, true);
 };
 
+/**
+ * Set the cookies
+ * @param int $userID - the user ID
+ * @param string $username - the username
+ * @param string $passwordHash - the password hash
+ * @param string $selectorHash - the selector hash
+ * @param string $expiryDate - the expiry date
+ * @return void
+ */
 function setCookies(int $userID, string $username, string $passwordHash, string $selectorHash, string $expiryDate)
 {
     //convert the expiry date to a unix timestamp
@@ -109,6 +122,12 @@ function setCookies(int $userID, string $username, string $passwordHash, string 
     setcookie("user_password_selector", $selectorHash, $expiryDate, "/", "", true, true);
 };
 
+/**
+ * Randomize Encryption
+ * @param int $minimum - the minimum value
+ * @param int $maximum - the maximum value
+ * @return int
+ */
 function randomizeEncryption($minimum, $maximum)
 {
     //number range
@@ -140,6 +159,11 @@ function randomizeEncryption($minimum, $maximum)
     return $minimum + $random;
 };
 
+/**
+ * Create a token
+ * @param int $length - the length of the token
+ * @return string
+ */
 function createToken($length)
 {
     $token = "";
@@ -152,12 +176,22 @@ function createToken($length)
     return $token;
 }
 
+/**
+ * Perform a redirect
+ * @param string $filePath - the file path to redirect to
+ * @return void
+ */
 function performRedirect(string $filePath)
 {
     //redirect to the specified file
     header("Location: " . APP_URL . $filePath);
 }
 
+/**
+ * Flatten an array
+ * @param array $array - the array to be flattened
+ * @return array
+ */
 function flattenArray(array $array): array
 {
     $return = array();
