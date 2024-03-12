@@ -44,8 +44,7 @@
             "CrimsonStrife\\RYM2\\Interfaces\\": "includes/interfaces/"
         },
         "classmap": [
-            "includes/classes/",
-            "includes/interfaces/"
+            "includes"
         ]
     },
     "scripts": {
