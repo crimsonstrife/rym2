@@ -84,8 +84,8 @@ class StudentTest extends TestCase
         $this->assertNotNull($student);
 
         //get the student first name and last name from the array
-        $resultFirstName = $student['firstName'];
-        $resultLastName = $student['lastName'];
+        $resultFirstName = $student['first_name'];
+        $resultLastName = $student['last_name'];
 
         //check if the student was retrieved
         $this->assertEquals($expectedFirstName, $resultFirstName);
