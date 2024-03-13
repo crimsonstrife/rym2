@@ -44,40 +44,7 @@
             "CrimsonStrife\\RYM2\\Interfaces\\": "includes/interfaces/"
         },
         "classmap": [
-            "includes/classes/session.inc.php",
-            "includes/classes/application.inc.php",
-            "includes/classes/users.inc.php",
-            "includes/classes/userlogin.inc.php",
-            "includes/classes/auth.inc.php",
-            "includes/classes/roles.inc.php",
-            "includes/classes/permissions.inc.php",
-            "includes/classes/students.inc.php",
-            "includes/classes/subjects.inc.php",
-            "includes/classes/areaofinterest.inc.php",
-            "includes/classes/jobfield.inc.php",
-            "includes/classes/job.inc.php",
-            "includes/classes/grade.inc.php",
-            "includes/classes/degree.inc.php",
-            "includes/classes/school.inc.php",
-            "includes/classes/reports.inc.php",
-            "includes/classes/events.inc.php",
-            "includes/classes/studentevent.inc.php",
-            "includes/classes/studentdata.inc.php",
-            "includes/classes/studentaddress.inc.php",
-            "includes/classes/studenteducation.inc.php",
-            "includes/classes/schedule.inc.php",
-            "includes/interfaces/login.inc.php",
-            "includes/interfaces/major.inc.php",
-            "includes/classes/contact.inc.php",
-            "includes/classes/activity.inc.php",
-            "includes/classes/media.inc.php",
-            "includes/classes/eventmedia.inc.php",
-            "includes/classes/search.inc.php",
-            "includes/classes/settings.inc.php",
-            "includes/classes/topdegreebyschool.report.inc.php",
-            "includes/classes/topfieldbyschool.report.inc.php",
-            "includes/classes/jobsbyfield.report.inc.php",
-            "includes/classes/contactfollowuppercentage.report.inc.php"
+            "includes"
         ]
     },
     "scripts": {
@@ -142,5 +109,20 @@
         "post-install-cmd": [
             "@post-update-cmd"
         ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5.12",
+        "php": "^8.1.2 || ^8.2",
+        "ext-imagick": "*",
+        "ext-gd": "*",
+        "vlucas/phpdotenv": "^5.5",
+        "twbs/bootstrap": "^5.3.2",
+        "fortawesome/font-awesome": "^6.4",
+        "components/jquery": "^3.7",
+        "select2/select2": "^4.0",
+        "components/jquery-migrate": "^3.0",
+        "phpmailer/phpmailer": "^6.8",
+        "chillerlan/php-qrcode": "^5.0",
+        "nnnick/chartjs": "^4.4"
     }
 }

@@ -780,8 +780,14 @@ class Student
         $session = new Session();
         $updatedBy = intval($session->get('user_id')) ?? null; //if the session is not available, set the updated_by to null
 
-        //SQL statement to update a student in the database
-        $sql = "UPDATE student SET first_name = '$firstName', last_name = '$lastName', email = '$email', phone = '$phone', address = '$address', city = '$city', state = '$state', zipcode = '$zip', degree = '$degreeID', major = '$majorID', school = '$school', graduation = '$graduation', position = '$position', interest = '$areaID', updated_at = '$timestamp', updated_by = '$updatedBy' WHERE id = '$studentID'";
+        //check if the updatedBy is null, modify the sql statement to not set the updated_by field
+        if ($updatedBy == null) {
+            //SQL statement to update a student in the database
+            $sql = "UPDATE student SET first_name = '$firstName', last_name = '$lastName', email = '$email', phone = '$phone', address = '$address', city = '$city', state = '$state', zipcode = '$zip', degree = '$degreeID', major = '$majorID', school = '$school', graduation = '$graduation', position = '$position', interest = '$areaID', updated_at = '$timestamp' WHERE id = $studentID";
+        } else {
+            //SQL statement to update a student in the database
+            $sql = "UPDATE student SET first_name = '$firstName', last_name = '$lastName', email = '$email', phone = '$phone', address = '$address', city = '$city', state = '$state', zipcode = '$zip', degree = '$degreeID', major = '$majorID', school = '$school', graduation = '$graduation', position = '$position', interest = '$areaID', updated_at = '$timestamp', updated_by = '$updatedBy' WHERE id = $studentID";
+        }
 
         //prepare the statement
         $stmt = prepareStatement($this->mysqli, $sql);
