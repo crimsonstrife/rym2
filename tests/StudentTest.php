@@ -9,6 +9,9 @@ require_once 'includes/boostrap.php';
  */
 class StudentTest extends TestCase
 {
+    /**
+     * Test the addStudent method to add a student to the database
+     */
     public function testAddStudent()
     {
         $studentClass = new Student();
@@ -51,5 +54,41 @@ class StudentTest extends TestCase
 
         //check if the student was added
         $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * Test the getStudent methods to get a student from the database
+     */
+    public function testGetStudent()
+    {
+        $studentClass = new Student();
+        $email = 'jdoe@test.email';
+        $expectedFirstName = 'John';
+        $expectedLastName = 'Doe';
+
+        //get the student ID
+        $result = $studentClass->getStudentByEmail($email);
+
+        //check that the result is not empty, null or false
+        $this->assertNotEmpty($result);
+        $this->assertNotNull($result);
+
+        //get the student id from the array
+        $id = intval($result['id']);
+
+        //get the student by ID
+        $student = $studentClass->getStudentById($id);
+
+        //check that the student is not empty, null or false
+        $this->assertNotEmpty($student);
+        $this->assertNotNull($student);
+
+        //get the student first name and last name from the array
+        $resultFirstName = $student['firstName'];
+        $resultLastName = $student['lastName'];
+
+        //check if the student was retrieved
+        $this->assertEquals($expectedFirstName, $resultFirstName);
+        $this->assertEquals($expectedLastName, $resultLastName);
     }
 }
