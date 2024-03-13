@@ -180,12 +180,22 @@ class Activity
             $performedOn = substr($performedOn, 0, 535);
         }
 
-        // Prepare the SQL statement
-        $sql = "INSERT INTO activity_log (user_id, action_date, action, performed_on) VALUES (?, ?, ?, ?)";
-        $stmt = prepareStatement($this->mysqli, $sql);
+        //check if the user ID is null, if so, set the sql accordingly
+        if ($userID == null) {
+            // Prepare the SQL statement
+            $sql = "INSERT INTO activity_log (action_date, action, performed_on) VALUES (?, ?, ?)";
+            $stmt = prepareStatement($this->mysqli, $sql);
 
-        // Bind the parameters based on the user ID
-        $stmt->bind_param('isss' , $userID, $actionDate, $action, $performedOn);
+            // Bind the parameters based on the user ID
+            $stmt->bind_param('sss', $actionDate, $action, $performedOn);
+        } else {
+            // Prepare the SQL statement
+            $sql = "INSERT INTO activity_log (user_id, action_date, action, performed_on) VALUES (?, ?, ?, ?)";
+            $stmt = prepareStatement($this->mysqli, $sql);
+
+            // Bind the parameters based on the user ID
+            $stmt->bind_param('isss', $userID, $actionDate, $action, $performedOn);
+        }
 
         // Execute the statement
         $stmt->execute();
