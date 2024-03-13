@@ -91,4 +91,88 @@ class StudentTest extends TestCase
         $this->assertEquals($expectedFirstName, $resultFirstName);
         $this->assertEquals($expectedLastName, $resultLastName);
     }
+
+    /**
+     * Test the updateStudent method to update a student in the database
+     */
+    public function testUpdateStudent()
+    {
+        $studentClass = new Student();
+        $studentDataClass = new StudentData();
+        $studentAddressClass = new StudentAddress();
+        $studentEducationClass = new StudentEducation();
+        $email = 'jdoe@test.email';
+
+        //get the student ID for the test student
+        $result = $studentClass->getStudentByEmail($email);
+
+        //check that the result is not empty, null or false
+        $this->assertNotEmpty($result);
+        $this->assertNotNull($result);
+
+        //get the student id from the array
+        $id = intval($result['id']);
+
+        //set the updated student data
+        $firstName = 'Jane';
+        $lastName = 'Doe';
+        $phone = '987-654-3210';
+        $email = 'jdoe@test.email';
+        $position = 'FULL';
+        $interest = 1; //default interest to the first entry in the database
+        $updatedAt = date('Y-m-d H:i:s');
+        $studentAddressClass->address = '456 Main St';
+        $studentAddressClass->city = 'Anytown';
+        $studentAddressClass->state = 'NY';
+        $studentAddressClass->zipcode = '67890';
+        $studentEducationClass->school = 1; //default school to the first entry in the database
+        $studentEducationClass->degree = 1; //default degree to the first entry in the database
+        $studentEducationClass->major = 1; //default major to the first entry in the database
+        //set the graduation date to a date in the future by 60 days
+        $studentEducationClass->graduation = date('Y-m-d', strtotime('+60 days')); //default graduation to 60 days from now
+        $expectedResult = true;
+
+        //set the student data
+        $studentDataClass->firstName = $firstName;
+        $studentDataClass->lastName = $lastName;
+        $studentDataClass->phone = $phone;
+        $studentDataClass->email = $email;
+        $studentDataClass->studentAddress = $studentAddressClass;
+        $studentDataClass->studentEducation = $studentEducationClass;
+        $studentDataClass->position = $position;
+        $studentDataClass->interest = $interest;
+        $studentDataClass->updatedAt = $updatedAt;
+
+        //update the student
+        $result = $studentClass->updateStudent($id, $studentDataClass);
+
+        //check if the student was updated
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * Test the deleteStudent method to delete a student from the database
+     */
+    public function testDeleteStudent()
+    {
+        $studentClass = new Student();
+        $email = 'jdoe@test.email';
+        $expectedResult = true;
+
+        //get the student ID for the test student
+        $result = $studentClass->getStudentByEmail($email);
+
+        //check that the result is not empty, null or false
+        $this->assertNotEmpty($result);
+        $this->assertNotNull($result);
+
+        //get the student id from the array
+        $id = intval($result['id']);
+
+        //delete the student
+        $result = $studentClass->deleteStudent($id);
+
+        //check if the student was deleted
+        $this->assertEquals($expectedResult, $result);
+    }
 }
