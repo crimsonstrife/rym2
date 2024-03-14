@@ -97,8 +97,17 @@ class UserLogin extends User implements Login
         //expire user's token(s)
         $auth->expireTokenByUserID(intval($session->get("user_id")));
 
-        // Unset all of the session variables
-        $session->sessionVars = array();
+        //Get all session variables, and remove them
+        $sessionVars = $session->getAll();
+
+        //remove all session variables
+        foreach ($sessionVars as $vars => $value) {
+            //get the name of the session variable as a string
+            $name = strval($vars);
+
+            //remove the session variable
+            $session->remove($name);
+        }
 
         // Destroy the session.
         session_destroy();
