@@ -202,10 +202,15 @@ class StudentAddress extends Student
      * @param string $property
      * @return string
      */
-    public function getEscapedString(string $property): string
+    public function getEscapedString(string $property = null): string
     {
         //get the value of the property
         $value = $this->$property;
+
+        //if the value is null, return an empty string
+        if ($value === null) {
+            return "";
+        }
 
         //escape the string
         $escapedString = $this->mysqli->real_escape_string($value);
