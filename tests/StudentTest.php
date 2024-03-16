@@ -64,7 +64,7 @@ class StudentTest extends TestCase
         //set the test student ID to null
         $this->testStudentId = null;
 
-        //check if the test student already exists in the database
+        //check if the test student already exists in the database, used to see if the addStudent method has already been tested, if so, get the student ID
         $result = $this->studentClass->getStudentByEmail($this->email);
 
         //if the test student exists, assign the student ID to the test student ID
