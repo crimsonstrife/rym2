@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once 'includes/boostrap.php';
+require_once 'includes/bootstrap.php';
 
 /**
  * Test case for Event class
