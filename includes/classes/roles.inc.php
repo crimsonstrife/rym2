@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Roles Class file for the College Recruitment Application
  * Contains all the functions for the Roles Class and handles all user role functions.
@@ -700,7 +701,7 @@ class RoleData extends Roles
     public function getPermissionGrantDate(int $roleId, int $permissionId): string
     {
         // SQL statement to get the date a role was granted a permission
-        $sql = "SELECT MAX(created_at) AS max_created_at, MAX(updated_at) AS max_updated_at FROM role_has_permission WHERE role_id = ? AND permission_id = ?";
+        $sql = "SELECT created_at FROM role_has_permission WHERE role_id = ? AND permission_id = ?";
 
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
@@ -714,11 +715,13 @@ class RoleData extends Roles
         // Get the results
         $result = $stmt->get_result();
 
-        // Fetch the row
-        $row = $result->fetch_assoc();
+        //Create a variable to hold the date
+        $date = "";
 
-        // Get the most recent date
-        $date = $row['max_created_at'] ?? $row['max_updated_at'] ?? "";
+        //Loop through the results and add them to the array
+        while ($row = $result->fetch_assoc()) {
+            $date = $row['created_at'];
+        }
 
         // Return the date
         return strval($date);
