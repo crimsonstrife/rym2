@@ -21,7 +21,7 @@ $auth = new Authenticator();
 $role = new Roles();
 
 //include the role data class
-$roleData = new RoleData();
+$roleDataClass = new RoleData();
 
 //user class
 $user = new User();
@@ -209,7 +209,7 @@ if (!$hasPermission) {
                                                                 foreach ($permissionArray as $permission) { ?>
                                                     <tr>
                                                         <td><?php echo $permission['name']; ?></td>
-                                                        <td><?php echo $roleData->getPermissionGrantDate(intval($roleId), intval($permission['id'])); ?>
+                                                        <td><?php echo $roleDataClass->getPermissionGrantDate(intval($roleId), intval($permission['id'])); ?>
                                                         </td>
                                                     </tr>
                                                     <?php }
@@ -230,7 +230,7 @@ if (!$hasPermission) {
                         <div id="info" class="">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <?php $usersWithRole = $roleData->getUsersWithRole(intval($roleId));
+                                    <?php $usersWithRole = $roleDataClass->getUsersWithRole(intval($roleId));
                                             if (!empty($usersWithRole)) { ?>
                                     <p><strong>Users:</strong></p>
                                     <div class="card-body">
@@ -252,11 +252,11 @@ if (!$hasPermission) {
                                                     <tr>
                                                         <td><?php echo $userDetails['username']; ?></td>
                                                         <td><?php echo $userDetails['email']; ?></td>
-                                                        <td><?php echo $roleData->getUserRoleGivenDate(intval($userDetails['id']), intval($roleId)); ?>
+                                                        <td><?php echo $roleDataClass->getUserRoleGivenDate(intval($userDetails['id']), intval($roleId)); ?>
                                                         </td>
                                                         <td><?php echo $user->getUserUsername(intval($userHasRole['created_by'])); ?>
                                                         </td>
-                                                        <td><?php echo $roleData->getUserRoleModifiedDate(intval($userDetails['id']), intval($roleId)); ?>
+                                                        <td><?php echo $roleDataClass->getUserRoleModifiedDate(intval($userDetails['id']), intval($roleId)); ?>
                                                         </td>
                                                         <td><?php echo $user->getUserUsername(intval($userHasRole['updated_by'])); ?>
                                                         </td>
