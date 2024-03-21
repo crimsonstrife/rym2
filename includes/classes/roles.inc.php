@@ -634,11 +634,11 @@ class Roles
         $userId = $session->get('user_id') ?? null;
 
         // Get the permissions for the role
-        $permissions = $this->getPermissionsIdByRoleId($roleId);
+        $permissions = $this->getPermissionsIdByRoleId(intval($roleId));
 
         // Remove the permissions
         foreach ($permissions as $permission) {
-            $this->removeRolePermission($roleId, $permission, $userId);
+            $this->removeRolePermission(intval($roleId), $permission, intval($userId));
         }
 
         // SQL statement to delete a role
@@ -648,7 +648,7 @@ class Roles
         $stmt = prepareStatement($this->mysqli, $sql);
 
         // Bind the parameters to the SQL statement
-        $stmt->bind_param("i", $roleId);
+        $stmt->bind_param("i", intval($roleId));
 
         // Execute the statement
         $stmt->execute();
@@ -656,7 +656,7 @@ class Roles
         // Check the result
         if ($stmt->affected_rows > 0) {
             // Log the activity
-            $this->logRoleActivity($roleId, "Role Deleted", $userId);
+            $this->logRoleActivity(intval($roleId), "Role Deleted", $userId);
             return true;
         }
 
