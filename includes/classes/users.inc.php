@@ -414,11 +414,17 @@ class User
     /**
      * Get a user's username by ID
      *
-     * @param int $userID
+     * @param int|null $userID
      * @return string
      */
-    public function getUserUsername(int $userID): string
+    public function getUserUsername(int $userID = null): string
     {
+        // Check if the user id submitted is null
+        if ($userID === null) {
+            // Return "SYSTEM" if the user id is null
+            return "SYSTEM";
+        }
+
         // SQL statement to get the user's username by ID
         $sql = "SELECT username FROM users WHERE id = $userID";
 

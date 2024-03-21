@@ -4,3 +4,5 @@
 ready.php
 public/content/uploads/
 public/content/libs/
+.idea/
+.phpunit.result.cache

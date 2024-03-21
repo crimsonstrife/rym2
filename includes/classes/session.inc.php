@@ -29,7 +29,7 @@ require_once(BASEPATH . '/includes/connector.inc.php');
  */
 class Session
 {
-    public $sessionVars;
+    protected $sessionVars;
 
     public function __construct()
     { //Get the session variables, will still trigger a phpmd warning.
@@ -54,12 +54,21 @@ class Session
     public function set(string $name, $value): void
     {
         if (isset($_SESSION)) {
+            //Set the session variables
             $_SESSION[$name] = $value;
+
+            //Set the property
+            $this->sessionVars = $_SESSION;
         } else {
             //Start the session
             $this->sessionVars = session_start();
+
             //Set the session variables
             $_SESSION[$name] = $value;
+
+            //Set the property
+            $this->sessionVars = $_SESSION;
+
             //debug
             error_log("Session started, variable set");
         }
@@ -72,8 +81,12 @@ class Session
      */
     public function get(string $name)
     {
-        if (isset($_SESSION[$name])) {
-            return $_SESSION[$name];
+        //Get the property
+        $session = $this->sessionVars;
+
+        //Check if the session variable exists
+        if (isset($session[$name])) {
+            return $session[$name];
         }
 
         //debug
@@ -88,7 +101,11 @@ class Session
      */
     public function check(string $name): bool
     {
-        if (isset($_SESSION[$name])) {
+        //Get the property
+        $session = $this->sessionVars;
+
+        //Check if the session variable exists
+        if (isset($session[$name])) {
             return true;
         }
 
@@ -104,8 +121,33 @@ class Session
      */
     public function remove(string $name): void
     {
-        if (isset($_SESSION[$name])) {
+        //Get the property
+        $session = $this->sessionVars;
+
+        //Check if the session variable exists
+        if (isset($session[$name])) {
+            //Unset the session variable
             unset($_SESSION[$name]);
+
+            //Set the property
+            $this->sessionVars = $_SESSION;
         }
+
+        //debug
+        error_log("Session variable " . $name . " removed");
+    }
+
+    /**
+     * Get all session variables
+     *
+     * @return array An array of all session variables
+     */
+    public function getAll(): array
+    {
+        //Get the property
+        $session = $this->sessionVars;
+
+        //Return the session variables
+        return $session;
     }
 }

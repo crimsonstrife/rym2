@@ -356,29 +356,9 @@ define('DEFAULT_ERROR', array(
     "code" => "MYSTIC",
     "message" => "An error has occurred, contact the Administrator."
 ));
-define('SUDDEN_ERROR', array(
-    "code" => "COBRA",
-    "message" => "An error has occurred, contact the Administrator."
-));
-define('TIMEOUT', array(
-    "code" => "TURTLE",
-    "message" => "The request has timed out, contact the Administrator."
-));
-define('RESTART', array(
-    "code" => "PHOENIX",
-    "message" => "There may have been a server restart or recovery, contact the Administrator."
-));
 define('NOT_FOUND', array(
     "code" => "SASQUATCH",
     "message" => "The requested content was not found, contact the Administrator."
-));
-define('NOT_IMPLEMENTED', array(
-    "code" => "YETI",
-    "message" => "The requested content is not yet implemented, contact the Administrator."
-));
-define('SERVICE_UNAVAILABLE', array(
-    "code" => "COMPASS",
-    "message" => "The requested content is not available, contact the Administrator."
 ));
 define('CRITICAL', array(
     "code" => "MONOLITH",
@@ -407,14 +387,6 @@ define('SEND_MAIL_ERROR', array(
 define('DATA_MISSING', array(
     "code" => "WEASEL",
     "message" => "Required data is missing, contact the Administrator."
-));
-define('FILE_UPLOAD_ERROR', array(
-    "code" => "CYMBAL",
-    "message" => "File could not be uploaded, contact the Administrator."
-));
-define('FILE_DELETE_ERROR', array(
-    "code" => "COWBELL",
-    "message" => "File could not be deleted, contact the Administrator."
 ));
 define('FILE_EXISTS_ERROR', array(
     "code" => "HARMONY",

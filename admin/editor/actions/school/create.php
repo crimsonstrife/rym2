@@ -179,20 +179,30 @@ if (!$hasPermission) {
 
         if (($canCreate && $schoolCreated) && $school_id != null && isset($school_id)) {
             //if there are files to upload, upload them
-            if (!empty($school_logo) && $uploaded_file != null) {
+            if (!empty($school_logo)) {
+                //debug
+                error_log('school_logo: ' . $school_logo);
+                error_log('uploaded_file: ' . print_r($uploaded_file, true));
+
                 //check if the school logo is an array
-                if (is_array($school_logo)) {
+                if (is_array($school_logo) && $uploaded_file != null) {
                     //upload the school logo, and get the media id
                     $media_id = $media->uploadMedia($school_logo, intval($_SESSION['user_id']));
+
+                    //debug
+                    error_log('media_id: ' . $media_id);
 
                     //get the file name
                     $target_file_logo = $media->getMediaFileName($media_id);
 
                     //get the file type
                     $imageFileType_logo = strtolower(pathinfo($target_file_logo, PATHINFO_EXTENSION));
-                } else if (!empty($school_logo) && $uploaded_file = null) {
+                } else if ((!empty($school_logo) && $school_logo != null) && ($uploaded_file = null || $uploaded_file == '')) {
                     //assume the school logo is an integer
                     $media_id = $school_logo;
+
+                    //debug
+                    error_log('media_id: ' . $media_id);
 
                     //get the file name
                     $target_file_logo = $media->getMediaFileName($media_id);
@@ -220,16 +230,16 @@ if (!$hasPermission) {
             }
         }
     } ?>
-    <!-- Completion page content -->
-    <div class="container-fluid px-4">
-        <h1 class="mt-4"><?php echo htmlspecialchars($school_name); ?></h1>
-        <div class="row">
-            <div class="card mb-4">
-                <!-- show completion message -->
-                <div class="card-header">
-                    <div class="card-title">
-                        <div>
-                            <?php
+<!-- Completion page content -->
+<div class="container-fluid px-4">
+    <h1 class="mt-4"><?php echo htmlspecialchars($school_name); ?></h1>
+    <div class="row">
+        <div class="card mb-4">
+            <!-- show completion message -->
+            <div class="card-header">
+                <div class="card-title">
+                    <div>
+                        <?php
                             if ($action == 'create') {
                                 if ($schoolCreated) {
                                     echo '<i class="fa-solid fa-check"></i>';
@@ -240,14 +250,14 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
-                        </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <!-- show completion message -->
-                        <div class="col-md-12">
-                            <?php
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- show completion message -->
+                    <div class="col-md-12">
+                        <?php
                             if ($action == 'create') {
                                 if ($schoolCreated) {
                                     echo '<p>The school: ' . htmlspecialchars($school_name) . ' has been created.</p>';
@@ -257,12 +267,12 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
-                        </div>
                     </div>
-                    <!-- show error messages -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <?php
+                </div>
+                <!-- show error messages -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <?php
                             if ($action == 'create') {
                                 if (!$schoolCreated) {
                                     echo '<p>The school: ' . htmlspecialchars($school_name) . ' could not be created due to an error.</p>';
@@ -274,12 +284,12 @@ if (!$hasPermission) {
                                     if ($schoolLogoSet && (!empty($school_logo) || $school_logo != null || isset($school_logo))) {
                                         echo '<p>The school logo has been set.</p>';
                                     } elseif (!$schoolLogoSet && (!empty($school_logo) || $school_logo != null || isset($school_logo))) {
-                                        echo '<p>The school logo could not be set.</p>';
+                                        echo '<p>The school logo could not be set or was not changed.</p>';
                                     }
                                     if ($schoolColorSet && (!empty($school_color) || $school_color != null || isset($school_color))) {
                                         echo '<p>The school color has been set.</p>';
                                     } elseif (!$schoolColorSet && (!empty($school_color) || $school_color != null || isset($school_color))) {
-                                        echo '<p>The school color could not be set.</p>';
+                                        echo '<p>The school color could not be set or was not changed.</p>';
                                     }
                                 }
                                 //if the school name already exists, show the error message
@@ -288,13 +298,13 @@ if (!$hasPermission) {
                                 }
                             }
                             ?>
-                        </div>
                     </div>
-                    <div class="row">
-                        <!-- show back buttons -->
-                        <div class="col-md-12">
-                            <div class="card-buttons">
-                                <?php
+                </div>
+                <div class="row">
+                    <!-- show back buttons -->
+                    <div class="col-md-12">
+                        <div class="card-buttons">
+                            <?php
                                 if ($action == 'create') {
                                     if ($schoolCreated) {
                                         echo '<span><a href="' . APP_URL . '/admin/dashboard.php?view=schools&school=list" class="btn btn-primary">Return to School List</a></span>';
@@ -304,11 +314,11 @@ if (!$hasPermission) {
                                     }
                                 }
                                 ?>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 <?php } ?>

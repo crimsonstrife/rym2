@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Roles Class file for the College Recruitment Application
  * Contains all the functions for the Roles Class and handles all user role functions.
@@ -633,11 +634,11 @@ class Roles
         $userId = $session->get('user_id') ?? null;
 
         // Get the permissions for the role
-        $permissions = $this->getPermissionsIdByRoleId($roleId);
+        $permissions = $this->getPermissionsIdByRoleId(intval($roleId));
 
         // Remove the permissions
         foreach ($permissions as $permission) {
-            $this->removeRolePermission($roleId, $permission, $userId);
+            $this->removeRolePermission(intval($roleId), $permission, intval($userId));
         }
 
         // SQL statement to delete a role
@@ -645,6 +646,9 @@ class Roles
 
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
+
+        // Ensure the role ID is an integer
+        $roleId = intval($roleId);
 
         // Bind the parameters to the SQL statement
         $stmt->bind_param("i", $roleId);
@@ -655,7 +659,7 @@ class Roles
         // Check the result
         if ($stmt->affected_rows > 0) {
             // Log the activity
-            $this->logRoleActivity($roleId, "Role Deleted", $userId);
+            $this->logRoleActivity(intval($roleId), "Role Deleted", intval($userId));
             return true;
         }
 
@@ -700,7 +704,7 @@ class RoleData extends Roles
     public function getPermissionGrantDate(int $roleId, int $permissionId): string
     {
         // SQL statement to get the date a role was granted a permission
-        $sql = "SELECT MAX(created_at) AS max_created_at, MAX(updated_at) AS max_updated_at FROM role_has_permission WHERE role_id = ? AND permission_id = ?";
+        $sql = "SELECT created_at FROM role_has_permission WHERE role_id = ? AND permission_id = ?";
 
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
@@ -714,11 +718,13 @@ class RoleData extends Roles
         // Get the results
         $result = $stmt->get_result();
 
-        // Fetch the row
-        $row = $result->fetch_assoc();
+        //Create a variable to hold the date
+        $date = "";
 
-        // Get the most recent date
-        $date = $row['max_created_at'] ?? $row['max_updated_at'] ?? "";
+        //Loop through the results and add them to the array
+        while ($row = $result->fetch_assoc()) {
+            $date = $row['created_at'];
+        }
 
         // Return the date
         return strval($date);

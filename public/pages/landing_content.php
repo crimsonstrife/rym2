@@ -1094,7 +1094,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                 <div class="input-group">
                                                     <input type="date" name="student_graduationDate" id="student_graduationDate" class="form-control <?php if ($student_graduationDate_error != null) {
                                                                                                                                                             echo " is-invalid";
-                                                                                                                                                        } ?>" min="<?php echo date(JS_DATE_FORMAT) ?>" value="<?php echo (!empty($student_graduationDate) ? formatDate($student_graduationDate) : date(JS_DATE_FORMAT)); ?>">
+                                                                                                                                                        } ?>" min="<?php echo date(JS_DATE_FORMAT) ?>" value="<?php echo (!empty($student_graduationDate) ? formatDate(htmlspecialchars($student_graduationDate)) : date(JS_DATE_FORMAT)); ?>">
                                                     <span></span>
                                                 </div>
                                                 <!-- help text for graduation date -->
