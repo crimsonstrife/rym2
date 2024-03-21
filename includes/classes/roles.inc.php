@@ -647,8 +647,11 @@ class Roles
         // Prepare the SQL statement for execution
         $stmt = prepareStatement($this->mysqli, $sql);
 
+        // Ensure the role ID is an integer
+        $roleId = intval($roleId);
+
         // Bind the parameters to the SQL statement
-        $stmt->bind_param("i", intval($roleId));
+        $stmt->bind_param("i", $roleId);
 
         // Execute the statement
         $stmt->execute();
