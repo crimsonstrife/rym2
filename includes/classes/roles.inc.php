@@ -659,7 +659,7 @@ class Roles
         // Check the result
         if ($stmt->affected_rows > 0) {
             // Log the activity
-            $this->logRoleActivity(intval($roleId), "Role Deleted", $userId);
+            $this->logRoleActivity(intval($roleId), "Role Deleted", intval($userId));
             return true;
         }
 
