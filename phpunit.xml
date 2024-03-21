@@ -3,5 +3,11 @@
         <testsuite name="Student Tests">
             <directory>tests/student/</directory>
         </testsuite>
+        <testsuite name="Event Tests">
+            <directory>tests/event/</directory>
+        </testsuite>
+        <testsuite name="School Tests">
+            <directory>tests/school/</directory>
+        </testsuite>
     </testsuites>
 </phpunit>
